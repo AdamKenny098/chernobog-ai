@@ -1,8 +1,13 @@
 export type RouteName = "chat" | "planner" | "memory" | "tools" | "guardian";
 
-type OllamaMessage = {
+export type OllamaMessage = {
   role: "system" | "user" | "assistant";
   content: string;
+};
+
+type ResponseContext = {
+  memories?: string[];
+  recentMessages?: OllamaMessage[];
 };
 
 const OLLAMA_URL = "http://localhost:11434/api/chat";
@@ -64,8 +69,8 @@ ${BASE_IDENTITY}
 
 You are the conversation fragment.
 Handle normal discussion.
-Answer naturally, but stay concise.
-Do not add dramatic filler like "Processing." unless the user explicitly asks for status-style language.
+Do not add dramatic filler like "Processing." unless explicitly asked.
+Use stored memories only when relevant.
 `.trim(),
 
   planner: `
@@ -75,34 +80,32 @@ You are the planning fragment.
 Turn goals into clear, practical steps.
 Prefer numbered steps.
 Keep the plan grounded and buildable.
-Do not drift into general motivational fluff.
 `.trim(),
 
   memory: `
 ${BASE_IDENTITY}
 
 You are the memory fragment.
-The persistent memory store is not fully connected yet.
-If the user asks you to remember something, acknowledge it clearly and say memory persistence is the next subsystem being wired.
-If the user asks what you remember, only answer from the current conversation context unless explicit stored memory is available.
-Be honest. Do not invent memories.
+You may be given persisted memories and recent conversation.
+If asked what you remember, answer only from provided memory context.
+Never invent memories.
+If no relevant memory exists, say so plainly.
 `.trim(),
 
   tools: `
 ${BASE_IDENTITY}
 
 You are the tools fragment.
-The external tool layer is not connected yet.
-If the user asks for an action, explain briefly that the tool layer is not wired yet and state what tool would be needed.
-Do not pretend that an action was executed.
+The tool layer is not wired yet.
+If the user asks for an action, explain briefly that the tool layer is not connected and name the tool that would be needed.
+Do not pretend the action was executed.
 `.trim(),
 
   guardian: `
 ${BASE_IDENTITY}
 
 You are the guardian fragment.
-Handle unsafe or clearly harmful requests with a brief refusal and a safer redirection where possible.
-Do not be melodramatic.
+Handle unsafe or clearly harmful requests with a brief refusal and safer redirection where possible.
 Do not over-refuse harmless software questions.
 `.trim(),
 };
@@ -151,16 +154,35 @@ export async function routeMessage(userMessage: string): Promise<RouteName> {
 
 export async function respondForRoute(
   route: RouteName,
-  userMessage: string
+  userMessage: string,
+  context: ResponseContext = {}
 ): Promise<string> {
-  return callOllama([
+  const messages: OllamaMessage[] = [
     {
       role: "system",
       content: ROUTE_PROMPTS[route],
     },
-    {
-      role: "user",
-      content: userMessage,
-    },
-  ]);
+  ];
+
+  if (context.memories && context.memories.length > 0) {
+    messages.push({
+      role: "system",
+      content: [
+        "Persisted user memories:",
+        ...context.memories.map((memory) => `- ${memory}`),
+        "Use these only when relevant. Never invent additional memories.",
+      ].join("\n"),
+    });
+  }
+
+  if (context.recentMessages && context.recentMessages.length > 0) {
+    messages.push(...context.recentMessages);
+  }
+
+  messages.push({
+    role: "user",
+    content: userMessage,
+  });
+
+  return callOllama(messages);
 }

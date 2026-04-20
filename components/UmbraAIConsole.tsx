@@ -23,38 +23,38 @@ function formatTime(date: Date) {
 }
 
 type LogEntry = {
-  id: number;
-  time: string;
-  source: string;
-  text: string;
-};
+    id: string;
+    time: string;
+    source: string;
+    text: string;
+  };
 
-const starterLogs: LogEntry[] = [
-  {
-    id: 1,
-    time: "00:00:01",
-    source: "CORE",
-    text: "Override shell initialized.",
-  },
-  {
-    id: 2,
-    time: "00:00:02",
-    source: "SYSTEM",
-    text: "Synthetic combat frame telemetry linked.",
-  },
-  {
-    id: 3,
-    time: "00:00:03",
-    source: "VISION",
-    text: "Optic lattice online. Threat scan stable.",
-  },
-  {
-    id: 4,
-    time: "00:00:04",
-    source: "MEMORY",
-    text: "Session buffer active. Long-term archive absent.",
-  },
-];
+  const starterLogs: LogEntry[] = [
+    {
+      id: "starter-1",
+      time: "00:00:01",
+      source: "CORE",
+      text: "Override shell initialized.",
+    },
+    {
+      id: "starter-2",
+      time: "00:00:02",
+      source: "SYSTEM",
+      text: "Synthetic combat frame telemetry linked.",
+    },
+    {
+      id: "starter-3",
+      time: "00:00:03",
+      source: "VISION",
+      text: "Optic lattice online. Threat scan stable.",
+    },
+    {
+      id: "starter-4",
+      time: "00:00:04",
+      source: "MEMORY",
+      text: "Session buffer active. Long-term archive absent.",
+    },
+  ];
 
 const subsystemCards = [
   {
@@ -109,11 +109,11 @@ export default function UmbraAIConsoleV1() {
 
   function pushLog(source: string, text: string) {
     const entry: LogEntry = {
-      id: Date.now() + Math.floor(Math.random() * 1000),
-      time: formatTime(new Date()),
-      source,
-      text,
-    };
+        id: crypto.randomUUID(),
+        time: formatTime(new Date()),
+        source,
+        text,
+      };
 
     setLogs((prev) => [...prev.slice(-9), entry]);
   }
