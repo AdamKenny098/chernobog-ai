@@ -145,6 +145,10 @@ export default function UmbraAIConsoleV1() {
         return;
       }
   
+      if (data?.route) {
+        pushLog("ROUTER", String(data.route).toUpperCase());
+      }
+  
       pushLog("CHERNOBOG", data?.reply ?? "No response returned.");
     } catch (error) {
       console.error(error);
