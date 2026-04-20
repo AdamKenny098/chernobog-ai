@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import { respondForRoute, routeMessage } from "@/lib/chernobog/router";
 import {
+  clearAllMemories,
+  deleteMemory,
+  extractForgetFact,
   extractMemoryFact,
   getMemories,
   getRecentMessages,
+  isForgetRequest,
   isRecallRequest,
   isRememberRequest,
+  isWipeMemoriesRequest,
   saveMemory,
   saveMessage,
 } from "@/lib/chernobog/memory";
@@ -27,13 +32,44 @@ export async function POST(req: Request) {
     const recentMessages = getRecentMessages(8);
     const storedMemories = getMemories(12);
 
-    const route = await routeMessage(userMessage);
-
-    saveMessage("user", userMessage, route);
+    let route:
+      | "chat"
+      | "planner"
+      | "memory"
+      | "tools"
+      | "guardian" = "chat";
 
     let reply = "";
 
-    if (route === "memory" && isRememberRequest(userMessage)) {
+    if (isWipeMemoriesRequest(userMessage)) {
+      route = "memory";
+
+      saveMessage("user", userMessage, route);
+
+      const deletedCount = clearAllMemories();
+      reply =
+        deletedCount > 0
+          ? `All memories wiped. Removed ${deletedCount} stored entr${
+              deletedCount === 1 ? "y" : "ies"
+            }.`
+          : "There were no stored memories to wipe.";
+    } else if (isForgetRequest(userMessage)) {
+      route = "memory";
+
+      saveMessage("user", userMessage, route);
+
+      const fact = extractForgetFact(userMessage);
+
+      reply = !fact
+        ? "State the memory you want removed."
+        : deleteMemory(fact).deleted
+        ? `Memory removed: ${fact}.`
+        : `No matching memory found for: ${fact}.`;
+    } else if (isRememberRequest(userMessage)) {
+      route = "memory";
+
+      saveMessage("user", userMessage, route);
+
       const fact = extractMemoryFact(userMessage);
 
       if (!fact) {
@@ -44,17 +80,24 @@ export async function POST(req: Request) {
           ? `Memory stored: ${result.fact}.`
           : `That memory already exists: ${result.fact}.`;
       }
-    } else if (route === "memory" && isRecallRequest(userMessage)) {
-      const memories = getMemories(20);
+    } else if (isRecallRequest(userMessage)) {
+      route = "memory";
 
+      saveMessage("user", userMessage, route);
+
+      const memories = getMemories(50);
       reply =
         memories.length === 0
           ? "I do not have any persisted memories yet."
-          : await respondForRoute("memory", userMessage, {
-              memories,
-              recentMessages,
-            });
+          : [
+              "Persisted memories:",
+              ...memories.map((memory, index) => `${index + 1}. ${memory}`),
+            ].join("\n");
     } else {
+      route = await routeMessage(userMessage);
+
+      saveMessage("user", userMessage, route);
+
       reply = await respondForRoute(route, userMessage, {
         memories: storedMemories,
         recentMessages,

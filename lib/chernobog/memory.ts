@@ -83,6 +83,30 @@ export function getMemories(limit = 20): string[] {
   return rows.map((row) => row.fact).reverse();
 }
 
+export function deleteMemory(fact: string): { deleted: boolean; fact: string } {
+  const clean = normalizeText(fact);
+  if (!clean) {
+    return { deleted: false, fact: "" };
+  }
+
+  const result = db.prepare(
+    `
+    DELETE FROM memories
+    WHERE lower(fact) = lower(?)
+    `
+  ).run(clean);
+
+  return {
+    deleted: result.changes > 0,
+    fact: clean,
+  };
+}
+
+export function clearAllMemories(): number {
+  const result = db.prepare(`DELETE FROM memories`).run();
+  return result.changes;
+}
+
 export function isRememberRequest(input: string): boolean {
   const text = input.trim().toLowerCase();
 
@@ -101,7 +125,34 @@ export function isRecallRequest(input: string): boolean {
     text.includes("what do you know about me") ||
     text.includes("what have you stored about me") ||
     text.includes("list memories") ||
+    text.includes("show memories") ||
+    text.includes("show me my memories") ||
     text.includes("do you remember anything about me")
+  );
+}
+
+export function isForgetRequest(input: string): boolean {
+  const text = input.trim().toLowerCase();
+
+  return (
+    text.startsWith("forget ") ||
+    text.startsWith("forget that ") ||
+    text.startsWith("please forget ") ||
+    text.startsWith("delete memory ") ||
+    text.startsWith("remove memory ")
+  );
+}
+
+export function isWipeMemoriesRequest(input: string): boolean {
+  const text = input.trim().toLowerCase();
+
+  return (
+    text === "wipe memories" ||
+    text === "wipe all memories" ||
+    text === "clear memories" ||
+    text === "clear all memories" ||
+    text === "delete all memories" ||
+    text === "remove all memories"
   );
 }
 
@@ -110,6 +161,18 @@ export function extractMemoryFact(input: string): string {
 
   fact = fact.replace(/^(please\s+)?remember\s+that\s+/i, "");
   fact = fact.replace(/^(please\s+)?remember\s+/i, "");
+  fact = fact.replace(/[.]+$/, "");
+
+  return normalizeText(fact);
+}
+
+export function extractForgetFact(input: string): string {
+  let fact = input.trim();
+
+  fact = fact.replace(/^(please\s+)?forget\s+that\s+/i, "");
+  fact = fact.replace(/^(please\s+)?forget\s+/i, "");
+  fact = fact.replace(/^delete\s+memory\s+/i, "");
+  fact = fact.replace(/^remove\s+memory\s+/i, "");
   fact = fact.replace(/[.]+$/, "");
 
   return normalizeText(fact);
