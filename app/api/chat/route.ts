@@ -16,6 +16,9 @@ import {
 } from "@/lib/chernobog/memory";
 import { parseToolCommand } from "@/lib/chernobog/tools/parser";
 import { executeTool } from "@/lib/chernobog/tools/executor";
+import { classifyToolIntent } from "@/lib/chernobog/tools/intent";
+import { normalizeToolCall } from "@/lib/chernobog/tools/normalize";
+import { logToolCall } from "@/lib/chernobog/db";
 
 export const runtime = "nodejs";
 
@@ -74,18 +77,12 @@ function formatToolReply(
     }
 
     case "open_app": {
-      const data = result.data as {
-        message: string;
-      };
-
+      const data = result.data as { message: string };
       return data.message;
     }
 
     case "open_url": {
-      const data = result.data as {
-        message: string;
-      };
-
+      const data = result.data as { message: string };
       return data.message;
     }
 
@@ -105,9 +102,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-    const recentMessages = getRecentMessages(8);
-    const storedMemories = getMemories(12);
 
     let route: RouteName = "chat";
     let reply = "";
@@ -175,22 +169,69 @@ export async function POST(req: Request) {
 
         saveMessage("user", userMessage, route);
 
+        const normalizedToolCall = normalizeToolCall(parsedToolCommand);
+
         const toolResult = await executeTool(
-          parsedToolCommand.tool,
-          parsedToolCommand.input,
+          normalizedToolCall.tool,
+          normalizedToolCall.input,
           { platform: process.platform }
         );
 
+        try {
+          logToolCall({
+            toolName: normalizedToolCall.tool,
+            input: normalizedToolCall.input,
+            output: toolResult,
+            success: toolResult.ok,
+          });
+        } catch (logError) {
+          console.error("Failed to log tool call:", logError);
+        }
+
         reply = formatToolReply(toolResult);
       } else {
-        route = await routeMessage(userMessage);
+        const toolIntent = await classifyToolIntent(userMessage);
 
-        saveMessage("user", userMessage, route);
+        if (toolIntent.tool !== "none") {
+          route = "tools";
 
-        reply = await respondForRoute(route, userMessage, {
-          memories: storedMemories,
-          recentMessages,
-        });
+          saveMessage("user", userMessage, route);
+
+          const normalizedToolCall = normalizeToolCall(toolIntent);
+
+          const toolResult = await executeTool(
+            normalizedToolCall.tool,
+            normalizedToolCall.input,
+            {
+              platform: process.platform,
+            }
+          );
+
+          try {
+            logToolCall({
+              toolName: normalizedToolCall.tool,
+              input: normalizedToolCall.input,
+              output: toolResult,
+              success: toolResult.ok,
+            });
+          } catch (logError) {
+            console.error("Failed to log tool call:", logError);
+          }
+
+          reply = formatToolReply(toolResult);
+        } else {
+          route = await routeMessage(userMessage);
+
+          saveMessage("user", userMessage, route);
+
+          const recentMessages = getRecentMessages(8);
+          const storedMemories = getMemories(12);
+
+          reply = await respondForRoute(route, userMessage, {
+            memories: storedMemories,
+            recentMessages,
+          });
+        }
       }
     }
 
@@ -204,7 +245,10 @@ export async function POST(req: Request) {
     console.error("Chat route error:", error);
 
     return NextResponse.json(
-      { error: "Failed to process directive." },
+      {
+        error: "Failed to process directive.",
+        details: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }

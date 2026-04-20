@@ -21,9 +21,44 @@ CREATE TABLE IF NOT EXISTS messages (
 
 CREATE TABLE IF NOT EXISTS memories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    fact TEXT NOT NULL,
+    fact TEXT NOT NULL UNIQUE,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tool_calls (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tool_name TEXT NOT NULL,
+    input_json TEXT NOT NULL,
+    output_json TEXT,
+    success INTEGER NOT NULL,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 `);
+
+type LogToolCallInput = {
+  toolName: string;
+  input: unknown;
+  output: unknown;
+  success: boolean;
+};
+
+const insertToolCallStmt = db.prepare(`
+INSERT INTO tool_calls (tool_name, input_json, output_json, success)
+VALUES (?, ?, ?, ?)
+`);
+
+export function logToolCall({
+  toolName,
+  input,
+  output,
+  success,
+}: LogToolCallInput) {
+  insertToolCallStmt.run(
+    toolName,
+    JSON.stringify(input ?? null),
+    JSON.stringify(output ?? null),
+    success ? 1 : 0
+  );
+}
 
 export default db;

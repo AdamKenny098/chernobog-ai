@@ -16,19 +16,27 @@ type OpenAppOutput = {
 };
 
 const APP_ALIASES: Record<string, string> = {
-  spotify: "spotify",
-  discord: "discord",
-  chrome: "chrome",
-  "google chrome": "chrome",
-  firefox: "firefox",
-  edge: "msedge",
-  vscode: "code",
-  "vs code": "code",
-  "visual studio code": "code",
-  notepad: "notepad",
-  calc: "calc",
-  calculator: "calc",
-};
+    spotify: "spotify",
+    discord: "discord",
+    opera: "opera",
+    "opera gx": "opera",
+    operagx: "opera",
+    browser: "opera",
+    "my browser": "opera",
+    "web browser": "opera",
+    "default browser": "opera",
+    chrome: "chrome",
+    "google chrome": "chrome",
+    firefox: "firefox",
+    edge: "msedge",
+    "microsoft edge": "msedge",
+    vscode: "code",
+    "vs code": "code",
+    "visual studio code": "code",
+    notepad: "notepad",
+    calc: "calc",
+    calculator: "calc",
+  };
 
 function normalizeAppName(appName: string) {
   return appName.trim().toLowerCase();
