@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Cpu,
@@ -56,14 +56,6 @@ const starterLogs: LogEntry[] = [
   },
 ];
 
-const aiReplies = [
-  "Directive accepted. Awaiting execution layer.",
-  "Override stable. Input recognized.",
-  "No fault state detected. Continue.",
-  "Targeting lattice remains synchronized.",
-  "Command received. Recommend model binding next.",
-];
-
 const subsystemCards = [
   {
     title: "Override Protocol",
@@ -95,6 +87,13 @@ export default function UmbraAIConsoleV1() {
   const [booted, setBooted] = useState(true);
   const [input, setInput] = useState("");
   const [logs, setLogs] = useState<LogEntry[]>(starterLogs);
+  const logContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!logContainerRef.current) return;
+
+    logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+  }, [logs]);
 
   const particles = useMemo(
     () =>
@@ -119,17 +118,38 @@ export default function UmbraAIConsoleV1() {
     setLogs((prev) => [...prev.slice(-9), entry]);
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
+  
     const value = input.trim();
     if (!value) return;
-
+  
     pushLog("USER", value);
     setInput("");
-
-    const reply = aiReplies[Math.floor(Math.random() * aiReplies.length)];
-    window.setTimeout(() => pushLog("CHERNOBOG", reply), 220);
+  
+    try {
+      pushLog("SYSTEM", "Routing directive to core...");
+  
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: value }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        pushLog("ERROR", data?.error ?? "Unknown backend error.");
+        return;
+      }
+  
+      pushLog("CHERNOBOG", data?.reply ?? "No response returned.");
+    } catch (error) {
+      console.error(error);
+      pushLog("ERROR", "Failed to reach /api/chat.");
+    }
   }
 
   function toggleBoot() {
@@ -346,13 +366,17 @@ export default function UmbraAIConsoleV1() {
                 </div>
               </section>
 
-              <section className="border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl" style={{ clipPath: "polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px))" }}>
+              <section className="flex min-h-[460px] flex-col border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl" style={{ clipPath: "polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px))" }}>
                 <div className="mb-4 flex items-center gap-2 text-sm uppercase tracking-[0.28em] text-white/55">
                   <ScanSearch className="h-4 w-4 text-orange-300" />
                   Directive Console
                 </div>
 
-                <div className="mb-4 h-[240px] overflow-hidden border border-white/10 bg-black/35 p-4 font-mono text-sm">
+                <div
+                  ref={logContainerRef}
+                  className="mb-4 h-[340px] overflow-y-auto border border-white/10 bg-black/35 p-4 pr-3 font-mono text-sm"
+                  style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(251,146,60,0.65) rgba(255,255,255,0.06)" }}
+                >
                   <div className="space-y-2 text-white/75">
                     {logs.map((log) => (
                       <div key={log.id} className="grid grid-cols-[84px_112px_1fr] gap-3 break-words">
@@ -364,7 +388,7 @@ export default function UmbraAIConsoleV1() {
                   </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-3 md:flex-row">
+                <form onSubmit={handleSubmit} className="mt-auto flex flex-col gap-3 md:flex-row">
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
