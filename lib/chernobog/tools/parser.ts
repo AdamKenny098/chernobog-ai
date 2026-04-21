@@ -112,5 +112,45 @@ export function parseToolCommand(message: string): ParsedToolCommand | null {
     };
   }
 
+  function normalizeSearchQuery(value: string) {
+    return stripQuotes(value)
+      .replace(/\b(file|files|folder|folders)\b/gi, "")
+      .trim();
+  }
+
+  const findFilesMatch = normalized.match(
+    /^(?:find file|find files|search files for|search for file|search for files)\s+(.+)$/i
+  );
+  if (findFilesMatch) {
+    const query = normalizeSearchQuery(findFilesMatch[1]);
+
+    if (!query) {
+      return null;
+    }
+
+    return {
+      tool: "find_files",
+      input: {
+        query,
+      },
+    };
+  }
+
+  const vagueReadMatch = normalized.match(
+    /^(?:read|open|show me|show)\s+my\s+(.+?)(?:\s+file|\s+document|\s+doc)?$/i
+  );
+  if (vagueReadMatch) {
+    const rawPath = stripQuotes(vagueReadMatch[1]).trim();
+
+    if (rawPath) {
+      return {
+        tool: "read_text_file",
+        input: {
+          path: rawPath,
+        },
+      };
+    }
+  }
+
   return null;
 }

@@ -86,9 +86,155 @@ function formatToolReply(
       return data.message;
     }
 
+    case "find_files": {
+      const data = result.data as {
+        root: string;
+        query: string;
+        matches: { path: string; name: string; extension: string }[];
+      };
+
+      if (data.matches.length === 0) {
+        return `I could not find any files matching "${data.query}" in ${data.root}.`;
+      }
+
+      const preview = data.matches
+        .slice(0, 8)
+        .map((match, index) => `${index + 1}. ${match.name} — ${match.path}`)
+        .join("\n");
+
+      const extraCount = data.matches.length - 8;
+      const suffix = extraCount > 0 ? `\n...and ${extraCount} more.` : "";
+
+      return `I found ${data.matches.length} file(s) matching "${data.query}" in ${data.root}:\n${preview}${suffix}`;
+    }
+
     default:
       return "Tool executed successfully.";
   }
+}
+function looksLikeExplicitFilePath(value: string): boolean {
+  const trimmed = value.trim();
+
+  if (!trimmed) return false;
+
+  // Windows absolute path
+  if (/^[a-zA-Z]:\\/.test(trimmed)) return true;
+
+  // UNC/network path
+  if (/^\\\\/.test(trimmed)) return true;
+
+  // Relative hints
+  if (trimmed.includes("\\") || trimmed.includes("/")) return true;
+
+  // File with extension
+  if (/\.[a-zA-Z0-9]{1,10}$/.test(trimmed)) return true;
+
+  return false;
+}
+
+function extractSearchQueryFromReadPath(value: string): string {
+  return value
+    .trim()
+    .replace(/^["']|["']$/g, "")
+    .replace(/\.[a-zA-Z0-9]{1,10}$/, "")
+    .replace(/\b(file|document|doc)\b/gi, "")
+    .trim();
+}
+
+type FindFilesResultData = {
+  root: string;
+  query: string;
+  matches: {
+    path: string;
+    name: string;
+    extension: string;
+  }[];
+};
+
+type ReadTextFileResultData = {
+  path: string;
+  content: string;
+  truncated: boolean;
+};
+
+async function tryReadViaFileSearchFallback(
+  userMessage: string,
+  requestedPath: string
+): Promise<string | null> {
+  const query = extractSearchQueryFromReadPath(requestedPath);
+
+  if (!query) {
+    return null;
+  }
+
+  const searchResult = await executeTool(
+    "find_files",
+    { query, maxResults: 8 },
+    { platform: process.platform }
+  );
+
+  try {
+    logToolCall({
+      toolName: "find_files",
+      input: { query, maxResults: 8, fallbackFrom: userMessage },
+      output: searchResult,
+      success: searchResult.ok,
+    });
+  } catch (logError) {
+    console.error("Failed to log fallback file search:", logError);
+  }
+
+  if (!searchResult.ok) {
+    return `I could not search for "${query}". ${searchResult.error}`;
+  }
+
+  const data = searchResult.data as FindFilesResultData;
+
+  if (data.matches.length === 0) {
+    return `I could not find any files matching "${query}".`;
+  }
+
+  if (data.matches.length === 1) {
+    const chosen = data.matches[0];
+
+    const readResult = await executeTool(
+      "read_text_file",
+      { path: chosen.path },
+      { platform: process.platform }
+    );
+
+    try {
+      logToolCall({
+        toolName: "read_text_file",
+        input: { path: chosen.path, fallbackFrom: userMessage },
+        output: readResult,
+        success: readResult.ok,
+      });
+    } catch (logError) {
+      console.error("Failed to log fallback file read:", logError);
+    }
+
+    if (!readResult.ok) {
+      return `I found ${chosen.name}, but I could not read it. ${readResult.error}`;
+    }
+
+    const readData = readResult.data as ReadTextFileResultData;
+
+    return readData.truncated
+      ? `I found ${chosen.name} and read the start of it:\n\n${readData.content}\n\n[truncated]`
+      : `I found ${chosen.name} and read it:\n\n${readData.content}`;
+  }
+
+  const preview = data.matches
+    .slice(0, 5)
+    .map((match, index) => `${index + 1}. ${match.name} — ${match.path}`)
+    .join("\n");
+
+  const extraCount = data.matches.length - 5;
+  const suffix =
+    extraCount > 0 ? `\n...and ${extraCount} more matches.` : "";
+
+  return `I found multiple files matching "${query}". Tell me which one you want:\n${preview}${suffix}`;
 }
 
 export async function POST(req: Request) {
@@ -166,47 +312,49 @@ export async function POST(req: Request) {
 
       if (parsedToolCommand) {
         route = "tools";
-
+      
         saveMessage("user", userMessage, route);
-
+      
         const normalizedToolCall = normalizeToolCall(parsedToolCommand);
-
-        const toolResult = await executeTool(
-          normalizedToolCall.tool,
-          normalizedToolCall.input,
-          { platform: process.platform }
-        );
-
-        try {
-          logToolCall({
-            toolName: normalizedToolCall.tool,
-            input: normalizedToolCall.input,
-            output: toolResult,
-            success: toolResult.ok,
-          });
-        } catch (logError) {
-          console.error("Failed to log tool call:", logError);
-        }
-
-        reply = formatToolReply(toolResult);
-      } else {
-        const toolIntent = await classifyToolIntent(userMessage);
-
-        if (toolIntent.tool !== "none") {
-          route = "tools";
-
-          saveMessage("user", userMessage, route);
-
-          const normalizedToolCall = normalizeToolCall(toolIntent);
-
+      
+        if (
+          normalizedToolCall.tool === "read_text_file" &&
+          !looksLikeExplicitFilePath(normalizedToolCall.input.path)
+        ) {
+          const fallbackReply = await tryReadViaFileSearchFallback(
+            userMessage,
+            normalizedToolCall.input.path
+          );
+      
+          if (fallbackReply) {
+            reply = fallbackReply;
+          } else {
+            const toolResult = await executeTool(
+              normalizedToolCall.tool,
+              normalizedToolCall.input,
+              { platform: process.platform }
+            );
+      
+            try {
+              logToolCall({
+                toolName: normalizedToolCall.tool,
+                input: normalizedToolCall.input,
+                output: toolResult,
+                success: toolResult.ok,
+              });
+            } catch (logError) {
+              console.error("Failed to log tool call:", logError);
+            }
+      
+            reply = formatToolReply(toolResult);
+          }
+        } else {
           const toolResult = await executeTool(
             normalizedToolCall.tool,
             normalizedToolCall.input,
-            {
-              platform: process.platform,
-            }
+            { platform: process.platform }
           );
-
+      
           try {
             logToolCall({
               toolName: normalizedToolCall.tool,
@@ -217,21 +365,83 @@ export async function POST(req: Request) {
           } catch (logError) {
             console.error("Failed to log tool call:", logError);
           }
-
+      
           reply = formatToolReply(toolResult);
-        } else {
-          route = await routeMessage(userMessage);
-
-          saveMessage("user", userMessage, route);
-
-          const recentMessages = getRecentMessages(8);
-          const storedMemories = getMemories(12);
-
-          reply = await respondForRoute(route, userMessage, {
-            memories: storedMemories,
-            recentMessages,
-          });
         }
+      }else {
+        const toolIntent = await classifyToolIntent(userMessage);
+
+if (toolIntent.tool !== "none") {
+  route = "tools";
+
+  saveMessage("user", userMessage, route);
+
+  const normalizedToolCall = normalizeToolCall(toolIntent);
+
+  if (
+    normalizedToolCall.tool === "read_text_file" &&
+    !looksLikeExplicitFilePath(normalizedToolCall.input.path)
+  ) {
+    const fallbackReply = await tryReadViaFileSearchFallback(
+      userMessage,
+      normalizedToolCall.input.path
+    );
+
+    if (fallbackReply) {
+      reply = fallbackReply;
+    } else {
+      const toolResult = await executeTool(
+        normalizedToolCall.tool,
+        normalizedToolCall.input,
+        { platform: process.platform }
+      );
+
+      try {
+        logToolCall({
+          toolName: normalizedToolCall.tool,
+          input: normalizedToolCall.input,
+          output: toolResult,
+          success: toolResult.ok,
+        });
+      } catch (logError) {
+        console.error("Failed to log tool call:", logError);
+      }
+
+      reply = formatToolReply(toolResult);
+    }
+  } else {
+    const toolResult = await executeTool(
+      normalizedToolCall.tool,
+      normalizedToolCall.input,
+      { platform: process.platform }
+    );
+
+    try {
+      logToolCall({
+        toolName: normalizedToolCall.tool,
+        input: normalizedToolCall.input,
+        output: toolResult,
+        success: toolResult.ok,
+      });
+    } catch (logError) {
+      console.error("Failed to log tool call:", logError);
+    }
+
+    reply = formatToolReply(toolResult);
+  }
+} else {
+  route = await routeMessage(userMessage);
+
+  saveMessage("user", userMessage, route);
+
+  const recentMessages = getRecentMessages(8);
+  const storedMemories = getMemories(12);
+
+  reply = await respondForRoute(route, userMessage, {
+    memories: storedMemories,
+    recentMessages,
+  });
+}
       }
     }
 

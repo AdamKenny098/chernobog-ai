@@ -32,6 +32,7 @@ export type ParsedToolCommand =
   | { tool: "get_time"; input: Record<string, never> }
   | { tool: "list_files"; input: { path: string } }
   | { tool: "read_text_file"; input: { path: string; maxChars?: number } }
+  | { tool: "find_files"; input: { query: string; root?: string; maxResults?: number } }
   | { tool: "open_app"; input: { appName: string } }
   | { tool: "open_url"; input: { url: string } };
 

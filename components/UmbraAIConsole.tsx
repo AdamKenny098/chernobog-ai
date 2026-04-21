@@ -14,6 +14,8 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import ChernobogDebugPanel from "@/components/ChernobogDebugPanel";
+
 function formatTime(date: Date) {
   return date.toLocaleTimeString([], {
     hour: "2-digit",
@@ -466,6 +468,8 @@ export default function UmbraAIConsoleV1() {
             </aside>
           </div>
         </div>
+
+        <ChernobogDebugPanel />
       </div>
     </div>
   );

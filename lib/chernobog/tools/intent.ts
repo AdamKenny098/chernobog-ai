@@ -22,6 +22,14 @@ const toolIntentSchema = z.discriminatedUnion("tool", [
     }),
   }),
   z.object({
+    tool: z.literal("find_files"),
+    input: z.object({
+      query: z.string().min(1),
+      root: z.string().min(1).optional(),
+      maxResults: z.number().int().positive().max(50).optional(),
+    }),
+  }),
+  z.object({
     tool: z.literal("open_app"),
     input: z.object({
       appName: z.string().min(1),
@@ -38,7 +46,6 @@ const toolIntentSchema = z.discriminatedUnion("tool", [
     input: z.object({}).strict(),
   }),
 ]);
-
 export type ToolIntent = z.infer<typeof toolIntentSchema>;
 
 function extractJsonObject(raw: string): string | null {
@@ -67,6 +74,7 @@ Your job is to decide whether the user's message should call one of these local 
 - get_time
 - list_files
 - read_text_file
+- find_files
 - open_app
 - open_url
 
@@ -94,8 +102,11 @@ Rules:
 - If the message does not clearly map to one of these tools, return:
   {"tool":"none","input":{}}
 
+- If the user is asking to find or search for a local file by name, return:
+  {"tool":"find_files","input":{"query":"..."}}
+
 Safety and scope:
-- Only use these five tools.
+- Only use these six tools.
 - Do not invent new tools.
 - Do not answer the user's question.
 - Do not pretend to execute anything.
