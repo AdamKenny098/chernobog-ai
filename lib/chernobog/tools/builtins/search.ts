@@ -1,76 +1,22 @@
 import fs from "node:fs/promises";
 import type { Dirent } from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { z } from "zod";
 import { ToolDefinition } from "../types";
+import {
+  ensureAllowedPath,
+  getNormalizedExtension,
+  isReadableTextFileName,
+  resolveSearchRoot,
+  shouldSkipDirectory,
+} from "../fs-policy";
 
 const DEFAULT_MAX_RESULTS = 20;
 const MAX_RESULTS_CAP = 50;
-const MAX_DEPTH = 10;
+const MAX_DEPTH = 6;
 
-const PREFERRED_EXTENSIONS = new Set([
-  ".txt",
-  ".md",
-  ".json",
-  ".ts",
-  ".tsx",
-  ".js",
-  ".jsx",
-  ".mjs",
-  ".cjs",
-  ".cs",
-  ".py",
-  ".html",
-  ".css",
-  ".xml",
-  ".yml",
-  ".yaml",
-  ".csv",
-  ".log",
-  ".docx",
-  ".pdf",
-]);
-
-function getAllowedRoots(): string[] {
-  const home = os.homedir();
-
-  return [
-    home,
-    path.join(home, "Desktop"),
-    path.join(home, "Documents"),
-    path.join(home, "Downloads"),
-    process.cwd(),
-  ];
-}
-
-function isPathWithin(parent: string, child: string): boolean {
-  const relative = path.relative(parent, child);
-  return (
-    relative === "" ||
-    (!relative.startsWith("..") && !path.isAbsolute(relative))
-  );
-}
-
-function ensureAllowedPath(targetPath: string): string {
-  const resolved = path.resolve(targetPath);
-  const allowedRoots = getAllowedRoots().map((root) => path.resolve(root));
-
-  const allowed = allowedRoots.some((root) => isPathWithin(root, resolved));
-
-  if (!allowed) {
-    throw new Error("Path is outside allowed roots");
-  }
-
-  return resolved;
-}
-
-function resolveSearchRoot(rawRoot?: string): string {
-  if (!rawRoot || !rawRoot.trim()) {
-    return path.resolve(os.homedir());
-  }
-
-  return ensureAllowedPath(rawRoot);
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 const findFilesInputSchema = z.object({
@@ -121,13 +67,13 @@ async function walkForMatches(
       return;
     }
 
-    if (dirent.name.startsWith(".")) {
-      continue;
-    }
-
     const fullPath = path.join(currentDir, dirent.name);
 
     if (dirent.isDirectory()) {
+      if (shouldSkipDirectory(dirent.name)) {
+        continue;
+      }
+
       await walkForMatches(fullPath, queryLower, matches, maxResults, depth + 1);
       continue;
     }
@@ -141,29 +87,47 @@ async function walkForMatches(
       continue;
     }
 
+    if (!isReadableTextFileName(dirent.name)) {
+      continue;
+    }
+
     matches.push({
       path: fullPath,
       name: dirent.name,
-      extension: path.extname(dirent.name).toLowerCase(),
+      extension: getNormalizedExtension(dirent.name),
     });
   }
 }
 
 function scoreMatch(match: SearchMatch, queryLower: string): number {
   let score = 0;
-  const nameLower = match.name.toLowerCase();
 
-  if (nameLower === queryLower) score += 100;
-  if (nameLower.startsWith(queryLower)) score += 40;
-  if (nameLower.includes(queryLower)) score += 20;
-  if (PREFERRED_EXTENSIONS.has(match.extension)) score += 10;
+  const fullPathLower = match.path.toLowerCase();
+  const nameLower = match.name.toLowerCase();
+  const ext = match.extension;
+  const stem = nameLower.endsWith(ext) ? nameLower.slice(0, -ext.length) : nameLower;
+  const wordRegex = new RegExp(`\\b${escapeRegExp(queryLower)}\\b`, "i");
+
+  if (stem === queryLower) score += 200;
+  if (nameLower === queryLower) score += 180;
+  if (stem.startsWith(queryLower)) score += 100;
+  if (nameLower.startsWith(queryLower)) score += 70;
+  if (wordRegex.test(stem)) score += 50;
+  if (wordRegex.test(nameLower)) score += 30;
+  if (nameLower.includes(queryLower)) score += 15;
+
+  if (fullPathLower.includes(`${path.sep}documents${path.sep}`)) score += 20;
+  if (fullPathLower.includes(`${path.sep}desktop${path.sep}`)) score += 10;
+  if (fullPathLower.includes(`${path.sep}downloads${path.sep}`)) score += 5;
+
+  score -= Math.min(stem.length, 80) * 0.35;
 
   return score;
 }
 
 export const findFilesTool: ToolDefinition<FindFilesInput, FindFilesOutput> = {
   name: "find_files",
-  description: "Find files by name within an allowed root",
+  description: "Find readable text files by name within an allowed root",
   inputSchema: findFilesInputSchema,
   execute: async (input) => {
     const root = resolveSearchRoot(input.root);
@@ -172,7 +136,7 @@ export const findFilesTool: ToolDefinition<FindFilesInput, FindFilesOutput> = {
     const maxResults = input.maxResults ?? DEFAULT_MAX_RESULTS;
 
     const matches: SearchMatch[] = [];
-    await walkForMatches(root, queryLower, matches, maxResults, 0);
+    await walkForMatches(root, queryLower, matches, maxResults * 2, 0);
 
     matches.sort((a, b) => {
       const scoreDiff = scoreMatch(b, queryLower) - scoreMatch(a, queryLower);
@@ -181,7 +145,7 @@ export const findFilesTool: ToolDefinition<FindFilesInput, FindFilesOutput> = {
     });
 
     return {
-      root,
+      root: ensureAllowedPath(root),
       query,
       matches: matches.slice(0, maxResults),
     };

@@ -8,10 +8,11 @@ export type OllamaMessage = {
 type ResponseContext = {
   memories?: string[];
   recentMessages?: OllamaMessage[];
+  sessionSummary?: string;
 };
 
-const OLLAMA_URL = "http://localhost:11434/api/chat";
-const MODEL_NAME = "gemma3";
+const OLLAMA_URL = process.env.OLLAMA_URL ?? "http://localhost:11434/api/chat";
+const MODEL_NAME = process.env.OLLAMA_MODEL ?? "gemma3";
 
 const BASE_IDENTITY = `
 You are the core intelligence of a fictional personal AI system named Chernobog.
@@ -55,27 +56,20 @@ guardian
 - clearly unsafe, destructive, malicious, dangerous, or suspicious requests
 
 Return only one word.
-Valid outputs:
-chat
-planner
-memory
-tools
-guardian
+Valid outputs: chat planner memory tools guardian
 `.trim();
 
 const ROUTE_PROMPTS: Record<RouteName, string> = {
   chat: `
 ${BASE_IDENTITY}
-
 You are the conversation fragment.
 Handle normal discussion.
-Do not add dramatic filler like "Processing." unless explicitly asked.
 Use stored memories only when relevant.
+Do not invent system actions or state.
 `.trim(),
 
   planner: `
 ${BASE_IDENTITY}
-
 You are the planning fragment.
 Turn goals into clear, practical steps.
 Prefer numbered steps.
@@ -84,7 +78,6 @@ Keep the plan grounded and buildable.
 
   memory: `
 ${BASE_IDENTITY}
-
 You are the memory fragment.
 You may be given persisted memories and recent conversation.
 If asked what you remember, answer only from provided memory context.
@@ -95,16 +88,14 @@ If no relevant memory exists, say so plainly.
 
   tools: `
 ${BASE_IDENTITY}
-
 You are the tools fragment.
-The tool layer is not wired yet.
-If the user asks for an action, explain briefly that the tool layer is not connected and name the tool that would be needed.
-Do not pretend the action was executed.
+The system may have already executed deterministic tool actions.
+Never claim a tool was executed unless the provided context says so.
+If discussing tool capability, stay concrete.
 `.trim(),
 
   guardian: `
 ${BASE_IDENTITY}
-
 You are the guardian fragment.
 Handle unsafe or clearly harmful requests with a brief refusal and safer redirection where possible.
 Do not over-refuse harmless software questions.
@@ -140,14 +131,8 @@ function normalizeRoute(raw: string): RouteName {
 
 export async function routeMessage(userMessage: string): Promise<RouteName> {
   const rawRoute = await callOllama([
-    {
-      role: "system",
-      content: ROUTER_PROMPT,
-    },
-    {
-      role: "user",
-      content: userMessage,
-    },
+    { role: "system", content: ROUTER_PROMPT },
+    { role: "user", content: userMessage },
   ]);
 
   return normalizeRoute(rawRoute);
@@ -171,8 +156,16 @@ export async function respondForRoute(
       content: [
         "Persisted user memories:",
         ...context.memories.map((memory) => `- ${memory}`),
-        "Use these only when relevant. Never invent additional memories.",
+        "Use these only when relevant.",
+        "Never invent additional memories.",
       ].join("\n"),
+    });
+  }
+
+  if (context.sessionSummary) {
+    messages.push({
+      role: "system",
+      content: `Active short-term session context:\n${context.sessionSummary}`,
     });
   }
 

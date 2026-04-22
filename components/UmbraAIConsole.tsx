@@ -90,6 +90,7 @@ export default function UmbraAIConsoleV1() {
   const [input, setInput] = useState("");
   const [logs, setLogs] = useState<LogEntry[]>(starterLogs);
   const logContainerRef = useRef<HTMLDivElement | null>(null);
+  const [sessionId] = useState(() => crypto.randomUUID());
 
   useEffect(() => {
     if (!logContainerRef.current) return;
@@ -137,7 +138,10 @@ export default function UmbraAIConsoleV1() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: value }),
+        body: JSON.stringify({
+          message: value,
+          sessionId,
+        })
       });
   
       const data = await response.json();
