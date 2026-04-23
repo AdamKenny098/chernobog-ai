@@ -51,6 +51,22 @@ function ordinalToIndex(input: string): number | null {
 }
 
 function buildFileSelectionPending(session: SessionContext): PendingDisambiguation | null {
+  if (session.workflow.kind === "file") {
+    if (session.workflow.candidates.length === 0) return null;
+
+    return {
+      kind: "file_selection",
+      prompt: "Which file result do you want me to use?",
+      createdAt: new Date().toISOString(),
+      options: session.workflow.candidates.slice(0, 8).map((candidate, index) => ({
+        id: String(index + 1),
+        label: `${index + 1}. ${candidate.label} — ${candidate.path ?? candidate.id}`,
+        value: candidate.path ?? candidate.id,
+        meta: { index: index + 1, candidateId: candidate.id },
+      })),
+    };
+  }
+
   const results = session.fileContext?.lastSearch?.results ?? [];
   if (results.length === 0) return null;
 
@@ -96,6 +112,24 @@ function resolveFromPendingSelection(input: string, session: SessionContext): st
 }
 
 function resolveCurrentFile(session: SessionContext): string | null {
+  if (session.workflow.kind === "file") {
+    const workflow = session.workflow;
+
+    const selected = workflow.candidates.find(
+      (candidate) => candidate.id === workflow.selectedCandidateId
+    );
+    if (selected?.path) return selected.path;
+
+    const read = workflow.candidates.find(
+      (candidate) => candidate.id === workflow.readCandidateId
+    );
+    if (read?.path) return read.path;
+
+    if (workflow.candidates.length === 1) {
+      return workflow.candidates[0].path ?? workflow.candidates[0].id;
+    }
+  }
+
   const lastSelected = session.fileContext?.lastSelected?.path;
   if (lastSelected) return lastSelected;
 
@@ -109,6 +143,19 @@ function resolveCurrentFile(session: SessionContext): string | null {
 }
 
 function selectSearchResultByIndex(session: SessionContext, index: number): string | null {
+  if (session.workflow.kind === "file") {
+    const workflow = session.workflow;
+    if (workflow.candidates.length === 0) return null;
+
+    if (index === -1) {
+      const candidate = workflow.candidates[workflow.candidates.length - 1];
+      return candidate?.path ?? candidate?.id ?? null;
+    }
+
+    const candidate = workflow.candidates[index - 1];
+    return candidate?.path ?? candidate?.id ?? null;
+  }
+
   const results = session.fileContext?.lastSearch?.results ?? [];
   if (results.length === 0) return null;
 
@@ -165,7 +212,11 @@ export function tryResolveFollowUp(
 
   const scopeAlias = isScopeShiftFollowUp(input);
   if (scopeAlias) {
-    const previousQuery = session.fileContext?.lastSearch?.query;
+    const previousQuery =
+      session.workflow.kind === "file"
+        ? session.workflow.query
+        : session.fileContext?.lastSearch?.query;
+
     if (!previousQuery) return { kind: "none" };
 
     const root = normalizeFolderAlias(scopeAlias);
@@ -183,6 +234,23 @@ export function tryResolveFollowUp(
   }
 
   if (isNextPageFollowUp(input)) {
+    if (session.workflow.kind === "file" && session.workflow.candidates.length > 0) {
+      const workflow = session.workflow;
+
+      return {
+        kind: "resolved_tool_action",
+        tool: "find_files",
+        input: {
+          query: workflow.query,
+          root: workflow.root,
+          maxResults: Math.max(
+            workflow.candidates.length + extractNextCount(input, 5),
+            10
+          ),
+        },
+      };
+    }
+
     const lastSearch = session.fileContext?.lastSearch;
     if (!lastSearch || lastSearch.results.length === 0) {
       return { kind: "none" };

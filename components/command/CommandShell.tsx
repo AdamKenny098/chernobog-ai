@@ -187,10 +187,19 @@ function mapSubsystems(subsystems: SubsystemItem[]): RailSubsystemItem[] {
 function deriveComposerMode(
   session: SessionSnapshot
 ): "directive" | "analysis" | "sealed" {
-  if (session.pendingState !== "none") return "sealed";
+  if (
+    session.pendingState === "processing" ||
+    session.pendingState === "awaiting_file_selection" ||
+    session.pendingState === "awaiting_confirmation" ||
+    session.pendingState === "awaiting_clarification"
+  ) {
+    return "sealed";
+  }
+
   if (session.activeRoute === "tools" || session.activeRoute === "guardian") {
     return "analysis";
   }
+
   return "directive";
 }
 

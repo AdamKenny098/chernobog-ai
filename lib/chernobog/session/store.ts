@@ -1,5 +1,6 @@
 import db from "@/lib/chernobog/db";
-import { SessionContext } from "./types";
+import type { WorkflowState } from "@/lib/chernobog/pipeline/types";
+import { createDefaultWorkflow, type SessionContext } from "./types";
 
 const sessionCache = new Map<string, SessionContext>();
 
@@ -20,6 +21,7 @@ function createEmptySession(sessionId: string): SessionContext {
     sessionId,
     lastUpdatedAt: nowIso(),
     pendingDisambiguation: null,
+    workflow: createDefaultWorkflow(),
   };
 }
 
@@ -30,7 +32,12 @@ export function resolveSessionId(value?: string | null): string {
 
 export function getSessionContext(sessionId: string): SessionContext {
   const cached = sessionCache.get(sessionId);
-  if (cached) return cached;
+  if (cached) {
+    if (!cached.workflow) {
+      cached.workflow = createDefaultWorkflow();
+    }
+    return cached;
+  }
 
   const row = db
     .prepare(
@@ -50,12 +57,15 @@ export function getSessionContext(sessionId: string): SessionContext {
   }
 
   try {
-    const parsed = JSON.parse(row.state_json) as SessionContext;
+    const parsed = JSON.parse(row.state_json) as Partial<SessionContext>;
+
     const hydrated: SessionContext = {
       ...createEmptySession(sessionId),
       ...parsed,
       sessionId,
+      workflow: parsed.workflow ?? createDefaultWorkflow(),
     };
+
     sessionCache.set(sessionId, hydrated);
     return hydrated;
   } catch {
@@ -67,6 +77,10 @@ export function getSessionContext(sessionId: string): SessionContext {
 
 export function saveSessionContext(session: SessionContext): void {
   session.lastUpdatedAt = nowIso();
+
+  if (!session.workflow) {
+    session.workflow = createDefaultWorkflow();
+  }
 
   const payload = JSON.stringify(session);
 
@@ -98,4 +112,12 @@ export function setPendingDisambiguation(
 export function clearSessionContext(sessionId: string): void {
   sessionCache.delete(sessionId);
   db.prepare(`DELETE FROM session_state WHERE session_id = ?`).run(sessionId);
+}
+
+export function clearWorkflow(session: SessionContext): void {
+  session.workflow = { kind: "none" };
+}
+
+export function setWorkflow(session: SessionContext, workflow: WorkflowState): void {
+  session.workflow = workflow;
 }

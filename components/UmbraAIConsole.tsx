@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import CommandShell from "./command/CommandShell";
+import type { PendingState } from "@/lib/chernobog/session/pending";
 
 export type LogSource = "USER" | "SYSTEM" | "ROUTER" | "CHERNOBOG";
 
@@ -36,7 +37,7 @@ export type SessionSnapshot = {
   currentSearchRoot: string;
   lastSelectedFile: string;
   lastReadFile: string;
-  pendingState: string;
+  pendingState: PendingState;
 };
 
 type ChatApiResponse = {
@@ -49,7 +50,7 @@ type ChatApiResponse = {
   searchRoot?: string;
   selectedFile?: string;
   readFile?: string;
-  pendingState?: string;
+  pendingState?: PendingState;
   details?: string;
   error?: string;
 };
@@ -138,10 +139,19 @@ export default function UmbraAIConsole() {
       {
         key: "relay",
         label: "Signal Relay",
-        status: pending !== "none" ? "ALERT" : "LOCKED",
+        status:
+          pending === "awaiting_file_selection" ||
+          pending === "awaiting_confirmation" ||
+          pending === "awaiting_clarification"
+            ? "ALERT"
+            : "LOCKED",
         detail:
-          pending !== "none"
-            ? `Awaiting ${session.pendingState}`
+          pending === "awaiting_file_selection"
+            ? "Awaiting file selection"
+            : pending === "awaiting_confirmation"
+            ? "Awaiting confirmation"
+            : pending === "awaiting_clarification"
+            ? "Awaiting clarification"
             : "Remote directive channel stable",
       },
       {
@@ -221,7 +231,7 @@ export default function UmbraAIConsole() {
         currentSearchRoot: normalizeText(data.searchRoot, prev.currentSearchRoot),
         lastSelectedFile: normalizeText(data.selectedFile, prev.lastSelectedFile),
         lastReadFile: normalizeText(data.readFile, prev.lastReadFile),
-        pendingState: normalizeText(data.pendingState, "none"),
+        pendingState: data.pendingState ?? "none",
       }));
     } catch (error) {
       const message =

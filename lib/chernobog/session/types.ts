@@ -1,3 +1,5 @@
+import type { WorkflowState } from "@/lib/chernobog/pipeline/types";
+
 export type RouteName = "chat" | "planner" | "memory" | "tools" | "guardian";
 
 export type PendingDisambiguationKind =
@@ -36,6 +38,12 @@ export type FileReadContext = {
   timestamp: string;
 };
 
+export type FileContext = {
+  lastSearch?: FileSearchContext | null;
+  lastSelected?: FileSelectionContext | null;
+  lastRead?: FileReadContext | null;
+};
+
 export type PendingDisambiguationOption = {
   id: string;
   label: string;
@@ -56,35 +64,28 @@ export type SessionContext = {
   lastRoute?: RouteName;
   lastTool?: {
     name: string;
-    input: unknown;
-    success: boolean;
-    summary?: string;
-    timestamp: string;
-  };
+    input?: unknown;
+  } | null;
   lastToolResult?: {
-    kind:
-      | "file_search"
-      | "file_read"
-      | "directory_list"
-      | "app_open"
-      | "url_open"
-      | "time_lookup"
-      | "generic";
-    summary: string;
-  };
-  fileContext?: {
-    lastSearch?: FileSearchContext;
-    lastSelected?: FileSelectionContext;
-    lastRead?: FileReadContext;
-  };
+    summary?: string;
+    ok?: boolean;
+  } | null;
   pendingDisambiguation?: PendingDisambiguation | null;
+  fileContext?: FileContext | null;
+  workflow: WorkflowState;
 };
 
 export type FollowUpResolution =
   | { kind: "none" }
   | {
       kind: "resolved_tool_action";
-      tool: "find_files" | "read_text_file" | "open_app" | "open_url" | "list_files" | "get_time";
+      tool:
+        | "find_files"
+        | "read_text_file"
+        | "open_app"
+        | "open_url"
+        | "list_files"
+        | "get_time";
       input: Record<string, unknown>;
     }
   | {
@@ -92,3 +93,7 @@ export type FollowUpResolution =
       message: string;
       pending: PendingDisambiguation;
     };
+
+export function createDefaultWorkflow(): WorkflowState {
+  return { kind: "none" };
+}
