@@ -2,7 +2,7 @@
 
 import { Activity, Cpu, Database, Shield, Thermometer } from "lucide-react";
 
-type HeaderStat = {
+export type HeaderStat = {
   label: string;
   value: string;
   tone?: "nominal" | "ready" | "stable" | "warning";

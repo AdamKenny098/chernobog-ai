@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import CommandShell from "./command/CommandShell";
 import type { PendingState } from "@/lib/chernobog/session/pending";
+import type { WorkflowKind, FileWorkflowStep } from "@/lib/chernobog/pipeline/types";
 
 export type LogSource = "USER" | "SYSTEM" | "ROUTER" | "CHERNOBOG";
 
@@ -38,6 +39,9 @@ export type SessionSnapshot = {
   lastSelectedFile: string;
   lastReadFile: string;
   pendingState: PendingState;
+  workflowKind: WorkflowKind;
+  workflowStep: FileWorkflowStep | "none";
+  workflowCandidateCount: number;
 };
 
 type ChatApiResponse = {
@@ -51,6 +55,9 @@ type ChatApiResponse = {
   selectedFile?: string;
   readFile?: string;
   pendingState?: PendingState;
+  workflowKind?: WorkflowKind;
+  workflowStep?: FileWorkflowStep | "none";
+  workflowCandidateCount?: number;
   details?: string;
   error?: string;
 };
@@ -74,6 +81,26 @@ function normalizeText(value: unknown, fallback = "none") {
   return trimmed.length > 0 ? trimmed : fallback;
 }
 
+function isWorkflowActive(step: SessionSnapshot["workflowStep"]) {
+  return step === "searching" || step === "reading";
+}
+
+function isWorkflowBlocked(step: SessionSnapshot["workflowStep"]) {
+  return step === "failed";
+}
+
+function isWorkflowSelectionRequired(
+  step: SessionSnapshot["workflowStep"],
+  pending: PendingState
+) {
+  return (
+    step === "awaiting_selection" ||
+    pending === "awaiting_file_selection" ||
+    pending === "awaiting_confirmation" ||
+    pending === "awaiting_clarification"
+  );
+}
+
 export default function UmbraAIConsole() {
   const [sessionId] = useState(() => crypto.randomUUID());
   const [input, setInput] = useState("");
@@ -94,6 +121,9 @@ export default function UmbraAIConsole() {
     lastSelectedFile: "none",
     lastReadFile: "none",
     pendingState: "none",
+    workflowKind: "none",
+    workflowStep: "none",
+    workflowCandidateCount: 0,
   });
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -107,26 +137,39 @@ export default function UmbraAIConsole() {
 
   const subsystems = useMemo<SubsystemItem[]>(() => {
     const route = session.activeRoute.toLowerCase();
-    const pending = session.pendingState.toLowerCase();
     const lastTool = session.lastTool.toLowerCase();
+    const workflowStep = session.workflowStep;
+    const workflowKind = session.workflowKind;
+
+    const selectionRequired = isWorkflowSelectionRequired(
+      workflowStep,
+      session.pendingState
+    );
+    const workflowActive = isWorkflowActive(workflowStep);
+    const workflowBlocked = isWorkflowBlocked(workflowStep);
 
     return [
       {
         key: "override",
         label: "Override Protocol",
-        status: isBusy ? "ACTIVE" : "ONLINE",
+        status: isBusy ? "ACTIVE" : workflowBlocked ? "ALERT" : "ONLINE",
         detail: isBusy
           ? "Transformation logic executing"
-          : "Transformation logic staged",
+          : workflowBlocked
+            ? "Directive chain encountered a blocked state"
+            : "Transformation logic staged",
       },
       {
         key: "optic",
         label: "Optic Core",
-        status: route === "tools" || isBusy ? "ACTIVE" : "ONLINE",
+        status:
+          route === "tools" || isBusy || workflowActive ? "ACTIVE" : "ONLINE",
         detail:
-          route === "tools"
-            ? "Chest-eye lens routed to toolspace"
-            : "Chest-eye lens aligned",
+          workflowActive
+            ? "Chest-eye lens focused on workflow execution"
+            : route === "tools"
+              ? "Chest-eye lens routed to toolspace"
+              : "Chest-eye lens aligned",
       },
       {
         key: "combat",
@@ -139,38 +182,38 @@ export default function UmbraAIConsole() {
       {
         key: "relay",
         label: "Signal Relay",
-        status:
-          pending === "awaiting_file_selection" ||
-          pending === "awaiting_confirmation" ||
-          pending === "awaiting_clarification"
-            ? "ALERT"
+        status: selectionRequired
+          ? "ALERT"
+          : workflowActive
+            ? "ACTIVE"
             : "LOCKED",
-        detail:
-          pending === "awaiting_file_selection"
-            ? "Awaiting file selection"
-            : pending === "awaiting_confirmation"
-            ? "Awaiting confirmation"
-            : pending === "awaiting_clarification"
-            ? "Awaiting clarification"
+        detail: selectionRequired
+          ? "Workflow awaiting operator resolution"
+          : workflowActive
+            ? "Signal bus carrying active workflow traffic"
             : "Remote directive channel stable",
       },
       {
         key: "memory",
         label: "Memory Engine",
-        status: lastTool !== "none" ? "ACTIVE" : "ONLINE",
+        status: route === "memory" || lastTool !== "none" ? "ACTIVE" : "ONLINE",
         detail:
-          lastTool !== "none"
-            ? `Most recent tool path: ${session.lastTool}`
-            : "Long-term recall operational",
+          route === "memory"
+            ? "Recall and persistence path engaged"
+            : lastTool !== "none"
+              ? `Most recent tool path: ${session.lastTool}`
+              : "Long-term recall operational",
       },
       {
         key: "guardian",
         label: "Guardian Node",
-        status: route === "guardian" ? "ALERT" : "STANDBY",
+        status: route === "guardian" || workflowBlocked ? "ALERT" : "STANDBY",
         detail:
           route === "guardian"
             ? "Constraint review layer engaged"
-            : "Ethical & directive constraints active",
+            : workflowBlocked
+              ? "Constraint-aware recovery posture active"
+              : "Ethical & directive constraints active",
       },
     ];
   }, [isBusy, session]);
@@ -232,6 +275,10 @@ export default function UmbraAIConsole() {
         lastSelectedFile: normalizeText(data.selectedFile, prev.lastSelectedFile),
         lastReadFile: normalizeText(data.readFile, prev.lastReadFile),
         pendingState: data.pendingState ?? "none",
+        workflowKind: data.workflowKind ?? prev.workflowKind,
+        workflowStep: data.workflowStep ?? prev.workflowStep,
+        workflowCandidateCount:
+          data.workflowCandidateCount ?? prev.workflowCandidateCount,
       }));
     } catch (error) {
       const message =

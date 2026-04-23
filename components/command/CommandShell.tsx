@@ -1,13 +1,14 @@
 "use client";
 
 import type { RefObject, FormEventHandler } from "react";
-import CommandHeader from "./CommandHeader";
+import CommandHeader, { type HeaderStat } from "./CommandHeader";
 import SubsystemRail, { type RailSubsystemItem } from "./SubsystemRail";
 import CoreEye from "./CoreEye";
 import TelemetryPanel from "./TelemetryPanel";
 import ContextPanel from "./ContextPanel";
 import CommandComposer from "./CommandComposer";
 import DirectiveFeed from "./DirectiveFeed";
+import WorkflowInspector from "./WorkflowInspector";
 import type {
   LogEntry,
   SessionSnapshot,
@@ -15,12 +16,15 @@ import type {
 } from "../UmbraAIConsole";
 
 import {
+  Activity,
   Cpu,
+  Database,
   Eye,
   Lock,
   Radar,
   Shield,
   Swords,
+  Thermometer,
   type LucideIcon,
 } from "lucide-react";
 
@@ -53,18 +57,18 @@ function ShellFrame({
             "shadow-[inset_0_0_0_1px_rgba(255,180,90,0.04),0_0_50px_rgba(0,0,0,0.5)]",
         }
       : variant === "soft"
-      ? {
-          border: "border-[rgba(255,160,70,0.09)]",
-          bg: "bg-[linear-gradient(180deg,rgba(255,170,80,0.024),rgba(255,170,80,0.006))]",
-          shadow:
-            "shadow-[inset_0_0_0_1px_rgba(255,180,90,0.025),0_0_28px_rgba(0,0,0,0.36)]",
-        }
-      : {
-          border: "border-[rgba(255,160,70,0.12)]",
-          bg: "bg-[linear-gradient(180deg,rgba(255,170,80,0.032),rgba(255,170,80,0.01))]",
-          shadow:
-            "shadow-[inset_0_0_0_1px_rgba(255,180,90,0.03),0_0_40px_rgba(0,0,0,0.45)]",
-        };
+        ? {
+            border: "border-[rgba(255,160,70,0.09)]",
+            bg: "bg-[linear-gradient(180deg,rgba(255,170,80,0.024),rgba(255,170,80,0.006))]",
+            shadow:
+              "shadow-[inset_0_0_0_1px_rgba(255,180,90,0.025),0_0_28px_rgba(0,0,0,0.36)]",
+          }
+        : {
+            border: "border-[rgba(255,160,70,0.12)]",
+            bg: "bg-[linear-gradient(180deg,rgba(255,170,80,0.032),rgba(255,170,80,0.01))]",
+            shadow:
+              "shadow-[inset_0_0_0_1px_rgba(255,180,90,0.03),0_0_40px_rgba(0,0,0,0.45)]",
+          };
 
   return (
     <div className={`relative ${className}`}>
@@ -108,7 +112,9 @@ function ProjectionLine({ className = "" }: { className?: string }) {
 
 function VerticalBus({ className = "" }: { className?: string }) {
   return (
-    <div className={`pointer-events-none absolute w-px bg-[linear-gradient(180deg,transparent,rgba(255,155,70,0.12),transparent)] ${className}`} />
+    <div
+      className={`pointer-events-none absolute w-px bg-[linear-gradient(180deg,transparent,rgba(255,155,70,0.12),transparent)] ${className}`}
+    />
   );
 }
 
@@ -118,8 +124,8 @@ function mapLogsToFeed(logs: LogEntry[]) {
       log.source === "USER"
         ? "user"
         : log.source === "CHERNOBOG"
-        ? "assistant"
-        : "system";
+          ? "assistant"
+          : "system";
 
     return {
       id: log.id,
@@ -132,10 +138,10 @@ function mapLogsToFeed(logs: LogEntry[]) {
         log.source === "ROUTER"
           ? "route"
           : log.source === "SYSTEM"
-          ? "system"
-          : log.source === "CHERNOBOG"
-          ? "response"
-          : "issued",
+            ? "system"
+            : log.source === "CHERNOBOG"
+              ? "response"
+              : "issued",
       timestamp: log.timestamp,
       content: log.text,
     } as const;
@@ -170,16 +176,16 @@ function mapSubsystems(subsystems: SubsystemItem[]): RailSubsystemItem[] {
       item.status === "ACTIVE"
         ? "armed"
         : item.status === "ONLINE"
-        ? "online"
-        : item.status === "LOCKED"
-        ? "locked"
-        : item.status === "ALERT"
-        ? "tracking"
-        : item.status === "IDLE"
-        ? "standby"
-        : item.status === "STANDBY"
-        ? "standby"
-        : "ready",
+          ? "online"
+          : item.status === "LOCKED"
+            ? "locked"
+            : item.status === "ALERT"
+              ? "tracking"
+              : item.status === "IDLE"
+                ? "standby"
+                : item.status === "STANDBY"
+                  ? "standby"
+                  : "ready",
     icon: getIcon(item.key),
   }));
 }
@@ -203,6 +209,196 @@ function deriveComposerMode(
   return "directive";
 }
 
+function deriveTelemetryMetrics(session: SessionSnapshot, isBusy: boolean) {
+  const workflowStep = session.workflowStep.toLowerCase();
+  const pending = session.pendingState.toLowerCase();
+
+  const throughputLevel =
+    isBusy || workflowStep === "searching" || workflowStep === "reading"
+      ? 94
+      : workflowStep === "awaiting_selection"
+        ? 78
+        : workflowStep === "failed"
+          ? 46
+          : 84;
+
+  const convergenceLevel =
+    session.activeRoute === "tools"
+      ? 96
+      : session.activeRoute === "guardian"
+        ? 90
+        : session.workflowKind === "file"
+          ? 91
+          : 86;
+
+  const loadLevel =
+    pending !== "none" || workflowStep === "awaiting_selection"
+      ? 64
+      : isBusy
+        ? 58
+        : workflowStep === "failed"
+          ? 67
+          : 34;
+
+  return [
+    {
+      label: "Directive Throughput",
+      value: `${throughputLevel.toFixed(1)}%`,
+      detail:
+        throughputLevel >= 90
+          ? "elevated"
+          : throughputLevel >= 75
+            ? "stable"
+            : "degraded",
+      level: throughputLevel,
+    },
+    {
+      label: "Optic Convergence",
+      value: `${convergenceLevel.toFixed(1)}%`,
+      detail: session.activeRoute === "tools" ? "focused" : "stable",
+      level: convergenceLevel,
+    },
+    {
+      label: "Cognitive Load",
+      value: `${loadLevel.toFixed(1)}%`,
+      detail:
+        loadLevel >= 60 ? "elevated" : loadLevel <= 40 ? "within band" : "stable",
+      level: loadLevel,
+    },
+  ];
+}
+
+function deriveTelemetryStreams(session: SessionSnapshot) {
+  return [
+    {
+      label: "Active Route",
+      value: session.activeRoute.toUpperCase(),
+    },
+    {
+      label: "Workflow Step",
+      value: session.workflowStep.toUpperCase(),
+    },
+    {
+      label: "Search Root",
+      value: session.currentSearchRoot.toUpperCase(),
+    },
+    {
+      label: "Search Query",
+      value: session.currentSearchQuery.toUpperCase(),
+    },
+    {
+      label: "Toolchain",
+      value: session.lastTool.toUpperCase(),
+    },
+    {
+      label: "Pending State",
+      value: session.pendingState.toUpperCase(),
+    },
+  ];
+}
+
+function deriveContextBlocks(session: SessionSnapshot) {
+  return [
+    {
+      label: "Active Route",
+      value: session.activeRoute.toUpperCase(),
+      detail: "live session route",
+    },
+    {
+      label: "Workflow Step",
+      value: session.workflowStep.toUpperCase(),
+      detail:
+        session.workflowKind === "file"
+          ? "workflow execution state"
+          : "no active workflow",
+    },
+    {
+      label: "Last Tool",
+      value: session.lastTool.toUpperCase(),
+      detail:
+        session.lastTool !== "none"
+          ? "most recent executed tool"
+          : "no recent tool path",
+    },
+  ];
+}
+
+function deriveContextRoutes(session: SessionSnapshot) {
+  return [
+    {
+      title: "CURRENT SEARCH QUERY",
+      state: session.currentSearchQuery.toUpperCase(),
+    },
+    {
+      title: "SEARCH ROOT",
+      state: session.currentSearchRoot.toUpperCase(),
+    },
+    {
+      title: "LAST SELECTED FILE",
+      state: session.lastSelectedFile.toUpperCase(),
+    },
+    {
+      title: "LAST READ FILE",
+      state: session.lastReadFile.toUpperCase(),
+    },
+  ];
+}
+
+function deriveHeaderStats(
+  session: SessionSnapshot,
+  isBusy: boolean
+): HeaderStat[] {
+  const workflowStep = session.workflowStep.toLowerCase();
+
+  return [
+    {
+      label: "System Status",
+      value:
+        workflowStep === "failed"
+          ? "BLOCKED"
+          : isBusy
+            ? "ACTIVE"
+            : "NOMINAL",
+      tone:
+        workflowStep === "failed"
+          ? "warning"
+          : isBusy
+            ? "ready"
+            : "nominal",
+      icon: <Activity className="h-3.5 w-3.5" strokeWidth={1.6} />,
+    },
+    {
+      label: "Workflow",
+      value: session.workflowStep.toUpperCase(),
+      tone:
+        workflowStep === "awaiting_selection"
+          ? "warning"
+          : session.workflowKind === "file"
+            ? "stable"
+            : "nominal",
+      icon: <Database className="h-3.5 w-3.5" strokeWidth={1.6} />,
+    },
+    {
+      label: "Toolchain",
+      value: session.lastTool.toUpperCase(),
+      tone: session.lastTool !== "none" ? "ready" : "nominal",
+      icon: <Shield className="h-3.5 w-3.5" strokeWidth={1.6} />,
+    },
+    {
+      label: "Session",
+      value: session.activeRoute.toUpperCase(),
+      tone: session.activeRoute === "tools" ? "stable" : "nominal",
+      icon: <Cpu className="h-3.5 w-3.5" strokeWidth={1.6} />,
+    },
+    {
+      label: "Selection Set",
+      value: String(session.workflowCandidateCount),
+      tone: session.workflowCandidateCount > 0 ? "stable" : "nominal",
+      icon: <Thermometer className="h-3.5 w-3.5" strokeWidth={1.6} />,
+    },
+  ];
+}
+
 export default function CommandShell({
   logs,
   subsystems,
@@ -216,6 +412,11 @@ export default function CommandShell({
   const feedItems = mapLogsToFeed(logs);
   const railItems = mapSubsystems(subsystems);
   const composerMode = deriveComposerMode(session);
+  const telemetryMetrics = deriveTelemetryMetrics(session, isBusy);
+  const telemetryStreams = deriveTelemetryStreams(session);
+  const contextBlocks = deriveContextBlocks(session);
+  const contextRoutes = deriveContextRoutes(session);
+  const headerStats = deriveHeaderStats(session, isBusy);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#050608] text-[#d6d1c7]">
@@ -272,13 +473,14 @@ export default function CommandShell({
                       description={`SESSION ${session.sessionId
                         .slice(0, 8)
                         .toUpperCase()} // ROUTE ${session.activeRoute.toUpperCase()} // TOOL ${session.lastTool.toUpperCase()}`}
+                      stats={headerStats}
                     />
                   </ShellFrame>
                 </div>
 
                 <div className="xl:col-span-3">
                   <ShellFrame variant="standard" className="h-full p-3 md:p-4">
-                    <SubsystemRail items={railItems} />
+                    <SubsystemRail items={railItems} version="INTERFACE VER. 4.2.0" />
                   </ShellFrame>
                 </div>
 
@@ -289,7 +491,7 @@ export default function CommandShell({
                         <CoreEye
                           title="CHERNOBOG SIGIL STATE"
                           subtitle="CORE EMBLEM"
-                          statusLabel={`ACTIVE ROUTE: ${session.activeRoute.toUpperCase()}`}
+                          statusLabel={`WORKFLOW ${session.workflowStep.toUpperCase()} // ROUTE ${session.activeRoute.toUpperCase()}`}
                           body={session.lastToolSummary}
                         />
                       </div>
@@ -310,89 +512,15 @@ export default function CommandShell({
                   <div className="flex h-full flex-col gap-4 xl:gap-5">
                     <ShellFrame variant="standard" className="p-3 md:p-4">
                       <TelemetryPanel
-                        metrics={[
-                          {
-                            label: "Directive Throughput",
-                            value: isBusy ? "92.0%" : "84.2%",
-                            detail: isBusy ? "elevated" : "nominal",
-                            level: isBusy ? 92 : 84,
-                          },
-                          {
-                            label: "Optic Convergence",
-                            value:
-                              session.activeRoute === "tools" ? "96.4%" : "88.1%",
-                            detail: "stable",
-                            level: session.activeRoute === "tools" ? 96 : 88,
-                          },
-                          {
-                            label: "Cognitive Load",
-                            value:
-                              session.pendingState !== "none" ? "61.3%" : "34.8%",
-                            detail:
-                              session.pendingState !== "none"
-                                ? "elevated"
-                                : "within band",
-                            level: session.pendingState !== "none" ? 61 : 35,
-                          },
-                        ]}
-                        streams={[
-                          {
-                            label: "Signal Relay",
-                            value: session.currentSearchRoot || "NONE",
-                          },
-                          {
-                            label: "Memory State",
-                            value: session.lastToolSummary.toUpperCase(),
-                          },
-                          {
-                            label: "Toolchain",
-                            value: session.lastTool.toUpperCase(),
-                          },
-                          {
-                            label: "Session Layer",
-                            value: session.pendingState.toUpperCase(),
-                          },
-                        ]}
+                        metrics={telemetryMetrics}
+                        streams={telemetryStreams}
                       />
                     </ShellFrame>
 
                     <ShellFrame variant="standard" className="p-3 md:p-4">
                       <ContextPanel
-                        blocks={[
-                          {
-                            label: "Conversation Layer",
-                            value: session.activeRoute.toUpperCase(),
-                            detail: "active session route",
-                          },
-                          {
-                            label: "Memory Authority",
-                            value: session.lastTool.toUpperCase(),
-                            detail: "most recent tool path",
-                          },
-                          {
-                            label: "Directive State",
-                            value: session.pendingState.toUpperCase(),
-                            detail: "current pending state",
-                          },
-                        ]}
-                        routes={[
-                          {
-                            title: "CURRENT SEARCH QUERY",
-                            state: session.currentSearchQuery.toUpperCase(),
-                          },
-                          {
-                            title: "SEARCH ROOT",
-                            state: session.currentSearchRoot.toUpperCase(),
-                          },
-                          {
-                            title: "LAST SELECTED FILE",
-                            state: session.lastSelectedFile.toUpperCase(),
-                          },
-                          {
-                            title: "LAST READ FILE",
-                            state: session.lastReadFile.toUpperCase(),
-                          },
-                        ]}
+                        blocks={contextBlocks}
+                        routes={contextRoutes}
                         summary={session.lastToolSummary}
                       />
                     </ShellFrame>
@@ -424,27 +552,21 @@ export default function CommandShell({
                 </div>
 
                 <div className="hidden xl:col-span-3 xl:block">
-                  <ShellFrame variant="soft" className="h-full min-h-[160px] p-3 md:p-4">
-                    <div className="pointer-events-none relative h-full overflow-hidden">
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,145,55,0.03)_0%,transparent_68%)]" />
-                      <div className="absolute left-0 top-0 h-px w-full bg-[linear-gradient(90deg,transparent,rgba(255,176,104,0.12),transparent)]" />
-                      <div className="absolute bottom-0 left-0 h-px w-[32%] bg-[linear-gradient(90deg,rgba(255,166,82,0.2),transparent)]" />
-                      <div className="absolute left-[10px] top-[10px] h-[14px] w-[14px] border-l border-t border-[rgba(255,176,104,0.06)]" />
-                      <div className="absolute right-[10px] bottom-[10px] h-[14px] w-[14px] border-b border-r border-[rgba(255,176,104,0.06)]" />
-
-                      <div className="absolute left-4 top-4 text-[9px] uppercase tracking-[0.24em] text-[rgba(183,133,86,0.68)]">
-                        AUXILIARY RESERVE
-                      </div>
-
-                      <div className="absolute left-4 top-12 flex flex-col gap-3">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <div key={i} className="flex items-center gap-2">
-                            <span className="h-[2px] w-[2px] rounded-full bg-[rgba(255,170,90,0.28)]" />
-                            <span className="h-px w-8 bg-[linear-gradient(90deg,rgba(255,170,90,0.12),transparent)]" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                  <ShellFrame variant="soft" className="h-full min-h-[220px] p-3 md:p-4">
+                    <WorkflowInspector
+                      route={session.activeRoute}
+                      workflowKind={session.workflowKind}
+                      workflowStep={session.workflowStep}
+                      workflowCandidateCount={session.workflowCandidateCount}
+                      searchQuery={session.currentSearchQuery}
+                      searchRoot={session.currentSearchRoot}
+                      selectedFile={session.lastSelectedFile}
+                      readFile={session.lastReadFile}
+                      lastTool={session.lastTool}
+                      toolSummary={session.lastToolSummary}
+                      pendingState={session.pendingState}
+                      isBusy={isBusy}
+                    />
                   </ShellFrame>
                 </div>
               </div>
