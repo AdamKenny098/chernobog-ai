@@ -12,7 +12,13 @@ export type LogEntry = {
   timestamp: string;
 };
 
-export type CommandStatus = "ONLINE" | "ACTIVE" | "IDLE" | "LOCKED" | "ALERT" | "STANDBY";
+export type CommandStatus =
+  | "ONLINE"
+  | "ACTIVE"
+  | "IDLE"
+  | "LOCKED"
+  | "ALERT"
+  | "STANDBY";
 
 export type SubsystemItem = {
   key: string;
@@ -33,6 +39,21 @@ export type SessionSnapshot = {
   pendingState: string;
 };
 
+type ChatApiResponse = {
+  route?: string;
+  reply?: string;
+  sessionId?: string;
+  tool?: string;
+  toolSummary?: string;
+  searchQuery?: string;
+  searchRoot?: string;
+  selectedFile?: string;
+  readFile?: string;
+  pendingState?: string;
+  details?: string;
+  error?: string;
+};
+
 function nowTime() {
   return new Date().toLocaleTimeString();
 }
@@ -44,6 +65,12 @@ function makeLog(source: LogSource, text: string): LogEntry {
     text,
     timestamp: nowTime(),
   };
+}
+
+function normalizeText(value: unknown, fallback = "none") {
+  if (typeof value !== "string") return fallback;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : fallback;
 }
 
 export default function UmbraAIConsole() {
@@ -79,46 +106,64 @@ export default function UmbraAIConsole() {
 
   const subsystems = useMemo<SubsystemItem[]>(() => {
     const route = session.activeRoute.toLowerCase();
+    const pending = session.pendingState.toLowerCase();
+    const lastTool = session.lastTool.toLowerCase();
 
     return [
       {
         key: "override",
         label: "Override Protocol",
-        status: "ACTIVE",
-        detail: "Transformation logic staged",
+        status: isBusy ? "ACTIVE" : "ONLINE",
+        detail: isBusy
+          ? "Transformation logic executing"
+          : "Transformation logic staged",
       },
       {
         key: "optic",
         label: "Optic Core",
-        status: route === "tools" ? "ACTIVE" : "ONLINE",
-        detail: "Chest-eye lens aligned",
+        status: route === "tools" || isBusy ? "ACTIVE" : "ONLINE",
+        detail:
+          route === "tools"
+            ? "Chest-eye lens routed to toolspace"
+            : "Chest-eye lens aligned",
       },
       {
         key: "combat",
         label: "Combat Frame",
-        status: "ONLINE",
-        detail: "Synthetic body telemetry nominal",
+        status: isBusy ? "ACTIVE" : "ONLINE",
+        detail: isBusy
+          ? "Synthetic body telemetry elevated"
+          : "Synthetic body telemetry nominal",
       },
       {
         key: "relay",
         label: "Signal Relay",
-        status: "LOCKED",
-        detail: "Remote directive channel stable",
+        status: pending !== "none" ? "ALERT" : "LOCKED",
+        detail:
+          pending !== "none"
+            ? `Awaiting ${session.pendingState}`
+            : "Remote directive channel stable",
       },
       {
         key: "memory",
         label: "Memory Engine",
-        status: "ONLINE",
-        detail: "Long-term recall operational",
+        status: lastTool !== "none" ? "ACTIVE" : "ONLINE",
+        detail:
+          lastTool !== "none"
+            ? `Most recent tool path: ${session.lastTool}`
+            : "Long-term recall operational",
       },
       {
         key: "guardian",
         label: "Guardian Node",
         status: route === "guardian" ? "ALERT" : "STANDBY",
-        detail: "Ethical & directive constraints active",
+        detail:
+          route === "guardian"
+            ? "Constraint review layer engaged"
+            : "Ethical & directive constraints active",
       },
     ];
-  }, [session]);
+  }, [isBusy, session]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -135,6 +180,11 @@ export default function UmbraAIConsole() {
       makeLog("SYSTEM", "Routing directive to core..."),
     ]);
 
+    setSession((prev) => ({
+      ...prev,
+      pendingState: "processing",
+    }));
+
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -147,14 +197,14 @@ export default function UmbraAIConsole() {
         }),
       });
 
-      const data = await response.json();
+      const data: ChatApiResponse = await response.json();
 
       if (!response.ok) {
         throw new Error(data?.details || data?.error || "Request failed.");
       }
 
-      const route = String(data?.route ?? "unknown").toUpperCase();
-      const reply = String(data?.reply ?? "No response returned.");
+      const route = normalizeText(data.route, "unknown").toUpperCase();
+      const reply = normalizeText(data.reply, "No response returned.");
 
       setLogs((prev) => [
         ...prev,
@@ -162,53 +212,28 @@ export default function UmbraAIConsole() {
         makeLog("CHERNOBOG", reply),
       ]);
 
-      setSession((prev) => {
-        const next = {
-          ...prev,
-          activeRoute: String(data?.route ?? prev.activeRoute),
-        };
-
-        const lowerMessage = value.toLowerCase();
-
-        if (next.activeRoute === "tools") {
-          if (lowerMessage.includes("find file") || lowerMessage.includes("search files")) {
-            next.lastTool = "find_files";
-            next.lastToolSummary = "File discovery completed.";
-            next.currentSearchQuery = value;
-          } else if (lowerMessage.includes("read")) {
-            next.lastTool = "read_text_file";
-            next.lastToolSummary = "File read completed.";
-          }
-        }
-
-        const lines = reply.split("\n");
-        const firstLine = lines[0] ?? "";
-
-        if (firstLine.includes("matching")) {
-          next.currentSearchRoot = firstLine;
-        }
-
-        if (reply.startsWith("Here is ")) {
-          const pathLine = reply.split(":")[0].replace("Here is ", "").trim();
-          next.lastReadFile = pathLine;
-          next.lastSelectedFile = pathLine;
-          next.pendingState = "none";
-        }
-
-        if (reply.toLowerCase().includes("which file do you want")) {
-          next.pendingState = "file selection required";
-        }
-
-        return next;
-      });
-    } catch (error) {
-      setLogs((prev) => [
+      setSession((prev) => ({
         ...prev,
-        makeLog(
-          "SYSTEM",
-          error instanceof Error ? error.message : "Request failed."
-        ),
-      ]);
+        activeRoute: normalizeText(data.route, prev.activeRoute),
+        lastTool: normalizeText(data.tool, prev.lastTool),
+        lastToolSummary: normalizeText(data.toolSummary, prev.lastToolSummary),
+        currentSearchQuery: normalizeText(data.searchQuery, prev.currentSearchQuery),
+        currentSearchRoot: normalizeText(data.searchRoot, prev.currentSearchRoot),
+        lastSelectedFile: normalizeText(data.selectedFile, prev.lastSelectedFile),
+        lastReadFile: normalizeText(data.readFile, prev.lastReadFile),
+        pendingState: normalizeText(data.pendingState, "none"),
+      }));
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Request failed.";
+
+      setLogs((prev) => [...prev, makeLog("SYSTEM", message)]);
+
+      setSession((prev) => ({
+        ...prev,
+        pendingState: "none",
+        lastToolSummary: message,
+      }));
     } finally {
       setIsBusy(false);
     }

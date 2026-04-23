@@ -57,6 +57,43 @@ type ReadTextFileResultData = {
 
 type ToolExecutionResult = Awaited<ReturnType<typeof executeTool>>;
 
+type ChatResponsePayload = {
+  route: RouteName;
+  reply: string;
+  sessionId: string;
+  tool: string;
+  toolSummary: string;
+  searchQuery: string;
+  searchRoot: string;
+  selectedFile: string;
+  readFile: string;
+  pendingState: string;
+};
+
+function makeUiPayload(
+  sessionId: string,
+  route: RouteName,
+  reply: string
+): ChatResponsePayload {
+  const session = getSessionContext(sessionId);
+
+  return {
+    route,
+    reply: reply || "No response returned.",
+    sessionId,
+    tool: session.lastTool?.name ?? "none",
+    toolSummary: session.lastToolResult?.summary ?? "No tool activity yet.",
+    searchQuery: session.fileContext?.lastSearch?.query ?? "none",
+    searchRoot:
+      session.fileContext?.lastSearch?.normalizedRoot ??
+      session.fileContext?.lastSearch?.root ??
+      "none",
+    selectedFile: session.fileContext?.lastSelected?.path ?? "none",
+    readFile: session.fileContext?.lastRead?.path ?? "none",
+    pendingState: session.pendingDisambiguation ? "file selection required" : "none",
+  };
+}
+
 function formatToolReply(result: ToolExecutionResult, sessionId?: string): string {
   if (!result.ok) {
     return `Tool failed: ${result.error}`;
@@ -156,8 +193,7 @@ function extractSearchQueryFromReadPath(value: string): string {
 async function executeAndTrackTool(
   toolName: string,
   input: unknown,
-  sessionId: string,
-  userMessage?: string
+  sessionId: string
 ): Promise<ToolExecutionResult> {
   const session = getSessionContext(sessionId);
 
@@ -191,8 +227,8 @@ async function executeAndTrackTool(
   saveSessionContext(session);
   return result;
 }
+
 async function tryReadViaFileSearchFallback(
-  userMessage: string,
   requestedPath: string,
   sessionId: string
 ): Promise<string | null> {
@@ -204,8 +240,7 @@ async function tryReadViaFileSearchFallback(
   const searchResult = await executeAndTrackTool(
     "find_files",
     { query, maxResults: 8 },
-    sessionId,
-    userMessage
+    sessionId
   );
 
   if (!searchResult.ok) {
@@ -223,8 +258,7 @@ async function tryReadViaFileSearchFallback(
     const readResult = await executeAndTrackTool(
       "read_text_file",
       { path: chosen.path },
-      sessionId,
-      userMessage
+      sessionId
     );
 
     if (!readResult.ok) {
@@ -251,7 +285,9 @@ function buildSessionSummary(sessionId: string): string {
 
   if (session.lastRoute) lines.push(`- Last route: ${session.lastRoute}`);
   if (session.lastTool) lines.push(`- Last tool: ${session.lastTool.name}`);
-  if (session.lastToolResult?.summary) lines.push(`- Last tool result: ${session.lastToolResult.summary}`);
+  if (session.lastToolResult?.summary) {
+    lines.push(`- Last tool result: ${session.lastToolResult.summary}`);
+  }
   if (session.fileContext?.lastSearch) {
     lines.push(
       `- Last file search: query="${session.fileContext.lastSearch.query}" root="${session.fileContext.lastSearch.normalizedRoot ?? session.fileContext.lastSearch.root ?? "default"}" results=${session.fileContext.lastSearch.results.length}`
@@ -342,31 +378,64 @@ export async function POST(req: Request) {
         const toolResult = await executeAndTrackTool(
           followUp.tool,
           followUp.input,
-          sessionId,
-          userMessage
+          sessionId
         );
 
         reply = formatToolReply(toolResult, sessionId);
+      } else if (looksLikeOrdinalFileFollowUp(userMessage)) {
+        route = "tools";
+        saveMessage("user", userMessage, route);
+        reply = "I do not have a valid active file result set for that selection yet.";
       } else {
-        if (looksLikeOrdinalFileFollowUp(userMessage)) {
+        const parsedToolCommand = parseToolCommand(userMessage);
+
+        if (parsedToolCommand) {
           route = "tools";
           saveMessage("user", userMessage, route);
-          reply = "I do not have a valid active file result set for that selection yet.";
-        } else {
-          const parsedToolCommand = parseToolCommand(userMessage);
 
-          if (parsedToolCommand) {
+          const normalizedToolCall = normalizeToolCall(parsedToolCommand);
+
+          if (
+            normalizedToolCall.tool === "read_text_file" &&
+            !looksLikeExplicitFilePath(normalizedToolCall.input.path)
+          ) {
+            const fallbackReply = await tryReadViaFileSearchFallback(
+              normalizedToolCall.input.path,
+              sessionId
+            );
+
+            if (fallbackReply) {
+              reply = fallbackReply;
+            } else {
+              const toolResult = await executeAndTrackTool(
+                normalizedToolCall.tool,
+                normalizedToolCall.input,
+                sessionId
+              );
+              reply = formatToolReply(toolResult, sessionId);
+            }
+          } else {
+            const toolResult = await executeAndTrackTool(
+              normalizedToolCall.tool,
+              normalizedToolCall.input,
+              sessionId
+            );
+            reply = formatToolReply(toolResult, sessionId);
+          }
+        } else {
+          const toolIntent = await classifyToolIntent(userMessage);
+
+          if (toolIntent.tool !== "none") {
             route = "tools";
             saveMessage("user", userMessage, route);
 
-            const normalizedToolCall = normalizeToolCall(parsedToolCommand);
+            const normalizedToolCall = normalizeToolCall(toolIntent);
 
             if (
               normalizedToolCall.tool === "read_text_file" &&
               !looksLikeExplicitFilePath(normalizedToolCall.input.path)
             ) {
               const fallbackReply = await tryReadViaFileSearchFallback(
-                userMessage,
                 normalizedToolCall.input.path,
                 sessionId
               );
@@ -377,80 +446,34 @@ export async function POST(req: Request) {
                 const toolResult = await executeAndTrackTool(
                   normalizedToolCall.tool,
                   normalizedToolCall.input,
-                  sessionId,
-                  userMessage
+                  sessionId
                 );
-
                 reply = formatToolReply(toolResult, sessionId);
               }
             } else {
               const toolResult = await executeAndTrackTool(
                 normalizedToolCall.tool,
                 normalizedToolCall.input,
-                sessionId,
-                userMessage
+                sessionId
               );
-
               reply = formatToolReply(toolResult, sessionId);
             }
           } else {
-            const toolIntent = await classifyToolIntent(userMessage);
+            route = await routeMessage(userMessage);
+            saveMessage("user", userMessage, route);
 
-            if (toolIntent.tool !== "none") {
-              route = "tools";
-              saveMessage("user", userMessage, route);
+            const storedMemories = getMemories(12);
+            const recentMessages = getRecentMessages(8);
 
-              const normalizedToolCall = normalizeToolCall(toolIntent);
+            reply = await respondForRoute(route, userMessage, {
+              memories: storedMemories,
+              recentMessages,
+              sessionSummary: buildSessionSummary(sessionId),
+            });
 
-              if (
-                normalizedToolCall.tool === "read_text_file" &&
-                !looksLikeExplicitFilePath(normalizedToolCall.input.path)
-              ) {
-                const fallbackReply = await tryReadViaFileSearchFallback(
-                  userMessage,
-                  normalizedToolCall.input.path,
-                  sessionId
-                );
-
-                if (fallbackReply) {
-                  reply = fallbackReply;
-                } else {
-                  const toolResult = await executeAndTrackTool(
-                    normalizedToolCall.tool,
-                    normalizedToolCall.input,
-                    sessionId,
-                    userMessage
-                  );
-
-                  reply = formatToolReply(toolResult, sessionId);
-                }
-              } else {
-                const toolResult = await executeAndTrackTool(
-                  normalizedToolCall.tool,
-                  normalizedToolCall.input,
-                  sessionId,
-                  userMessage
-                );
-
-                reply = formatToolReply(toolResult, sessionId);
-              }
-            } else {
-              route = await routeMessage(userMessage);
-              saveMessage("user", userMessage, route);
-
-              const storedMemories = getMemories(12);
-              const recentMessages = getRecentMessages(8);
-
-              reply = await respondForRoute(route, userMessage, {
-                memories: storedMemories,
-                recentMessages,
-                sessionSummary: buildSessionSummary(sessionId),
-              });
-
-              const activeSession = getSessionContext(sessionId);
-              updateSessionAfterRoute(activeSession, route);
-              saveSessionContext(activeSession);
-            }
+            const activeSession = getSessionContext(sessionId);
+            updateSessionAfterRoute(activeSession, route);
+            saveSessionContext(activeSession);
           }
         }
       }
@@ -458,11 +481,8 @@ export async function POST(req: Request) {
 
     saveMessage("assistant", reply, route);
 
-    return NextResponse.json({
-      route,
-      reply: reply || "No response returned.",
-      sessionId,
-    });
+    const payload = makeUiPayload(sessionId, route, reply);
+    return NextResponse.json(payload);
   } catch (error) {
     console.error("Chat route error:", error);
 
