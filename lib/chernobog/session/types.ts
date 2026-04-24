@@ -1,4 +1,6 @@
 import type { WorkflowState } from "@/lib/chernobog/pipeline/types";
+import type { ActivePlan } from "@/lib/chernobog/planner/types";
+
 
 export type RouteName = "chat" | "planner" | "memory" | "tools" | "guardian";
 
@@ -73,6 +75,7 @@ export type SessionContext = {
   pendingDisambiguation?: PendingDisambiguation | null;
   fileContext?: FileContext | null;
   workflow: WorkflowState;
+  activePlan?: ActivePlan | null;
 };
 
 export type FollowUpResolution =

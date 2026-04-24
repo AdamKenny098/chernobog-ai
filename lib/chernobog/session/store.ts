@@ -56,6 +56,7 @@ function createEmptySession(sessionId: string): SessionContext {
     lastUpdatedAt: nowIso(),
     pendingDisambiguation: null,
     workflow: createDefaultWorkflow(),
+    activePlan: null,
   };
 }
 

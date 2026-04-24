@@ -61,5 +61,17 @@ export async function GET(req: Request) {
     workflowCandidateCount:
       workflow.kind === "file" ? workflow.candidates.length : 0,
     lastUpdatedAt: session.lastUpdatedAt,
+
+    activePlan: session.activePlan
+    ? {
+        id: session.activePlan.id,
+        title: session.activePlan.title,
+        status: session.activePlan.status,
+        stepCount: session.activePlan.steps.length,
+        activeStep:
+            session.activePlan.steps.find((step) => step.status === "active")
+            ?.title ?? null,
+        }
+    : null,
   });
 }

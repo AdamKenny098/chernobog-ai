@@ -78,6 +78,14 @@ export type FileWorkflowIntent =
     workflowKind: string;
     workflowStep: string;
     workflowCandidateCount: number;
+
+    activePlan?: {
+      id: string;
+      title: string;
+      status: string;
+      stepCount: number;
+      activeStep: string | null;
+    } | null;
   
     debugTrace?: {
       id: string;

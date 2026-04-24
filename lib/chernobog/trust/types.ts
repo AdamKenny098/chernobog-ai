@@ -14,6 +14,14 @@ export type TrustTraceStepType =
   | "failure"
   | "response";
 
+export type TrustFailureCategory =
+  | "none"
+  | "tool_failure"
+  | "route_failure"
+  | "validation_failure"
+  | "workflow_failure"
+  | "unknown_failure";
+
 export type TrustTraceStep = {
   type: TrustTraceStepType;
   label: string;
@@ -33,4 +41,5 @@ export type TrustTrace = {
   success: boolean;
   steps: TrustTraceStep[];
   error?: string;
+  failureCategory?: TrustFailureCategory;
 };

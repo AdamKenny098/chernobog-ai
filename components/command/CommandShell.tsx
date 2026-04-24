@@ -9,6 +9,7 @@ import ContextPanel from "./ContextPanel";
 import CommandComposer from "./CommandComposer";
 import DirectiveFeed from "./DirectiveFeed";
 import WorkflowInspector from "./WorkflowInspector";
+import PlannerInspector from "./PlannerInspector";
 import type {
   LogEntry,
   SessionSnapshot,
@@ -324,6 +325,13 @@ function deriveContextBlocks(session: SessionSnapshot) {
           ? "most recent executed tool"
           : "no recent tool path",
     },
+    {
+      label: "Active Plan",
+      value: session.activePlan ? session.activePlan.title.toUpperCase() : "NONE",
+      detail: session.activePlan
+        ? `${session.activePlan.stepCount} steps tracked`
+        : "no persistent plan active",
+    },
   ];
 }
 
@@ -576,6 +584,10 @@ export default function CommandShell({
                         pendingState={session.pendingState}
                         isBusy={isBusy}
                       />
+                    </ShellFrame>
+
+                    <ShellFrame variant="soft" className="p-3 md:p-4">
+                      <PlannerInspector activePlan={session.activePlan} />
                     </ShellFrame>
 
                     <ShellFrame variant="soft" className="p-3 md:p-4">

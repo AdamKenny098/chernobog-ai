@@ -49,6 +49,7 @@ export type SessionSnapshot = {
   workflowKind: WorkflowKind;
   workflowStep: FileWorkflowStep | "none";
   workflowCandidateCount: number;
+  activePlan: ActivePlanSnapshot | null;
 };
 
 export type DebugTraceStep = {
@@ -82,9 +83,18 @@ type ChatApiResponse = {
   workflowKind?: WorkflowKind;
   workflowStep?: FileWorkflowStep | "none";
   workflowCandidateCount?: number;
+  activePlan?: ActivePlanSnapshot | null;
   debugTrace?: DebugTrace;
   details?: string;
   error?: string;
+};
+
+type ActivePlanSnapshot = {
+  id: string;
+  title: string;
+  status: string;
+  stepCount: number;
+  activeStep: string | null;
 };
 
 
@@ -180,6 +190,7 @@ export default function UmbraAIConsole() {
     workflowKind: "none",
     workflowStep: "none",
     workflowCandidateCount: 0,
+    activePlan: null,
   });
   
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -230,6 +241,8 @@ export default function UmbraAIConsole() {
           workflowStep: data.workflowStep ?? prev.workflowStep,
           workflowCandidateCount:
             data.workflowCandidateCount ?? prev.workflowCandidateCount,
+          activePlan:
+            "activePlan" in data ? data.activePlan ?? null : prev.activePlan,
         }));
   
         setLogs((prev) => [
@@ -419,6 +432,8 @@ export default function UmbraAIConsole() {
         workflowStep: data.workflowStep ?? prev.workflowStep,
         workflowCandidateCount:
           data.workflowCandidateCount ?? prev.workflowCandidateCount,
+        activePlan:
+          "activePlan" in data ? data.activePlan ?? null : prev.activePlan,
       }));
     } catch (error) {
       const message = error instanceof Error ? error.message : "Request failed.";

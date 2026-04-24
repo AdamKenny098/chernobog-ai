@@ -56,6 +56,9 @@ import {
   detectContinuityQuery,
 } from "@/lib/chernobog/session/continuity";
 
+import { parsePlannerCommand } from "@/lib/chernobog/planner/parser";
+import { runPlannerCommand } from "@/lib/chernobog/planner/coordinator";
+
 type FindFilesResultData = {
   root: string;
   query: string;
@@ -84,14 +87,30 @@ function buildUiPayload(
   const session = getSessionContext(sessionId);
   const workflow = session.workflow;
 
+  const activePlan = session.activePlan
+    ? {
+        id: session.activePlan.id,
+        title: session.activePlan.title,
+        status: session.activePlan.status,
+        stepCount: session.activePlan.steps.length,
+        activeStep:
+          session.activePlan.steps.find((step) => step.status === "active")
+            ?.title ?? null,
+      }
+    : null;
+
   const selectedCandidate =
     workflow.kind === "file"
-      ? workflow.candidates.find((candidate) => candidate.id === workflow.selectedCandidateId)
+      ? workflow.candidates.find(
+          (candidate) => candidate.id === workflow.selectedCandidateId
+        )
       : null;
 
   const readCandidate =
     workflow.kind === "file"
-      ? workflow.candidates.find((candidate) => candidate.id === workflow.readCandidateId)
+      ? workflow.candidates.find(
+          (candidate) => candidate.id === workflow.readCandidateId
+        )
       : null;
 
   const debugTrace = trace
@@ -100,6 +119,7 @@ function buildUiPayload(
         route: trace.route,
         tool: trace.tool,
         success: trace.success,
+        failureCategory: trace.failureCategory,
         summary: summarizeTrace(trace),
         steps: trace.steps.map((step) => ({
           type: step.type,
@@ -136,13 +156,15 @@ function buildUiPayload(
       "none",
     pendingState:
       workflow.kind === "file" && workflow.awaitingDisambiguation
-        ? "file selection required"
+        ? "awaiting_file_selection"
         : session.pendingDisambiguation
-          ? "file selection required"
+          ? "awaiting_file_selection"
           : "none",
     workflowKind: workflow.kind,
     workflowStep: workflow.kind === "file" ? workflow.step : "none",
-    workflowCandidateCount: workflow.kind === "file" ? workflow.candidates.length : 0,
+    workflowCandidateCount:
+      workflow.kind === "file" ? workflow.candidates.length : 0,
+    activePlan,
     debugTrace,
   };
 }
@@ -574,6 +596,30 @@ export async function runCommandPipeline(
 
       return finalizePipelinePayload(sessionId, route, reply, trace);
     }
+
+    const plannerCommand = parsePlannerCommand(userMessage);
+    const plannerReply = runPlannerCommand(plannerCommand, session);
+
+    if (plannerReply) {
+      route = "planner";
+      setTraceRoute(trace, route);
+
+      addTraceStep(
+        trace,
+        "router",
+        "Persistent planner command handled",
+        plannerCommand.kind,
+        plannerCommand
+      );
+
+      saveMessage("user", userMessage, route);
+      saveSessionContext(session);
+
+      reply = plannerReply;
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
     const followUp = tryResolveFollowUp(userMessage, session);
 
     if (followUp.kind === "needs_disambiguation") {

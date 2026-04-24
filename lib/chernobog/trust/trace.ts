@@ -1,6 +1,12 @@
 import crypto from "node:crypto";
 import type { RouteName } from "@/lib/chernobog/session/types";
-import type { TrustTrace, TrustTraceStep, TrustTraceStepType } from "./types";
+import type {
+  TrustFailureCategory,
+  TrustTrace,
+  TrustTraceStep,
+  TrustTraceStepType,
+} from "./types";
+
 
 function now() {
   return new Date().toISOString();
@@ -15,6 +21,7 @@ export function createTrustTrace(input: string, sessionId: string): TrustTrace {
     route: "unknown",
     tool: "none",
     success: false,
+    failureCategory: "none",
     steps: [
       {
         type: "input",
@@ -114,4 +121,18 @@ export function printTraceInDev(trace: TrustTrace): void {
   }
 
   console.log("[/Chernobog Trust Trace]\n");
+}
+
+export function setTraceFailure(
+  trace: TrustTrace,
+  category: TrustFailureCategory,
+  error: unknown
+): void {
+  const message = error instanceof Error ? error.message : String(error);
+
+  trace.success = false;
+  trace.error = message;
+  trace.failureCategory = category;
+
+  addTraceStep(trace, "failure", "Failure recorded", message);
 }
