@@ -1,59 +1,45 @@
 import { NextResponse } from "next/server";
-import db, { getRecentToolCalls } from "@/lib/chernobog/db";
 import { getMemories } from "@/lib/chernobog/memory";
+import { db } from "@/lib/chernobog/db"
 
 export const runtime = "nodejs";
 
-type MessageRow = {
-  id: number;
-  role: string;
-  content: string;
-  route: string | null;
-  created_at: string;
-};
-
-const getRecentMessageRowsStmt = db.prepare(`
-SELECT id, role, content, route, created_at
-FROM messages
-ORDER BY id DESC
-LIMIT ?
-`);
-
-function getRecentMessageRows(limit = 20): MessageRow[] {
-  return getRecentMessageRowsStmt.all(limit) as MessageRow[];
-}
-
-function safeParseJson(value: string | null) {
-  if (!value) return null;
-
-  try {
-    return JSON.parse(value);
-  } catch {
-    return value;
-  }
-}
-
 export async function GET() {
   try {
-    const messages = getRecentMessageRows(20);
-    const memories = getMemories(20);
-    const toolCalls = getRecentToolCalls(20);
+    const messages = db
+      .prepare(
+        `
+        SELECT id, role, content, route, created_at
+        FROM messages
+        ORDER BY id DESC
+        LIMIT 25
+        `
+      )
+      .all();
+
+    const toolCalls = db
+      .prepare(
+        `
+        SELECT id, tool_name, input, output, success, created_at
+        FROM tool_calls
+        ORDER BY id DESC
+        LIMIT 25
+        `
+      )
+      .all()
+      .map((row: any) => ({
+        ...row,
+        success: Boolean(row.success),
+        input: safeJsonParse(row.input),
+        output: safeJsonParse(row.output),
+      }));
 
     return NextResponse.json({
       messages,
-      memories,
-      toolCalls: toolCalls.map((row) => ({
-        id: row.id,
-        tool_name: row.tool_name,
-        success: Boolean(row.success),
-        created_at: row.created_at,
-        input: safeParseJson(row.input_json),
-        output: safeParseJson(row.output_json),
-      })),
+      memories: getMemories(50),
+      toolCalls,
     });
   } catch (error) {
-    console.error("Debug state route error:", error);
-
     return NextResponse.json(
       {
         error: "Failed to load debug state.",
@@ -61,5 +47,17 @@ export async function GET() {
       },
       { status: 500 }
     );
+  }
+}
+
+function safeJsonParse(value: unknown) {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
   }
 }

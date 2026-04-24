@@ -64,21 +64,35 @@ export type FileWorkflowIntent =
   | { kind: "open_selected" }
   | { kind: "needs_disambiguation"; message: string };
 
-export type ChatUiPayload = {
-  route: RouteName;
-  reply: string;
-  sessionId: string;
-  tool: string;
-  toolSummary: string;
-  searchQuery: string;
-  searchRoot: string;
-  selectedFile: string;
-  readFile: string;
-  pendingState: string;
-  workflowKind?: WorkflowKind;
-  workflowStep?: FileWorkflowStep | "none";
-  workflowCandidateCount?: number;
-};
+  export type ChatUiPayload = {
+    route: RouteName;
+    reply: string;
+    sessionId: string;
+    tool: string;
+    toolSummary: string;
+    searchQuery: string;
+    searchRoot: string;
+    selectedFile: string;
+    readFile: string;
+    pendingState: string;
+    workflowKind: string;
+    workflowStep: string;
+    workflowCandidateCount: number;
+  
+    debugTrace?: {
+      id: string;
+      route: string;
+      tool: string;
+      success: boolean;
+      summary: string;
+      steps: {
+        type: string;
+        label: string;
+        detail?: string;
+        timestamp: string;
+      }[];
+    };
+  };
 
 export type CommandPipelineResult = {
   payload: ChatUiPayload;

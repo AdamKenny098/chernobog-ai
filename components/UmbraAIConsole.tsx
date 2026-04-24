@@ -2,8 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import CommandShell from "./command/CommandShell";
+import { TrustDebugPanel } from "./chernobog/TrustDebugPanel";
+import { TrustTraceHistory } from "./chernobog/TrustTraceHistory";
 import type { PendingState } from "@/lib/chernobog/session/pending";
-import type { WorkflowKind, FileWorkflowStep } from "@/lib/chernobog/pipeline/types";
+import type {
+  WorkflowKind,
+  FileWorkflowStep,
+} from "@/lib/chernobog/pipeline/types";
+import ChernobogDebugStatePanel from "./chernobog/ChernobogDebugStatePanel";
+
 
 export type LogSource = "USER" | "SYSTEM" | "ROUTER" | "CHERNOBOG";
 
@@ -44,6 +51,23 @@ export type SessionSnapshot = {
   workflowCandidateCount: number;
 };
 
+export type DebugTraceStep = {
+  type: string;
+  label: string;
+  detail?: string;
+  timestamp: string;
+};
+
+export type DebugTrace = {
+  id: string;
+  route: string;
+  tool: string;
+  success: boolean;
+  failureCategory?: string;
+  summary: string;
+  steps: DebugTraceStep[];
+};
+
 type ChatApiResponse = {
   route?: string;
   reply?: string;
@@ -58,6 +82,7 @@ type ChatApiResponse = {
   workflowKind?: WorkflowKind;
   workflowStep?: FileWorkflowStep | "none";
   workflowCandidateCount?: number;
+  debugTrace?: DebugTrace;
   details?: string;
   error?: string;
 };
@@ -106,6 +131,10 @@ export default function UmbraAIConsole() {
   const [input, setInput] = useState("");
   const [isBusy, setIsBusy] = useState(false);
 
+  const [debugTrace, setDebugTrace] = useState<DebugTrace | null>(null);
+  const [debugVisible, setDebugVisible] = useState(true);
+  const [developerMode, setDeveloperMode] = useState(true);
+
   const [logs, setLogs] = useState<LogEntry[]>(() => [
     makeLog("SYSTEM", "God Program interface initialized."),
     makeLog("SYSTEM", "Core intelligence online. Session orchestration stable."),
@@ -139,7 +168,6 @@ export default function UmbraAIConsole() {
     const route = session.activeRoute.toLowerCase();
     const lastTool = session.lastTool.toLowerCase();
     const workflowStep = session.workflowStep;
-    const workflowKind = session.workflowKind;
 
     const selectionRequired = isWorkflowSelectionRequired(
       workflowStep,
@@ -164,12 +192,11 @@ export default function UmbraAIConsole() {
         label: "Optic Core",
         status:
           route === "tools" || isBusy || workflowActive ? "ACTIVE" : "ONLINE",
-        detail:
-          workflowActive
-            ? "Chest-eye lens focused on workflow execution"
-            : route === "tools"
-              ? "Chest-eye lens routed to toolspace"
-              : "Chest-eye lens aligned",
+        detail: workflowActive
+          ? "Chest-eye lens focused on workflow execution"
+          : route === "tools"
+            ? "Chest-eye lens routed to toolspace"
+            : "Chest-eye lens aligned",
       },
       {
         key: "combat",
@@ -239,21 +266,35 @@ export default function UmbraAIConsole() {
     }));
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: value,
-          sessionId,
-        }),
-      });
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 35_000);
+
+      let response: Response;
+
+      try {
+        response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          signal: controller.signal,
+          body: JSON.stringify({
+            message: value,
+            sessionId,
+          }),
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
 
       const data: ChatApiResponse = await response.json();
 
       if (!response.ok) {
         throw new Error(data?.details || data?.error || "Request failed.");
+      }
+
+      if (data.debugTrace) {
+        setDebugTrace(data.debugTrace);
       }
 
       const route = normalizeText(data.route, "unknown").toUpperCase();
@@ -270,7 +311,10 @@ export default function UmbraAIConsole() {
         activeRoute: normalizeText(data.route, prev.activeRoute),
         lastTool: normalizeText(data.tool, prev.lastTool),
         lastToolSummary: normalizeText(data.toolSummary, prev.lastToolSummary),
-        currentSearchQuery: normalizeText(data.searchQuery, prev.currentSearchQuery),
+        currentSearchQuery: normalizeText(
+          data.searchQuery,
+          prev.currentSearchQuery
+        ),
         currentSearchRoot: normalizeText(data.searchRoot, prev.currentSearchRoot),
         lastSelectedFile: normalizeText(data.selectedFile, prev.lastSelectedFile),
         lastReadFile: normalizeText(data.readFile, prev.lastReadFile),
@@ -281,8 +325,7 @@ export default function UmbraAIConsole() {
           data.workflowCandidateCount ?? prev.workflowCandidateCount,
       }));
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Request failed.";
+      const message = error instanceof Error ? error.message : "Request failed.";
 
       setLogs((prev) => [...prev, makeLog("SYSTEM", message)]);
 
@@ -296,6 +339,20 @@ export default function UmbraAIConsole() {
     }
   }
 
+  const developerPanel = developerMode ? (
+    <div className="space-y-4">
+      <TrustDebugPanel
+        trace={debugTrace}
+        visible={debugVisible}
+        onToggleVisible={() => setDebugVisible((value) => !value)}
+      />
+  
+      <TrustTraceHistory onSelectTrace={setDebugTrace} />
+  
+      <ChernobogDebugStatePanel />
+    </div>
+  ) : null;
+
   return (
     <CommandShell
       logs={logs}
@@ -306,6 +363,9 @@ export default function UmbraAIConsole() {
       onSubmit={handleSubmit}
       isBusy={isBusy}
       scrollRef={scrollRef}
+      developerMode={developerMode}
+      setDeveloperMode={setDeveloperMode}
+      developerPanel={developerPanel}
     />
   );
 }

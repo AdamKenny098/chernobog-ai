@@ -103,25 +103,49 @@ Do not over-refuse harmless software questions.
 };
 
 async function callOllama(messages: OllamaMessage[]): Promise<string> {
-  const response = await fetch(OLLAMA_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: MODEL_NAME,
-      stream: false,
-      messages,
-    }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30_000);
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Ollama request failed: ${errorText}`);
+  try {
+    const response = await fetch(OLLAMA_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: MODEL_NAME,
+        stream: false,
+        messages,
+        options: {
+          num_predict: 500,
+          temperature: 0.4,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Ollama request failed: ${errorText}`);
+    }
+
+    const data = await response.json();
+    const content = String(data?.message?.content ?? "").trim();
+
+    if (!content) {
+      return "No response returned from the local model.";
+    }
+
+    return content;
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error("Ollama request timed out after 30 seconds.");
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const data = await response.json();
-  return String(data?.message?.content ?? "").trim();
 }
 
 function normalizeRoute(raw: string): RouteName {

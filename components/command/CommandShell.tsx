@@ -37,6 +37,9 @@ type CommandShellProps = {
   onSubmit: FormEventHandler<HTMLFormElement>;
   isBusy: boolean;
   scrollRef: RefObject<HTMLDivElement | null>;
+  developerMode: boolean;
+  setDeveloperMode: React.Dispatch<React.SetStateAction<boolean>>;
+  developerPanel?: React.ReactNode;
 };
 
 function ShellFrame({
@@ -408,6 +411,9 @@ export default function CommandShell({
   onSubmit,
   isBusy,
   scrollRef,
+  developerMode,
+  setDeveloperMode,
+  developerPanel,
 }: CommandShellProps) {
   const feedItems = mapLogsToFeed(logs);
   const railItems = mapSubsystems(subsystems);
@@ -480,7 +486,7 @@ export default function CommandShell({
 
                 <div className="xl:col-span-3">
                   <ShellFrame variant="standard" className="h-full p-3 md:p-4">
-                    <SubsystemRail items={railItems} version="INTERFACE VER. 4.2.0" />
+                    <SubsystemRail items={railItems} version="INTERFACE VER. 4.5.0" />
                   </ShellFrame>
                 </div>
 
@@ -551,23 +557,52 @@ export default function CommandShell({
                   </ShellFrame>
                 </div>
 
-                <div className="hidden xl:col-span-3 xl:block">
-                  <ShellFrame variant="soft" className="h-full min-h-[220px] p-3 md:p-4">
-                    <WorkflowInspector
-                      route={session.activeRoute}
-                      workflowKind={session.workflowKind}
-                      workflowStep={session.workflowStep}
-                      workflowCandidateCount={session.workflowCandidateCount}
-                      searchQuery={session.currentSearchQuery}
-                      searchRoot={session.currentSearchRoot}
-                      selectedFile={session.lastSelectedFile}
-                      readFile={session.lastReadFile}
-                      lastTool={session.lastTool}
-                      toolSummary={session.lastToolSummary}
-                      pendingState={session.pendingState}
-                      isBusy={isBusy}
-                    />
-                  </ShellFrame>
+                <div className="xl:col-span-3">
+                  <div className="flex h-full flex-col gap-4 xl:gap-5">
+                    <ShellFrame variant="soft" className="min-h-[220px] p-3 md:p-4">
+                      <WorkflowInspector
+                        route={session.activeRoute}
+                        workflowKind={session.workflowKind}
+                        workflowStep={session.workflowStep}
+                        workflowCandidateCount={session.workflowCandidateCount}
+                        searchQuery={session.currentSearchQuery}
+                        searchRoot={session.currentSearchRoot}
+                        selectedFile={session.lastSelectedFile}
+                        readFile={session.lastReadFile}
+                        lastTool={session.lastTool}
+                        toolSummary={session.lastToolSummary}
+                        pendingState={session.pendingState}
+                        isBusy={isBusy}
+                      />
+                    </ShellFrame>
+
+                    <ShellFrame variant="soft" className="p-3 md:p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffb066]/70">
+                            Developer Trust
+                          </div>
+                          <div className="mt-1 text-xs text-[#d6d1c7]/50">
+                            Trust traces, tool logs, memories, and message state
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => setDeveloperMode((value) => !value)}
+                          className="rounded-lg border border-[rgba(255,160,70,0.18)] px-3 py-1.5 text-xs text-[#ffb066] transition hover:bg-[rgba(255,120,40,0.08)]"
+                        >
+                          {developerMode ? "On" : "Off"}
+                        </button>
+                      </div>
+                    </ShellFrame>
+
+                    {developerPanel ? (
+                      <ShellFrame variant="soft" className="p-3 md:p-4">
+                        {developerPanel}
+                      </ShellFrame>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             </div>
