@@ -16,8 +16,10 @@ import {
 import { parseToolCommand } from "@/lib/chernobog/tools/parser";
 import { executeTool } from "@/lib/chernobog/tools/executor";
 import { classifyToolIntent } from "@/lib/chernobog/tools/intent";
-import { normalizeToolCall } from "@/lib/chernobog/tools/normalize";
-import { logToolCall } from "@/lib/chernobog/db";
+import {
+    normalizeToolCall,
+    openAppCallLooksLikeFileRequest,
+  } from "@/lib/chernobog/tools/normalize";import { logToolCall } from "@/lib/chernobog/db";
 import {
   clearPendingDisambiguation,
   getSessionContext,
@@ -35,6 +37,8 @@ import {
 } from "@/lib/chernobog/session/update";
 import type { RouteName } from "@/lib/chernobog/session/types";
 import type { ChatUiPayload, CommandPipelineResult } from "./types";
+import { orchestrateMessage } from "@/lib/chernobog/orchestration/orchestrator";
+
 
 type FindFilesResultData = {
   root: string;
@@ -379,160 +383,158 @@ function buildSessionSummary(sessionId: string): string {
 }
 
 export async function runCommandPipeline(
-  userMessage: string,
-  sessionId: string
-): Promise<CommandPipelineResult> {
-  let route: RouteName = "chat";
-  let reply = "";
-
-  if (isWipeMemoriesRequest(userMessage)) {
-    route = "memory";
-    saveMessage("user", userMessage, route);
-
-    const deletedCount = clearAllMemories();
-
-    reply =
-      deletedCount > 0
-        ? `All memories wiped. Removed ${deletedCount} stored entr${deletedCount === 1 ? "y" : "ies"}.`
-        : "There were no stored memories to wipe.";
-  } else if (isForgetRequest(userMessage)) {
-    route = "memory";
-    saveMessage("user", userMessage, route);
-
-    const fact = extractForgetFact(userMessage);
-
-    reply = !fact
-      ? "State the memory you want removed."
-      : deleteMemory(fact).deleted
-        ? `Memory removed: ${fact}.`
-        : `No matching memory found for: ${fact}.`;
-  } else if (isRememberRequest(userMessage)) {
-    route = "memory";
-    saveMessage("user", userMessage, route);
-
-    const fact = extractMemoryFact(userMessage);
-
-    if (!fact) {
-      reply = "State the fact you want stored.";
+    userMessage: string,
+    sessionId: string
+  ): Promise<CommandPipelineResult> {
+    let route: RouteName = "chat";
+    let reply = "";
+  
+    if (isWipeMemoriesRequest(userMessage)) {
+      route = "memory";
+      saveMessage("user", userMessage, route);
+  
+      const deletedCount = clearAllMemories();
+  
+      reply =
+        deletedCount > 0
+          ? `All memories wiped. Removed ${deletedCount} stored entr${deletedCount === 1 ? "y" : "ies"}.`
+          : "There were no stored memories to wipe.";
+    } else if (isForgetRequest(userMessage)) {
+      route = "memory";
+      saveMessage("user", userMessage, route);
+  
+      const fact = extractForgetFact(userMessage);
+  
+      reply = !fact
+        ? "State the memory you want removed."
+        : deleteMemory(fact).deleted
+          ? `Memory removed: ${fact}.`
+          : `No matching memory found for: ${fact}.`;
+    } else if (isRememberRequest(userMessage)) {
+      route = "memory";
+      saveMessage("user", userMessage, route);
+  
+      const fact = extractMemoryFact(userMessage);
+  
+      if (!fact) {
+        reply = "State the fact you want stored.";
+      } else {
+        const result = saveMemory(fact);
+        reply = result.saved
+          ? `Memory stored: ${result.fact}.`
+          : `That memory already exists: ${result.fact}.`;
+      }
+    } else if (isRecallRequest(userMessage)) {
+      route = "memory";
+      saveMessage("user", userMessage, route);
+  
+      const memories = getMemories(50);
+  
+      reply =
+        memories.length === 0
+          ? "I do not have any persisted memories yet."
+          : [
+              "Persisted memories:",
+              ...memories.map((memory, index) => `${index + 1}. ${memory}`),
+            ].join("\n");
     } else {
-      const result = saveMemory(fact);
-      reply = result.saved
-        ? `Memory stored: ${result.fact}.`
-        : `That memory already exists: ${result.fact}.`;
-    }
-  } else if (isRecallRequest(userMessage)) {
-    route = "memory";
-    saveMessage("user", userMessage, route);
-
-    const memories = getMemories(50);
-
-    reply =
-      memories.length === 0
-        ? "I do not have any persisted memories yet."
-        : ["Persisted memories:", ...memories.map((memory, index) => `${index + 1}. ${memory}`)].join("\n");
-  } else {
-    const session = getSessionContext(sessionId);
-    const followUp = tryResolveFollowUp(userMessage, session);
-
-    if (followUp.kind === "needs_disambiguation") {
-      route = "tools";
-      saveMessage("user", userMessage, route);
-      setPendingDisambiguation(session, followUp.pending);
-      saveSessionContext(session);
-      reply = followUp.message;
-    } else if (followUp.kind === "resolved_tool_action") {
-      route = "tools";
-      saveMessage("user", userMessage, route);
-
-      const toolResult = await executeAndTrackTool(
-        followUp.tool,
-        followUp.input,
-        sessionId
-      );
-
-      reply = formatToolReply(toolResult, sessionId);
-    } else if (looksLikeOrdinalFileFollowUp(userMessage)) {
-      route = "tools";
-      saveMessage("user", userMessage, route);
-      reply = "I do not have a valid active file result set for that selection yet.";
-    } else {
-      const parsedToolCommand = parseToolCommand(userMessage);
-
-      if (parsedToolCommand) {
+      const session = getSessionContext(sessionId);
+      const followUp = tryResolveFollowUp(userMessage, session);
+  
+      if (followUp.kind === "needs_disambiguation") {
         route = "tools";
         saveMessage("user", userMessage, route);
+  
+        setPendingDisambiguation(session, followUp.pending);
+        saveSessionContext(session);
+  
+        reply = followUp.message;
+      } else if (followUp.kind === "resolved_tool_action") {
+        route = "tools";
+        saveMessage("user", userMessage, route);
+  
+        const toolResult = await executeAndTrackTool(
+          followUp.tool,
+          followUp.input,
+          sessionId
+        );
+  
+        reply = formatToolReply(toolResult, sessionId);
+      } else if (looksLikeOrdinalFileFollowUp(userMessage)) {
+        route = "tools";
+        saveMessage("user", userMessage, route);
+  
+        reply = "I do not have a valid active file result set for that selection yet.";
+      } else {
+        const orchestration = await orchestrateMessage(userMessage, session);
+  
+        if (orchestration.handled) {
+          route = orchestration.route;
+          saveMessage("user", userMessage, route);
+  
+          reply = orchestration.reply;
+          saveSessionContext(session);
+        } else {
+          const parsedToolCommand = parseToolCommand(userMessage);
+  
+          if (parsedToolCommand) {
+            route = "tools";
+            saveMessage("user", userMessage, route);
+  
+            const normalizedToolCall = normalizeToolCall(parsedToolCommand);
 
-        const normalizedToolCall = normalizeToolCall(parsedToolCommand);
-
-        if (
-          normalizedToolCall.tool === "read_text_file" ||
-          normalizedToolCall.tool === "open_file"
-        ) {
-          const fileInput = normalizedToolCall.input as { path: string };
-
-          if (!looksLikeExplicitFilePath(fileInput.path)) {
+            if (openAppCallLooksLikeFileRequest(normalizedToolCall)) {
             const fallbackReply = await tryFileSearchFallback(
-              fileInput.path,
-              sessionId,
-              normalizedToolCall.tool
+                userMessage,
+                sessionId,
+                "open_file"
             );
 
             if (fallbackReply) {
-              reply = fallbackReply;
-            } else {
-              const toolResult = await executeAndTrackTool(
-                normalizedToolCall.tool,
-                normalizedToolCall.input,
-                sessionId
-              );
-              reply = formatToolReply(toolResult, sessionId);
-            }
-          } else {
-            const toolResult = await executeAndTrackTool(
-              normalizedToolCall.tool,
-              normalizedToolCall.input,
-              sessionId
-            );
-            reply = formatToolReply(toolResult, sessionId);
-          }
-        } else {
-          const toolResult = await executeAndTrackTool(
-            normalizedToolCall.tool,
-            normalizedToolCall.input,
-            sessionId
-          );
-          reply = formatToolReply(toolResult, sessionId);
-        }
-      } else {
-        const toolIntent = await classifyToolIntent(userMessage);
-
-        if (toolIntent.tool !== "none") {
-          route = "tools";
-          saveMessage("user", userMessage, route);
-
-          const normalizedToolCall = normalizeToolCall(toolIntent);
-
-          if (
-            normalizedToolCall.tool === "read_text_file" ||
-            normalizedToolCall.tool === "open_file"
-          ) {
-            const fileInput = normalizedToolCall.input as { path: string };
-
-            if (!looksLikeExplicitFilePath(fileInput.path)) {
-              const fallbackReply = await tryFileSearchFallback(
-                fileInput.path,
-                sessionId,
-                normalizedToolCall.tool
-              );
-
-              if (fallbackReply) {
                 reply = fallbackReply;
+            } else {
+                reply =
+                "That looked like a file-open request, not an app launch. I could not confidently resolve it to a real file.";
+            }
+
+            saveMessage("assistant", reply, route);
+
+            return {
+                payload: buildUiPayload(sessionId, route, reply),
+            };
+            }
+
+            if (
+              normalizedToolCall.tool === "read_text_file" ||
+              normalizedToolCall.tool === "open_file"
+            ) {
+              const fileInput = normalizedToolCall.input as { path: string };
+  
+              if (!looksLikeExplicitFilePath(fileInput.path)) {
+                const fallbackReply = await tryFileSearchFallback(
+                  fileInput.path,
+                  sessionId,
+                  normalizedToolCall.tool
+                );
+  
+                if (fallbackReply) {
+                  reply = fallbackReply;
+                } else {
+                  const toolResult = await executeAndTrackTool(
+                    normalizedToolCall.tool,
+                    normalizedToolCall.input,
+                    sessionId
+                  );
+  
+                  reply = formatToolReply(toolResult, sessionId);
+                }
               } else {
                 const toolResult = await executeAndTrackTool(
                   normalizedToolCall.tool,
                   normalizedToolCall.input,
                   sessionId
                 );
+  
                 reply = formatToolReply(toolResult, sessionId);
               }
             } else {
@@ -541,33 +543,30 @@ export async function runCommandPipeline(
                 normalizedToolCall.input,
                 sessionId
               );
+  
               reply = formatToolReply(toolResult, sessionId);
             }
           } else {
-            const toolResult = await executeAndTrackTool(
-              normalizedToolCall.tool,
-              normalizedToolCall.input,
-              sessionId
-            );
-            reply = formatToolReply(toolResult, sessionId);
-          }
-        } else {
-
-            if (looksLikeVagueFileRequest(userMessage)) {
-                route = "tools";
-                saveMessage("user", userMessage, route);
-              
+            const toolIntent = await classifyToolIntent(userMessage);
+  
+            if (toolIntent.tool !== "none") {
+              route = "tools";
+              saveMessage("user", userMessage, route);
+  
+              const normalizedToolCall = normalizeToolCall(toolIntent);
+                
+              if (openAppCallLooksLikeFileRequest(normalizedToolCall)) {
                 const fallbackReply = await tryFileSearchFallback(
                   userMessage,
                   sessionId,
-                  /\bopen\b/i.test(userMessage) ? "open_file" : "read_text_file"
+                  "open_file"
                 );
               
                 if (fallbackReply) {
                   reply = fallbackReply;
                 } else {
                   reply =
-                    "I could not confidently resolve that to a real file. Give me the filename, a clearer query, or ask me to search for it first.";
+                    "That looked like a file-open request, not an app launch. I could not confidently resolve it to a real file.";
                 }
               
                 saveMessage("assistant", reply, route);
@@ -576,33 +575,90 @@ export async function runCommandPipeline(
                   payload: buildUiPayload(sessionId, route, reply),
                 };
               }
-
-          route = await routeMessage(userMessage);
-          saveMessage("user", userMessage, route);
-
-          const storedMemories = getMemories(12);
-          const recentMessages = getRecentMessages(8);
-
-          reply = await respondForRoute(route, userMessage, {
-            memories: storedMemories,
-            recentMessages,
-            sessionSummary: buildSessionSummary(sessionId),
-          });
-
-          const activeSession = getSessionContext(sessionId);
-          updateSessionAfterRoute(activeSession, route);
-          saveSessionContext(activeSession);
+              
+              if (
+                normalizedToolCall.tool === "read_text_file" ||
+                normalizedToolCall.tool === "open_file"
+              ) {
+                const fileInput = normalizedToolCall.input as { path: string };
+  
+                if (!looksLikeExplicitFilePath(fileInput.path)) {
+                  const fallbackReply = await tryFileSearchFallback(
+                    fileInput.path,
+                    sessionId,
+                    normalizedToolCall.tool
+                  );
+  
+                  if (fallbackReply) {
+                    reply = fallbackReply;
+                  } else {
+                    const toolResult = await executeAndTrackTool(
+                      normalizedToolCall.tool,
+                      normalizedToolCall.input,
+                      sessionId
+                    );
+  
+                    reply = formatToolReply(toolResult, sessionId);
+                  }
+                } else {
+                  const toolResult = await executeAndTrackTool(
+                    normalizedToolCall.tool,
+                    normalizedToolCall.input,
+                    sessionId
+                  );
+  
+                  reply = formatToolReply(toolResult, sessionId);
+                }
+              } else {
+                const toolResult = await executeAndTrackTool(
+                  normalizedToolCall.tool,
+                  normalizedToolCall.input,
+                  sessionId
+                );
+  
+                reply = formatToolReply(toolResult, sessionId);
+              }
+            } else if (looksLikeVagueFileRequest(userMessage)) {
+              route = "tools";
+              saveMessage("user", userMessage, route);
+  
+              const fallbackReply = await tryFileSearchFallback(
+                userMessage,
+                sessionId,
+                /\bopen\b/i.test(userMessage) ? "open_file" : "read_text_file"
+              );
+  
+              reply =
+                fallbackReply ??
+                "I could not confidently resolve that to a real file. Give me the filename, a clearer query, or ask me to search for it first.";
+            } else {
+              route = await routeMessage(userMessage);
+              saveMessage("user", userMessage, route);
+  
+              const storedMemories = getMemories(12);
+              const recentMessages = getRecentMessages(8);
+  
+              reply = await respondForRoute(route, userMessage, {
+                memories: storedMemories,
+                recentMessages,
+                sessionSummary: buildSessionSummary(sessionId),
+              });
+  
+              const activeSession = getSessionContext(sessionId);
+              updateSessionAfterRoute(activeSession, route);
+              saveSessionContext(activeSession);
+            }
+          }
         }
       }
     }
+  
+    saveMessage("assistant", reply, route);
+  
+    return {
+      payload: buildUiPayload(sessionId, route, reply),
+    };
   }
-
-  saveMessage("assistant", reply, route);
-
-  return {
-    payload: buildUiPayload(sessionId, route, reply),
-  };
-}
 
 function looksLikeVagueFileRequest(message: string): boolean {
     const lower = message.trim().toLowerCase();

@@ -57,6 +57,33 @@ function normalizeAppName(rawAppName: string): string {
   return rawAppName.trim();
 }
 
+export function looksLikeFileOpenRequest(message: string): boolean {
+  const lower = message.trim().toLowerCase();
+
+  return (
+    /\b(file|folder|document|doc|txt|md|pdf|note|notes|readme|roadmap|json|csv|log)\b/.test(lower) ||
+    /\b(first one|first result|top result|it|that|this|same one|same file)\b/.test(lower) ||
+    /\b(last read|just read|last opened|just opened)\b/.test(lower) ||
+    /\.[a-zA-Z0-9]{1,10}\b/.test(message) ||
+    message.includes("\\") ||
+    message.includes("/")
+  );
+}
+
+export function openAppCallLooksLikeFileRequest(toolCall: ExecutableToolCall): boolean {
+  if (toolCall.tool !== "open_app") {
+    return false;
+  }
+
+  const appName = String(toolCall.input.appName ?? "").trim();
+
+  if (!appName) {
+    return false;
+  }
+
+  return looksLikeFileOpenRequest(appName);
+}
+
 export function normalizeToolCall<T extends ExecutableToolCall>(toolCall: T): T {
   switch (toolCall.tool) {
     case "open_app":
