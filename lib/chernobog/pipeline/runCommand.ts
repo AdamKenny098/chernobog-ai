@@ -51,6 +51,10 @@ import {
 import { buildWorkflowSnapshot } from "@/lib/chernobog/trust/sessionSnapshot";
 import type { TrustTrace } from "@/lib/chernobog/trust/types";
 import { saveTrustTrace } from "@/lib/chernobog/trust/store";
+import {
+  buildContinuityReply,
+  detectContinuityQuery,
+} from "@/lib/chernobog/session/continuity";
 
 type FindFilesResultData = {
   root: string;
@@ -551,6 +555,25 @@ export async function runCommandPipeline(
           ].join("\n");
   } else {
     const session = getSessionContext(sessionId);
+    const continuityQuery = detectContinuityQuery(userMessage);
+
+    if (continuityQuery !== "none") {
+      route = "tools";
+      setTraceRoute(trace, route);
+
+      addTraceStep(
+        trace,
+        "workflow_update",
+        "Continuity query resolved from persisted session state",
+        continuityQuery
+      );
+
+      saveMessage("user", userMessage, route);
+
+      reply = buildContinuityReply(continuityQuery, session);
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
     const followUp = tryResolveFollowUp(userMessage, session);
 
     if (followUp.kind === "needs_disambiguation") {

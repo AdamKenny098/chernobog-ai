@@ -40,6 +40,7 @@ type CommandShellProps = {
   developerMode: boolean;
   setDeveloperMode: React.Dispatch<React.SetStateAction<boolean>>;
   developerPanel?: React.ReactNode;
+  resetCurrentSession: () => void;
 };
 
 function ShellFrame({
@@ -414,6 +415,7 @@ export default function CommandShell({
   developerMode,
   setDeveloperMode,
   developerPanel,
+  resetCurrentSession,
 }: CommandShellProps) {
   const feedItems = mapLogsToFeed(logs);
   const railItems = mapSubsystems(subsystems);
@@ -587,13 +589,23 @@ export default function CommandShell({
                           </div>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => setDeveloperMode((value) => !value)}
-                          className="rounded-lg border border-[rgba(255,160,70,0.18)] px-3 py-1.5 text-xs text-[#ffb066] transition hover:bg-[rgba(255,120,40,0.08)]"
-                        >
-                          {developerMode ? "On" : "Off"}
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setDeveloperMode((value) => !value)}
+                            className="rounded-lg border border-[rgba(255,160,70,0.18)] px-3 py-1.5 text-xs text-[#ffb066] transition hover:bg-[rgba(255,120,40,0.08)]"
+                          >
+                            {developerMode ? "On" : "Off"}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={resetCurrentSession}
+                            className="rounded-lg border border-[rgba(255,80,80,0.24)] px-3 py-1.5 text-xs text-red-300 transition hover:bg-red-950/30"
+                          >
+                            Reset
+                          </button>
+                        </div>
                       </div>
                     </ShellFrame>
 

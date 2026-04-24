@@ -87,6 +87,8 @@ type ChatApiResponse = {
   error?: string;
 };
 
+
+
 function nowTime() {
   return new Date().toLocaleTimeString();
 }
@@ -126,8 +128,33 @@ function isWorkflowSelectionRequired(
   );
 }
 
+const SESSION_STORAGE_KEY = "chernobog.sessionId";
+
+function getOrCreateBrowserSessionId() {
+  if (typeof window === "undefined") {
+    return crypto.randomUUID();
+  }
+
+  const existing = window.localStorage.getItem(SESSION_STORAGE_KEY);
+
+  if (existing && existing.trim().length > 0) {
+    return existing;
+  }
+
+  const created = crypto.randomUUID();
+  window.localStorage.setItem(SESSION_STORAGE_KEY, created);
+
+  return created;
+}
+
+function resetBrowserSession() {
+  const nextSessionId = crypto.randomUUID();
+  window.localStorage.setItem(SESSION_STORAGE_KEY, nextSessionId);
+  window.location.reload();
+}
+
 export default function UmbraAIConsole() {
-  const [sessionId] = useState(() => crypto.randomUUID());
+  const [sessionId] = useState(getOrCreateBrowserSessionId);
   const [input, setInput] = useState("");
   const [isBusy, setIsBusy] = useState(false);
 
@@ -154,9 +181,78 @@ export default function UmbraAIConsole() {
     workflowStep: "none",
     workflowCandidateCount: 0,
   });
-
+  
   const scrollRef = useRef<HTMLDivElement | null>(null);
-
+  
+  useEffect(() => {
+    let cancelled = false;
+  
+    async function hydrateSession() {
+      try {
+        const response = await fetch(
+          `/api/session?sessionId=${encodeURIComponent(sessionId)}`,
+          {
+            method: "GET",
+            cache: "no-store",
+          }
+        );
+  
+        if (!response.ok) {
+          return;
+        }
+  
+        const data: ChatApiResponse = await response.json();
+  
+        if (cancelled) {
+          return;
+        }
+  
+        setSession((prev) => ({
+          ...prev,
+          activeRoute: normalizeText(data.route, prev.activeRoute),
+          lastTool: normalizeText(data.tool, prev.lastTool),
+          lastToolSummary: normalizeText(data.toolSummary, prev.lastToolSummary),
+          currentSearchQuery: normalizeText(
+            data.searchQuery,
+            prev.currentSearchQuery
+          ),
+          currentSearchRoot: normalizeText(
+            data.searchRoot,
+            prev.currentSearchRoot
+          ),
+          lastSelectedFile: normalizeText(
+            data.selectedFile,
+            prev.lastSelectedFile
+          ),
+          lastReadFile: normalizeText(data.readFile, prev.lastReadFile),
+          pendingState: data.pendingState ?? "none",
+          workflowKind: data.workflowKind ?? prev.workflowKind,
+          workflowStep: data.workflowStep ?? prev.workflowStep,
+          workflowCandidateCount:
+            data.workflowCandidateCount ?? prev.workflowCandidateCount,
+        }));
+  
+        setLogs((prev) => [
+          ...prev,
+          makeLog("SYSTEM", "Previous session context restored."),
+        ]);
+      } catch {
+        if (!cancelled) {
+          setLogs((prev) => [
+            ...prev,
+            makeLog("SYSTEM", "No previous session context restored."),
+          ]);
+        }
+      }
+    }
+  
+    void hydrateSession();
+  
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId]);
+  
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
@@ -353,6 +449,24 @@ export default function UmbraAIConsole() {
     </div>
   ) : null;
 
+  async function resetCurrentSession() {
+    try {
+      await fetch("/api/session/reset", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sessionId,
+        }),
+      });
+    } finally {
+      const nextSessionId = crypto.randomUUID();
+      window.localStorage.setItem(SESSION_STORAGE_KEY, nextSessionId);
+      window.location.reload();
+    }
+  }
+
   return (
     <CommandShell
       logs={logs}
@@ -366,6 +480,7 @@ export default function UmbraAIConsole() {
       developerMode={developerMode}
       setDeveloperMode={setDeveloperMode}
       developerPanel={developerPanel}
+      resetCurrentSession={resetCurrentSession}
     />
   );
 }
