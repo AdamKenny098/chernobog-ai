@@ -142,6 +142,12 @@ function resolveCurrentFile(session: SessionContext): string | null {
   return null;
 }
 
+function resolveCurrentFolder(session: SessionContext): string | null {
+  const currentFile = resolveCurrentFile(session);
+  if (!currentFile) return null;
+  return path.dirname(currentFile);
+}
+
 function selectSearchResultByIndex(session: SessionContext, index: number): string | null {
   if (session.workflow.kind === "file") {
     const workflow = session.workflow;
@@ -167,16 +173,28 @@ function selectSearchResultByIndex(session: SessionContext, index: number): stri
   return matched?.path ?? null;
 }
 
-function isReadFollowUp(input: string): boolean {
+function isReadAction(input: string): boolean {
   const lower = input.toLowerCase();
+  return /\bread\b/.test(lower) || /\bshow\b/.test(lower);
+}
+
+function isOpenAction(input: string): boolean {
+  const lower = input.toLowerCase();
+  return /\bopen\b/.test(lower) || /\blaunch\b/.test(lower);
+}
+
+function isFileActionFollowUp(input: string): boolean {
   return (
-    /\bread\b/.test(lower) ||
-    /\bshow\b/.test(lower) ||
-    /\bopen\b/.test(lower) ||
-    /\buse that\b/.test(lower) ||
-    /\bthat file\b/.test(lower) ||
-    /\bit again\b/.test(lower)
+    isReadAction(input) ||
+    isOpenAction(input) ||
+    /\buse that\b/.test(input.toLowerCase()) ||
+    /\bthat file\b/.test(input.toLowerCase()) ||
+    /\bit again\b/.test(input.toLowerCase())
   );
+}
+
+function isContainingFolderFollowUp(input: string): boolean {
+  return /\b(open|show)\s+(the\s+)?containing\s+folder\b/i.test(input);
 }
 
 function isNextPageFollowUp(input: string): boolean {
@@ -200,7 +218,7 @@ function isScopeShiftFollowUp(input: string): string | null {
 
 export function looksLikeOrdinalFileFollowUp(input: string): boolean {
   const lower = input.trim().toLowerCase();
-  return isReadFollowUp(lower) && ordinalToIndex(lower) !== null;
+  return isFileActionFollowUp(lower) && ordinalToIndex(lower) !== null;
 }
 
 export function tryResolveFollowUp(
@@ -209,6 +227,38 @@ export function tryResolveFollowUp(
 ): FollowUpResolution {
   const input = rawInput.trim();
   if (!input) return { kind: "none" };
+
+  if (isContainingFolderFollowUp(input)) {
+    const currentFolder = resolveCurrentFolder(session);
+
+    if (currentFolder) {
+      return {
+        kind: "resolved_tool_action",
+        tool: "open_folder",
+        input: { path: currentFolder },
+      };
+    }
+
+    const currentFile = resolveCurrentFile(session);
+    if (currentFile) {
+      return {
+        kind: "resolved_tool_action",
+        tool: "open_folder",
+        input: { path: path.dirname(currentFile) },
+      };
+    }
+
+    return {
+      kind: "needs_disambiguation",
+      message: "I do not have a current file selection to derive a containing folder from.",
+      pending: {
+        kind: "generic_selection",
+        prompt: "No current file is available.",
+        options: [],
+        createdAt: new Date().toISOString(),
+      },
+    };
+  }
 
   const scopeAlias = isScopeShiftFollowUp(input);
   if (scopeAlias) {
@@ -285,9 +335,17 @@ export function tryResolveFollowUp(
   }
 
   const index = ordinalToIndex(input);
-  if (index !== null && isReadFollowUp(input)) {
+  if (index !== null && isFileActionFollowUp(input)) {
     const selectedPath = selectSearchResultByIndex(session, index);
     if (selectedPath) {
+      if (isOpenAction(input)) {
+        return {
+          kind: "resolved_tool_action",
+          tool: "open_file",
+          input: { path: selectedPath },
+        };
+      }
+
       return {
         kind: "resolved_tool_action",
         tool: "read_text_file",
@@ -297,6 +355,14 @@ export function tryResolveFollowUp(
 
     const pendingResolvedPath = resolveFromPendingSelection(input, session);
     if (pendingResolvedPath) {
+      if (isOpenAction(input)) {
+        return {
+          kind: "resolved_tool_action",
+          tool: "open_file",
+          input: { path: pendingResolvedPath },
+        };
+      }
+
       return {
         kind: "resolved_tool_action",
         tool: "read_text_file",
@@ -327,6 +393,14 @@ export function tryResolveFollowUp(
 
   const pendingResolvedPath = resolveFromPendingSelection(input, session);
   if (pendingResolvedPath) {
+    if (isOpenAction(input)) {
+      return {
+        kind: "resolved_tool_action",
+        tool: "open_file",
+        input: { path: pendingResolvedPath },
+      };
+    }
+
     return {
       kind: "resolved_tool_action",
       tool: "read_text_file",
@@ -335,10 +409,20 @@ export function tryResolveFollowUp(
   }
 
   if (
-    /\b(read that|read it again|use that file|use that one|that file again|read that file)\b/i.test(input)
+    /\b(read that|read it again|use that file|use that one|that file again|read that file|open that|open that file|open it again|open that one)\b/i.test(
+      input
+    )
   ) {
     const currentPath = resolveCurrentFile(session);
     if (currentPath) {
+      if (isOpenAction(input)) {
+        return {
+          kind: "resolved_tool_action",
+          tool: "open_file",
+          input: { path: currentPath },
+        };
+      }
+
       return {
         kind: "resolved_tool_action",
         tool: "read_text_file",

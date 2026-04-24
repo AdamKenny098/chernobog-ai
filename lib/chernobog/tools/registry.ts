@@ -1,6 +1,11 @@
 import { ToolDefinition } from "./types";
 import { getTimeTool } from "./builtins/time";
-import { listFilesTool, readTextFileTool } from "./builtins/files";
+import {
+  listFilesTool,
+  readTextFileTool,
+  openFileTool,
+  openFolderTool,
+} from "./builtins/files";
 import { openAppTool } from "./builtins/apps";
 import { openUrlTool } from "./builtins/web";
 import { findFilesTool } from "./builtins/search";
@@ -10,6 +15,8 @@ export const toolRegistry = {
   list_files: listFilesTool,
   read_text_file: readTextFileTool,
   find_files: findFilesTool,
+  open_file: openFileTool,
+  open_folder: openFolderTool,
   open_app: openAppTool,
   open_url: openUrlTool,
 } satisfies Record<string, ToolDefinition<any, any>>;

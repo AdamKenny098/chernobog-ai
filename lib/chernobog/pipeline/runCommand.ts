@@ -53,6 +53,7 @@ type ReadTextFileResultData = {
 };
 
 type ToolExecutionResult = Awaited<ReturnType<typeof executeTool>>;
+type FileActionTool = "read_text_file" | "open_file";
 
 function buildUiPayload(
   sessionId: string,
@@ -148,6 +149,16 @@ function formatToolReply(result: ToolExecutionResult, sessionId?: string): strin
         : `Here is ${data.path}:\n\n${data.content}`;
     }
 
+    case "open_file": {
+      const data = result.data as { message: string };
+      return data.message;
+    }
+
+    case "open_folder": {
+      const data = result.data as { message: string };
+      return data.message;
+    }
+
     case "open_app": {
       const data = result.data as { message: string };
       return data.message;
@@ -173,7 +184,7 @@ function formatToolReply(result: ToolExecutionResult, sessionId?: string): strin
       const extraCount = data.matches.length - 5;
       const suffix = extraCount > 0 ? `\n...and ${extraCount} more.` : "";
       const sessionNote = sessionId
-        ? `\nYou can now say things like "read the first one" or "search Documents instead".`
+        ? `\nYou can now say things like "read the first one", "open the first one", or "search Documents instead".`
         : "";
 
       return `I found ${data.matches.length} file(s) matching "${data.query}" in ${data.root}:\n${preview}${suffix}${sessionNote}`;
@@ -196,14 +207,16 @@ function looksLikeExplicitFilePath(value: string): boolean {
   return false;
 }
 
-function extractSearchQueryFromReadPath(value: string): string {
-  return value
-    .trim()
-    .replace(/^["']|["']$/g, "")
-    .replace(/\.[a-zA-Z0-9]{1,10}$/, "")
-    .replace(/\b(file|document|doc)\b/gi, "")
-    .trim();
-}
+function extractSearchQueryFromPathLikeValue(value: string): string {
+    return value
+      .trim()
+      .replace(/^["']|["']$/g, "")
+      .replace(/^(read|open|show)\s+/i, "")
+      .replace(/^(my|the)\s+/i, "")
+      .replace(/\b(file|document|doc)\b/gi, "")
+      .replace(/\.[a-zA-Z0-9]{1,10}$/, "")
+      .trim();
+  }
 
 async function executeAndTrackTool(
   toolName: string,
@@ -241,15 +254,24 @@ async function executeAndTrackTool(
     clearPendingDisambiguation(session);
   }
 
+  if (result.ok && toolName === "open_file") {
+    const data = result.data as { path?: string };
+    if (data.path) {
+      setSelectedFileFromPath(session, "recent_read", data.path);
+    }
+    clearPendingDisambiguation(session);
+  }
+
   saveSessionContext(session);
   return result;
 }
 
-async function tryReadViaFileSearchFallback(
+async function tryFileSearchFallback(
   requestedPath: string,
-  sessionId: string
+  sessionId: string,
+  action: FileActionTool
 ): Promise<string | null> {
-  const query = extractSearchQueryFromReadPath(requestedPath);
+  const query = extractSearchQueryFromPathLikeValue(requestedPath);
   if (!query) return null;
 
   const searchResult = await executeAndTrackTool(
@@ -270,21 +292,27 @@ async function tryReadViaFileSearchFallback(
 
   if (data.matches.length === 1) {
     const chosen = data.matches[0];
-    const readResult = await executeAndTrackTool(
-      "read_text_file",
+    const actionResult = await executeAndTrackTool(
+      action,
       { path: chosen.path },
       sessionId
     );
 
-    if (!readResult.ok) {
-      return `I found ${chosen.name}, but I could not read it.\n${readResult.error}`;
+    if (!actionResult.ok) {
+      return `I found ${chosen.name}, but I could not ${
+        action === "read_text_file" ? "read" : "open"
+      } it.\n${actionResult.error}`;
     }
 
-    const readData = readResult.data as ReadTextFileResultData;
+    if (action === "read_text_file") {
+      const readData = actionResult.data as ReadTextFileResultData;
+      return readData.truncated
+        ? `I found ${chosen.name} and read the start of it:\n\n${readData.content}\n\n[truncated]`
+        : `I found ${chosen.name} and read it:\n\n${readData.content}`;
+    }
 
-    return readData.truncated
-      ? `I found ${chosen.name} and read the start of it:\n\n${readData.content}\n\n[truncated]`
-      : `I found ${chosen.name} and read it:\n\n${readData.content}`;
+    const openData = actionResult.data as { message: string };
+    return openData.message;
   }
 
   const preview = data.matches
@@ -436,13 +464,17 @@ export async function runCommandPipeline(
 
         const normalizedToolCall = normalizeToolCall(parsedToolCommand);
 
-        if (normalizedToolCall.tool === "read_text_file") {
-          const readInput = normalizedToolCall.input as { path: string };
+        if (
+          normalizedToolCall.tool === "read_text_file" ||
+          normalizedToolCall.tool === "open_file"
+        ) {
+          const fileInput = normalizedToolCall.input as { path: string };
 
-          if (!looksLikeExplicitFilePath(readInput.path)) {
-            const fallbackReply = await tryReadViaFileSearchFallback(
-              readInput.path,
-              sessionId
+          if (!looksLikeExplicitFilePath(fileInput.path)) {
+            const fallbackReply = await tryFileSearchFallback(
+              fileInput.path,
+              sessionId,
+              normalizedToolCall.tool
             );
 
             if (fallbackReply) {
@@ -480,13 +512,17 @@ export async function runCommandPipeline(
 
           const normalizedToolCall = normalizeToolCall(toolIntent);
 
-          if (normalizedToolCall.tool === "read_text_file") {
-            const readInput = normalizedToolCall.input as { path: string };
+          if (
+            normalizedToolCall.tool === "read_text_file" ||
+            normalizedToolCall.tool === "open_file"
+          ) {
+            const fileInput = normalizedToolCall.input as { path: string };
 
-            if (!looksLikeExplicitFilePath(readInput.path)) {
-              const fallbackReply = await tryReadViaFileSearchFallback(
-                readInput.path,
-                sessionId
+            if (!looksLikeExplicitFilePath(fileInput.path)) {
+              const fallbackReply = await tryFileSearchFallback(
+                fileInput.path,
+                sessionId,
+                normalizedToolCall.tool
               );
 
               if (fallbackReply) {
@@ -516,6 +552,31 @@ export async function runCommandPipeline(
             reply = formatToolReply(toolResult, sessionId);
           }
         } else {
+
+            if (looksLikeVagueFileRequest(userMessage)) {
+                route = "tools";
+                saveMessage("user", userMessage, route);
+              
+                const fallbackReply = await tryFileSearchFallback(
+                  userMessage,
+                  sessionId,
+                  /\bopen\b/i.test(userMessage) ? "open_file" : "read_text_file"
+                );
+              
+                if (fallbackReply) {
+                  reply = fallbackReply;
+                } else {
+                  reply =
+                    "I could not confidently resolve that to a real file. Give me the filename, a clearer query, or ask me to search for it first.";
+                }
+              
+                saveMessage("assistant", reply, route);
+              
+                return {
+                  payload: buildUiPayload(sessionId, route, reply),
+                };
+              }
+
           route = await routeMessage(userMessage);
           saveMessage("user", userMessage, route);
 
@@ -542,3 +603,13 @@ export async function runCommandPipeline(
     payload: buildUiPayload(sessionId, route, reply),
   };
 }
+
+function looksLikeVagueFileRequest(message: string): boolean {
+    const lower = message.trim().toLowerCase();
+  
+    return (
+      /^(read|open|show)\s+my\s+.+/.test(lower) ||
+      /^(read|open|show)\s+.+\.(txt|md|json|csv|log|cs|ts|js|tsx|jsx|xml|ini|cfg)$/i.test(lower) ||
+      /\b(file|document|doc|notes|note)\b/.test(lower)
+    );
+  }

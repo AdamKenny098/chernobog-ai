@@ -82,6 +82,8 @@ export type FollowUpResolution =
       tool:
         | "find_files"
         | "read_text_file"
+        | "open_file"
+        | "open_folder"
         | "open_app"
         | "open_url"
         | "list_files"

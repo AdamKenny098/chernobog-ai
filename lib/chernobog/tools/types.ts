@@ -33,6 +33,8 @@ export type ParsedToolCommand =
   | { tool: "list_files"; input: { path: string } }
   | { tool: "read_text_file"; input: { path: string; maxChars?: number } }
   | { tool: "find_files"; input: { query: string; root?: string; maxResults?: number } }
+  | { tool: "open_file"; input: { path: string } }
+  | { tool: "open_folder"; input: { path: string } }
   | { tool: "open_app"; input: { appName: string } }
   | { tool: "open_url"; input: { url: string } };
 

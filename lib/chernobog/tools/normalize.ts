@@ -42,63 +42,57 @@ function normalizeFolderPath(rawPath: string): string {
 }
 
 function normalizeAppName(rawAppName: string): string {
-    const value = rawAppName.trim().toLowerCase();
-  
-    if (
-      value === "browser" ||
-      value === "my browser" ||
-      value === "web browser" ||
-      value === "internet browser" ||
-      value === "default browser"
-    ) {
-      return "opera gx";
-    }
-  
-    return rawAppName.trim();
+  const value = rawAppName.trim().toLowerCase();
+
+  if (
+    value === "browser" ||
+    value === "my browser" ||
+    value === "web browser" ||
+    value === "internet browser" ||
+    value === "default browser"
+  ) {
+    return "opera gx";
   }
 
-  export function normalizeToolCall<T extends ExecutableToolCall>(toolCall: T): T {
-    switch (toolCall.tool) {
-      case "open_app":
-        return {
-          ...toolCall,
-          input: {
-            ...toolCall.input,
-            appName: normalizeAppName(toolCall.input.appName),
-          },
-        } as T;
-  
-      case "list_files":
-        return {
-          ...toolCall,
-          input: {
-            ...toolCall.input,
-            path: normalizeFolderPath(toolCall.input.path),
-          },
-        } as T;
-  
-      case "read_text_file":
-        return {
-          ...toolCall,
-          input: {
-            ...toolCall.input,
-            path: normalizeFolderPath(toolCall.input.path),
-          },
-        } as T;
-  
-      case "find_files":
-        return {
-          ...toolCall,
-          input: {
-            ...toolCall.input,
-            query: toolCall.input.query.trim(),
-            root: toolCall.input.root
-              ? normalizeFolderPath(toolCall.input.root)
-              : toolCall.input.root,
-          },
-        } as T;
-  
-      default:
-        return toolCall;
-    }
+  return rawAppName.trim();
+}
+
+export function normalizeToolCall<T extends ExecutableToolCall>(toolCall: T): T {
+  switch (toolCall.tool) {
+    case "open_app":
+      return {
+        ...toolCall,
+        input: {
+          ...toolCall.input,
+          appName: normalizeAppName(toolCall.input.appName),
+        },
+      } as T;
+
+    case "list_files":
+    case "read_text_file":
+    case "open_file":
+    case "open_folder":
+      return {
+        ...toolCall,
+        input: {
+          ...toolCall.input,
+          path: normalizeFolderPath(toolCall.input.path),
+        },
+      } as T;
+
+    case "find_files":
+      return {
+        ...toolCall,
+        input: {
+          ...toolCall.input,
+          query: toolCall.input.query.trim(),
+          root: toolCall.input.root
+            ? normalizeFolderPath(toolCall.input.root)
+            : toolCall.input.root,
+        },
+      } as T;
+
+    default:
+      return toolCall;
   }
+}
