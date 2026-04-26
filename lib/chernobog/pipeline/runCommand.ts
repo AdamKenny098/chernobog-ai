@@ -58,6 +58,12 @@ import {
 
 import { parsePlannerCommand } from "@/lib/chernobog/planner/parser";
 import { runPlannerCommand } from "@/lib/chernobog/planner/coordinator";
+import { buildMemoryContext } from "@/lib/chernobog/memory-architecture";
+
+import {
+  detectMemoryArchitectureCommand,
+  runMemoryArchitectureCommand,
+} from "@/lib/chernobog/memory-architecture/commands";
 
 type FindFilesResultData = {
   root: string;
@@ -597,6 +603,36 @@ export async function runCommandPipeline(
       return finalizePipelinePayload(sessionId, route, reply, trace);
     }
 
+    const memoryArchitectureCommand = detectMemoryArchitectureCommand(userMessage);
+
+    if (memoryArchitectureCommand !== "none") {
+      route = "memory";
+      setTraceRoute(trace, route);
+
+      addTraceStep(
+        trace,
+        "memory_route",
+        "Layered memory command handled",
+        memoryArchitectureCommand
+      );
+
+      const storedMemories = getMemories(50);
+      const recentMessages = getRecentMessages(12);
+
+      const memoryReply = runMemoryArchitectureCommand(memoryArchitectureCommand, {
+        session,
+        persistedMemories: storedMemories,
+        recentMessages,
+        userMessage,
+      });
+
+      saveMessage("user", userMessage, route);
+
+      reply = memoryReply ?? "No memory architecture response was produced.";
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
     const plannerCommand = parsePlannerCommand(userMessage);
     const plannerReply = runPlannerCommand(plannerCommand, session);
 
@@ -905,16 +941,35 @@ export async function runCommandPipeline(
 
             saveMessage("user", userMessage, route);
 
+            const activeSession = getSessionContext(sessionId);
             const storedMemories = getMemories(12);
             const recentMessages = getRecentMessages(8);
+
+            const memoryContext = buildMemoryContext({
+              session: activeSession,
+              persistedMemories: storedMemories,
+              recentMessages,
+              userMessage,
+            });
+
+            addTraceStep(
+              trace,
+              "workflow_update",
+              "Layered memory context built for routed response",
+              undefined,
+              {
+                shortTermEntries: memoryContext.shortTerm.lines.length,
+                workingEntries: memoryContext.working.lines.length,
+                longTermEntries: memoryContext.longTerm.lines.length,
+              }
+            );
 
             reply = await respondForRoute(route, userMessage, {
               memories: storedMemories,
               recentMessages,
-              sessionSummary: buildSessionSummary(sessionId),
+              sessionSummary: memoryContext.systemText,
             });
 
-            const activeSession = getSessionContext(sessionId);
             updateSessionAfterRoute(activeSession, route);
             saveSessionContext(activeSession);
           }

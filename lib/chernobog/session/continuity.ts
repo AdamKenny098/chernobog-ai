@@ -1,11 +1,17 @@
 import type { SessionContext } from "./types";
+import {
+    buildWorkingMemorySnapshot,
+    formatWorkingMemory,
+  } from "@/lib/chernobog/memory-architecture";
+
 
 export type ContinuityQueryKind =
   | "none"
   | "last_read_file"
   | "last_selected_file"
   | "current_workflow"
-  | "current_file_context";
+  | "current_file_context"
+  | "working_memory";
 
 export function detectContinuityQuery(message: string): ContinuityQueryKind {
   const lower = message.trim().toLowerCase();
@@ -42,6 +48,15 @@ export function detectContinuityQuery(message: string): ContinuityQueryKind {
     /\bwhat workflow is active\b/.test(lower)
   ) {
     return "current_workflow";
+  }
+
+  if (
+    /\bwhat are we working on\b/.test(lower) ||
+    /\bwhat am i working on\b/.test(lower) ||
+    /\bcurrent working memory\b/.test(lower) ||
+    /\bworking memory\b/.test(lower)
+  ) {
+    return "working_memory";
   }
 
   return "none";
@@ -131,6 +146,15 @@ export function buildContinuityReply(
       lastSelected ? `- Selected file: ${lastSelected}` : "- Selected file: none",
       lastRead ? `- Read file: ${lastRead}` : "- Read file: none",
     ].join("\n");
+  }
+
+  if (kind === "working_memory") {
+    const snapshot = buildWorkingMemorySnapshot(session);
+    const lines = formatWorkingMemory(snapshot);
+  
+    return lines.length > 0
+      ? ["Current working memory:", ...lines.map((line) => `- ${line}`)].join("\n")
+      : "There is no active working memory in the current session.";
   }
 
   return "";

@@ -10,7 +10,7 @@ import type {
   FileWorkflowStep,
 } from "@/lib/chernobog/pipeline/types";
 import ChernobogDebugStatePanel from "./chernobog/ChernobogDebugStatePanel";
-
+import MemoryArchitecturePanel from "./MemoryArchitecturePanel";
 
 export type LogSource = "USER" | "SYSTEM" | "ROUTER" | "CHERNOBOG";
 
@@ -459,6 +459,8 @@ export default function UmbraAIConsole() {
       />
   
       <TrustTraceHistory onSelectTrace={setDebugTrace} />
+  
+      <MemoryArchitecturePanel sessionId={sessionId} />
   
       <ChernobogDebugStatePanel />
     </div>
