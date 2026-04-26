@@ -11,6 +11,7 @@ import type {
 } from "@/lib/chernobog/pipeline/types";
 import ChernobogDebugStatePanel from "./chernobog/ChernobogDebugStatePanel";
 import MemoryArchitecturePanel from "./MemoryArchitecturePanel";
+import CommandLanguagePanel from "./CommandLanguagePanel";
 
 export type LogSource = "USER" | "SYSTEM" | "ROUTER" | "CHERNOBOG";
 
@@ -461,6 +462,8 @@ export default function UmbraAIConsole() {
       <TrustTraceHistory onSelectTrace={setDebugTrace} />
   
       <MemoryArchitecturePanel sessionId={sessionId} />
+
+      <CommandLanguagePanel />
   
       <ChernobogDebugStatePanel />
     </div>

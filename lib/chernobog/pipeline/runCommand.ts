@@ -65,6 +65,15 @@ import {
   runMemoryArchitectureCommand,
 } from "@/lib/chernobog/memory-architecture/commands";
 
+import {
+  formatCommandLanguageHelp,
+  parseUnifiedCommand,
+  unifiedToMemoryAction,
+  unifiedToMemoryArchitectureCommand,
+  unifiedToPlannerCommand,
+  unifiedToToolCall,
+} from "@/lib/chernobog/command-language";
+
 type FindFilesResultData = {
   root: string;
   query: string;
@@ -506,6 +515,8 @@ export async function runCommandPipeline(
   let reply = "";
   const trace = createTrustTrace(userMessage, sessionId);
 
+  
+
   const startingSession = getSessionContext(sessionId);
 
   addTraceStep(
@@ -515,6 +526,26 @@ export async function runCommandPipeline(
     undefined,
     buildWorkflowSnapshot(startingSession)
   );
+
+  const unifiedCommand = parseUnifiedCommand(userMessage);
+
+addTraceStep(
+  trace,
+  "router",
+  "Unified command language parsed input",
+  `${unifiedCommand.domain}.${unifiedCommand.action}.${unifiedCommand.target}`,
+  {
+    domain: unifiedCommand.domain,
+    action: unifiedCommand.action,
+    target: unifiedCommand.target,
+    reference: unifiedCommand.reference,
+    confidence: unifiedCommand.confidence,
+    confidenceLevel: unifiedCommand.confidenceLevel,
+    query: unifiedCommand.query,
+    stepIndex: unifiedCommand.stepIndex,
+    reasons: unifiedCommand.reasons,
+  }
+);
 
   if (isWipeMemoriesRequest(userMessage)) {
     route = "memory";
@@ -603,7 +634,92 @@ export async function runCommandPipeline(
       return finalizePipelinePayload(sessionId, route, reply, trace);
     }
 
-    const memoryArchitectureCommand = detectMemoryArchitectureCommand(userMessage);
+    if (
+      unifiedCommand.domain === "context" &&
+      unifiedCommand.action === "show" &&
+      unifiedCommand.query === "command_help"
+    ) {
+      route = "chat";
+      setTraceRoute(trace, route);
+    
+      addTraceStep(
+        trace,
+        "router",
+        "Unified command language help handled",
+        "command_help",
+        unifiedCommand
+      );
+    
+      saveMessage("user", userMessage, route);
+    
+      reply = formatCommandLanguageHelp();
+    
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    const unifiedMemoryAction = unifiedToMemoryAction(unifiedCommand);
+
+if (unifiedMemoryAction) {
+  route = "memory";
+  setTraceRoute(trace, route);
+
+  addTraceStep(
+    trace,
+    "memory_route",
+    "Unified memory action handled",
+    unifiedMemoryAction.kind,
+    unifiedMemoryAction
+  );
+
+  saveMessage("user", userMessage, route);
+
+  if (unifiedMemoryAction.kind === "wipe") {
+    const deletedCount = clearAllMemories();
+
+    reply =
+      deletedCount > 0
+        ? `All memories wiped. Removed ${deletedCount} stored entr${
+            deletedCount === 1 ? "y" : "ies"
+          }.`
+        : "There were no stored memories to wipe.";
+  } else if (unifiedMemoryAction.kind === "remember") {
+    const fact = unifiedMemoryAction.fact.trim();
+
+    if (!fact) {
+      reply = "State the fact you want stored.";
+    } else {
+      const result = saveMemory(fact);
+
+      reply = result.saved
+        ? `Memory stored: ${result.fact}.`
+        : `That memory already exists: ${result.fact}.`;
+    }
+  } else if (unifiedMemoryAction.kind === "forget") {
+    const fact = unifiedMemoryAction.fact.trim();
+
+    reply = !fact
+      ? "State the memory you want removed."
+      : deleteMemory(fact).deleted
+        ? `Memory removed: ${fact}.`
+        : `No matching memory found for: ${fact}.`;
+  } else {
+    const memories = getMemories(50);
+
+    reply =
+      memories.length === 0
+        ? "I do not have any persisted memories yet."
+        : [
+            "Persisted memories:",
+            ...memories.map((memory, index) => `${index + 1}. ${memory}`),
+          ].join("\n");
+  }
+
+  return finalizePipelinePayload(sessionId, route, reply, trace);
+}
+
+    const memoryArchitectureCommand =
+  unifiedToMemoryArchitectureCommand(unifiedCommand) ??
+  detectMemoryArchitectureCommand(userMessage);
 
     if (memoryArchitectureCommand !== "none") {
       route = "memory";
@@ -633,7 +749,8 @@ export async function runCommandPipeline(
       return finalizePipelinePayload(sessionId, route, reply, trace);
     }
 
-    const plannerCommand = parsePlannerCommand(userMessage);
+    const plannerCommand =
+  unifiedToPlannerCommand(unifiedCommand) ?? parsePlannerCommand(userMessage);
     const plannerReply = runPlannerCommand(plannerCommand, session);
 
     if (plannerReply) {
@@ -657,6 +774,95 @@ export async function runCommandPipeline(
     }
 
     const followUp = tryResolveFollowUp(userMessage, session);
+    const unifiedToolCall = unifiedToToolCall(unifiedCommand);
+
+    if (unifiedToolCall && unifiedCommand.confidenceLevel === "high") {
+      route = "tools";
+      setTraceRoute(trace, route);
+      setTraceTool(trace, unifiedToolCall.tool);
+
+      addTraceStep(
+        trace,
+        "parsed_tool",
+        "Unified command converted to explicit tool call",
+        unifiedToolCall.tool,
+        {
+          command: unifiedCommand,
+          toolCall: unifiedToolCall,
+        }
+      );
+
+      saveMessage("user", userMessage, route);
+
+      const normalizedToolCall = normalizeToolCall(unifiedToolCall);
+
+      if (openAppCallLooksLikeFileRequest(normalizedToolCall)) {
+        addTraceStep(
+          trace,
+          "vague_file_fallback",
+          "Blocked unified open_app because request looked like a file workflow",
+          userMessage,
+          normalizedToolCall
+        );
+
+        const fallbackReply = await tryFileSearchFallback(
+          userMessage,
+          sessionId,
+          "open_file"
+        );
+
+        reply =
+          fallbackReply ??
+          "That looked like a file-open request, not an app launch. I could not confidently resolve it to a real file.";
+
+        return finalizePipelinePayload(sessionId, route, reply, trace);
+      }
+
+      if (
+        normalizedToolCall.tool === "read_text_file" ||
+        normalizedToolCall.tool === "open_file"
+      ) {
+        const fileInput = normalizedToolCall.input as { path: string };
+
+        if (!looksLikeExplicitFilePath(fileInput.path)) {
+          const fallbackReply = await tryFileSearchFallback(
+            fileInput.path,
+            sessionId,
+            normalizedToolCall.tool
+          );
+
+          if (fallbackReply) {
+            reply = fallbackReply;
+          } else {
+            const toolResult = await executeAndTrackTool(
+              normalizedToolCall.tool,
+              normalizedToolCall.input,
+              sessionId
+            );
+
+            reply = formatToolReply(toolResult, sessionId);
+          }
+        } else {
+          const toolResult = await executeAndTrackTool(
+            normalizedToolCall.tool,
+            normalizedToolCall.input,
+            sessionId
+          );
+
+          reply = formatToolReply(toolResult, sessionId);
+        }
+      } else {
+        const toolResult = await executeAndTrackTool(
+          normalizedToolCall.tool,
+          normalizedToolCall.input,
+          sessionId
+        );
+
+        reply = formatToolReply(toolResult, sessionId);
+      }
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
 
     if (followUp.kind === "needs_disambiguation") {
       route = "tools";
