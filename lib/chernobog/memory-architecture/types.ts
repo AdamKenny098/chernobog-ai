@@ -1,4 +1,3 @@
-import type { ActivePlan } from "@/lib/chernobog/planner/types";
 import type { SessionContext } from "@/lib/chernobog/session/types";
 import type { OllamaMessage } from "@/lib/chernobog/router";
 

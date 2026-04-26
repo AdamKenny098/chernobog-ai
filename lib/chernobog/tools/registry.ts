@@ -1,4 +1,3 @@
-import { ToolDefinition } from "./types";
 import { getTimeTool } from "./builtins/time";
 import {
   listFilesTool,
@@ -14,15 +13,15 @@ export const toolRegistry = {
   get_time: getTimeTool,
   list_files: listFilesTool,
   read_text_file: readTextFileTool,
-  find_files: findFilesTool,
   open_file: openFileTool,
   open_folder: openFolderTool,
   open_app: openAppTool,
   open_url: openUrlTool,
-} satisfies Record<string, ToolDefinition<any, any>>;
+  find_files: findFilesTool,
+};
 
 export type ToolName = keyof typeof toolRegistry;
 
 export function getTool(name: string) {
-  return toolRegistry[name as ToolName] ?? null;
+  return toolRegistry[name as ToolName];
 }

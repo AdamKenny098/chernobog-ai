@@ -158,12 +158,6 @@ function getOrCreateBrowserSessionId() {
   return created;
 }
 
-function resetBrowserSession() {
-  const nextSessionId = crypto.randomUUID();
-  window.localStorage.setItem(SESSION_STORAGE_KEY, nextSessionId);
-  window.location.reload();
-}
-
 export default function UmbraAIConsole() {
   const [sessionId] = useState(getOrCreateBrowserSessionId);
   const [input, setInput] = useState("");

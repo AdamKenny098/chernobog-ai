@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type MemoryContextBlock = {
   layer: "short_term" | "working" | "long_term";
@@ -79,11 +79,11 @@ export default function MemoryArchitecturePanel({
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
 
-  async function loadMemoryContext() {
+  const loadMemoryContext = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
-
+  
       const response = await fetch(
         `/api/debug/memory?sessionId=${encodeURIComponent(sessionId)}&query=${encodeURIComponent(query)}`,
         {
@@ -91,15 +91,14 @@ export default function MemoryArchitecturePanel({
           cache: "no-store",
         }
       );
-
+  
       const raw = await response.text();
-
+  
       if (!response.ok) {
         throw new Error(`Memory API ${response.status}: ${raw}`);
       }
-
+  
       const data = JSON.parse(raw);
-
       setMemoryContext(data.memoryContext ?? null);
     } catch (err) {
       setError(
@@ -108,12 +107,17 @@ export default function MemoryArchitecturePanel({
     } finally {
       setLoading(false);
     }
-  }
+  }, [sessionId, query]);
 
   useEffect(() => {
     if (!open) return;
-    void loadMemoryContext();
-  }, [open, sessionId]);
+  
+    const timeoutId = window.setTimeout(() => {
+      void loadMemoryContext();
+    }, 0);
+  
+    return () => window.clearTimeout(timeoutId);
+  }, [open, loadMemoryContext]);
 
   return (
     <section className="rounded-2xl border border-[rgba(255,160,70,0.14)] bg-black/30 p-4">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type DebugMessage = {
   id: number;
@@ -45,7 +45,7 @@ export default function ChernobogDebugStatePanel({
   const [state, setState] = useState<DebugState | null>(null);
   const [error, setError] = useState<string>("");
 
-  async function loadDebugState() {
+  const loadDebugState = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -75,12 +75,17 @@ export default function ChernobogDebugStatePanel({
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     if (!open) return;
-    void loadDebugState();
-  }, [open]);
+  
+    const timeoutId = window.setTimeout(() => {
+      void loadDebugState();
+    }, 0);
+  
+    return () => window.clearTimeout(timeoutId);
+  }, [open, loadDebugState]);
 
   const messageCount = state?.messages.length ?? 0;
   const memoryCount = state?.memories.length ?? 0;

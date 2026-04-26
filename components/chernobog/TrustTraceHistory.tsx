@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type TrustTraceSummary = {
   id: string;
@@ -13,8 +13,25 @@ type TrustTraceSummary = {
   steps?: unknown[];
 };
 
+type DebugTraceStep = {
+  type: string;
+  label: string;
+  detail?: string;
+  timestamp: string;
+};
+
+type DebugTrace = {
+  id: string;
+  route: string;
+  tool: string;
+  success: boolean;
+  failureCategory?: string;
+  summary: string;
+  steps: DebugTraceStep[];
+};
+
 type TrustTraceHistoryProps = {
-  onSelectTrace?: (trace: any) => void;
+  onSelectTrace?: (trace: DebugTrace | null) => void;
 };
 
 function formatTime(value: string) {
@@ -36,7 +53,7 @@ export function TrustTraceHistory({ onSelectTrace }: TrustTraceHistoryProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function loadTraces() {
+  const loadTraces = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -59,7 +76,7 @@ export function TrustTraceHistory({ onSelectTrace }: TrustTraceHistoryProps) {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   async function clearTraces() {
     try {
@@ -122,8 +139,12 @@ export function TrustTraceHistory({ onSelectTrace }: TrustTraceHistoryProps) {
   }
 
   useEffect(() => {
-    void loadTraces();
-  }, []);
+    const timeoutId = window.setTimeout(() => {
+      void loadTraces();
+    }, 0);
+  
+    return () => window.clearTimeout(timeoutId);
+  }, [loadTraces]);
 
   return (
     <section className="rounded-2xl border border-[rgba(255,160,70,0.14)] bg-black/30 p-4">

@@ -1,58 +1,31 @@
 import { NextResponse } from "next/server";
-import { getMemories } from "@/lib/chernobog/memory";
-import { db } from "@/lib/chernobog/db"
+import { getRecentToolCalls } from "@/lib/chernobog/db";
+import { getMemories, getRecentMessages } from "@/lib/chernobog/memory";
 
 export const runtime = "nodejs";
 
-export async function GET() {
-  try {
-    const messages = db
-      .prepare(
-        `
-        SELECT id, role, content, route, created_at
-        FROM messages
-        ORDER BY id DESC
-        LIMIT 25
-        `
-      )
-      .all();
+type DebugMessage = {
+  id: number;
+  role: string;
+  content: string;
+  route: string | null;
+  created_at: string;
+};
 
-    const toolCalls = db
-      .prepare(
-        `
-        SELECT id, tool_name, input, output, success, created_at
-        FROM tool_calls
-        ORDER BY id DESC
-        LIMIT 25
-        `
-      )
-      .all()
-      .map((row: any) => ({
-        ...row,
-        success: Boolean(row.success),
-        input: safeJsonParse(row.input),
-        output: safeJsonParse(row.output),
-      }));
+type RawToolCall = {
+  id: number;
+  tool_name: string;
+  input_json?: string | null;
+  output_json?: string | null;
+  input?: string | null;
+  output?: string | null;
+  success: number | boolean;
+  created_at: string;
+};
 
-    return NextResponse.json({
-      messages,
-      memories: getMemories(50),
-      toolCalls,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error: "Failed to load debug state.",
-        details: error instanceof Error ? error.message : String(error),
-      },
-      { status: 500 }
-    );
-  }
-}
-
-function safeJsonParse(value: unknown) {
+function safeJsonParse(value: unknown): unknown {
   if (typeof value !== "string") {
-    return value;
+    return value ?? null;
   }
 
   try {
@@ -60,4 +33,31 @@ function safeJsonParse(value: unknown) {
   } catch {
     return value;
   }
+}
+
+export async function GET() {
+  const messages = getRecentMessages(20) as DebugMessage[];
+  const memories = getMemories(50);
+
+  const rawToolCalls = getRecentToolCalls(20) as unknown as RawToolCall[];
+
+  const toolCalls = rawToolCalls.map((toolCall) => {
+    const input = toolCall.input_json ?? toolCall.input ?? null;
+    const output = toolCall.output_json ?? toolCall.output ?? null;
+
+    return {
+      id: toolCall.id,
+      tool_name: toolCall.tool_name,
+      success: Boolean(toolCall.success),
+      created_at: toolCall.created_at,
+      input: safeJsonParse(input),
+      output: safeJsonParse(output),
+    };
+  });
+
+  return NextResponse.json({
+    messages,
+    memories,
+    toolCalls,
+  });
 }
