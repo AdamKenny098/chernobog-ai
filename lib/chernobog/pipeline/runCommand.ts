@@ -13,6 +13,7 @@ import {
   saveMemory,
   saveMessage,
 } from "@/lib/chernobog/memory";
+
 import { parseToolCommand } from "@/lib/chernobog/tools/parser";
 import { executeTool } from "@/lib/chernobog/tools/executor";
 import { classifyToolIntent } from "@/lib/chernobog/tools/intent";
@@ -20,6 +21,7 @@ import {
   normalizeToolCall,
   openAppCallLooksLikeFileRequest,
 } from "@/lib/chernobog/tools/normalize";
+
 import { logToolCall } from "@/lib/chernobog/db";
 import {
   clearPendingDisambiguation,
@@ -27,15 +29,18 @@ import {
   saveSessionContext,
   setPendingDisambiguation,
 } from "@/lib/chernobog/session/store";
+
 import {
   looksLikeOrdinalFileFollowUp,
   tryResolveFollowUp,
 } from "@/lib/chernobog/session/followups";
+
 import {
   setSelectedFileFromPath,
   updateSessionAfterRoute,
   updateSessionFromToolResult,
 } from "@/lib/chernobog/session/update";
+
 import type { RouteName } from "@/lib/chernobog/session/types";
 import type { ChatUiPayload, CommandPipelineResult } from "./types";
 import { orchestrateMessage } from "@/lib/chernobog/orchestration/orchestrator";
@@ -48,6 +53,7 @@ import {
   setTraceTool,
   summarizeTrace,
 } from "@/lib/chernobog/trust/trace";
+
 import { buildWorkflowSnapshot } from "@/lib/chernobog/trust/sessionSnapshot";
 import type { TrustTrace } from "@/lib/chernobog/trust/types";
 import { saveTrustTrace } from "@/lib/chernobog/trust/store";
@@ -59,6 +65,11 @@ import {
 import { parsePlannerCommand } from "@/lib/chernobog/planner/parser";
 import { runPlannerCommand } from "@/lib/chernobog/planner/coordinator";
 import { buildMemoryContext } from "@/lib/chernobog/memory-architecture";
+import {
+  buildExecutionDiagnostics,
+  executeFromMessage,
+  type ExecutionState,
+} from "@/lib/chernobog/execution";
 
 import {
   detectMemoryArchitectureCommand,
@@ -92,6 +103,10 @@ type ReadTextFileResultData = {
 
 type ToolExecutionResult = Awaited<ReturnType<typeof executeTool>>;
 type FileActionTool = "read_text_file" | "open_file";
+
+type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {
+  executionState?: ExecutionState;
+};
 
 function buildUiPayload(
   sessionId: string,
@@ -704,6 +719,66 @@ if (unifiedMemoryAction) {
 
       return finalizePipelinePayload(sessionId, route, reply, trace);
     }
+
+    addTraceStep(
+      trace,
+      "orchestration",
+      "Checking V5.0 autonomous execution layer"
+    );
+
+    const sessionWithExecution = session as SessionWithExecutionState;
+
+    const execution = await executeFromMessage(userMessage, {
+      previousState: sessionWithExecution.executionState,
+    });
+
+    if (execution.handled) {
+      route = "tools";
+      setTraceRoute(trace, route);
+
+      sessionWithExecution.executionState = execution.executionState;
+      saveSessionContext(sessionWithExecution);
+
+      addTraceStep(
+        trace,
+        "orchestration",
+        "V5.0 execution layer handled the message",
+        execution.task?.status ?? "unknown",
+        {
+          diagnostics: execution.task
+            ? buildExecutionDiagnostics(execution.task)
+            : undefined,
+          executionState: {
+            selectedFilePath: execution.executionState.selectedFilePath,
+            selectedFolderPath: execution.executionState.selectedFolderPath,
+            lastReadFilePath: execution.executionState.lastReadFilePath,
+            hasLastReadText: execution.executionState.lastReadText !== undefined,
+            activeTaskGoal: execution.executionState.activeTask?.goal,
+            lastTaskGoal: execution.executionState.lastTask?.goal,
+          },
+          steps: execution.task?.steps.map((step) => ({
+            id: step.id,
+            label: step.label,
+            action: step.action,
+            status: step.status,
+            risk: step.risk,
+            error: step.error,
+          })),
+        }
+      );
+
+      saveMessage("user", userMessage, route);
+
+      reply = execution.response;
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    addTraceStep(
+      trace,
+      "orchestration",
+      "V5.0 execution layer did not handle the message"
+    );
 
     const followUp = tryResolveFollowUp(userMessage, session);
     const unifiedToolCall = unifiedToToolCall(unifiedCommand);
