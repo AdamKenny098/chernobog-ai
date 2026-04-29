@@ -2,16 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import CommandShell from "./command/CommandShell";
-import { TrustDebugPanel } from "./chernobog/TrustDebugPanel";
-import { TrustTraceHistory } from "./chernobog/TrustTraceHistory";
 import type { PendingState } from "@/lib/chernobog/session/pending";
 import type {
   WorkflowKind,
   FileWorkflowStep,
 } from "@/lib/chernobog/pipeline/types";
-import ChernobogDebugStatePanel from "./chernobog/ChernobogDebugStatePanel";
-import MemoryArchitecturePanel from "./MemoryArchitecturePanel";
-import CommandLanguagePanel from "./CommandLanguagePanel";
+
+import RightDashboardRail from "./chernobog/RightDashboardRail";
 
 export type LogSource = "USER" | "SYSTEM" | "ROUTER" | "CHERNOBOG";
 
@@ -51,6 +48,7 @@ export type SessionSnapshot = {
   workflowStep: FileWorkflowStep | "none";
   workflowCandidateCount: number;
   activePlan: ActivePlanSnapshot | null;
+  executionState: ExecutionStateSnapshot | null;
 };
 
 export type DebugTraceStep = {
@@ -85,6 +83,7 @@ type ChatApiResponse = {
   workflowStep?: FileWorkflowStep | "none";
   workflowCandidateCount?: number;
   activePlan?: ActivePlanSnapshot | null;
+  executionState?: ExecutionStateSnapshot | null;
   debugTrace?: DebugTrace;
   details?: string;
   error?: string;
@@ -96,6 +95,40 @@ type ActivePlanSnapshot = {
   status: string;
   stepCount: number;
   activeStep: string | null;
+};
+
+type ExecutionStateSnapshot = {
+  selectedFilePath?: string;
+  selectedFolderPath?: string;
+
+  lastReadFilePath?: string;
+  hasLastReadText?: boolean;
+
+  lastCreatedFilePath?: string;
+  lastCreatedFolderPath?: string;
+
+  lastAppendedFilePath?: string;
+
+  lastRenamedFilePath?: string;
+  lastRenamedFolderPath?: string;
+
+  lastCopiedFilePath?: string;
+  lastCopiedFolderPath?: string;
+
+  lastMovedFilePath?: string;
+  lastMovedFolderPath?: string;
+
+  lastOpenedApp?: unknown;
+  lastOpenedUrl?: unknown;
+
+  hasSystemStatus?: boolean;
+  hasPathInfo?: boolean;
+  hasListedDirectory?: boolean;
+
+  activeTaskGoal?: string;
+  activeTaskStatus?: string;
+  lastTaskGoal?: string;
+  lastTaskStatus?: string;
 };
 
 const SESSION_STORAGE_KEY = "chernobog.sessionId";
@@ -178,6 +211,7 @@ export default function UmbraAIConsole() {
     workflowStep: "none",
     workflowCandidateCount: 0,
     activePlan: null,
+    executionState: null,
   });
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -250,6 +284,8 @@ export default function UmbraAIConsole() {
             data.workflowCandidateCount ?? prev.workflowCandidateCount,
           activePlan:
             "activePlan" in data ? data.activePlan ?? null : prev.activePlan,
+            executionState:
+            "executionState" in data ? data.executionState ?? null : prev.executionState,
         }));
 
         setLogs((prev) => [
@@ -443,6 +479,8 @@ export default function UmbraAIConsole() {
           data.workflowCandidateCount ?? prev.workflowCandidateCount,
         activePlan:
           "activePlan" in data ? data.activePlan ?? null : prev.activePlan,
+          executionState:
+          "executionState" in data ? data.executionState ?? null : prev.executionState,
       }));
     } catch (error) {
       const message = error instanceof Error ? error.message : "Request failed.";
@@ -480,21 +518,14 @@ export default function UmbraAIConsole() {
   }
 
   const developerPanel = developerMode ? (
-    <div className="space-y-4">
-      <TrustDebugPanel
-        trace={debugTrace}
-        visible={debugVisible}
-        onToggleVisible={() => setDebugVisible((value) => !value)}
-      />
-
-      <TrustTraceHistory onSelectTrace={setDebugTrace} />
-
-      {sessionId ? <MemoryArchitecturePanel sessionId={sessionId} /> : null}
-
-      <CommandLanguagePanel />
-
-      <ChernobogDebugStatePanel />
-    </div>
+    <RightDashboardRail
+      sessionId={sessionId}
+      session={session}
+      debugTrace={debugTrace}
+      debugVisible={debugVisible}
+      onToggleDebugVisible={() => setDebugVisible((value) => !value)}
+      onSelectTrace={setDebugTrace}
+    />
   ) : null;
 
   return (

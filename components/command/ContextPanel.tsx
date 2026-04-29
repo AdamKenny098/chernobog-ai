@@ -79,6 +79,15 @@ function routeTone(state: string) {
   };
 }
 
+function isPathLike(value: string) {
+  return (
+    value.includes("\\") ||
+    value.includes("/") ||
+    value.includes(":") ||
+    value.length > 28
+  );
+}
+
 function ContextBlockCard({
   block,
   index,
@@ -87,9 +96,10 @@ function ContextBlockCard({
   index: number;
 }) {
   const tone = detailTone(block.detail);
+  const pathLike = isPathLike(block.value);
 
   return (
-    <div className="group relative overflow-hidden">
+    <div className="group relative min-w-0 overflow-hidden">
       <div
         className="
           absolute inset-0
@@ -107,22 +117,31 @@ function ContextBlockCard({
         <div className={`absolute right-0 top-0 h-full w-[2px] ${tone.accentClass} opacity-55`} />
       </div>
 
-      <div className="relative z-10 px-3 py-2.5">
-        <div className="flex items-center gap-2">
-          <span className="text-[9px] uppercase tracking-[0.24em] text-[rgba(183,133,86,0.72)]">
+      <div className="relative z-10 min-w-0 px-3 py-2.5">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="shrink-0 text-[9px] uppercase tracking-[0.24em] text-[rgba(183,133,86,0.72)]">
             {String(index + 1).padStart(2, "0")}
           </span>
-          <span className="h-px w-6 bg-[linear-gradient(90deg,rgba(255,170,90,0.18),transparent)]" />
-          <span className="text-[9px] uppercase tracking-[0.24em] text-[rgba(183,133,86,0.74)]">
+          <span className="h-px w-6 shrink-0 bg-[linear-gradient(90deg,rgba(255,170,90,0.18),transparent)]" />
+          <span className="min-w-0 break-words text-[9px] uppercase leading-4 tracking-[0.18em] text-[rgba(183,133,86,0.74)]">
             {block.label}
           </span>
         </div>
 
-        <div className="mt-2 text-[15px] font-medium uppercase tracking-[0.16em] text-[rgba(238,232,223,0.94)]">
+        <div
+          className={[
+            "mt-2 min-w-0 text-[13px] font-medium uppercase leading-5 text-[rgba(238,232,223,0.94)]",
+            pathLike
+              ? "break-all font-mono tracking-[0.04em]"
+              : "break-words tracking-[0.12em]",
+          ].join(" ")}
+        >
           {block.value}
         </div>
 
-        <div className={`mt-2 text-[9px] uppercase tracking-[0.24em] ${tone.stateClass}`}>
+        <div
+          className={`mt-2 min-w-0 break-words text-[9px] uppercase leading-4 tracking-[0.18em] ${tone.stateClass}`}
+        >
           {block.detail}
         </div>
       </div>
@@ -132,9 +151,10 @@ function ContextBlockCard({
 
 function RouteRow({ route, index }: { route: ContextRoute; index: number }) {
   const tone = routeTone(route.state);
+  const pathLike = isPathLike(route.state);
 
   return (
-    <div className="group relative overflow-hidden px-3 py-2.5">
+    <div className="group relative min-w-0 overflow-hidden px-3 py-2.5">
       <div
         className="
           absolute inset-0
@@ -150,23 +170,27 @@ function RouteRow({ route, index }: { route: ContextRoute; index: number }) {
         <div className="absolute right-[8px] top-[8px] h-[10px] w-[10px] border-r border-t border-[rgba(255,176,104,0.06)]" />
       </div>
 
-      <div className="relative z-10 flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="text-[9px] uppercase tracking-[0.24em] text-[rgba(183,133,86,0.72)]">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <span className="h-px w-5 bg-[linear-gradient(90deg,rgba(255,170,90,0.16),transparent)]" />
-          </div>
-
-          <div className="mt-1 text-[11px] uppercase tracking-[0.14em] text-[rgba(223,214,201,0.9)]">
+      <div className="relative z-10 min-w-0">
+        <div className="mb-2 flex min-w-0 items-center gap-2">
+          <span className="shrink-0 text-[9px] uppercase tracking-[0.24em] text-[rgba(183,133,86,0.72)]">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span className="h-px w-5 shrink-0 bg-[linear-gradient(90deg,rgba(255,170,90,0.16),transparent)]" />
+          <span className="min-w-0 break-words text-[9px] uppercase leading-4 tracking-[0.18em] text-[rgba(183,133,86,0.72)]">
             {route.title}
-          </div>
+          </span>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <span className={`h-1.5 w-1.5 rounded-full ${tone.dotClass} shadow-[0_0_8px_rgba(255,170,90,0.22)]`} />
-          <span className={`text-[9px] uppercase tracking-[0.24em] ${tone.textClass}`}>
+        <div className="flex min-w-0 items-start gap-2">
+          <span className={`mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full ${tone.dotClass} shadow-[0_0_8px_rgba(255,170,90,0.22)]`} />
+          <span
+            className={[
+              "min-w-0 text-[10px] uppercase leading-5 text-[rgba(223,214,201,0.86)]",
+              pathLike
+                ? "break-all font-mono tracking-[0.04em]"
+                : `break-words tracking-[0.12em] ${tone.textClass}`,
+            ].join(" ")}
+          >
             {route.state}
           </span>
         </div>
@@ -197,15 +221,15 @@ export default function ContextPanel({
   routes = [
     { title: "CURRENT SEARCH QUERY", state: "NONE" },
     { title: "SEARCH ROOT", state: "NONE" },
-    { title: "LAST BLUSTER FILE", state: "NONE" },
+    { title: "LAST SELECTED FILE", state: "NONE" },
     { title: "LAST READ FILE", state: "NONE" },
   ],
   summary = "No tool activity yet.",
 }: ContextPanelProps) {
   return (
-    <section className="relative">
+    <section className="relative min-w-0">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[5%] top-[64px] bottom-[34px] w-px bg-[linear-gradient(180deg,rgba(255,170,90,0.08),transparent,rgba(255,170,90,0.08))]" />
+        <div className="absolute bottom-[34px] left-[5%] top-[64px] w-px bg-[linear-gradient(180deg,rgba(255,170,90,0.08),transparent,rgba(255,170,90,0.08))]" />
         <div className="absolute right-[6%] top-[24px] h-px w-[96px] bg-[linear-gradient(90deg,transparent,rgba(255,176,104,0.14))]" />
         <div className="absolute left-[5%] top-[78px] flex h-[calc(100%-120px)] flex-col justify-between">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -217,12 +241,12 @@ export default function ContextPanel({
         </div>
       </div>
 
-      <div className="relative z-10">
-        <div className="mb-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+      <div className="relative z-10 min-w-0">
+        <div className="mb-3 flex min-w-0 items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-3">
             <div
               className="
-                relative flex h-[34px] w-[34px] items-center justify-center
+                relative flex h-[34px] w-[34px] shrink-0 items-center justify-center
                 [clip-path:polygon(8px_0,100%_0,100%_calc(100%-8px),calc(100%-8px)_100%,0_100%,0_8px)]
                 border border-[rgba(255,170,90,0.14)]
                 bg-[linear-gradient(180deg,rgba(255,170,90,0.04),rgba(255,170,90,0.012))]
@@ -233,8 +257,8 @@ export default function ContextPanel({
               <Brain className="h-4 w-4" strokeWidth={1.75} />
             </div>
 
-            <div>
-              <div className="text-[11px] font-medium uppercase tracking-[0.34em] text-[rgba(219,210,197,0.84)]">
+            <div className="min-w-0">
+              <div className="break-words text-[11px] font-medium uppercase leading-4 tracking-[0.28em] text-[rgba(219,210,197,0.84)]">
                 {title}
               </div>
               <div className="mt-1 text-[9px] uppercase tracking-[0.24em] text-[rgba(183,133,86,0.72)]">
@@ -243,20 +267,20 @@ export default function ContextPanel({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-[rgba(233,178,104,0.76)]">
+          <div className="flex shrink-0 items-center gap-2 text-[rgba(233,178,104,0.76)]">
             <Layers3 className="h-3.5 w-3.5" strokeWidth={1.7} />
             <GitBranch className="h-3.5 w-3.5" strokeWidth={1.7} />
             <LockKeyhole className="h-3.5 w-3.5" strokeWidth={1.7} />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3">
+        <div className="grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2">
           {blocks.map((block, index) => (
-            <ContextBlockCard key={block.label} block={block} index={index} />
+            <ContextBlockCard key={`${block.label}-${index}`} block={block} index={index} />
           ))}
         </div>
 
-        <div className="relative mt-3 overflow-hidden px-4 py-3.5">
+        <div className="relative mt-3 min-w-0 overflow-hidden px-4 py-3.5">
           <div
             className="
               absolute inset-0
@@ -273,13 +297,13 @@ export default function ContextPanel({
             <div className="absolute bottom-[10px] left-[10px] h-[16px] w-[16px] border-b border-l border-[rgba(255,176,104,0.08)]" />
           </div>
 
-          <div className="relative z-10">
+          <div className="relative z-10 min-w-0">
             <div className="mb-3 flex items-center justify-between gap-3">
-              <div className="text-[9px] uppercase tracking-[0.24em] text-[rgba(183,133,86,0.74)]">
+              <div className="min-w-0 break-words text-[9px] uppercase leading-4 tracking-[0.22em] text-[rgba(183,133,86,0.74)]">
                 ROUTED CONTEXT PATHS
               </div>
 
-              <div className="flex items-center gap-2 text-[rgba(233,178,104,0.75)]">
+              <div className="flex shrink-0 items-center gap-2 text-[rgba(233,178,104,0.75)]">
                 <ScrollText className="h-3.5 w-3.5" strokeWidth={1.8} />
                 <FileText className="h-3.5 w-3.5" strokeWidth={1.8} />
               </div>
@@ -287,13 +311,13 @@ export default function ContextPanel({
 
             <div className="space-y-2">
               {routes.map((route, index) => (
-                <RouteRow key={route.title} route={route} index={index} />
+                <RouteRow key={`${route.title}-${index}`} route={route} index={index} />
               ))}
             </div>
           </div>
         </div>
 
-        <div className="relative mt-3 overflow-hidden px-4 py-3">
+        <div className="relative mt-3 min-w-0 overflow-hidden px-4 py-3">
           <div
             className="
               absolute inset-0
@@ -307,12 +331,12 @@ export default function ContextPanel({
             <div className="absolute bottom-0 left-0 h-px w-[32%] bg-[linear-gradient(90deg,rgba(255,166,82,0.22),transparent)]" />
           </div>
 
-          <div className="relative z-10">
+          <div className="relative z-10 min-w-0">
             <div className="text-[9px] uppercase tracking-[0.24em] text-[rgba(183,133,86,0.72)]">
               INTERNAL SUMMARY
             </div>
 
-            <p className="mt-2 text-[11px] uppercase tracking-[0.06em] leading-[1.55] text-[rgba(193,184,169,0.62)]">
+            <p className="mt-2 min-w-0 break-words text-[11px] uppercase leading-[1.55] tracking-[0.06em] text-[rgba(193,184,169,0.62)]">
               {summary}
             </p>
           </div>

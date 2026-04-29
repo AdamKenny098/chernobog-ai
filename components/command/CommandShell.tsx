@@ -1,6 +1,13 @@
 "use client";
 
-import type { RefObject, FormEventHandler } from "react";
+import {
+  useState,
+  type Dispatch,
+  type FormEventHandler,
+  type ReactNode,
+  type RefObject,
+  type SetStateAction,
+} from "react";
 import CommandHeader, { type HeaderStat } from "./CommandHeader";
 import SubsystemRail, { type RailSubsystemItem } from "./SubsystemRail";
 import CoreEye from "./CoreEye";
@@ -18,14 +25,19 @@ import type {
 
 import {
   Activity,
+  ClipboardList,
   Cpu,
   Database,
   Eye,
+  GitBranch,
   Lock,
+  Network,
   Radar,
   Shield,
   Swords,
+  TerminalSquare,
   Thermometer,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 
@@ -39,17 +51,51 @@ type CommandShellProps = {
   isBusy: boolean;
   scrollRef: RefObject<HTMLDivElement | null>;
   developerMode: boolean;
-  setDeveloperMode: React.Dispatch<React.SetStateAction<boolean>>;
-  developerPanel?: React.ReactNode;
+  setDeveloperMode: Dispatch<SetStateAction<boolean>>;
+  developerPanel?: ReactNode;
   resetCurrentSession: () => void;
 };
+
+type DashboardMode = "operation" | "workflow" | "planner" | "developer";
+
+const DASHBOARD_MODES: {
+  key: DashboardMode;
+  label: string;
+  description: string;
+  icon: LucideIcon;
+}[] = [
+  {
+    key: "operation",
+    label: "Operation",
+    description: "live state",
+    icon: Activity,
+  },
+  {
+    key: "workflow",
+    label: "Workflow",
+    description: "route chain",
+    icon: GitBranch,
+  },
+  {
+    key: "planner",
+    label: "Planner",
+    description: "task plan",
+    icon: ClipboardList,
+  },
+  {
+    key: "developer",
+    label: "Developer",
+    description: "trust layer",
+    icon: Wrench,
+  },
+];
 
 function ShellFrame({
   children,
   className = "",
   variant = "standard",
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   variant?: "standard" | "heavy" | "soft";
 }) {
@@ -411,6 +457,524 @@ function deriveHeaderStats(
   ];
 }
 
+function DashboardModeButton({
+  label,
+  description,
+  icon: Icon,
+  active,
+  onClick,
+}: {
+  label: string;
+  description: string;
+  icon: LucideIcon;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={[
+        "group relative min-w-0 overflow-hidden border px-3 py-2.5 text-left transition",
+        active
+          ? "border-[rgba(255,176,104,0.5)] bg-[rgba(255,140,50,0.12)] text-[#ffe2b7] shadow-[0_0_18px_rgba(255,140,50,0.12)]"
+          : "border-[rgba(255,160,70,0.14)] bg-black/20 text-[#d6a264]/55 hover:border-[rgba(255,176,104,0.3)] hover:text-[#ffd49a]/80",
+      ].join(" ")}
+    >
+      <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
+        <div className="absolute left-0 top-0 h-px w-full bg-[linear-gradient(90deg,transparent,rgba(255,176,104,0.2),transparent)]" />
+        <div className="absolute bottom-0 left-0 h-px w-[45%] bg-[linear-gradient(90deg,rgba(255,176,104,0.22),transparent)]" />
+      </div>
+
+      <div className="relative z-10 flex min-w-0 items-center gap-2">
+        <div
+          className={[
+            "flex h-7 w-7 shrink-0 items-center justify-center border",
+            active
+              ? "border-[#ffb066]/35 bg-[#ff8c32]/10 text-[#ffcf95]"
+              : "border-[#ffb066]/15 bg-black/20 text-[#b98556]/65",
+          ].join(" ")}
+        >
+          <Icon className="h-3.5 w-3.5" strokeWidth={1.7} />
+        </div>
+
+        <div className="min-w-0">
+          <div className="truncate text-[9px] font-semibold uppercase tracking-[0.16em]">
+            {label}
+          </div>
+          <div className="mt-1 truncate text-[8px] uppercase tracking-[0.13em] opacity-55">
+            {description}
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+function ActiveObjectPanel({ session }: { session: SessionSnapshot }) {
+  const execution = session.executionState;
+
+  const selectedFile =
+    execution?.selectedFilePath ??
+    session.lastSelectedFile;
+
+  const selectedFolder =
+    execution?.selectedFolderPath ??
+    "none";
+
+  const lastReadFile =
+    execution?.lastReadFilePath ??
+    session.lastReadFile;
+
+  const lastCreatedFile =
+    execution?.lastCreatedFilePath ??
+    "none";
+
+  const lastCreatedFolder =
+    execution?.lastCreatedFolderPath ??
+    "none";
+
+  const lastModifiedFile =
+    execution?.lastAppendedFilePath ??
+    execution?.lastRenamedFilePath ??
+    execution?.lastMovedFilePath ??
+    execution?.lastCopiedFilePath ??
+    "none";
+
+  const activeTask =
+    execution?.activeTaskGoal ??
+    "none";
+
+  const lastTask =
+    execution?.lastTaskGoal ??
+    "none";
+
+  const rows = [
+    {
+      label: "Selected File",
+      value: selectedFile,
+      active: selectedFile !== "none",
+    },
+    {
+      label: "Selected Folder",
+      value: selectedFolder,
+      active: selectedFolder !== "none",
+    },
+    {
+      label: "Last Read File",
+      value: lastReadFile,
+      active: lastReadFile !== "none",
+    },
+    {
+      label: "Last Created File",
+      value: lastCreatedFile,
+      active: lastCreatedFile !== "none",
+    },
+    {
+      label: "Last Created Folder",
+      value: lastCreatedFolder,
+      active: lastCreatedFolder !== "none",
+    },
+    {
+      label: "Last Modified File",
+      value: lastModifiedFile,
+      active: lastModifiedFile !== "none",
+    },
+    {
+      label: "Active Task",
+      value: activeTask,
+      active: activeTask !== "none",
+    },
+    {
+      label: "Last Task",
+      value: lastTask,
+      active: lastTask !== "none",
+    },
+  ];
+
+  return (
+    <div className="relative min-w-0 overflow-hidden">
+      <div className="mb-3 flex items-center justify-between gap-3 border-b border-[rgba(255,170,90,0.12)] pb-2">
+        <div className="min-w-0">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffb066]/75">
+            Active Object
+          </div>
+          <div className="mt-1 text-[9px] uppercase tracking-[0.18em] text-[#b98556]/60">
+            continuity target
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        {rows.map((row) => (
+          <div
+            key={row.label}
+            className="
+              min-w-0 border border-[rgba(255,160,70,0.12)]
+              bg-[linear-gradient(180deg,rgba(255,170,80,0.02),rgba(255,170,80,0.006))]
+              px-3 py-2.5
+            "
+          >
+            <div className="mb-1 flex items-center justify-between gap-2">
+              <span className="text-[8px] uppercase tracking-[0.18em] text-[#b98556]/65">
+                {row.label}
+              </span>
+              <span
+                className={[
+                  "text-[8px] uppercase tracking-[0.16em]",
+                  row.active ? "text-[#ffb066]/70" : "text-[#7a5435]/70",
+                ].join(" ")}
+              >
+                {row.active ? "set" : "none"}
+              </span>
+            </div>
+
+            <div
+              className={[
+                "min-w-0 text-[10px] uppercase leading-4",
+                row.value.includes("\\") || row.value.includes("/")
+                  ? "break-all font-mono tracking-[0.04em] text-[#d6d1c7]/70"
+                  : "break-words tracking-[0.1em] text-[#d6d1c7]/65",
+              ].join(" ")}
+            >
+              {row.value}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StatusPill({
+  label,
+  value,
+  tone = "neutral",
+}: {
+  label: string;
+  value: string;
+  tone?: "neutral" | "active" | "warning" | "success";
+}) {
+  const toneClass =
+    tone === "active"
+      ? "border-[#ffb066]/35 bg-[#ff8c32]/10 text-[#ffd7a3]"
+      : tone === "warning"
+        ? "border-red-400/30 bg-red-950/20 text-red-200"
+        : tone === "success"
+          ? "border-emerald-400/25 bg-emerald-950/15 text-emerald-200"
+          : "border-[rgba(255,160,70,0.14)] bg-black/20 text-[#d6d1c7]/65";
+
+  return (
+    <div className={`min-w-0 border px-3 py-2 ${toneClass}`}>
+      <div className="text-[8px] uppercase tracking-[0.18em] opacity-60">
+        {label}
+      </div>
+      <div className="mt-1 min-w-0 truncate text-[10px] uppercase tracking-[0.12em]">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function getActiveObjectKind(session: SessionSnapshot) {
+  const execution = session.executionState;
+
+  if (execution?.selectedFilePath) return "file";
+  if (execution?.selectedFolderPath) return "folder";
+  if (execution?.lastOpenedApp) return "app";
+  if (execution?.lastOpenedUrl) return "url";
+
+  if (session.lastSelectedFile !== "none") return "file";
+
+  return "none";
+}
+
+function ExecutionStatusStrip({ session }: { session: SessionSnapshot }) {
+  const execution = session.executionState;
+
+  const activeTaskStatus = execution?.activeTaskStatus ?? "none";
+  const lastTaskStatus = execution?.lastTaskStatus ?? "none";
+  const activeObjectKind = getActiveObjectKind(session);
+
+  const isWaitingForApproval =
+    activeTaskStatus === "waiting_for_approval" ||
+    session.pendingState === "awaiting_confirmation";
+
+  const taskTone =
+    isWaitingForApproval
+      ? "warning"
+      : activeTaskStatus !== "none"
+        ? "active"
+        : lastTaskStatus === "completed"
+          ? "success"
+          : "neutral";
+
+  return (
+    <div className="grid grid-cols-2 gap-2 xl:grid-cols-4">
+      <StatusPill
+        label="Active Object"
+        value={activeObjectKind}
+        tone={activeObjectKind !== "none" ? "active" : "neutral"}
+      />
+
+      <StatusPill
+        label="Task State"
+        value={activeTaskStatus !== "none" ? activeTaskStatus : lastTaskStatus}
+        tone={taskTone}
+      />
+
+      <StatusPill
+        label="Route"
+        value={session.activeRoute}
+        tone={session.activeRoute === "tools" ? "active" : "neutral"}
+      />
+
+      <StatusPill
+        label="Approval"
+        value={isWaitingForApproval ? "required" : "clear"}
+        tone={isWaitingForApproval ? "warning" : "success"}
+      />
+    </div>
+  );
+}
+
+function ModeStatusPanel({
+  mode,
+  session,
+}: {
+  mode: DashboardMode;
+  session: SessionSnapshot;
+}) {
+  const modeLabel = mode.toUpperCase();
+
+  const modeDescription =
+    mode === "operation"
+      ? "ACTIVE EXECUTION CONTEXT"
+      : mode === "workflow"
+        ? "WORKFLOW ROUTE INSPECTION"
+        : mode === "planner"
+          ? "PERSISTENT PLAN OVERSIGHT"
+          : "DEVELOPER TRUST LAYER";
+
+  return (
+    <div className="mb-4 min-w-0 border border-[rgba(255,160,70,0.12)] bg-black/20 p-3">
+      <div className="text-[9px] uppercase tracking-[0.22em] text-[#b98556]/65">
+        Dashboard Mode
+      </div>
+
+      <div className="mt-2 break-words text-[15px] font-semibold uppercase tracking-[0.16em] text-[#ffe0b3]/90">
+        {modeLabel}
+      </div>
+
+      <div className="mt-2 break-words text-[9px] uppercase leading-4 tracking-[0.14em] text-[#d6d1c7]/45">
+        {modeDescription}
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <div className="border border-[rgba(255,160,70,0.1)] bg-black/20 p-2">
+          <div className="text-[8px] uppercase tracking-[0.16em] text-[#b98556]/55">
+            Route
+          </div>
+          <div className="mt-1 truncate text-[10px] uppercase tracking-[0.1em] text-[#d6d1c7]/70">
+            {session.activeRoute}
+          </div>
+        </div>
+
+        <div className="border border-[rgba(255,160,70,0.1)] bg-black/20 p-2">
+          <div className="text-[8px] uppercase tracking-[0.16em] text-[#b98556]/55">
+            Tool
+          </div>
+          <div className="mt-1 truncate text-[10px] uppercase tracking-[0.1em] text-[#d6d1c7]/70">
+            {session.lastTool}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RightDashboard({
+  mode,
+  setMode,
+  session,
+  telemetryMetrics,
+  telemetryStreams,
+  contextBlocks,
+  contextRoutes,
+  isBusy,
+  developerMode,
+  setDeveloperMode,
+  developerPanel,
+  resetCurrentSession,
+}: {
+  mode: DashboardMode;
+  setMode: (mode: DashboardMode) => void;
+  session: SessionSnapshot;
+  telemetryMetrics: ReturnType<typeof deriveTelemetryMetrics>;
+  telemetryStreams: ReturnType<typeof deriveTelemetryStreams>;
+  contextBlocks: ReturnType<typeof deriveContextBlocks>;
+  contextRoutes: ReturnType<typeof deriveContextRoutes>;
+  isBusy: boolean;
+  developerMode: boolean;
+  setDeveloperMode: Dispatch<SetStateAction<boolean>>;
+  developerPanel?: ReactNode;
+  resetCurrentSession: () => void;
+}) {
+  return (
+    <div className="flex min-w-0 flex-col gap-4 xl:gap-5">
+      <ShellFrame variant="soft" className="p-2">
+        <div className="grid grid-cols-2 gap-2">
+        {DASHBOARD_MODES.map((item) => (
+          <DashboardModeButton
+            key={item.key}
+            label={item.label}
+            description={item.description}
+            icon={item.icon}
+            active={mode === item.key}
+            onClick={() => setMode(item.key)}
+          />
+        ))}
+        </div>
+      </ShellFrame>
+
+      {mode === "operation" ? (
+        <>
+          <ShellFrame variant="soft" className="p-3 md:p-4">
+            <ExecutionStatusStrip session={session} />
+          </ShellFrame>
+
+          <ShellFrame variant="standard" className="p-3 md:p-4">
+            <ActiveObjectPanel session={session} />
+          </ShellFrame>
+
+          <ShellFrame variant="standard" className="p-3 md:p-4">
+            <TelemetryPanel metrics={telemetryMetrics} streams={telemetryStreams} />
+          </ShellFrame>
+        </>
+      ) : null}
+
+      {mode === "workflow" ? (
+        <>
+          <ShellFrame variant="soft" className="p-3 md:p-4">
+            <WorkflowInspector
+              route={session.activeRoute}
+              workflowKind={session.workflowKind}
+              workflowStep={session.workflowStep}
+              workflowCandidateCount={session.workflowCandidateCount}
+              searchQuery={session.currentSearchQuery}
+              searchRoot={session.currentSearchRoot}
+              selectedFile={session.lastSelectedFile}
+              readFile={session.lastReadFile}
+              lastTool={session.lastTool}
+              toolSummary={session.lastToolSummary}
+              pendingState={session.pendingState}
+              isBusy={isBusy}
+            />
+          </ShellFrame>
+
+          <ShellFrame variant="standard" className="p-3 md:p-4">
+            <ContextPanel
+              title="WORKFLOW CONTEXT"
+              blocks={contextBlocks}
+              routes={contextRoutes}
+              summary={session.lastToolSummary}
+            />
+          </ShellFrame>
+        </>
+      ) : null}
+
+      {mode === "planner" ? (
+        <>
+          <ShellFrame variant="soft" className="p-3 md:p-4">
+            <PlannerInspector activePlan={session.activePlan} />
+          </ShellFrame>
+
+          <ShellFrame variant="soft" className="p-3 md:p-4">
+            <div className="space-y-3">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffb066]/70">
+                  Planner State
+                </div>
+                <p className="mt-2 text-[11px] uppercase leading-5 tracking-[0.12em] text-[#d6d1c7]/55">
+                  Persistent task planning and execution tracking are isolated
+                  here to keep the command core clean.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="border border-[rgba(255,160,70,0.12)] bg-black/20 p-3">
+                  <div className="text-[9px] uppercase tracking-[0.18em] text-[#b98556]/70">
+                    Plan
+                  </div>
+                  <div className="mt-2 break-words text-[11px] uppercase tracking-[0.1em] text-[#f0d2a8]/80">
+                    {session.activePlan ? session.activePlan.title : "None"}
+                  </div>
+                </div>
+
+                <div className="border border-[rgba(255,160,70,0.12)] bg-black/20 p-3">
+                  <div className="text-[9px] uppercase tracking-[0.18em] text-[#b98556]/70">
+                    Status
+                  </div>
+                  <div className="mt-2 text-[11px] uppercase tracking-[0.1em] text-[#f0d2a8]/80">
+                    {session.activePlan ? session.activePlan.status : "Idle"}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ShellFrame>
+        </>
+      ) : null}
+
+      {mode === "developer" ? (
+        <>
+          <ShellFrame variant="soft" className="p-3 md:p-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffb066]/70">
+                  Developer Trust
+                </div>
+                <div className="mt-1 text-xs text-[#d6d1c7]/50">
+                  Trust traces, tool logs, memories, and message state.
+                </div>
+              </div>
+
+              <div className="flex shrink-0 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setDeveloperMode((value) => !value)}
+                  className="rounded-lg border border-[rgba(255,160,70,0.18)] px-3 py-1.5 text-xs text-[#ffb066] transition hover:bg-[rgba(255,120,40,0.08)]"
+                >
+                  {developerMode ? "On" : "Off"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={resetCurrentSession}
+                  className="rounded-lg border border-[rgba(255,80,80,0.24)] px-3 py-1.5 text-xs text-red-300 transition hover:bg-red-950/30"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </ShellFrame>
+
+          {developerPanel ? (
+            <ShellFrame variant="soft" className="p-3 md:p-4">
+              {developerPanel}
+            </ShellFrame>
+          ) : (
+            <ShellFrame variant="soft" className="p-3 md:p-4">
+              <div className="text-[10px] uppercase tracking-[0.18em] text-[#d6d1c7]/45">
+                Developer panels disabled.
+              </div>
+            </ShellFrame>
+          )}
+        </>
+      ) : null}
+    </div>
+  );
+}
+
 export default function CommandShell({
   logs,
   subsystems,
@@ -425,6 +989,9 @@ export default function CommandShell({
   developerPanel,
   resetCurrentSession,
 }: CommandShellProps) {
+  const [dashboardMode, setDashboardMode] =
+    useState<DashboardMode>("operation");
+
   const feedItems = mapLogsToFeed(logs);
   const railItems = mapSubsystems(subsystems);
   const composerMode = deriveComposerMode(session);
@@ -435,8 +1002,8 @@ export default function CommandShell({
   const headerStats = deriveHeaderStats(session, isBusy);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#050608] text-[#d6d1c7]">
-      <div className="pointer-events-none absolute inset-0">
+    <main className="relative min-h-screen bg-[#050608] text-[#d6d1c7]">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,145,55,0.05)_0%,rgba(255,145,55,0.018)_18%,rgba(0,0,0,0)_42%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,120,40,0.028)_0%,transparent_30%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#040507_0%,#07080b_35%,#050608_100%)]" />
@@ -479,7 +1046,7 @@ export default function CommandShell({
               <div className="absolute bottom-[14px] right-[14px] h-[18px] w-[18px] border-b border-r border-[rgba(255,176,104,0.08)]" />
             </div>
 
-            <div className="p-3 md:p-4 lg:p-5">
+            <div className="relative z-10 p-3 md:p-4 lg:p-5">
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-12 xl:gap-5">
                 <div className="xl:col-span-12">
                   <ShellFrame variant="heavy" className="p-0">
@@ -494,143 +1061,122 @@ export default function CommandShell({
                   </ShellFrame>
                 </div>
 
-                <div className="xl:col-span-3">
-                  <ShellFrame variant="standard" className="h-full p-3 md:p-4">
-                    <SubsystemRail items={railItems} version="INTERFACE VER. 4.5.0" />
-                  </ShellFrame>
-                </div>
+                <div className="xl:col-span-12">
+                  <div className="grid grid-cols-1 gap-4 xl:grid-cols-[300px_minmax(0,1fr)_390px] xl:gap-5">
+                  <aside className="min-w-0">
+                    <ShellFrame variant="standard" className="h-full p-3 md:p-4">
+                      <ModeStatusPanel mode={dashboardMode} session={session} />
 
-                <div className="xl:col-span-6">
-                  <div className="flex h-full flex-col gap-4 xl:gap-5">
-                    <ShellFrame variant="heavy" className="relative p-3 md:p-4 lg:p-5">
-                      <div className="relative">
-                        <CoreEye
-                          title="CHERNOBOG SIGIL STATE"
-                          subtitle="CORE EMBLEM"
-                          statusLabel={`WORKFLOW ${session.workflowStep.toUpperCase()} // ROUTE ${session.activeRoute.toUpperCase()}`}
-                          body={session.lastToolSummary}
-                        />
+                      <SubsystemRail
+                        items={railItems}
+                        version="INTERFACE VER. 5.1.5"
+                      />
+                    </ShellFrame>
+                  </aside>
+
+                    <section className="min-w-0">
+                      <div className="flex min-h-0 flex-col gap-4 xl:gap-5">
+                      <ShellFrame
+                          variant="heavy"
+                          className="relative p-3 md:p-4 lg:p-5 xl:min-h-[360px]"
+                        >
+                          <CoreEye
+                            title="CHERNOBOG SIGIL STATE"
+                            subtitle="CORE EMBLEM"
+                            statusLabel={`WORKFLOW ${session.workflowStep.toUpperCase()} // ROUTE ${session.activeRoute.toUpperCase()}`}
+                            body={session.lastToolSummary}
+                          />
+                        </ShellFrame>
+
+                        <ShellFrame variant="standard" className="p-3 md:p-4">
+                        <div className="mb-3 flex items-center justify-between gap-3 border-b border-[rgba(255,170,90,0.1)] pb-2">
+                          <div>
+                            <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffb066]/75">
+                              Directive Feed
+                            </div>
+                            <div className="mt-1 text-[9px] uppercase tracking-[0.18em] text-[#b98556]/60">
+                              command / route / response stream
+                            </div>
+                          </div>
+
+                          <div className="text-[9px] uppercase tracking-[0.16em] text-[#d6d1c7]/40">
+                            {feedItems.length} entries
+                          </div>
+                        </div>
+
+                        <div
+                          ref={scrollRef}
+                          className="max-h-[390px] overflow-y-auto pr-1 [scrollbar-width:thin]"
+                        >
+                          <DirectiveFeed items={feedItems} />
+                        </div>
+                        </ShellFrame>
+
+                        <ShellFrame variant="heavy" className="p-3 md:p-4">
+                          <div className="mb-3 flex items-center justify-between gap-3 border-b border-[rgba(255,170,90,0.1)] pb-2">
+                            <div>
+                              <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffb066]/75">
+                                Directive Input
+                              </div>
+                              <div className="mt-1 text-[9px] uppercase tracking-[0.18em] text-[#b98556]/60">
+                                operator command channel
+                              </div>
+                            </div>
+
+                            <div
+                              className={[
+                                "h-2 w-2 rounded-full shadow-[0_0_12px_rgba(255,170,90,0.35)]",
+                                isBusy ? "bg-red-300/80" : "bg-[#ffb066]/80",
+                              ].join(" ")}
+                            />
+                          </div>
+
+                          <form onSubmit={onSubmit}>
+                            <CommandComposer
+                              value={input}
+                              onChange={setInput}
+                              onSubmit={() => {
+                                const fakeEvent = {
+                                  preventDefault() {},
+                                } as React.FormEvent<HTMLFormElement>;
+                                onSubmit(fakeEvent);
+                              }}
+                              disabled={isBusy}
+                              mode={composerMode}
+                              placeholder={
+                                isBusy
+                                  ? "CHERNOBOG IS PROCESSING DIRECTIVE..."
+                                  : "ISSUE DIRECTIVE TO CHERNOBOG..."
+                              }
+                            />
+                          </form>
+                        </ShellFrame>
                       </div>
-                    </ShellFrame>
+                    </section>
 
-                    <ShellFrame variant="standard" className="p-3 md:p-4">
-                      <div
-                        ref={scrollRef}
-                        className="max-h-[520px] overflow-y-auto pr-1 [scrollbar-width:thin]"
-                      >
-                        <DirectiveFeed items={feedItems} />
-                      </div>
-                    </ShellFrame>
-                  </div>
-                </div>
-
-                <div className="xl:col-span-3">
-                  <div className="flex h-full flex-col gap-4 xl:gap-5">
-                    <ShellFrame variant="standard" className="p-3 md:p-4">
-                      <TelemetryPanel
-                        metrics={telemetryMetrics}
-                        streams={telemetryStreams}
-                      />
-                    </ShellFrame>
-
-                    <ShellFrame variant="standard" className="p-3 md:p-4">
-                      <ContextPanel
-                        blocks={contextBlocks}
-                        routes={contextRoutes}
-                        summary={session.lastToolSummary}
-                      />
-                    </ShellFrame>
-                  </div>
-                </div>
-
-                <div className="xl:col-span-9">
-                  <ShellFrame variant="heavy" className="p-3 md:p-4">
-                    <form onSubmit={onSubmit}>
-                      <CommandComposer
-                        value={input}
-                        onChange={setInput}
-                        onSubmit={() => {
-                          const fakeEvent = {
-                            preventDefault() {},
-                          } as React.FormEvent<HTMLFormElement>;
-                          onSubmit(fakeEvent);
-                        }}
-                        disabled={isBusy}
-                        mode={composerMode}
-                        placeholder={
-                          isBusy
-                            ? "CHERNOBOG IS PROCESSING DIRECTIVE..."
-                            : "ISSUE DIRECTIVE TO CHERNOBOG..."
-                        }
-                      />
-                    </form>
-                  </ShellFrame>
-                </div>
-
-                <div className="xl:col-span-3">
-                  <div className="flex h-full flex-col gap-4 xl:gap-5">
-                    <ShellFrame variant="soft" className="min-h-[220px] p-3 md:p-4">
-                      <WorkflowInspector
-                        route={session.activeRoute}
-                        workflowKind={session.workflowKind}
-                        workflowStep={session.workflowStep}
-                        workflowCandidateCount={session.workflowCandidateCount}
-                        searchQuery={session.currentSearchQuery}
-                        searchRoot={session.currentSearchRoot}
-                        selectedFile={session.lastSelectedFile}
-                        readFile={session.lastReadFile}
-                        lastTool={session.lastTool}
-                        toolSummary={session.lastToolSummary}
-                        pendingState={session.pendingState}
+                    <aside className="min-w-0">
+                      <RightDashboard
+                        mode={dashboardMode}
+                        setMode={setDashboardMode}
+                        session={session}
+                        telemetryMetrics={telemetryMetrics}
+                        telemetryStreams={telemetryStreams}
+                        contextBlocks={contextBlocks}
+                        contextRoutes={contextRoutes}
                         isBusy={isBusy}
+                        developerMode={developerMode}
+                        setDeveloperMode={setDeveloperMode}
+                        developerPanel={developerPanel}
+                        resetCurrentSession={resetCurrentSession}
                       />
-                    </ShellFrame>
-
-                    <ShellFrame variant="soft" className="p-3 md:p-4">
-                      <PlannerInspector activePlan={session.activePlan} />
-                    </ShellFrame>
-
-                    <ShellFrame variant="soft" className="p-3 md:p-4">
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffb066]/70">
-                            Developer Trust
-                          </div>
-                          <div className="mt-1 text-xs text-[#d6d1c7]/50">
-                            Trust traces, tool logs, memories, and message state
-                          </div>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setDeveloperMode((value) => !value)}
-                            className="rounded-lg border border-[rgba(255,160,70,0.18)] px-3 py-1.5 text-xs text-[#ffb066] transition hover:bg-[rgba(255,120,40,0.08)]"
-                          >
-                            {developerMode ? "On" : "Off"}
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={resetCurrentSession}
-                            className="rounded-lg border border-[rgba(255,80,80,0.24)] px-3 py-1.5 text-xs text-red-300 transition hover:bg-red-950/30"
-                          >
-                            Reset
-                          </button>
-                        </div>
-                      </div>
-                    </ShellFrame>
-
-                    {developerPanel ? (
-                      <ShellFrame variant="soft" className="p-3 md:p-4">
-                        {developerPanel}
-                      </ShellFrame>
-                    ) : null}
+                    </aside>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div className="h-6" />
         </div>
       </div>
     </main>

@@ -27,6 +27,48 @@ export async function GET(req: Request) {
         )
       : null;
 
+      function serializeExecutionState(session: any) {
+        const state = session.executionState;
+      
+        if (!state) {
+          return null;
+        }
+      
+        return {
+          selectedFilePath: state.selectedFilePath,
+          selectedFolderPath: state.selectedFolderPath,
+      
+          lastReadFilePath: state.lastReadFilePath,
+          hasLastReadText: state.lastReadText !== undefined,
+      
+          lastCreatedFilePath: state.lastCreatedFilePath,
+          lastCreatedFolderPath: state.lastCreatedFolderPath,
+      
+          lastAppendedFilePath: state.lastAppendedFilePath,
+      
+          lastRenamedFilePath: state.lastRenamedFilePath,
+          lastRenamedFolderPath: state.lastRenamedFolderPath,
+      
+          lastCopiedFilePath: state.lastCopiedFilePath,
+          lastCopiedFolderPath: state.lastCopiedFolderPath,
+      
+          lastMovedFilePath: state.lastMovedFilePath,
+          lastMovedFolderPath: state.lastMovedFolderPath,
+      
+          lastOpenedApp: state.lastOpenedApp,
+          lastOpenedUrl: state.lastOpenedUrl,
+      
+          hasSystemStatus: state.lastSystemStatus !== undefined,
+          hasPathInfo: state.lastPathInfo !== undefined,
+          hasListedDirectory: state.lastListedDirectory !== undefined,
+      
+          activeTaskGoal: state.activeTask?.goal,
+          activeTaskStatus: state.activeTask?.status,
+          lastTaskGoal: state.lastTask?.goal,
+          lastTaskStatus: state.lastTask?.status,
+        };
+      }
+
   return NextResponse.json({
     sessionId,
     route: session.lastRoute ?? "idle",
@@ -73,5 +115,7 @@ export async function GET(req: Request) {
             ?.title ?? null,
         }
     : null,
+
+    executionState: serializeExecutionState(session),
   });
 }
