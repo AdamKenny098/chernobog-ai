@@ -98,7 +98,7 @@ type ActivePlanSnapshot = {
   activeStep: string | null;
 };
 
-
+const SESSION_STORAGE_KEY = "chernobog.sessionId";
 
 function nowTime() {
   return new Date().toLocaleTimeString();
@@ -115,6 +115,7 @@ function makeLog(source: LogSource, text: string): LogEntry {
 
 function normalizeText(value: unknown, fallback = "none") {
   if (typeof value !== "string") return fallback;
+
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : fallback;
 }
@@ -139,13 +140,7 @@ function isWorkflowSelectionRequired(
   );
 }
 
-const SESSION_STORAGE_KEY = "chernobog.sessionId";
-
 function getOrCreateBrowserSessionId() {
-  if (typeof window === "undefined") {
-    return crypto.randomUUID();
-  }
-
   const existing = window.localStorage.getItem(SESSION_STORAGE_KEY);
 
   if (existing && existing.trim().length > 0) {
@@ -159,7 +154,7 @@ function getOrCreateBrowserSessionId() {
 }
 
 export default function UmbraAIConsole() {
-  const [sessionId] = useState(getOrCreateBrowserSessionId);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [isBusy, setIsBusy] = useState(false);
 
@@ -167,13 +162,10 @@ export default function UmbraAIConsole() {
   const [debugVisible, setDebugVisible] = useState(true);
   const [developerMode, setDeveloperMode] = useState(true);
 
-  const [logs, setLogs] = useState<LogEntry[]>(() => [
-    makeLog("SYSTEM", "God Program interface initialized."),
-    makeLog("SYSTEM", "Core intelligence online. Session orchestration stable."),
-  ]);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
 
   const [session, setSession] = useState<SessionSnapshot>({
-    sessionId,
+    sessionId: "pending",
     activeRoute: "idle",
     lastTool: "none",
     lastToolSummary: "No tool activity yet.",
@@ -187,34 +179,54 @@ export default function UmbraAIConsole() {
     workflowCandidateCount: 0,
     activePlan: null,
   });
-  
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  
+
   useEffect(() => {
+    const browserSessionId = getOrCreateBrowserSessionId();
+
+    setSessionId(browserSessionId);
+
+    setSession((prev) => ({
+      ...prev,
+      sessionId: browserSessionId,
+    }));
+
+    setLogs([
+      makeLog("SYSTEM", "God Program interface initialized."),
+      makeLog("SYSTEM", "Core intelligence online. Session orchestration stable."),
+    ]);
+  }, []);
+
+  useEffect(() => {
+    if (!sessionId) return;
+  
+    const activeSessionId = sessionId;
     let cancelled = false;
   
     async function hydrateSession() {
       try {
         const response = await fetch(
-          `/api/session?sessionId=${encodeURIComponent(sessionId)}`,
+          `/api/session?sessionId=${encodeURIComponent(activeSessionId)}`,
           {
             method: "GET",
             cache: "no-store",
           }
         );
-  
+
         if (!response.ok) {
           return;
         }
-  
+
         const data: ChatApiResponse = await response.json();
-  
+
         if (cancelled) {
           return;
         }
-  
+
         setSession((prev) => ({
           ...prev,
+          sessionId: activeSessionId,
           activeRoute: normalizeText(data.route, prev.activeRoute),
           lastTool: normalizeText(data.tool, prev.lastTool),
           lastToolSummary: normalizeText(data.toolSummary, prev.lastToolSummary),
@@ -239,7 +251,7 @@ export default function UmbraAIConsole() {
           activePlan:
             "activePlan" in data ? data.activePlan ?? null : prev.activePlan,
         }));
-  
+
         setLogs((prev) => [
           ...prev,
           makeLog("SYSTEM", "Previous session context restored."),
@@ -253,14 +265,14 @@ export default function UmbraAIConsole() {
         }
       }
     }
-  
+
     void hydrateSession();
-  
+
     return () => {
       cancelled = true;
     };
   }, [sessionId]);
-  
+
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
@@ -353,7 +365,8 @@ export default function UmbraAIConsole() {
     e.preventDefault();
 
     const value = input.trim();
-    if (!value || isBusy) return;
+    if (!value || isBusy || !sessionId) return;
+    const activeSessionId = sessionId;
 
     setInput("");
     setIsBusy(true);
@@ -384,7 +397,7 @@ export default function UmbraAIConsole() {
           signal: controller.signal,
           body: JSON.stringify({
             message: value,
-            sessionId,
+            sessionId: activeSessionId,
           }),
         });
       } finally {
@@ -412,6 +425,7 @@ export default function UmbraAIConsole() {
 
       setSession((prev) => ({
         ...prev,
+        sessionId: activeSessionId,
         activeRoute: normalizeText(data.route, prev.activeRoute),
         lastTool: normalizeText(data.tool, prev.lastTool),
         lastToolSummary: normalizeText(data.toolSummary, prev.lastToolSummary),
@@ -445,25 +459,9 @@ export default function UmbraAIConsole() {
     }
   }
 
-  const developerPanel = developerMode ? (
-    <div className="space-y-4">
-      <TrustDebugPanel
-        trace={debugTrace}
-        visible={debugVisible}
-        onToggleVisible={() => setDebugVisible((value) => !value)}
-      />
-  
-      <TrustTraceHistory onSelectTrace={setDebugTrace} />
-  
-      <MemoryArchitecturePanel sessionId={sessionId} />
-
-      <CommandLanguagePanel />
-  
-      <ChernobogDebugStatePanel />
-    </div>
-  ) : null;
-
   async function resetCurrentSession() {
+    if (!sessionId) return;
+
     try {
       await fetch("/api/session/reset", {
         method: "POST",
@@ -480,6 +478,24 @@ export default function UmbraAIConsole() {
       window.location.reload();
     }
   }
+
+  const developerPanel = developerMode ? (
+    <div className="space-y-4">
+      <TrustDebugPanel
+        trace={debugTrace}
+        visible={debugVisible}
+        onToggleVisible={() => setDebugVisible((value) => !value)}
+      />
+
+      <TrustTraceHistory onSelectTrace={setDebugTrace} />
+
+      {sessionId ? <MemoryArchitecturePanel sessionId={sessionId} /> : null}
+
+      <CommandLanguagePanel />
+
+      <ChernobogDebugStatePanel />
+    </div>
+  ) : null;
 
   return (
     <CommandShell

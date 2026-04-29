@@ -1,4 +1,7 @@
 import { spawn } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { z } from "zod";
 import { ToolDefinition } from "../types";
 
@@ -15,42 +18,87 @@ type OpenAppOutput = {
   message: string;
 };
 
+type WindowsLaunchTarget = {
+  command: string;
+  args?: string[];
+};
+
 const APP_ALIASES: Record<string, string> = {
-    spotify: "spotify",
-    discord: "discord",
-    opera: "opera",
-    "opera gx": "opera",
-    operagx: "opera",
-    browser: "opera",
-    "my browser": "opera",
-    "web browser": "opera",
-    "default browser": "opera",
-    chrome: "chrome",
-    "google chrome": "chrome",
-    firefox: "firefox",
-    edge: "msedge",
-    "microsoft edge": "msedge",
-    vscode: "code",
-    "vs code": "code",
-    "visual studio code": "code",
-    notepad: "notepad",
-    calc: "calc",
-    calculator: "calc",
-  };
+  spotify: "spotify",
+  discord: "discord",
+  opera: "opera",
+  "opera gx": "opera",
+  operagx: "opera",
+  browser: "opera",
+  "my browser": "opera",
+  "web browser": "opera",
+  "default browser": "opera",
+  chrome: "chrome",
+  "google chrome": "chrome",
+  firefox: "firefox",
+  edge: "msedge",
+  "microsoft edge": "msedge",
+  vscode: "code",
+  "vs code": "code",
+  "visual studio code": "code",
+  notepad: "notepad",
+  calc: "calc",
+  calculator: "calc",
+};
 
 function normalizeAppName(appName: string) {
   return appName.trim().toLowerCase();
 }
 
-function openWindowsApp(command: string): Promise<void> {
+function getLocalAppDataPath() {
+  return process.env.LOCALAPPDATA ?? path.join(os.homedir(), "AppData", "Local");
+}
+
+function resolveWindowsLaunchTarget(resolvedApp: string): WindowsLaunchTarget {
+  const localAppData = getLocalAppDataPath();
+
+  if (resolvedApp === "discord") {
+    const discordUpdateExe = path.join(localAppData, "Discord", "Update.exe");
+
+    if (fs.existsSync(discordUpdateExe)) {
+      return {
+        command: discordUpdateExe,
+        args: ["--processStart", "Discord.exe"],
+      };
+    }
+  }
+
+  if (resolvedApp === "spotify") {
+    const spotifyExe = path.join(
+      localAppData,
+      "Microsoft",
+      "WindowsApps",
+      "Spotify.exe"
+    );
+
+    if (fs.existsSync(spotifyExe)) {
+      return {
+        command: spotifyExe,
+      };
+    }
+  }
+
+  return {
+    command: resolvedApp,
+  };
+}
+
+function openWindowsApp(target: WindowsLaunchTarget): Promise<void> {
   return new Promise((resolve, reject) => {
-    const child = spawn("cmd", ["/c", "start", "", command], {
+    const child = spawn(target.command, target.args ?? [], {
       detached: true,
       stdio: "ignore",
+      shell: false,
     });
 
     child.on("error", reject);
     child.unref();
+
     resolve();
   });
 }
@@ -64,6 +112,7 @@ function openMacApp(command: string): Promise<void> {
 
     child.on("error", reject);
     child.unref();
+
     resolve();
   });
 }
@@ -77,6 +126,7 @@ function openLinuxApp(command: string): Promise<void> {
 
     child.on("error", reject);
     child.unref();
+
     resolve();
   });
 }
@@ -96,7 +146,8 @@ export const openAppTool: ToolDefinition<OpenAppInput, OpenAppOutput> = {
     const platform = context?.platform ?? process.platform;
 
     if (platform === "win32") {
-      await openWindowsApp(resolvedApp);
+      const target = resolveWindowsLaunchTarget(resolvedApp);
+      await openWindowsApp(target);
     } else if (platform === "darwin") {
       await openMacApp(resolvedApp);
     } else if (platform === "linux") {

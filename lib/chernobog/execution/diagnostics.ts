@@ -17,6 +17,16 @@ export interface ExecutionDiagnostics {
   lastReadFilePath?: string;
   hasLastReadText: boolean;
   error?: string;
+  openedApp?: unknown;
+  hasSystemStatus: boolean;
+  createdFolderPath?: string;
+  appendedFilePath?: string;
+  renamedTo?: string;
+  copiedTo?: string;
+  movedTo?: string;
+  hasListedDirectory: boolean;
+  hasPathInfo: boolean;
+  hasOpenedUrl: boolean;
 }
 
 export function buildExecutionDiagnostics(task: ExecutionTask): ExecutionDiagnostics {
@@ -43,7 +53,31 @@ export function buildExecutionDiagnostics(task: ExecutionTask): ExecutionDiagnos
       typeof task.context.lastReadFilePath === "string"
         ? task.context.lastReadFilePath
         : undefined,
-    hasLastReadText: task.context.lastReadText !== undefined,
-    error: task.error,
+        hasLastReadText: task.context.lastReadText !== undefined,
+        openedApp: task.context.openedApp,
+        hasSystemStatus: task.context.systemStatus !== undefined,
+        error: task.error,
+        createdFolderPath:
+        typeof task.context.createdFolderPath === "string"
+          ? task.context.createdFolderPath
+          : undefined,
+          renamedTo:
+  typeof task.context.renamedTo === "string"
+    ? task.context.renamedTo
+    : undefined,
+
+copiedTo:
+  typeof task.context.copiedTo === "string"
+    ? task.context.copiedTo
+    : undefined,
+
+movedTo:
+  typeof task.context.movedTo === "string"
+    ? task.context.movedTo
+    : undefined,
+
+hasListedDirectory: task.context.listedDirectory !== undefined,
+hasPathInfo: task.context.pathInfo !== undefined,
+hasOpenedUrl: task.context.openedUrl !== undefined,
   };
 }
