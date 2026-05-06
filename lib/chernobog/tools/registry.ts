@@ -16,6 +16,8 @@ import { listDirectoryTool } from "./builtins/list-directory";
 import { getPathInfoTool } from "./builtins/get-path-info";
 import { copyPathTool } from "./builtins/copy-path";
 import { movePathTool } from "./builtins/move-path";
+import { writeProjectFileTool } from "./builtins/write-project-file";
+import { runProjectCommandTool } from "./builtins/run-project-command";
 
 export const toolRegistry = {
   get_time: getTimeTool,
@@ -34,6 +36,8 @@ export const toolRegistry = {
   get_path_info:getPathInfoTool,
   copy_path:copyPathTool,
   move_path:movePathTool,
+  write_project_file:writeProjectFileTool,
+  run_project_command:runProjectCommandTool,
 
 };
 

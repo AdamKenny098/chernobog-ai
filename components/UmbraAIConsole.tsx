@@ -132,6 +132,7 @@ type ExecutionStateSnapshot = {
 };
 
 const SESSION_STORAGE_KEY = "chernobog.sessionId";
+const REQUEST_TIMEOUT_MS = 120_000;
 
 function nowTime() {
   return new Date().toLocaleTimeString();
@@ -420,7 +421,7 @@ export default function UmbraAIConsole() {
 
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 35_000);
+      const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
       let response: Response;
 

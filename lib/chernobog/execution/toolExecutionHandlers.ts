@@ -623,6 +623,98 @@ export function createToolExecutionHandlers(
         };
       },
 
+
+      async write_project_file(step, task) {
+        const mappedInput = inputMappers.write_project_file
+          ? inputMappers.write_project_file(step.input, task.context)
+          : step.input;
+
+        const result = await executeTool("write_project_file", mappedInput);
+
+        if (!result.ok) {
+          return {
+            success: false,
+            error: result.error || "write_project_file failed.",
+          };
+        }
+
+        const writePath =
+          result.data &&
+          typeof result.data === "object" &&
+          "relativePath" in result.data &&
+          typeof result.data.relativePath === "string"
+            ? result.data.relativePath
+            : undefined;
+
+        const summary =
+          result.data &&
+          typeof result.data === "object" &&
+          "message" in result.data &&
+          typeof result.data.message === "string"
+            ? result.data.message
+            : "Project file written.";
+
+        return {
+          success: true,
+          output: summary,
+          context: {
+            lastProjectWritePath: writePath,
+            summary,
+          },
+        };
+      },
+
+      async run_project_command(step, task) {
+        const mappedInput = inputMappers.run_project_command
+          ? inputMappers.run_project_command(step.input, task.context)
+          : step.input;
+
+        const result = await executeTool("run_project_command", mappedInput);
+
+        if (!result.ok) {
+          return {
+            success: false,
+            error: result.error || "run_project_command failed.",
+          };
+        }
+
+        const command =
+          result.data &&
+          typeof result.data === "object" &&
+          "command" in result.data &&
+          typeof result.data.command === "string"
+            ? result.data.command
+            : "unknown";
+
+        const output =
+          result.data &&
+          typeof result.data === "object" &&
+          "output" in result.data &&
+          typeof result.data.output === "string"
+            ? result.data.output
+            : "";
+
+        const message =
+          result.data &&
+          typeof result.data === "object" &&
+          "message" in result.data &&
+          typeof result.data.message === "string"
+            ? result.data.message
+            : "Project command completed.";
+
+        const summary = output.length > 0 ? `${message}\n\n${output}` : message;
+
+        return {
+          success: true,
+          output: summary,
+          context: {
+            lastProjectCommand: command,
+            lastProjectCommandOutput: output,
+            summary,
+          },
+        };
+      },
+
       async open_url(step, task) {
         const mappedInput = inputMappers.open_url
           ? inputMappers.open_url(step.input, task.context)

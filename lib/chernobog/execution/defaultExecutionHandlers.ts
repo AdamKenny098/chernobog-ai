@@ -166,6 +166,28 @@ export function createDefaultExecutionHandlers(): Record<string, ExecutionAction
         open_url(input) {
           return input;
         },
+
+        write_project_file(input, context) {
+          if (
+            input &&
+            typeof input === "object" &&
+            "relativePathSource" in input &&
+            input.relativePathSource === "preparedPatchTargetFile" &&
+            "contentSource" in input &&
+            input.contentSource === "preparedPatchContent"
+          ) {
+            return {
+              relativePath: context.preparedPatchTargetFile,
+              content: context.preparedPatchContent,
+            };
+          }
+        
+          return input;
+        },
+
+        run_project_command(input) {
+          return input;
+        },
       },
     }),
   };

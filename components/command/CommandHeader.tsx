@@ -54,6 +54,46 @@ function toneClasses(tone: HeaderStat["tone"] = "nominal") {
   }
 }
 
+function deriveHeaderHealth(stats: HeaderStat[]) {
+  if (stats.some((stat) => stat.tone === "warning")) {
+    return {
+      label: "WATCH",
+      dot: "bg-[rgba(155,36,36,0.95)] shadow-[0_0_12px_rgba(155,36,36,0.42)]",
+      className:
+        "border-[rgba(155,36,36,0.34)] bg-[rgba(155,36,36,0.1)] text-[rgba(255,190,190,0.9)]",
+    };
+  }
+
+  if (stats.some((stat) => stat.tone === "ready")) {
+    return {
+      label: "READY",
+      dot: "bg-[rgba(88,214,164,0.95)] shadow-[0_0_12px_rgba(88,214,164,0.42)]",
+      className:
+        "border-[rgba(88,214,164,0.28)] bg-[rgba(88,214,164,0.08)] text-[rgba(198,255,228,0.9)]",
+    };
+  }
+
+  return {
+    label: "STABLE",
+    dot: "bg-[rgba(255,170,90,0.86)] shadow-[0_0_12px_rgba(255,170,90,0.32)]",
+    className:
+      "border-[rgba(255,170,90,0.2)] bg-[rgba(255,170,90,0.06)] text-[rgba(255,218,178,0.88)]",
+  };
+}
+
+function HeaderHealthBadge({ stats }: { stats: HeaderStat[] }) {
+  const health = deriveHeaderHealth(stats);
+
+  return (
+    <div
+      className={`inline-flex items-center gap-2 border px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.18em] ${health.className}`}
+    >
+      <span className={`h-1.5 w-1.5 rounded-full ${health.dot}`} />
+      <span>{health.label}</span>
+    </div>
+  );
+}
+
 function StatusCell({ stat, index }: { stat: HeaderStat; index: number }) {
   const tone = toneClasses(stat.tone);
 
@@ -161,8 +201,12 @@ export default function CommandHeader({
             </div>
 
             <div className="min-w-0">
-              <div className="text-[8px] font-medium uppercase tracking-[0.34em] text-[rgba(194,149,107,0.72)] md:text-[9px]">
-                {subtitle}
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="text-[8px] font-medium uppercase tracking-[0.34em] text-[rgba(194,149,107,0.72)] md:text-[9px]">
+                  {subtitle}
+                </div>
+
+                <HeaderHealthBadge stats={stats} />
               </div>
 
               <h1 className="mt-2 text-[28px] font-semibold uppercase leading-none tracking-[0.18em] text-[rgba(245,239,230,0.97)] md:text-[38px]">

@@ -495,6 +495,99 @@ function wantsMoveActiveObject(message: string) {
   );
 }
 
+
+function wantsSelfInspection(message: string) {
+  const normalized = normalizeMessage(message);
+
+  return (
+    normalized === "inspect yourself" ||
+    normalized.startsWith("inspect your ") ||
+    normalized.startsWith("inspect the ") ||
+    normalized.startsWith("scan your ") ||
+    normalized.startsWith("scan the ") ||
+    normalized.startsWith("analyze your ") ||
+    normalized.startsWith("analyse your ")
+  );
+}
+
+function extractSelfInspectionTarget(message: string) {
+  return message
+    .replace(/^inspect yourself$/i, "codebase")
+    .replace(/^inspect your /i, "")
+    .replace(/^inspect the /i, "")
+    .replace(/^inspect /i, "")
+    .replace(/^scan your /i, "")
+    .replace(/^scan the /i, "")
+    .replace(/^scan /i, "")
+    .replace(/^analyze your /i, "")
+    .replace(/^analyse your /i, "")
+    .replace(/^analyze /i, "")
+    .replace(/^analyse /i, "")
+    .replace(/\bplease\b/gi, "")
+    .trim();
+}
+
+function wantsSelfProposal(message: string) {
+  const normalized = normalizeMessage(message);
+
+  return (
+    normalized === "propose next dev step" ||
+    normalized === "propose next development step" ||
+    normalized === "propose improvement" ||
+    normalized === "what should we improve next" ||
+    normalized === "plan your next improvement"
+  );
+}
+
+function wantsWriteDevNote(message: string) {
+  const normalized = normalizeMessage(message);
+
+  return (
+    normalized === "write dev note" ||
+    normalized === "write self dev note" ||
+    normalized === "write self-development note" ||
+    normalized === "create dev note" ||
+    normalized === "create self dev note"
+  );
+}
+
+function wantsPreparePatchPlan(message: string) {
+  const normalized = normalizeMessage(message);
+
+  return (
+    normalized === "prepare patch plan" ||
+    normalized === "prepare patch" ||
+    normalized === "prepare code patch" ||
+    normalized === "prepare dashboard patch" ||
+    normalized === "prepare self dev patch" ||
+    normalized === "prepare self-development patch"
+  );
+}
+
+function wantsProjectCheck(message: string) {
+  const normalized = normalizeMessage(message);
+
+  return (
+    normalized === "run project check" ||
+    normalized === "run typecheck" ||
+    normalized === "run project typecheck" ||
+    normalized === "validate project"
+  );
+}
+
+function wantsApplyPreparedPatch(message: string) {
+  const normalized = normalizeMessage(message);
+
+  return (
+    normalized === "apply prepared patch" ||
+    normalized === "apply patch" ||
+    normalized === "apply code patch" ||
+    normalized === "apply dashboard patch" ||
+    normalized === "implement prepared patch" ||
+    normalized === "implement patch"
+  );
+}
+
 function isItFollowUp(message: string) {
   const normalized = normalizeMessage(message);
 
@@ -607,6 +700,159 @@ function createSystemStatusTask(message: string) {
         action: "system.status",
         input: {},
         risk: "safe",
+      },
+    ],
+  });
+}
+
+
+function createSelfInspectionTask(message: string, target: string) {
+  return createExecutionTask({
+    category: "self_development",
+    input: message,
+    goal: `Inspect ${target}`,
+    steps: [
+      {
+        kind: "workflow",
+        label: `Inspect ${target}`,
+        action: "self.inspect",
+        input: {
+          target,
+        },
+        risk: "safe",
+      },
+    ],
+    context: {
+      activeDevTarget: target,
+    },
+  });
+}
+
+function createSelfProposalTask(message: string, target: string) {
+  return createExecutionTask({
+    category: "self_development",
+    input: message,
+    goal: `Propose next development step for ${target}`,
+    steps: [
+      {
+        kind: "workflow",
+        label: "Propose next development step",
+        action: "self.proposeNextStep",
+        input: {},
+        risk: "safe",
+      },
+    ],
+    context: {
+      activeDevTarget: target,
+    },
+  });
+}
+
+function createWriteDevNoteTask(
+  message: string,
+  target: string,
+  proposal: string | undefined
+) {
+  const content = [
+    "# Chernobog Self-Development Note",
+    "",
+    `Target: ${target}`,
+    "",
+    "## Current Proposal",
+    "",
+    proposal ?? "No proposal has been recorded yet.",
+    "",
+    "## Validation",
+    "",
+    "Run `npx tsc --noEmit` after applying project changes.",
+    "",
+    "## Safety Rule",
+    "",
+    "Project file writes must remain approval-gated.",
+    "",
+  ].join("\n");
+
+  return createExecutionTask({
+    category: "self_development",
+    input: message,
+    goal: "Write self-development note",
+    steps: [
+      {
+        kind: "file",
+        label: "Write self-development note",
+        action: "write_project_file",
+        input: {
+          relativePath: "Docs/chernobog-self-dev-note.md",
+          content,
+        },
+        risk: "approval_required",
+      },
+    ],
+    context: {
+      activeDevTarget: target,
+      lastDevProposal: proposal,
+    },
+  });
+}
+
+function createPreparePatchPlanTask(message: string) {
+  return createExecutionTask({
+    category: "self_development",
+    input: message,
+    goal: "Prepare self-development patch plan",
+    steps: [
+      {
+        kind: "workflow",
+        label: "Prepare self-development patch plan",
+        action: "self.preparePatchPlan",
+        input: {},
+        risk: "safe",
+      },
+    ],
+  });
+}
+
+function createProjectCheckTask(message: string) {
+  return createExecutionTask({
+    category: "self_development",
+    input: message,
+    goal: "Run project typecheck",
+    steps: [
+      {
+        kind: "system",
+        label: "Run project typecheck",
+        action: "run_project_command",
+        input: {
+          command: "typecheck",
+        },
+        risk: "approval_required",
+      },
+    ],
+  });
+}
+
+function createApplyPreparedPatchTask(message: string) {
+  return createExecutionTask({
+    category: "self_development",
+    input: message,
+    goal: "Apply prepared self-development patch",
+    steps: [
+      {
+        kind: "workflow",
+        label: "Generate prepared patch content",
+        action: "self.generatePreparedPatch",
+        input: {},
+        risk: "safe",
+      },
+      {
+        kind: "file",
+        label: "Write prepared patch to project file",
+        action: "write_project_file",
+        input: {
+          relativePathSource: "preparedPatchTargetFile",
+          contentSource: "preparedPatchContent",
+        },
+        risk: "approval_required",
       },
     ],
   });
@@ -1008,6 +1254,37 @@ export function buildExecutionTaskFromMessage(
 
   if (wantsSystemStatus(message)) {
     return createSystemStatusTask(message);
+  }
+
+  if (wantsSelfInspection(message)) {
+    const devTarget = extractSelfInspectionTarget(message) || "codebase";
+
+    return createSelfInspectionTask(message, devTarget);
+  }
+
+  if (wantsSelfProposal(message)) {
+    const devTarget = previousState?.activeDevTarget ?? "codebase";
+
+    return createSelfProposalTask(message, devTarget);
+  }
+
+  if (wantsWriteDevNote(message)) {
+    const devTarget = previousState?.activeDevTarget ?? "codebase";
+    const proposal = previousState?.lastDevProposal;
+
+    return createWriteDevNoteTask(message, devTarget, proposal);
+  }
+
+  if (wantsPreparePatchPlan(message)) {
+    return createPreparePatchPlanTask(message);
+  }
+
+  if (wantsApplyPreparedPatch(message)) {
+    return createApplyPreparedPatchTask(message);
+  }
+
+  if (wantsProjectCheck(message)) {
+    return createProjectCheckTask(message);
   }
 
   if (wantsCreateFolder(message)) {

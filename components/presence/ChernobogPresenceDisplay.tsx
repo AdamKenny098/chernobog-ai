@@ -13,9 +13,31 @@ export type PresenceState =
   | "responding"
   | "warning";
 
-export default function ChernobogPresenceDisplay() {
-  const state: PresenceState = "standby";
+type ChernobogPresenceDisplayProps = {
+  state?: PresenceState;
+};
 
+const PRESENCE_LABELS: Record<PresenceState, string> = {
+  standby: "STANDBY",
+  listening: "LISTENING",
+  processing: "PROCESSING",
+  executing: "EXECUTING",
+  responding: "RESPONDING",
+  warning: "WARNING",
+};
+
+const PRESENCE_DETAILS: Record<PresenceState, string> = {
+  standby: "AWAITING DIRECTIVE",
+  listening: "RECEIVING INPUT",
+  processing: "ROUTING COMMAND",
+  executing: "ACTION IN PROGRESS",
+  responding: "TRANSMITTING RESPONSE",
+  warning: "ATTENTION REQUIRED",
+};
+
+export default function ChernobogPresenceDisplay({
+  state = "standby",
+}: ChernobogPresenceDisplayProps) {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#020203] text-[#f2f2f2]">
       <CodeRain />
@@ -46,26 +68,16 @@ export default function ChernobogPresenceDisplay() {
 
       <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-8 pt-24">
         <div className="scale-[1.35]">
-            <PresenceEye state={state} />
+          <PresenceEye state={state} />
         </div>
 
         <div className="mt-16 text-center">
           <div className="text-3xl tracking-[0.45em] text-red-500 drop-shadow-[0_0_18px_rgba(255,40,30,0.7)]">
-            {state === "standby" && "STANDBY"}
-            {state === "listening" && "LISTENING"}
-            {state === "processing" && "PROCESSING"}
-            {state === "executing" && "EXECUTING"}
-            {state === "responding" && "RESPONDING"}
-            {state === "warning" && "WARNING"}
+            {PRESENCE_LABELS[state]}
           </div>
 
           <div className="mt-3 text-sm tracking-[0.28em] text-zinc-400">
-            {state === "standby" && "AWAITING DIRECTIVE"}
-            {state === "listening" && "RECEIVING INPUT"}
-            {state === "processing" && "ROUTING COMMAND"}
-            {state === "executing" && "ACTION IN PROGRESS"}
-            {state === "responding" && "TRANSMITTING RESPONSE"}
-            {state === "warning" && "ATTENTION REQUIRED"}
+            {PRESENCE_DETAILS[state]}
           </div>
         </div>
 

@@ -40,6 +40,7 @@ export type ExecutionStepKind =
   | "execution_summary"
   | "summarization"
   | "system_operation"
+  | "self_development"
   | "unknown";
 
 export interface ExecutionStep {
