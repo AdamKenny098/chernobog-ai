@@ -7,7 +7,8 @@ export type CommandDomain =
   | "workflow"
   | "context"
   | "chat"
-  | "guardian";
+  | "guardian"
+  | "vault";
 
 export type CommandAction =
   | "none"
@@ -25,7 +26,13 @@ export type CommandAction =
   | "complete"
   | "block"
   | "status"
-  | "execute";
+  | "execute"
+  | "append"
+  | "link"
+  | "backlinks"
+  | "orphans"
+  | "index"
+  | "daily_log";
 
 export type CommandTarget =
   | "none"
@@ -40,7 +47,12 @@ export type CommandTarget =
   | "folder"
   | "app"
   | "workflow"
-  | "context";
+  | "context"
+  | "vault"
+  | "vault_note"
+  | "vault_graph"
+  | "vault_index"
+  | "daily_log";
 
 export type CommandReference =
   | "none"
@@ -67,4 +79,7 @@ export type UnifiedCommand = {
   confidence: number;
   confidenceLevel: CommandConfidenceLevel;
   reasons: string[];
+
+  moduleId?: string;
+  moduleCommand?: unknown;
 };

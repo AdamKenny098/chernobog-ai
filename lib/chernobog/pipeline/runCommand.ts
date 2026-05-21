@@ -85,6 +85,8 @@ import {
   unifiedToToolCall,
 } from "@/lib/chernobog/command-language";
 
+import { getDomainHandler } from "./domainHandlers";
+
 type FindFilesResultData = {
   root: string;
   query: string;
@@ -603,6 +605,37 @@ addTraceStep(
     
       return finalizePipelinePayload(sessionId, route, reply, trace);
     }
+
+    const domainHandler = getDomainHandler(unifiedCommand.domain);
+
+  if (domainHandler) {
+    addTraceStep(
+      trace,
+      "router",
+      "Module domain handler detected",
+      unifiedCommand.domain,
+      {
+        domain: unifiedCommand.domain,
+        action: unifiedCommand.action,
+        target: unifiedCommand.target,
+        moduleId: unifiedCommand.moduleId,
+        query: unifiedCommand.query,
+      }
+    );
+
+    const moduleResult = await domainHandler({
+      userMessage,
+      sessionId,
+      command: unifiedCommand,
+    });
+
+    route = moduleResult.route;
+    setTraceRoute(trace, route);
+    saveMessage("user", userMessage, route);
+    reply = moduleResult.reply;
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
 
     const unifiedMemoryAction = unifiedToMemoryAction(unifiedCommand);
 

@@ -20,6 +20,7 @@ import { writeProjectFileTool } from "./builtins/write-project-file";
 import { runProjectCommandTool } from "./builtins/run-project-command";
 import { readProjectNoteTool } from "./builtins/read-project-note";
 import { searchProjectNotesTool } from "./builtins/search-project-notes";
+import { vaultToolRegistry } from "@/lib/modules/obsidian-vault/tools/registry";
 
 export const toolRegistry = {
   get_time: getTimeTool,
@@ -42,7 +43,7 @@ export const toolRegistry = {
   run_project_command:runProjectCommandTool,
   read_project_note:readProjectNoteTool,
   search_project_notes:searchProjectNotesTool,
-
+  vault_tool_registry:vaultToolRegistry,
 };
 
 export type ToolName = keyof typeof toolRegistry;

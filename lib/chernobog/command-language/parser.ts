@@ -6,6 +6,8 @@ import {
   normalizeCommandText,
 } from "./utils";
 
+import { parseModuleCommand } from "./moduleParsers";
+
 function baseCommand(raw: string): UnifiedCommand {
   return {
     raw,
@@ -58,6 +60,12 @@ function stripFileQuery(message: string): string {
 }
 
 export function parseUnifiedCommand(message: string): UnifiedCommand {
+  const moduleCommand = parseModuleCommand(message);
+
+  if (moduleCommand) {
+    return moduleCommand;
+  }
+
   const command = baseCommand(message);
   const text = command.normalized;
 
