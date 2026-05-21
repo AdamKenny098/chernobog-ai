@@ -192,6 +192,14 @@ function getActiveObjectSummary(state: ExecutionState) {
     lines.push("Last project command output: available");
   }
 
+  if (state.lastRejectedPatchFile) {
+    lines.push(`Last rejected patch file: ${state.lastRejectedPatchFile}`);
+  }
+
+  if (state.lastRejectedPatchReason) {
+    lines.push(`Last rejected patch reason: ${state.lastRejectedPatchReason}`);
+  }
+
   if (lines.length === 1) {
     lines.push("No active execution object is currently selected.");
   }
@@ -352,6 +360,71 @@ type DevFileSnapshot = {
 const MAX_DEV_FILES_TO_READ = 3;
 const MAX_CHARS_PER_DEV_FILE = 2500;
 
+const DOCTRINE_NOTES_FOR_SELF_PROPOSAL = [
+  "current-state",
+  "file-map",
+  "patch-safety-rules",
+  "known-failures",
+  "design-doctrine",
+  "self-development-rules",
+];
+
+const MAX_DOCTRINE_CHARS_PER_NOTE = 2800;
+
+function resolveDoctrineNotePath(noteName: string) {
+  const vaultRoot = path.resolve(process.cwd(), "vault", "chernobog");
+  const safeName = noteName
+    .trim()
+    .replace(/\\/g, "/")
+    .replace(/^\/+/, "")
+    .replace(/\.md$/i, "");
+
+  const resolved = path.resolve(vaultRoot, `${safeName}.md`);
+
+  if (!resolved.startsWith(vaultRoot)) {
+    throw new Error(`Refusing to read doctrine note outside vault: ${noteName}`);
+  }
+
+  return resolved;
+}
+
+async function readDoctrineNote(noteName: string) {
+  try {
+    const notePath = resolveDoctrineNotePath(noteName);
+    const content = await fs.readFile(notePath, "utf8");
+
+    return {
+      noteName,
+      content:
+        content.length > MAX_DOCTRINE_CHARS_PER_NOTE
+          ? `${content.slice(0, MAX_DOCTRINE_CHARS_PER_NOTE)}\n\n<!-- doctrine truncated -->`
+          : content,
+    };
+  } catch {
+    return {
+      noteName,
+      content: "<doctrine note unavailable>",
+    };
+  }
+}
+
+async function readSelfDevelopmentDoctrine() {
+  const notes = await Promise.all(
+    DOCTRINE_NOTES_FOR_SELF_PROPOSAL.map((noteName) =>
+      readDoctrineNote(noteName)
+    )
+  );
+
+  return notes
+    .map((note) =>
+      [
+        `--- DOCTRINE NOTE: ${note.noteName}.md ---`,
+        note.content,
+      ].join("\n")
+    )
+    .join("\n\n");
+}
+
 function resolveProjectRelativePath(relativePath: string) {
   const projectRoot = process.cwd();
   const resolved = path.resolve(projectRoot, relativePath);
@@ -395,7 +468,11 @@ async function readDevFileSnapshots(files: string[]): Promise<DevFileSnapshot[]>
   return snapshots;
 }
 
-function buildSelfProposalPrompt(target: string, snapshots: DevFileSnapshot[]) {
+function buildSelfProposalPrompt(
+  target: string,
+  snapshots: DevFileSnapshot[],
+  doctrine: string
+) {
   const allowedFiles = snapshots
     .map((snapshot) => `- ${snapshot.file}`)
     .join("\n");
@@ -411,8 +488,13 @@ function buildSelfProposalPrompt(target: string, snapshots: DevFileSnapshot[]) {
     "",
     "Rules:",
     "- You are working inside the real Chernobog codebase.",
+    "- You must obey the project doctrine from the local knowledge vault.",
+    "- Known failures must not be repeated.",
+    "- Patch safety rules override creative suggestions.",
+    "- Design doctrine overrides generic dashboard ideas.",
     "- You must only reference files that appear in the allowed existing files list.",
     "- You must only reference files that appear in the supplied source context.",
+    "- If the doctrine says a file does not exist, do not reference it.",
     "- Do not invent file paths.",
     "- Any proposal that references files outside the allowed existing files list will be rejected.",
     "- The project does not use components/Dashboard.jsx.",
@@ -424,13 +506,18 @@ function buildSelfProposalPrompt(target: string, snapshots: DevFileSnapshot[]) {
     "- Do not propose broad vague rewrites.",
     "- Propose one contained improvement.",
     "- Name the exact existing files affected.",
-    "- If you need a new file, mark it clearly as NEW FILE and explain why.",
     "- Prefer modifying existing files over creating new ones.",
+    "- If you need a new file, mark it clearly as NEW FILE and explain why.",
     "- Explain why the change matters.",
     "- Include approval and validation requirements.",
     "- End with the recommended next Chernobog command, not a shell command.",
+    "- Do not copy any instruction text into the proposal sections.",
+    "- Do not leave placeholders in the answer.",
     "",
     `Active development target: ${target}`,
+    "",
+    "Project doctrine from local knowledge vault:",
+    doctrine,
     "",
     "Allowed existing files:",
     allowedFiles,
@@ -443,16 +530,16 @@ function buildSelfProposalPrompt(target: string, snapshots: DevFileSnapshot[]) {
     `Development proposal for ${target}:`,
     "",
     "Proposed improvement:",
-    "<one specific improvement based only on the supplied files>",
+    "Write one concrete improvement in plain English. Do not copy this instruction.",
     "",
     "Files affected:",
-    "- <existing supplied file path>",
+    "- Copy one or more exact paths from the allowed existing files list.",
     "",
     "New files, if any:",
-    "- <NEW FILE: path> or None",
+    "- None, unless a new file is explicitly necessary and clearly marked as NEW FILE.",
     "",
     "Why this matters:",
-    "<short reason>",
+    "Write a short concrete reason. Do not copy this instruction.",
     "",
     "Safety:",
     "- Requires approval before project-file writes.",
@@ -473,31 +560,25 @@ async function generateSelfProposalWithOllama(
     return null;
   }
 
-  const prompt = buildSelfProposalPrompt(target, snapshots);
+  const doctrine = await readSelfDevelopmentDoctrine();
+  const prompt = buildSelfProposalPrompt(target, snapshots, doctrine);
 
   const result = await generateWithOllama({
     role: "code",
     prompt,
-    temperature: 0.25,
-    timeoutMs: 180_000,
+    temperature: 0.2,
+    timeoutMs: 300_000,
   });
 
   return result.ok ? result.text ?? null : null;
 }
+
 function extractReferencedProjectPaths(text: string) {
   const matches = text.match(/`([^`]+\.(?:ts|tsx|js|jsx|css|md|json))`/g) ?? [];
 
   return matches
     .map((match) => match.replace(/`/g, "").trim())
     .filter((value) => value.length > 0);
-}
-
-function getInvalidReferencedPaths(proposal: string, allowedFiles: string[]) {
-  const referencedPaths = extractReferencedProjectPaths(proposal);
-
-  return referencedPaths.filter(
-    (file) => !isAllowedProjectReference(file, allowedFiles)
-  );
 }
 
 function isAllowedProjectReference(file: string, allowedFiles: string[]) {
@@ -516,6 +597,14 @@ function isAllowedProjectReference(file: string, allowedFiles: string[]) {
   return basenameMatches.length === 1;
 }
 
+function getInvalidReferencedPaths(proposal: string, allowedFiles: string[]) {
+  const referencedPaths = extractReferencedProjectPaths(proposal);
+
+  return referencedPaths.filter(
+    (file) => !isAllowedProjectReference(file, allowedFiles)
+  );
+}
+
 function proposalUsesOnlyAllowedFiles(proposal: string, allowedFiles: string[]) {
   const referencedPaths = extractReferencedProjectPaths(proposal);
 
@@ -528,6 +617,21 @@ function proposalUsesOnlyAllowedFiles(proposal: string, allowedFiles: string[]) 
   );
 }
 
+function proposalContainsTemplatePlaceholders(proposal: string) {
+  return (
+    proposal.includes("<one specific improvement") ||
+    proposal.includes("<existing supplied file path>") ||
+    proposal.includes("<copy exact file path") ||
+    proposal.includes("<short reason>") ||
+    proposal.includes("<command>") ||
+    proposal.includes("<NEW FILE: path>") ||
+    proposal.includes("<file>") ||
+    proposal.includes("Write one concrete improvement in plain English") ||
+    proposal.includes("Copy one or more exact paths") ||
+    proposal.includes("Write a short concrete reason") ||
+    proposal.includes("Do not copy this instruction")
+  );
+}
 
 function formatRejectedProposalFallback(
   target: string,
@@ -548,7 +652,7 @@ function formatRejectedProposalFallback(
     "- None",
     "",
     "Why this matters:",
-    "V5.2 is focused on self-development. The dashboard should expose Chernobog's self-development state directly instead of hiding it inside generic execution/debug summaries.",
+    "V5.2 and V5.3 focus on self-development and project knowledge. The dashboard should expose Chernobog's self-development state directly instead of hiding it inside generic execution/debug summaries.",
     "",
     "Safety:",
     "- Requires approval before project-file writes.",
@@ -559,7 +663,7 @@ function formatRejectedProposalFallback(
     "write dev note",
     "",
     "Validation note:",
-    "The AI proposal was rejected because it referenced files outside the inspected Chernobog source set.",
+    "The AI proposal was rejected because it referenced invalid files or copied template placeholders.",
     "",
     ...(rejectedProposal
       ? [
@@ -603,7 +707,6 @@ function formatSelfProposal(target: string) {
     "write dev note",
   ].join("\n");
 }
-
 
 function findAllowedFileMentioned(text: string, allowedFiles: string[]) {
   const normalizedText = text.toLowerCase();
@@ -789,25 +892,6 @@ function validateGeneratedPatchContent(file: string, content: string) {
   };
 }
 
-function looksLikeCompleteSourceFile(file: string, content: string) {
-  const trimmed = content.trim();
-
-  if (trimmed.length < 100) {
-    return false;
-  }
-
-  if (file.endsWith(".tsx") || file.endsWith(".ts")) {
-    return (
-      trimmed.includes("import ") ||
-      trimmed.includes("export ") ||
-      trimmed.includes("function ") ||
-      trimmed.includes("const ")
-    );
-  }
-
-  return true;
-}
-
 function validatePatchPreservesFileSize({
   original,
   patched,
@@ -881,8 +965,6 @@ async function repairGeneratedPatchWithOllama({
   invalidContent: string;
   rejectionReason: string;
 }): Promise<string | null> {
-  const model = process.env.OLLAMA_MODEL ?? "gemma3";
-
   const prompt = [
     "You are Chernobog repairing invalid generated source code.",
     "",
@@ -908,37 +990,14 @@ async function repairGeneratedPatchWithOllama({
     "Return only the repaired complete file content now.",
   ].join("\n");
 
-  try {
-    const response = await fetch("http://127.0.0.1:11434/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model,
-        prompt,
-        stream: false,
-        options: {
-          temperature: 0.03,
-        },
-      }),
-    });
+  const result = await generateWithOllama({
+    role: "repair",
+    prompt,
+    temperature: 0.03,
+    timeoutMs: 240_000,
+  });
 
-    if (!response.ok) {
-      return null;
-    }
-
-    const result = await generateWithOllama({
-      role: "repair",
-      prompt,
-      temperature: 0.03,
-      timeoutMs: 240_000,
-    });
-    
-    return result.ok && result.text ? stripCodeFence(result.text) : null;
-  } catch {
-    return null;
-  }
+  return result.ok && result.text ? stripCodeFence(result.text) : null;
 }
 
 async function generatePatchedFileWithOllama({
@@ -1010,7 +1069,7 @@ async function repairSelfProposalWithOllama({
   const prompt = [
     "You are Chernobog repairing a rejected self-development proposal.",
     "",
-    "The previous proposal was rejected because it invented file paths.",
+    "The previous proposal was rejected because it referenced invalid files, copied template placeholders, or violated project doctrine.",
     "",
     "You must choose affected files ONLY from this numbered list:",
     allowedFiles,
@@ -1027,24 +1086,25 @@ async function repairSelfProposalWithOllama({
     "- Do not suggest Git commands.",
     "- Files affected must be copied exactly from the allowed list.",
     "- Recommended next command must be exactly: write dev note",
+    "- Do not copy placeholders or instruction text.",
     "",
     "Pick one small improvement that can be done using only the allowed files.",
     "",
-    "Return exactly this format:",
+    "Return exactly this structure, filled with real content:",
     "",
     `Development proposal for ${target}:`,
     "",
     "Proposed improvement:",
-    "<one specific contained improvement>",
+    "Describe the specific improvement in plain English.",
     "",
     "Files affected:",
-    "- <copy exact file path from allowed list>",
+    "- Copy exact file path from the allowed list.",
     "",
     "New files, if any:",
     "- None",
     "",
     "Why this matters:",
-    "<short reason>",
+    "Explain the concrete value of the improvement.",
     "",
     "Safety:",
     "- Requires approval before project-file writes.",
@@ -1062,6 +1122,208 @@ async function repairSelfProposalWithOllama({
   });
 
   return result.ok ? result.text ?? null : null;
+}
+
+type ProposalRisk = "low" | "medium" | "high";
+
+type ProposalRiskAssessment = {
+  risk: ProposalRisk;
+  reason: string;
+  recommendation: string;
+};
+
+function countAffectedFiles(proposal: string, allowedFiles: string[]) {
+  const resolved = new Set<string>();
+  const normalizedProposal = proposal.toLowerCase();
+  const referenced = extractReferencedProjectPaths(proposal);
+
+  for (const file of referenced) {
+    if (allowedFiles.includes(file)) {
+      resolved.add(file);
+      continue;
+    }
+
+    const basenameMatches = allowedFiles.filter(
+      (allowedFile) => path.basename(allowedFile) === file
+    );
+
+    if (basenameMatches.length === 1) {
+      resolved.add(basenameMatches[0]);
+    }
+  }
+
+  for (const allowedFile of allowedFiles) {
+    const normalizedAllowedFile = allowedFile.toLowerCase();
+    const normalizedBasename = path.basename(allowedFile).toLowerCase();
+
+    if (
+      normalizedProposal.includes(normalizedAllowedFile) ||
+      normalizedProposal.includes(normalizedBasename)
+    ) {
+      resolved.add(allowedFile);
+    }
+  }
+
+  return resolved.size;
+}
+
+function proposalMentionsNewFiles(proposal: string) {
+  const normalized = proposal.toLowerCase();
+
+  return (
+    normalized.includes("new file") &&
+    !normalized.includes("new files, if any:\nnone") &&
+    !normalized.includes("new files, if any:\r\nnone") &&
+    !normalized.includes("new files, if any:\n- none") &&
+    !normalized.includes("new files, if any:\r\n- none")
+  );
+}
+
+function proposalMentionsBroadChange(proposal: string) {
+  const normalized = proposal.toLowerCase();
+
+  const riskyTerms = [
+    "refactor",
+    "rewrite",
+    "restructure",
+    "rebuild",
+    "extract",
+    "new component",
+    "mode switching",
+    "navigation",
+    "layout",
+    "architecture",
+    "pipeline",
+    "execution engine",
+    "routing",
+    "permission",
+    "tool registry",
+    "multi-file",
+    "across the dashboard",
+    "dynamic",
+    "automatically",
+    "seamlessly",
+    "toggle between",
+    "mode switch",
+    "mode switching",
+    "workflow stage",
+    "current workflow",
+    "user-friendly dashboard",
+  ];
+
+  return riskyTerms.some((term) => normalized.includes(term));
+}
+
+function proposalMentionsSafeSmallChange(proposal: string) {
+  const normalized = proposal.toLowerCase();
+
+  const safeTerms = [
+    "badge",
+    "label",
+    "tooltip",
+    "aria",
+    "accessibility",
+    "copy",
+    "text",
+    "status row",
+    "small indicator",
+    "guard condition",
+    "error message",
+    "summary line",
+  ];
+
+  return safeTerms.some((term) => normalized.includes(term));
+}
+
+function assessDevelopmentProposalRisk(
+  proposal: string,
+  allowedFiles: string[]
+): ProposalRiskAssessment {
+  const affectedFileCount = countAffectedFiles(proposal, allowedFiles);
+  const mentionsNewFiles = proposalMentionsNewFiles(proposal);
+  const mentionsBroadChange = proposalMentionsBroadChange(proposal);
+  const mentionsSafeSmallChange = proposalMentionsSafeSmallChange(proposal);
+
+  if (mentionsNewFiles) {
+    return {
+      risk: "high",
+      reason:
+        "Proposal mentions creating or relying on new files. New files require explicit operator approval.",
+      recommendation:
+        "Write a dev note only. Do not prepare or apply a patch until the new file is explicitly approved.",
+    };
+  }
+
+  if (affectedFileCount >= 3) {
+    return {
+      risk: "high",
+      reason: `Proposal affects ${affectedFileCount} files, which is too broad for a guarded self-patch.`,
+      recommendation:
+        "Write a dev note only. Split this into a smaller one-file proposal before patching.",
+    };
+  }
+
+  if (affectedFileCount === 2 && mentionsBroadChange) {
+    return {
+      risk: "high",
+      reason:
+        "Proposal affects two files and describes a broad UI/workflow change.",
+      recommendation:
+        "Write a dev note only. Ask for a smaller one-file proposal before preparing a patch.",
+    };
+  }
+
+  if (affectedFileCount === 2) {
+    return {
+      risk: "medium",
+      reason:
+        "Proposal affects two files. This may be valid, but it is riskier than a one-file patch.",
+      recommendation:
+        "Prefer writing a dev note. Only prepare a patch if the operator explicitly accepts the two-file scope.",
+    };
+  }
+
+  if (mentionsBroadChange) {
+    return {
+      risk: "medium",
+      reason:
+        "Proposal uses broad-change language such as refactor, mode switching, layout, or architecture.",
+      recommendation:
+        "Prepare a patch only if the change is narrowed to a small contained edit.",
+    };
+  }
+
+  if (affectedFileCount <= 1 && mentionsSafeSmallChange) {
+    return {
+      risk: "low",
+      reason:
+        "Proposal appears to be a small one-file UI or messaging improvement.",
+      recommendation:
+        "Safe candidate for prepare patch plan, subject to approval and project validation.",
+    };
+  }
+
+  return {
+    risk: "medium",
+    reason:
+      "Proposal is grounded but not clearly small. It should be reviewed before patching.",
+    recommendation:
+      "Write a dev note or ask for a smaller one-file proposal before applying changes.",
+  };
+}
+
+function appendRiskAssessmentToProposal(
+  proposal: string,
+  assessment: ProposalRiskAssessment
+) {
+  return [
+    proposal.trim(),
+    "",
+    "Proposal risk assessment:",
+    `Risk: ${assessment.risk.toUpperCase()}`,
+    `Reason: ${assessment.reason}`,
+    `Recommendation: ${assessment.recommendation}`,
+  ].join("\n");
 }
 
 async function generatePreparedPatchContent(state: ExecutionState) {
@@ -1092,6 +1354,7 @@ async function generatePreparedPatchContent(state: ExecutionState) {
       success: false as const,
       error:
         "Ollama did not return patch content. Try again or reduce the target file size.",
+      targetFile,
     };
   }
 
@@ -1102,7 +1365,7 @@ async function generatePreparedPatchContent(state: ExecutionState) {
       original: currentContent,
       patched: patchedContent,
     });
-  
+
     if (!preservation.ok) {
       return {
         success: false as const,
@@ -1110,7 +1373,7 @@ async function generatePreparedPatchContent(state: ExecutionState) {
         targetFile,
       };
     }
-  
+
     return {
       success: true as const,
       targetFile,
@@ -1119,52 +1382,52 @@ async function generatePreparedPatchContent(state: ExecutionState) {
     };
   }
 
-const repairedContent = await repairGeneratedPatchWithOllama({
-  targetFile,
-  invalidContent: patchedContent,
-  rejectionReason: validation.reason,
-});
-
-if (!repairedContent) {
-  return {
-    success: false as const,
-    error: validation.reason,
+  const repairedContent = await repairGeneratedPatchWithOllama({
     targetFile,
-  };
-}
+    invalidContent: patchedContent,
+    rejectionReason: validation.reason,
+  });
 
-const repairedValidation = validateGeneratedPatchContent(
-  targetFile,
-  repairedContent
-);
+  if (!repairedContent) {
+    return {
+      success: false as const,
+      error: validation.reason,
+      targetFile,
+    };
+  }
 
-if (!repairedValidation.ok) {
-  return {
-    success: false as const,
-    error: `Initial patch failed: ${validation.reason}. Repair attempt failed: ${repairedValidation.reason}`,
+  const repairedValidation = validateGeneratedPatchContent(
     targetFile,
-  };
-}
+    repairedContent
+  );
 
-const repairedPreservation = validatePatchPreservesFileSize({
-  original: currentContent,
-  patched: repairedContent,
-});
+  if (!repairedValidation.ok) {
+    return {
+      success: false as const,
+      error: `Initial patch failed: ${validation.reason}. Repair attempt failed: ${repairedValidation.reason}`,
+      targetFile,
+    };
+  }
 
-if (!repairedPreservation.ok) {
+  const repairedPreservation = validatePatchPreservesFileSize({
+    original: currentContent,
+    patched: repairedContent,
+  });
+
+  if (!repairedPreservation.ok) {
+    return {
+      success: false as const,
+      error: `Initial patch failed: ${validation.reason}. Repair attempt passed syntax checks but failed preservation checks: ${repairedPreservation.reason}`,
+      targetFile,
+    };
+  }
+
   return {
-    success: false as const,
-    error: `Initial patch failed: ${validation.reason}. Repair attempt passed syntax checks but failed preservation checks: ${repairedPreservation.reason}`,
+    success: true as const,
     targetFile,
+    patchedContent: repairedContent,
+    summary,
   };
-}
-
-return {
-  success: true as const,
-  targetFile,
-  patchedContent: repairedContent,
-  summary,
-};
 }
 
 export function createInternalExecutionHandlers(
@@ -1306,6 +1569,7 @@ export function createInternalExecutionHandlers(
       if (
         aiProposal &&
         aiProposal.trim().length > 0 &&
+        !proposalContainsTemplatePlaceholders(aiProposal) &&
         proposalUsesOnlyAllowedFiles(aiProposal, activeDevFiles)
       ) {
         proposal = aiProposal;
@@ -1319,6 +1583,7 @@ export function createInternalExecutionHandlers(
         if (
           repairedProposal &&
           repairedProposal.trim().length > 0 &&
+          !proposalContainsTemplatePlaceholders(repairedProposal) &&
           proposalUsesOnlyAllowedFiles(repairedProposal, activeDevFiles)
         ) {
           proposal = repairedProposal;
@@ -1338,14 +1603,21 @@ export function createInternalExecutionHandlers(
         ].join("\n");
       }
 
+      const riskAssessment = assessDevelopmentProposalRisk(proposal, activeDevFiles);
+      const output = appendRiskAssessmentToProposal(proposal, riskAssessment);
+
       return {
         success: true,
-        output: proposal,
+        output,
         context: {
           activeDevTarget: target,
           activeDevFiles,
           lastDevProposal: proposal,
-          summary: proposal,
+          lastDevProposalRisk: riskAssessment.risk,
+          lastDevProposalRiskReason: riskAssessment.reason,
+          lastDevProposalRecommendation: riskAssessment.recommendation,
+          lastDevSummary: `Doctrine-aware proposal generated for ${target}. Risk: ${riskAssessment.risk}.`,
+          summary: output,
         },
       };
     },
@@ -1354,6 +1626,18 @@ export function createInternalExecutionHandlers(
       const proposal = previousState.lastDevProposal;
       const activeDevFiles = previousState.activeDevFiles ?? [];
       const target = previousState.activeDevTarget ?? "codebase";
+
+      if (previousState.lastDevProposalRisk === "high") {
+        return {
+          success: false,
+          error:
+            previousState.lastDevProposalRecommendation ??
+            "The current development proposal is high risk. Ask for a smaller proposal before preparing a patch.",
+          context: {
+            summary: "Prepared patch plan blocked because the current proposal is high risk.",
+          },
+        };
+      }
 
       if (!proposal || proposal.trim().length === 0) {
         return {
@@ -1399,19 +1683,20 @@ export function createInternalExecutionHandlers(
 
     async "self.generatePreparedPatch"() {
       const result = await generatePreparedPatchContent(previousState);
-    
+
       if (!result.success) {
         return {
           success: false,
           error: result.error,
           context: {
             lastRejectedPatchReason: result.error,
-            lastRejectedPatchFile: "targetFile" in result ? result.targetFile : undefined,
+            lastRejectedPatchFile:
+              "targetFile" in result ? result.targetFile : undefined,
             summary: `Prepared patch rejected: ${result.error}`,
           },
         };
       }
-    
+
       const output = [
         "Prepared patch content generated.",
         "",
@@ -1424,7 +1709,7 @@ export function createInternalExecutionHandlers(
         "Next step:",
         "Writing this patch requires approval.",
       ].join("\n");
-    
+
       return {
         success: true,
         output,

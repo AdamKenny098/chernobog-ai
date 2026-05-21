@@ -588,6 +588,47 @@ function wantsApplyPreparedPatch(message: string) {
   );
 }
 
+function wantsReadProjectNote(message: string) {
+  const normalized = normalizeMessage(message);
+
+  return (
+    normalized.startsWith("read project note ") ||
+    normalized.startsWith("read note ") ||
+    normalized.startsWith("open project note ") ||
+    normalized.startsWith("show project note ")
+  );
+}
+
+function extractProjectNoteName(message: string) {
+  return message
+    .replace(/^read project note /i, "")
+    .replace(/^read note /i, "")
+    .replace(/^open project note /i, "")
+    .replace(/^show project note /i, "")
+    .replace(/\.md$/i, "")
+    .trim();
+}
+
+function wantsSearchProjectNotes(message: string) {
+  const normalized = normalizeMessage(message);
+
+  return (
+    normalized.startsWith("search project notes ") ||
+    normalized.startsWith("search notes ") ||
+    normalized.startsWith("search doctrine ") ||
+    normalized.startsWith("find in project notes ")
+  );
+}
+
+function extractProjectNotesQuery(message: string) {
+  return message
+    .replace(/^search project notes /i, "")
+    .replace(/^search notes /i, "")
+    .replace(/^search doctrine /i, "")
+    .replace(/^find in project notes /i, "")
+    .trim();
+}
+
 function isItFollowUp(message: string) {
   const normalized = normalizeMessage(message);
 
@@ -1218,6 +1259,51 @@ function createMoveActivePathTask(
   });
 }
 
+function createReadProjectNoteTask(message: string, noteName: string) {
+  return createExecutionTask({
+    category: "file_workflow",
+    input: message,
+    goal: `Read project note ${noteName}`,
+    steps: [
+      {
+        kind: "file",
+        label: `Read project note ${noteName}`,
+        action: "read_project_note",
+        input: {
+          noteName,
+        },
+        risk: "safe",
+      },
+    ],
+    context: {
+      noteName,
+    },
+  });
+}
+
+function createSearchProjectNotesTask(message: string, query: string) {
+  return createExecutionTask({
+    category: "file_workflow",
+    input: message,
+    goal: `Search project notes for ${query}`,
+    steps: [
+      {
+        kind: "file",
+        label: `Search project notes for ${query}`,
+        action: "search_project_notes",
+        input: {
+          query,
+          maxResults: 10,
+        },
+        risk: "safe",
+      },
+    ],
+    context: {
+      query,
+    },
+  });
+}
+
 export function buildExecutionTaskFromMessage(
   message: string,
   options: BuildExecutionTaskOptions = {}
@@ -1285,6 +1371,22 @@ export function buildExecutionTaskFromMessage(
 
   if (wantsProjectCheck(message)) {
     return createProjectCheckTask(message);
+  }
+
+  if (wantsReadProjectNote(message)) {
+    const noteName = extractProjectNoteName(message);
+  
+    if (noteName.length > 0) {
+      return createReadProjectNoteTask(message, noteName);
+    }
+  }
+  
+  if (wantsSearchProjectNotes(message)) {
+    const query = extractProjectNotesQuery(message);
+  
+    if (query.length > 0) {
+      return createSearchProjectNotesTask(message, query);
+    }
   }
 
   if (wantsCreateFolder(message)) {

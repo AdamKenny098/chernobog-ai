@@ -18,6 +18,8 @@ import { copyPathTool } from "./builtins/copy-path";
 import { movePathTool } from "./builtins/move-path";
 import { writeProjectFileTool } from "./builtins/write-project-file";
 import { runProjectCommandTool } from "./builtins/run-project-command";
+import { readProjectNoteTool } from "./builtins/read-project-note";
+import { searchProjectNotesTool } from "./builtins/search-project-notes";
 
 export const toolRegistry = {
   get_time: getTimeTool,
@@ -38,6 +40,8 @@ export const toolRegistry = {
   move_path:movePathTool,
   write_project_file:writeProjectFileTool,
   run_project_command:runProjectCommandTool,
+  read_project_note:readProjectNoteTool,
+  search_project_notes:searchProjectNotesTool,
 
 };
 

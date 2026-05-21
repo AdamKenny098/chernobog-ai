@@ -737,5 +737,118 @@ export function createToolExecutionHandlers(
           },
         };
       },
+
+      async read_project_note(step, task) {
+        const mappedInput = inputMappers.read_project_note
+          ? inputMappers.read_project_note(step.input, task.context)
+          : step.input;
+      
+        const result = await executeTool("read_project_note", mappedInput);
+      
+        if (!result.ok) {
+          return {
+            success: false,
+            error: result.error || "read_project_note failed.",
+          };
+        }
+      
+        const content =
+          result.data &&
+          typeof result.data === "object" &&
+          "content" in result.data &&
+          typeof result.data.content === "string"
+            ? result.data.content
+            : "";
+      
+        const noteName =
+          result.data &&
+          typeof result.data === "object" &&
+          "noteName" in result.data &&
+          typeof result.data.noteName === "string"
+            ? result.data.noteName
+            : "unknown";
+      
+        const relativePath =
+          result.data &&
+          typeof result.data === "object" &&
+          "relativePath" in result.data &&
+          typeof result.data.relativePath === "string"
+            ? result.data.relativePath
+            : "";
+      
+        return {
+          success: true,
+          output: content,
+          context: {
+            lastProjectNoteName: noteName,
+            lastProjectNotePath: relativePath,
+            lastProjectNoteContent: content,
+            summary: `Read project note: ${noteName}`,
+          },
+        };
+      },
+      
+      async search_project_notes(step, task) {
+        const mappedInput = inputMappers.search_project_notes
+          ? inputMappers.search_project_notes(step.input, task.context)
+          : step.input;
+      
+        const result = await executeTool("search_project_notes", mappedInput);
+      
+        if (!result.ok) {
+          return {
+            success: false,
+            error: result.error || "search_project_notes failed.",
+          };
+        }
+      
+        const matches =
+          result.data &&
+          typeof result.data === "object" &&
+          "matches" in result.data &&
+          Array.isArray(result.data.matches)
+            ? result.data.matches
+            : [];
+      
+        const output =
+          matches.length === 0
+            ? "No project notes matched that query."
+            : [
+                `Project note matches: ${matches.length}`,
+                "",
+                ...matches.map((match, index) => {
+                  if (!match || typeof match !== "object") {
+                    return `${index + 1}. Unknown match`;
+                  }
+      
+                  const noteName =
+                    "noteName" in match && typeof match.noteName === "string"
+                      ? match.noteName
+                      : "unknown";
+      
+                  const lineNumber =
+                    "lineNumber" in match && typeof match.lineNumber === "number"
+                      ? match.lineNumber
+                      : 0;
+      
+                  const line =
+                    "line" in match && typeof match.line === "string"
+                      ? match.line
+                      : "";
+      
+                  return `${index + 1}. ${noteName}:${lineNumber} — ${line}`;
+                }),
+              ].join("\n");
+      
+        return {
+          success: true,
+          output,
+          context: {
+            lastProjectNoteSearch: mappedInput,
+            lastProjectNoteSearchMatches: matches,
+            summary: `Searched project notes. Matches: ${matches.length}`,
+          },
+        };
+      },
   };
 }

@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "95c025da5dd4da57",
+        "id": "5077b4baaba215f3",
         "type": "tabs",
         "children": [
           {
-            "id": "d6e6dbb4fcc49b20",
+            "id": "ec5b324de61f36c2",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "roadmap.md",
+                "file": "known-failures.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "roadmap"
+              "title": "known-failures"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "roadmap.md",
+                "file": "known-failures.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for roadmap"
+              "title": "Backlinks for known-failures"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "roadmap.md",
+                "file": "known-failures.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from roadmap"
+              "title": "Outgoing links from known-failures"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "roadmap.md",
+                "file": "known-failures.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of roadmap"
+              "title": "Outline of known-failures"
             }
           }
         ]
@@ -183,11 +183,11 @@
       "bases:Create new base": false
     }
   },
-  "active": "d6e6dbb4fcc49b20",
+  "active": "ec5b324de61f36c2",
   "lastOpenFiles": [
+    "roadmap.md",
     "self-development-rules.md",
     "current-state.md",
-    "roadmap.md",
     "model-routing.md",
     "design-doctrine.md",
     "architecture.md",

@@ -54,6 +54,16 @@ export interface ExecutionState {
 
   lastRejectedPatchReason?: string;
   lastRejectedPatchFile?: string;
+
+  lastProjectNoteName?: string;
+  lastProjectNotePath?: string;
+  lastProjectNoteContent?: string;
+  lastProjectNoteSearch?: unknown;
+  lastProjectNoteSearchMatches?: unknown;
+
+  lastDevProposalRisk?: "low" | "medium" | "high";
+  lastDevProposalRiskReason?: string;
+  lastDevProposalRecommendation?: string;
 }
 
 function now() {
@@ -278,6 +288,48 @@ export function deriveExecutionStateFromTask(
         ? task.context.lastRejectedPatchFile
         : previousState.lastRejectedPatchFile;
 
+        const lastProjectNoteName =
+        typeof task.context.lastProjectNoteName === "string"
+          ? task.context.lastProjectNoteName
+          : previousState.lastProjectNoteName;
+      
+      const lastProjectNotePath =
+        typeof task.context.lastProjectNotePath === "string"
+          ? task.context.lastProjectNotePath
+          : previousState.lastProjectNotePath;
+      
+      const lastProjectNoteContent =
+        typeof task.context.lastProjectNoteContent === "string"
+          ? task.context.lastProjectNoteContent
+          : previousState.lastProjectNoteContent;
+      
+      const lastProjectNoteSearch =
+        task.context.lastProjectNoteSearch !== undefined
+          ? task.context.lastProjectNoteSearch
+          : previousState.lastProjectNoteSearch;
+      
+      const lastProjectNoteSearchMatches =
+        task.context.lastProjectNoteSearchMatches !== undefined
+          ? task.context.lastProjectNoteSearchMatches
+          : previousState.lastProjectNoteSearchMatches;
+
+          const lastDevProposalRisk =
+          task.context.lastDevProposalRisk === "low" ||
+          task.context.lastDevProposalRisk === "medium" ||
+          task.context.lastDevProposalRisk === "high"
+            ? task.context.lastDevProposalRisk
+            : previousState.lastDevProposalRisk;
+        
+        const lastDevProposalRiskReason =
+          typeof task.context.lastDevProposalRiskReason === "string"
+            ? task.context.lastDevProposalRiskReason
+            : previousState.lastDevProposalRiskReason;
+        
+        const lastDevProposalRecommendation =
+          typeof task.context.lastDevProposalRecommendation === "string"
+            ? task.context.lastDevProposalRecommendation
+            : previousState.lastDevProposalRecommendation;
+
   return {
     ...previousState,
 
@@ -335,6 +387,16 @@ export function deriveExecutionStateFromTask(
     lastRejectedPatchReason,
     lastRejectedPatchFile,
 
+    lastProjectNoteName,
+    lastProjectNotePath,
+    lastProjectNoteContent,
+    lastProjectNoteSearch,
+    lastProjectNoteSearchMatches,
+    
+    lastDevProposalRisk,
+    lastDevProposalRiskReason,
+    lastDevProposalRecommendation,
+
     lastResult: task.result ?? previousState.lastResult,
 
     updatedAt: now(),
@@ -387,6 +449,18 @@ export function getExecutionStateSummary(state: ExecutionState): string {
 
   if (state.lastSystemStatus) {
     lines.push("Last system status: available");
+  }
+
+  if (state.lastDevProposalRisk) {
+    lines.push(`Last dev proposal risk: ${state.lastDevProposalRisk}`);
+  }
+  
+  if (state.lastDevProposalRiskReason) {
+    lines.push(`Last dev proposal risk reason: ${state.lastDevProposalRiskReason}`);
+  }
+  
+  if (state.lastDevProposalRecommendation) {
+    lines.push(`Last dev proposal recommendation: ${state.lastDevProposalRecommendation}`);
   }
 
   if (state.lastCreatedFolderPath) {
@@ -495,6 +569,22 @@ export function getExecutionStateSummary(state: ExecutionState): string {
   
   if (state.lastRejectedPatchReason) {
     lines.push(`Last rejected patch reason: ${state.lastRejectedPatchReason}`);
+  }
+
+  if (state.lastProjectNoteName) {
+    lines.push(`Last project note: ${state.lastProjectNoteName}`);
+  }
+  
+  if (state.lastProjectNotePath) {
+    lines.push(`Last project note path: ${state.lastProjectNotePath}`);
+  }
+  
+  if (state.lastProjectNoteSearch) {
+    lines.push("Last project note search: available");
+  }
+  
+  if (state.lastProjectNoteSearchMatches) {
+    lines.push("Last project note search matches: available");
   }
 
   return lines.join("\n");
