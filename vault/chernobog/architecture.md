@@ -2,15 +2,16 @@
 
 ## High-Level Architecture
 
-Chernobog is structured around several cooperating layers:
+Chernobog is structured around cooperating layers:
 
 1. User Interface Layer
 2. API / Command Pipeline Layer
-3. Execution Task Layer
-4. Tool Layer
-5. LLM / Model Routing Layer
-6. Memory / Project Knowledge Layer
-7. Trust and Approval Layer
+3. Module Layer
+4. Execution Task Layer
+5. Tool Layer
+6. LLM / Model Routing Layer
+7. Memory / Project Knowledge Layer
+8. Trust and Approval Layer
 
 ## User Interface Layer
 
@@ -31,7 +32,9 @@ The UI displays:
 - telemetry panels
 - developer/debug panels
 
-## API / Pipeline Layer
+The UI should preserve the Chernobog visual identity described in [[Design Doctrine]].
+
+## API / Command Pipeline Layer
 
 The chat API receives user directives and routes them into the command system.
 
@@ -40,9 +43,46 @@ Important files:
 - `app/api/chat/route.ts`
 - `app/api/session/route.ts`
 - `lib/chernobog/pipeline/runCommand.ts`
+- `lib/chernobog/pipeline/domainHandlers.ts`
 - `lib/chernobog/pipeline/types.ts`
 
-The pipeline is responsible for deciding whether a message is handled as normal chat, memory, tool workflow, execution task, or internal system action.
+The pipeline should be a router/orchestrator, not the owner of every domain.
+
+It should handle:
+
+- trace creation
+- command parsing entry
+- module dispatch
+- core fallback handling
+- message/session persistence
+- response finalization
+
+See [[Pipeline Map]].
+
+## Module Layer
+
+Modules live under:
+
+```txt
+lib/modules/
+```
+
+Current module:
+
+```txt
+lib/modules/obsidian-vault/
+```
+
+Modules should own domain-specific behavior:
+
+- parser logic
+- command execution
+- follow-up handling
+- domain tools
+- module session state
+- module reply formatting
+
+See [[Module Map]] and [[Module Contract]].
 
 ## Execution Task Layer
 
@@ -71,7 +111,7 @@ The execution layer tracks:
 
 ## Tool Layer
 
-The tool layer exposes local actions to Chernobog.
+The tool layer exposes deterministic local actions to Chernobog.
 
 Examples:
 
@@ -88,6 +128,8 @@ Examples:
 - get path info
 - write project file
 - run approved project command
+- read/search project notes
+- vault tools from the Obsidian vault module
 
 Project writes and project commands must remain approval-gated.
 
@@ -102,20 +144,28 @@ Important files:
 
 Current routing:
 
-- default role: `gemma3`
-- code role: `deepseek-coder-v2:16b`
-- planner role: code model
-- repair role: code model
+- default role: normal assistant brain
+- code role: coding/self-development brain
+- planner role: code/planner brain
+- repair role: patch repair brain
 
-The default brain handles ordinary interaction. The code brain handles self-development, proposal generation, patch generation, and patch repair.
+See [[Model Routing]].
 
-## Project Knowledge Layer
+## Memory / Project Knowledge Layer
 
-V5.3 introduces a local markdown vault:
+Chernobog uses more than one memory layer:
 
-- `vault/chernobog/`
+- runtime/session context
+- SQLite assistant memory
+- Obsidian-style project knowledge vault
 
-This vault stores durable project doctrine:
+The vault lives at:
+
+```txt
+vault/chernobog/
+```
+
+The vault stores durable project doctrine:
 
 - current state
 - file map
@@ -125,6 +175,8 @@ This vault stores durable project doctrine:
 - model routing
 - roadmap
 - design doctrine
+- module doctrine
+- ADRs
 
 This layer should be read before Chernobog proposes or applies self-development changes.
 
@@ -148,3 +200,17 @@ Trust rules:
 - validate after writes
 - reject unsafe model output
 - preserve operator control
+
+## Current Architectural Direction
+
+The next major architectural direction is modularization.
+
+Recommended first extraction:
+
+```txt
+lib/modules/file-workflow/
+```
+
+Reason:
+
+The file workflow already has domain state and follow-ups, and it should not keep growing inside the central pipeline.

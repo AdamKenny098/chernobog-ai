@@ -2,13 +2,20 @@
 
 ## Current Milestone
 
-Chernobog is entering V5.3: Project Knowledge Vault / Second Brain.
+Chernobog is moving through the memory/vault/module transition.
 
-The purpose of V5.3 is to give Chernobog persistent project reality through a local markdown vault.
+The current practical milestone is:
 
-## Completed Milestones
+```txt
+Vault foundation complete
+→ vault doctrine seeded
+→ modular core formalized
+→ bloated workflow domains extracted
+```
 
-### V4.x Command Interface and Tool Foundation
+## Completed or Functionally Working
+
+### Command Interface and Tool Foundation
 
 Implemented:
 
@@ -19,7 +26,7 @@ Implemented:
 - memory/state experimentation
 - trust/debug visibility
 
-### V5.0 Execution Core
+### Execution Core
 
 Implemented:
 
@@ -29,7 +36,7 @@ Implemented:
 - approval-gated operations
 - execution state tracking
 
-### V5.1 Tool Expansion
+### Tool Expansion
 
 Implemented:
 
@@ -41,7 +48,7 @@ Implemented:
 - project command execution
 - project file writing
 
-### V5.2 Self-Development Layer Alpha
+### Self-Development Alpha
 
 Implemented:
 
@@ -55,31 +62,53 @@ Implemented:
 - patch rejection for unsafe output
 - model routing for default/code brains
 
-V5.2 demonstrated that Chernobog can begin to reason about and attempt to improve itself, but source patching still requires strong guardrails.
+### Obsidian Vault Foundation
 
-## V5.3 Project Knowledge Vault
+Implemented:
+
+- vault folder at `vault/chernobog/`
+- project doctrine notes
+- Obsidian vault module under `lib/modules/obsidian-vault/`
+- vault search/read/create/append/link/backlinks/orphans/status/review commands
+- vault follow-up handling for active search/note state
+
+## Immediate Milestone: Vault Doctrine Seed
 
 Goal:
 
-- local Obsidian-style markdown vault
-- project doctrine files
-- known failure memory
-- patch safety doctrine
-- file map awareness
-- roadmap awareness
-- doctrine retrieval before proposal/patching
+Populate the vault with enough architecture doctrine to guide the next modularization pass.
+
+Deliverables:
+
+- [[Module Map]]
+- [[Pipeline Map]]
+- [[Command Language]]
+- [[Vault Module]]
+- [[Refactor Targets]]
+- [[Module Contract]]
+- ADR notes
+- checklists
+
+Completion condition:
+
+Chernobog's vault explains how Chernobog should be structured before the next code refactor begins.
+
+## Next Milestone: Modular Core and Unified Commands
+
+Goal:
+
+Make modules first-class and reduce bloated central infrastructure.
 
 Planned phases:
 
-1. Create vault structure.
-2. Write initial doctrine notes.
-3. Add read project note tool.
-4. Add search project notes tool.
-5. Inject doctrine into self-development prompts.
-6. Make patch planning doctrine-aware.
-7. Add update project state command.
+1. Formalize module registry.
+2. Formalize follow-up handler registry.
+3. Formalize domain handler registry.
+4. Extract file workflow into `lib/modules/file-workflow/`.
+5. Normalize command grammar across file/vault/memory/planner.
+6. Update command help and debug parser output.
 
-## V5.4 Diff-Based Patching
+## Later Milestone: Diff-Based Patching
 
 Goal:
 
@@ -94,7 +123,7 @@ Planned features:
 - patch only explicit code regions
 - require validation after patching
 
-## V5.5 Project Workspace Awareness
+## Later Milestone: Project Workspace Awareness
 
 Goal:
 
@@ -108,7 +137,7 @@ Planned features:
 - current milestone tracking
 - automatic doctrine retrieval by project
 
-## V6.0 Near-Autonomous Assistant Foundation
+## Long-Term Milestone: Near-Autonomous Assistant Foundation
 
 Goal:
 
@@ -125,6 +154,12 @@ Planned features:
 - trust dashboard
 - long-running workflow support
 
-## Current Immediate Priority
+## Current Rule
 
-Finish V5.3 by connecting the vault to Chernobog's execution and self-development prompts.
+Do not add new major capability modules until the modular architecture is stable.
+
+Next code target:
+
+```txt
+lib/modules/file-workflow/
+```

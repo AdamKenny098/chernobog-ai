@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "known-failures.md",
+                "file": "checklists/v4-8-closure-checklist.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "known-failures"
+              "title": "v4-8-closure-checklist"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "known-failures.md",
+                "file": "checklists/v4-8-closure-checklist.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for known-failures"
+              "title": "Backlinks for v4-8-closure-checklist"
             }
           },
           {
@@ -186,6 +186,21 @@
   "active": "ec5b324de61f36c2",
   "lastOpenFiles": [
     "02_Projects/intelligence layer.md",
+    "vault-module.md",
+    "refactor-targets.md",
+    "pipeline-map.md",
+    "module-map.md",
+    "module-contract.md",
+    "command-language.md",
+    "decisions/ADR-0004-modules-own-domain-logic.md",
+    "decisions/ADR-0003-domain-handlers-over-pipeline-bloat.md",
+    "decisions/ADR-0002-obsidian-vault-as-project-knowledge-layer.md",
+    "decisions/ADR-0001-modular-architecture.md",
+    "decisions",
+    "checklists/v4-9-modularization-checklist.md",
+    "checklists/v4-8-closure-checklist.md",
+    "checklists",
+    "known-failures.md",
     "02_Projects",
     "roadmap.md",
     "self-development-rules.md",
@@ -194,7 +209,6 @@
     "design-doctrine.md",
     "architecture.md",
     "overview.md",
-    "known-failures.md",
     "patch-safety-rules.md",
     "file-map.md",
     "Welcome.md"

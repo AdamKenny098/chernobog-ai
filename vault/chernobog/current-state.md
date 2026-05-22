@@ -1,63 +1,101 @@
 # Chernobog Current State
 
-## Current Version
+## Current Working Track
 
-Chernobog is currently entering V5.3: Project Knowledge Vault / Second Brain.
+Chernobog has reached the point where the Obsidian vault module is functioning as the first real external module.
 
-V5.2 Self-Development Layer Alpha is functionally implemented as an alpha system.
+The immediate working track is:
 
-## What V5.2 Added
+```txt
+Finish vault/memory foundation
+→ seed project doctrine
+→ formalize module architecture
+→ extract bloated infrastructure one domain at a time
+```
 
-Chernobog can now:
+Depending on roadmap naming, this may be referred to as:
 
-- Inspect its own project areas.
-- Map high-level targets such as dashboard, execution layer, tool layer, memory, and command core to real project files.
-- Use Ollama to propose self-development steps.
-- Validate proposed file references against known allowed files.
-- Reject hallucinated file paths.
-- Prepare patch plans from accepted proposals.
-- Attempt guarded patch generation.
-- Require approval before writing project files.
-- Run project validation through an approved `npx tsc --noEmit` command.
-- Use multi-model routing:
-  - default model for normal command behavior
-  - code model for self-development and patching
+- V4.8 memory/vault foundation closure
+- V4.9 modular core preparation
+- V5.3 project knowledge vault / second brain
 
-## Current Model Routing
+The practical reality is the same: Chernobog now has a project knowledge vault and should use it to guide safer modular self-development.
 
-Default conversational model:
+## Confirmed Local Capabilities
 
-- `gemma3`
+The operator has confirmed that direct vault commands work.
 
-Code/self-development model:
+Working command families include:
 
-- `deepseek-coder-v2:16b`
+- `vault status`
+- `vault search <query>`
+- `vault read <note>`
+- `vault find orphans`
+- `read the first one` after a vault search
+- `show backlinks for it` after a vault note is active
 
-The model router is implemented through:
+The vault module path is:
 
-- `lib/chernobog/llm/modelRouter.ts`
-- `lib/chernobog/llm/ollamaClient.ts`
+```txt
+lib/modules/obsidian-vault/
+```
 
-## Current Problem
+## Current Vault Contents
 
-Chernobog can attempt self-development, but source patching is still risky.
+The vault currently contains core doctrine notes:
 
-The main failure mode is full-file rewriting. A previous AI-generated patch damaged `components/command/CommandHeader.tsx` by shrinking it from roughly 550 lines to around 180 lines and damaging the Tailwind-based visual structure.
+- `overview.md`
+- `current-state.md`
+- `architecture.md`
+- `file-map.md`
+- `known-failures.md`
+- `model-routing.md`
+- `design-doctrine.md`
+- `patch-safety-rules.md`
+- `self-development-rules.md`
+- `roadmap.md`
+
+New doctrine should add:
+
+- [[Module Map]]
+- [[Pipeline Map]]
+- [[Command Language]]
+- [[Vault Module]]
+- [[Refactor Targets]]
+- ADR notes under `decisions/`
+
+## Current Architectural Problem
+
+The system works, but some infrastructure is getting bloated.
+
+Likely bloat areas:
+
+- central command pipeline
+- hardcoded parser branches
+- tool registry growth
+- file workflow follow-up logic
+- execution/project workspace responsibilities
+
+The next architectural move should be modularization, not more random features.
 
 ## Current Priority
 
-V5.3 should give Chernobog persistent project knowledge so it stops behaving like a generic coding assistant.
+Seed the vault with modular architecture doctrine, then begin extracting the file workflow into a proper module.
 
-The priority is to make self-development doctrine-aware before allowing more patch attempts.
+Recommended next module:
+
+```txt
+lib/modules/file-workflow/
+```
 
 ## Current Rule
 
-Chernobog should not apply large source-code rewrites unless the operator explicitly approves that risk.
+Do not add new large features until the module system is formalized.
 
 Prefer:
 
-- small targeted changes
-- grounded file references
-- existing files only
-- preserving the current UI design language
-- validation before and after patching
+- small targeted modules
+- preserved current behavior
+- no UI rewrites
+- no broad pipeline rewrites
+- validation after every patch

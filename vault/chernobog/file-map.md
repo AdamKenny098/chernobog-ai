@@ -9,238 +9,263 @@ Chernobog is a local-first personal AI assistant project built with:
 - TypeScript
 - Tailwind
 - Ollama
-- local tools
+- local deterministic tools
 - local execution state
 - project self-development workflow
+- Obsidian-style project vault
+- modular capability system
 
 ## Main UI Files
 
 ### Core UI Container
 
-- `components/UmbraAIConsole.tsx`
+```txt
+components/UmbraAIConsole.tsx
+```
 
 Purpose:
 
-- Owns the main command console state.
-- Manages session ID.
-- Sends messages to `/api/chat`.
-- Stores logs.
-- Hydrates session state.
-- Builds subsystem state.
-- Passes data into `CommandShell`.
+- owns the main command console state
+- manages session ID
+- sends messages to `/api/chat`
+- stores logs
+- hydrates session state
+- builds subsystem state
+- passes data into `CommandShell`
 
 ### Command Dashboard Shell
 
-- `components/command/CommandShell.tsx`
+```txt
+components/command/CommandShell.tsx
+```
 
 Purpose:
 
-- Main dashboard layout.
-- Renders header, rails, core eye, directive feed, telemetry, context, workflow inspector, planner inspector, developer controls, and command composer.
+- main dashboard layout
+- renders header, rails, core eye, directive feed, telemetry, context, workflow inspector, planner inspector, developer controls, and command composer
 
 ### Header
 
-- `components/command/CommandHeader.tsx`
+```txt
+components/command/CommandHeader.tsx
+```
 
 Purpose:
 
-- Top command header.
-- Displays title, subtitle, session description, system stats, and command-chain status visuals.
-- Uses `StatusCell`.
-- Uses Tailwind-heavy militarized Chernobog styling.
-- Should not be destructively rewritten.
+- top command header
+- displays title, subtitle, session description, system stats, and command-chain status visuals
+- uses `StatusCell`
+- uses Tailwind-heavy militarized Chernobog styling
 
-### Left Rail
+Safety note:
 
-- `components/command/SubsystemRail.tsx`
-
-Purpose:
-
-- Displays subsystem statuses such as override, optic, combat, relay, memory, and guardian.
+- should not be destructively rewritten
+- large UI rewrites require explicit approval
 
 ### Core Eye
 
-- `components/command/CoreEye.tsx`
+```txt
+components/command/CoreEye.tsx
+```
 
 Purpose:
 
-- Displays the central Chernobog eye/sigil visual identity.
-- Important to the "God Program" feeling.
+- displays the central Chernobog eye/sigil visual identity
+- important to the God Program feeling
 
-### Directive Feed
+### Other UI Components
 
-- `components/command/DirectiveFeed.tsx`
+```txt
+components/command/SubsystemRail.tsx
+components/command/DirectiveFeed.tsx
+components/command/CommandComposer.tsx
+components/command/TelemetryPanel.tsx
+components/command/ContextPanel.tsx
+components/command/WorkflowInspector.tsx
+components/command/PlannerInspector.tsx
+```
 
-Purpose:
+## Core Backend Files
 
-- Displays user/system/router/Chernobog message feed.
+### Command Pipeline
 
-### Command Composer
-
-- `components/command/CommandComposer.tsx`
-
-Purpose:
-
-- Handles command input UI.
-
-### Telemetry Panel
-
-- `components/command/TelemetryPanel.tsx`
-
-Purpose:
-
-- Displays derived telemetry metrics and streams.
-
-### Context Panel
-
-- `components/command/ContextPanel.tsx`
+```txt
+lib/chernobog/pipeline/runCommand.ts
+lib/chernobog/pipeline/domainHandlers.ts
+```
 
 Purpose:
 
-- Displays current route, workflow state, last tool, active plan, search query, selected/read files, and summary state.
+- route user messages
+- dispatch module/domain handlers
+- maintain trust trace
+- finalize responses
 
-### Workflow Inspector
+Refactor note:
 
-- `components/command/WorkflowInspector.tsx`
+- should become thinner over time
+- should not own every domain workflow
 
-Purpose:
+### Command Language
 
-- Displays current workflow state and file-operation context.
-
-### Planner Inspector
-
-- `components/command/PlannerInspector.tsx`
-
-Purpose:
-
-- Displays active plan state.
-
-## Execution Layer
-
-### Task Builder
-
-- `lib/chernobog/execution/buildExecutionTask.ts`
+```txt
+lib/chernobog/command-language/
+```
 
 Purpose:
 
-- Converts natural-language commands into execution tasks.
-- Recognizes commands such as:
-  - inspect yourself
-  - inspect your dashboard
-  - propose next dev step
-  - prepare patch plan
-  - apply prepared patch
-  - run project check
+- normalize user messages into command structures
+- support core and module command parsing
 
-### Task Runner
+Related doctrine:
 
-- `lib/chernobog/execution/runExecutionTask.ts`
+- [[Command Language]]
 
-Purpose:
+### Execution Layer
 
-- Runs execution task steps.
-- Handles approval-gated steps.
-
-### Execution State
-
-- `lib/chernobog/execution/executionState.ts`
+```txt
+lib/chernobog/execution/buildExecutionTask.ts
+lib/chernobog/execution/runExecutionTask.ts
+lib/chernobog/execution/executionState.ts
+lib/chernobog/execution/internalExecutionHandlers.ts
+lib/chernobog/execution/toolExecutionHandlers.ts
+lib/chernobog/execution/defaultExecutionHandlers.ts
+```
 
 Purpose:
 
-- Tracks selected files/folders.
-- Tracks last read/opened/written files.
-- Tracks self-development state.
-- Tracks prepared patch state.
-- Tracks rejected patch state.
+- convert natural language into structured execution tasks
+- track task/proposal/patch state
+- bridge execution steps to tools
 
-### Internal Handlers
+### Tool Layer
 
-- `lib/chernobog/execution/internalExecutionHandlers.ts`
-
-Purpose:
-
-- Handles internal workflow actions such as:
-  - execution summary
-  - system status
-  - self inspection
-  - self proposal
-  - prepared patch planning
-  - patch generation
-
-### Tool Handlers
-
-- `lib/chernobog/execution/toolExecutionHandlers.ts`
+```txt
+lib/chernobog/tools/registry.ts
+lib/chernobog/tools/builtins/
+```
 
 Purpose:
 
-- Bridges execution actions to registered tools.
+- register available local tools
+- expose deterministic operations
 
-### Default Mappers
+Important tools:
 
-- `lib/chernobog/execution/defaultExecutionHandlers.ts`
+```txt
+get_time
+find_files
+list_files
+read_text_file
+open_file
+open_folder
+open_app
+open_url
+create_folder
+create_text_file
+append_text_file
+rename_path
+copy_path
+move_path
+write_project_file
+run_project_command
+read_project_note
+search_project_notes
+```
 
-Purpose:
+Vault tools should be spread into the registry from the Obsidian vault module.
 
-- Maps execution step input/context into tool input.
+Correct pattern:
 
-## LLM Layer
+```ts
+...vaultToolRegistry
+```
 
-### Model Router
+Incorrect pattern:
 
-- `lib/chernobog/llm/modelRouter.ts`
+```ts
+vault_tool_registry: vaultToolRegistry
+```
 
-Purpose:
+## Module Layer
 
-- Resolves model role to Ollama model.
-- Default model: normal assistant brain.
-- Code/repair/planner model: coding/self-development brain.
+### Obsidian Vault Module
 
-### Ollama Client
-
-- `lib/chernobog/llm/ollamaClient.ts`
-
-Purpose:
-
-- Shared Ollama generation client.
-- Handles model resolution, timeout, request, and text extraction.
-
-## Tool Layer
-
-### Tool Registry
-
-- `lib/chernobog/tools/index.ts`
-
-Purpose:
-
-- Registers available local tools.
-
-### Project File Writer
-
-- `lib/chernobog/tools/builtins/write-project-file.ts`
-
-Purpose:
-
-- Writes project files inside the project root only.
-- Must remain approval-gated.
-
-### Project Command Runner
-
-- `lib/chernobog/tools/builtins/run-project-command.ts`
+```txt
+lib/modules/obsidian-vault/
+```
 
 Purpose:
 
-- Runs approved project commands.
-- Current allowed validation command:
-  - `npx tsc --noEmit`
+- vault commands
+- vault tools
+- vault session state
+- vault follow-ups
+- Markdown knowledge graph behavior
 
-## Non-existent Files
+Related doctrine:
+
+- [[Vault Module]]
+- [[Module Map]]
+
+### Future File Workflow Module
+
+Proposed:
+
+```txt
+lib/modules/file-workflow/
+```
+
+Purpose:
+
+- file search/read/open workflow
+- file follow-ups
+- active file state
+
+## Vault Files
+
+```txt
+vault/chernobog/
+```
+
+Core notes:
+
+```txt
+overview.md
+current-state.md
+architecture.md
+file-map.md
+known-failures.md
+model-routing.md
+design-doctrine.md
+patch-safety-rules.md
+self-development-rules.md
+roadmap.md
+```
+
+Recommended added notes:
+
+```txt
+module-map.md
+pipeline-map.md
+command-language.md
+vault-module.md
+refactor-targets.md
+module-contract.md
+decisions/*.md
+checklists/*.md
+```
+
+## Non-Existent Files
 
 The following files are not part of the current Chernobog dashboard unless explicitly created later:
 
-- `components/Dashboard.jsx`
-- `src/components/Dashboard.jsx`
-- `src/components/Dashboard.tsx`
-- `styles/theme.js`
-- `components/command/StatsPanel.tsx`
+```txt
+components/Dashboard.jsx
+src/components/Dashboard.jsx
+src/components/Dashboard.tsx
+styles/theme.js
+components/command/StatsPanel.tsx
+```
 
 Chernobog must not propose these as existing files.

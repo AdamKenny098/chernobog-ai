@@ -2,13 +2,15 @@
 
 ## Identity
 
-Chernobog is a local-first personal AI assistant system built from the ground up as a command-oriented "God Program" interface.
+Chernobog is a local-first personal AI assistant system built from the ground up as a command-oriented God Program interface.
 
-It is not just a chatbot. It is intended to become a highly capable personal AI system that can understand the operator, manage local workflows, use tools, inspect its own project, and eventually assist with controlled self-development.
+It is not a chatbot skin. It is intended to become a highly capable personal AI system that can understand the operator, manage local workflows, use tools, inspect its own project, and eventually assist with controlled self-development.
 
 ## Core Vision
 
-Chernobog should become the operator's local command intelligence layer:
+Chernobog should become the operator's local command intelligence layer.
+
+It should be:
 
 - conversational when needed
 - tool-capable when useful
@@ -17,6 +19,7 @@ Chernobog should become the operator's local command intelligence layer:
 - approval-gated for risky actions
 - visually distinct and severe
 - private and local-first
+- modular rather than monolithic
 
 The long-term goal is a near-autonomous assistant that runs in the operator's own environment, with clear trust boundaries and visible execution state.
 
@@ -44,20 +47,33 @@ Chernobog currently includes:
 - TypeScript execution layer
 - Ollama local LLM integration
 - model routing for default/code models
-- local tool execution
+- local deterministic tool execution
 - approval-gated file and system operations
 - execution state tracking
 - trust/debug traces
 - self-development alpha workflow
+- Obsidian-style project knowledge vault
+- first external module under `lib/modules/obsidian-vault/`
+
+## Strategic Direction
+
+The current architectural direction is modularization.
+
+Chernobog core should act as the kernel. Domain capabilities should live in modules.
+
+Current working module:
+
+- [[Vault Module]]
+
+Important architecture notes:
+
+- [[Module Map]]
+- [[Pipeline Map]]
+- [[Command Language]]
+- [[Refactor Targets]]
 
 ## Important Principle
 
 Chernobog must be useful without being reckless.
 
 It should be able to act, but risky actions must remain visible, approval-gated, reversible, and validated.
-
-## Current Strategic Direction
-
-V5.2 proved that Chernobog can inspect and attempt to improve itself.
-
-V5.3 gives Chernobog a project knowledge vault so future proposals and patches are grounded in persistent doctrine instead of generic model assumptions.
