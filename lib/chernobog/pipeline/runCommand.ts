@@ -615,9 +615,16 @@ addTraceStep(
     });
     
     if (moduleFollowUp) {
-      addTraceStep(trace, "router", "Module follow-up handler detected", "vault", {
-        route: moduleFollowUp.route,
-      });
+      addTraceStep(
+        trace,
+        "router",
+        "Module follow-up handler detected",
+        moduleFollowUp.moduleId ?? "module",
+        {
+          route: moduleFollowUp.route,
+          moduleId: moduleFollowUp.moduleId,
+        }
+      );
     
       route = moduleFollowUp.route;
       setTraceRoute(trace, route);
@@ -629,34 +636,45 @@ addTraceStep(
 
     const domainHandler = getDomainHandler(unifiedCommand.domain);
 
-  if (domainHandler) {
-    addTraceStep(
-      trace,
-      "router",
-      "Module domain handler detected",
-      unifiedCommand.domain,
-      {
-        domain: unifiedCommand.domain,
-        action: unifiedCommand.action,
-        target: unifiedCommand.target,
-        moduleId: unifiedCommand.moduleId,
-        query: unifiedCommand.query,
-      }
-    );
-
-    const moduleResult = await domainHandler({
-      userMessage,
-      sessionId,
-      command: unifiedCommand,
-    });
-
-    route = moduleResult.route;
-    setTraceRoute(trace, route);
-    saveMessage("user", userMessage, route);
-    reply = moduleResult.reply;
-
-    return finalizePipelinePayload(sessionId, route, reply, trace);
-  }
+    if (domainHandler) {
+      addTraceStep(
+        trace,
+        "router",
+        "Module domain handler detected",
+        unifiedCommand.moduleId ?? unifiedCommand.domain,
+        {
+          domain: unifiedCommand.domain,
+          action: unifiedCommand.action,
+          target: unifiedCommand.target,
+          moduleId: unifiedCommand.moduleId,
+          query: unifiedCommand.query,
+        }
+      );
+    
+      const moduleResult = await domainHandler({
+        userMessage,
+        sessionId,
+        command: unifiedCommand,
+      });
+    
+      route = moduleResult.route;
+      setTraceRoute(trace, route);
+      saveMessage("user", userMessage, route);
+      reply = moduleResult.reply;
+    
+      addTraceStep(
+        trace,
+        "router",
+        "Module domain handler completed",
+        moduleResult.moduleId ?? unifiedCommand.moduleId ?? unifiedCommand.domain,
+        {
+          route: moduleResult.route,
+          moduleId: moduleResult.moduleId,
+        }
+      );
+    
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
 
     const unifiedMemoryAction = unifiedToMemoryAction(unifiedCommand);
 

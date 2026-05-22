@@ -132,6 +132,7 @@ import type { ModuleCommandResult } from "@/lib/modules/obsidian-vault/contract"
     return {
       route: normalizeVaultRoute(result.route),
       reply: result.reply,
+      moduleId: "obsidian-vault",
       modulePayload: result.modulePayload,
     };
   }

@@ -15,6 +15,7 @@ export type ModuleFollowUpContext = {
 export type ModuleHandlerResult = {
   route: RouteName;
   reply: string;
+  moduleId?: string;
   modulePayload?: Record<string, unknown>;
 };
 
@@ -27,6 +28,19 @@ export type ModuleCommandHandler = (
 export type ModuleFollowUpHandler = (
   context: ModuleFollowUpContext
 ) => Promise<ModuleHandlerResult | null>;
+
+export type ModuleRegistrySnapshot = {
+  moduleCount: number;
+  modules: Array<{
+    id: string;
+    displayName: string;
+    domains: string[];
+    toolCount: number;
+    hasParser: boolean;
+    hasCommandHandler: boolean;
+    hasFollowUpHandler: boolean;
+  }>;
+};
 
 export type ChernobogModule = {
   id: string;

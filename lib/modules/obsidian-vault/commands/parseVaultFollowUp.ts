@@ -57,15 +57,19 @@ export function parseVaultFollowUp(
     return {
       ...base(message),
       action: "read",
-      note: note.title,
+      note: note.relativePath,
       confidence: 0.9,
       reasons: [
-        `vault follow-up resolved ordinal "${ordinal}" to [[${note.title}]]`,
+        `vault follow-up resolved ordinal "${ordinal}" to [[${note.title}]] at ${note.relativePath}`,
       ],
     };
   }
 
-  if (/^(?:read|show|open)\s+(?:it|that|this|the note|current note|active note)$/i.test(lower)) {
+  if (
+    /^(?:read|show|open)\s+(?:it|that|this|the note|current note|active note)$/i.test(
+      lower
+    )
+  ) {
     const active = resolveActiveVaultNote(sessionId);
 
     if (!active) {
@@ -75,9 +79,11 @@ export function parseVaultFollowUp(
     return {
       ...base(message),
       action: "read",
-      note: active.title,
+      note: active.relativePath,
       confidence: 0.86,
-      reasons: [`vault follow-up resolved active note [[${active.title}]]`],
+      reasons: [
+        `vault follow-up resolved active note [[${active.title}]] at ${active.relativePath}`,
+      ],
     };
   }
 
@@ -100,7 +106,9 @@ export function parseVaultFollowUp(
     };
   }
 
-  match = normalized.match(/^backlinks(?:\s+for)?\s+(it|that|this|the note|current note|active note)$/i);
+  match = normalized.match(
+    /^backlinks(?:\s+for)?\s+(it|that|this|the note|current note|active note)$/i
+  );
   if (match) {
     const active = resolveActiveVaultNote(sessionId);
 
@@ -117,7 +125,9 @@ export function parseVaultFollowUp(
     };
   }
 
-  match = normalized.match(/^link\s+(it|that|this|the note|current note|active note)\s+(?:to|with)\s+(.+)$/i);
+  match = normalized.match(
+    /^link\s+(it|that|this|the note|current note|active note)\s+(?:to|with)\s+(.+)$/i
+  );
   if (match) {
     const active = resolveActiveVaultNote(sessionId);
 
@@ -128,14 +138,18 @@ export function parseVaultFollowUp(
     return {
       ...base(message),
       action: "link",
-      note: active.title,
+      note: active.relativePath,
       targetNote: cleanNoteTitle(match[2]),
       confidence: 0.88,
-      reasons: [`vault follow-up resolved link from [[${active.title}]]`],
+      reasons: [
+        `vault follow-up resolved link from [[${active.title}]] at ${active.relativePath}`,
+      ],
     };
   }
 
-  match = normalized.match(/^link\s+(.+?)\s+(?:to|with)\s+(it|that|this|the note|current note|active note)$/i);
+  match = normalized.match(
+    /^link\s+(.+?)\s+(?:to|with)\s+(it|that|this|the note|current note|active note)$/i
+  );
   if (match) {
     const active = resolveActiveVaultNote(sessionId);
 
@@ -149,11 +163,15 @@ export function parseVaultFollowUp(
       note: cleanNoteTitle(match[1]),
       targetNote: active.title,
       confidence: 0.84,
-      reasons: [`vault follow-up resolved target as active note [[${active.title}]]`],
+      reasons: [
+        `vault follow-up resolved target as active note [[${active.title}]]`,
+      ],
     };
   }
 
-  match = normalized.match(/^append\s+(.+?)\s+to\s+(it|that|this|the note|current note|active note)$/i);
+  match = normalized.match(
+    /^append\s+(.+?)\s+to\s+(it|that|this|the note|current note|active note)$/i
+  );
   if (match && containsVaultishPronoun(match[2])) {
     const active = resolveActiveVaultNote(sessionId);
 
@@ -164,14 +182,18 @@ export function parseVaultFollowUp(
     return {
       ...base(message),
       action: "append",
-      note: active.title,
+      note: active.relativePath,
       content: match[1].trim(),
       confidence: 0.82,
-      reasons: [`vault follow-up resolved append target [[${active.title}]]`],
+      reasons: [
+        `vault follow-up resolved append target [[${active.title}]] at ${active.relativePath}`,
+      ],
     };
   }
 
-  match = normalized.match(/^append\s+to\s+(it|that|this|the note|current note|active note)\s*[:\-]\s*(.+)$/i);
+  match = normalized.match(
+    /^append\s+to\s+(it|that|this|the note|current note|active note)\s*[:\-]\s*(.+)$/i
+  );
   if (match) {
     const active = resolveActiveVaultNote(sessionId);
 
@@ -182,10 +204,12 @@ export function parseVaultFollowUp(
     return {
       ...base(message),
       action: "append",
-      note: active.title,
+      note: active.relativePath,
       content: match[2].trim(),
       confidence: 0.84,
-      reasons: [`vault follow-up resolved append target [[${active.title}]]`],
+      reasons: [
+        `vault follow-up resolved append target [[${active.title}]] at ${active.relativePath}`,
+      ],
     };
   }
 
