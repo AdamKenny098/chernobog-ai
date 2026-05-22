@@ -1,4 +1,5 @@
 import type { VaultNoteType, VaultParsedCommand } from "../types";
+import { parseVaultMemoryBridge } from "./parseVaultMemoryBridge";
 
 const VALID_NOTE_TYPES = new Set<VaultNoteType>([
   "note",
@@ -44,12 +45,35 @@ export function parseVaultCommand(message: string): VaultParsedCommand | null {
   const normalized = normalize(message);
   const lower = normalized.toLowerCase();
 
+  const bridgeCommand = parseVaultMemoryBridge(message);
+  if (bridgeCommand) return bridgeCommand;
+
   const mentionsVault = /\b(vault|obsidian)\b/.test(lower);
   const startsWithVault = /^vault\b/.test(lower);
 
   if (!mentionsVault && !startsWithVault) return null;
 
   const withoutPrefix = normalized.replace(/^vault\s+/i, "");
+
+  if (/^(status|state|context|review state)$/i.test(withoutPrefix)) {
+    return {
+      ...base(message),
+      action: "status",
+      confidence: 0.9,
+      reasons: ["vault status command detected"],
+    };
+  }
+
+  let reviewMatch = withoutPrefix.match(/^(review|inspect|what do you remember about)\s+(.+)$/i);
+  if (reviewMatch) {
+    return {
+      ...base(message),
+      action: "search",
+      query: reviewMatch[2].trim(),
+      confidence: 0.86,
+      reasons: ["vault review command normalized to search"],
+    };
+  }
 
   let match = withoutPrefix.match(/^(search|find|look for)\s+(?:the\s+)?(?:vault\s+)?(?:for\s+)?(.+)$/i);
   if (match) {

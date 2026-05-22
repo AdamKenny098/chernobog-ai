@@ -43,7 +43,7 @@ export const toolRegistry = {
   run_project_command:runProjectCommandTool,
   read_project_note:readProjectNoteTool,
   search_project_notes:searchProjectNotesTool,
-  vault_tool_registry:vaultToolRegistry,
+  ...vaultToolRegistry,
 };
 
 export type ToolName = keyof typeof toolRegistry;

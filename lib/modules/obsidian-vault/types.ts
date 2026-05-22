@@ -18,7 +18,8 @@ export type VaultCommandAction =
   | "backlinks"
   | "orphans"
   | "index"
-  | "daily_log";
+  | "daily_log"
+  | "status";
 
 export type VaultParsedCommand = {
   raw: string;
@@ -67,17 +68,57 @@ export type VaultBacklink = {
   matchingLinks: string[];
 };
 
-export type VaultModulePayload = {
-  activeVaultNote?: {
-    title: string;
-    path: string;
-    relativePath: string;
-    lastAction: "read" | "created" | "appended" | "linked" | "indexed";
+export type VaultActiveNote = {
+  title: string;
+  path: string;
+  relativePath: string;
+  lastAction: "read" | "created" | "appended" | "linked" | "indexed" | "logged";
+};
+
+export type VaultGraphAction = {
+  type: "backlinks" | "orphans" | "index";
+  target?: string;
+  resultCount?: number;
+  updatedAt: string;
+};
+
+export type VaultSessionState = {
+  sessionId: string;
+  activeNote?: VaultActiveNote;
+  lastSearch?: {
+    query: string;
+    resultCount: number;
+    results: VaultSearchResult[];
+    selectedIndex?: number;
+    updatedAt: string;
   };
+  lastGraphAction?: VaultGraphAction;
+  lastBacklinks?: {
+    note: string;
+    count: number;
+    results: VaultBacklink[];
+    updatedAt: string;
+  };
+  lastOrphans?: {
+    count: number;
+    returnedCount: number;
+    results: VaultNoteSummary[];
+    updatedAt: string;
+  };
+  lastAction?: {
+    action: VaultCommandAction;
+    summary: string;
+    updatedAt: string;
+  };
+};
+
+export type VaultModulePayload = {
+  activeVaultNote?: VaultActiveNote;
   vaultSearch?: {
     query: string;
     resultCount: number;
     results: VaultSearchResult[];
+    selectedIndex?: number;
   };
   backlinks?: {
     note: string;
@@ -86,6 +127,9 @@ export type VaultModulePayload = {
   };
   orphans?: {
     count: number;
+    returnedCount: number;
     results: VaultNoteSummary[];
   };
+  graphAction?: VaultGraphAction;
+  stateSummary?: string;
 };

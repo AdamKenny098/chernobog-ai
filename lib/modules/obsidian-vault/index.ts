@@ -12,6 +12,16 @@ export const obsidianVaultModule = {
 } satisfies ChernobogModule;
 
 export { parseVaultCommand } from "./commands/parseVaultCommand";
-export { handleVaultCommand } from "./commands/executeVaultCommand";
+export { handleVaultCommand, handleVaultFollowUp } from "./commands/executeVaultCommand";
 export { vaultToolRegistry } from "./tools/registry";
-export type { VaultParsedCommand, VaultNoteSummary, VaultSearchResult } from "./types";
+export type {
+  VaultParsedCommand,
+  VaultNoteSummary,
+  VaultSearchResult,
+  VaultSessionState,
+  VaultModulePayload,
+} from "./types";
+
+export { parseVaultFollowUp } from "./commands/parseVaultFollowUp";
+export { parseVaultMemoryBridge } from "./commands/parseVaultMemoryBridge";
+export { getVaultSessionState, buildVaultModulePayload } from "./session/vaultSession";

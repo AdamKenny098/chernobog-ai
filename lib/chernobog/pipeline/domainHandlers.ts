@@ -1,6 +1,9 @@
 import type { UnifiedCommand } from "@/lib/chernobog/command-language";
 import type { RouteName } from "@/lib/chernobog/session/types";
-import { handleVaultCommand } from "@/lib/modules/obsidian-vault";
+import {
+    handleVaultCommand,
+    handleVaultFollowUp,
+  } from "@/lib/modules/obsidian-vault";
 import type { VaultParsedCommand } from "@/lib/modules/obsidian-vault";
 
 export type DomainHandlerContext = {
@@ -80,3 +83,23 @@ const domainHandlers: Record<string, DomainHandler> = {
 export function getDomainHandler(domain: string): DomainHandler | null {
   return domainHandlers[domain] ?? null;
 }
+
+export async function tryHandleModuleFollowUp(context: {
+    userMessage: string;
+    sessionId: string;
+  }): Promise<DomainHandlerResult | null> {
+    const vaultResult = await handleVaultFollowUp({
+      userMessage: context.userMessage,
+      sessionId: context.sessionId,
+    });
+  
+    if (!vaultResult) {
+      return null;
+    }
+  
+    return {
+      route: normalizeModuleRoute(vaultResult.route),
+      reply: vaultResult.reply,
+      modulePayload: vaultResult.modulePayload,
+    };
+  }

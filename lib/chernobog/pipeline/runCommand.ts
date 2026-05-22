@@ -85,7 +85,10 @@ import {
   unifiedToToolCall,
 } from "@/lib/chernobog/command-language";
 
-import { getDomainHandler } from "./domainHandlers";
+import {
+  getDomainHandler,
+  tryHandleModuleFollowUp,
+} from "./domainHandlers";
 
 type FindFilesResultData = {
   root: string;
@@ -602,6 +605,24 @@ addTraceStep(
       saveMessage("user", userMessage, route);
     
       reply = formatCommandLanguageHelp();
+    
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    const moduleFollowUp = await tryHandleModuleFollowUp({
+      userMessage,
+      sessionId,
+    });
+    
+    if (moduleFollowUp) {
+      addTraceStep(trace, "router", "Module follow-up handler detected", "vault", {
+        route: moduleFollowUp.route,
+      });
+    
+      route = moduleFollowUp.route;
+      setTraceRoute(trace, route);
+      saveMessage("user", userMessage, route);
+      reply = moduleFollowUp.reply;
     
       return finalizePipelinePayload(sessionId, route, reply, trace);
     }

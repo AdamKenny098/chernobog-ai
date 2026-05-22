@@ -1,7 +1,14 @@
 import type { ToolResult } from "@/lib/chernobog/tools/types";
 import type { ModuleCommandContext, ModuleCommandResult } from "../contract";
+import {
+  buildVaultModulePayload,
+  getVaultSessionState,
+  summarizeVaultState,
+  updateVaultSessionFromToolResult,
+} from "../session/vaultSession";
 import { vaultToolRegistry } from "../tools/registry";
 import { formatVaultReply } from "./formatVaultReply";
+import { parseVaultFollowUp } from "./parseVaultFollowUp";
 
 async function executeVaultTool(
   name: keyof typeof vaultToolRegistry,
@@ -12,6 +19,21 @@ async function executeVaultTool(
   return result as ToolResult<unknown>;
 }
 
+async function executeAndRecord(
+  context: ModuleCommandContext,
+  toolName: keyof typeof vaultToolRegistry,
+  input: unknown
+): Promise<ModuleCommandResult> {
+  const result = await executeVaultTool(toolName, input);
+  updateVaultSessionFromToolResult(context.sessionId, context.command.action, result);
+
+  return {
+    route: "tools",
+    reply: formatVaultReply(result),
+    modulePayload: buildVaultModulePayload(context.sessionId),
+  };
+}
+
 export async function handleVaultCommand(
   context: ModuleCommandContext
 ): Promise<ModuleCommandResult> {
@@ -19,112 +41,78 @@ export async function handleVaultCommand(
 
   switch (command.action) {
     case "search": {
-      const result = await executeVaultTool("vault_search", {
+      return executeAndRecord(context, "vault_search", {
         query: command.query ?? "",
         folder: command.folder,
         maxResults: 20,
       });
-
-      return {
-        route: "tools",
-        reply: formatVaultReply(result),
-      };
     }
 
     case "read": {
-      const result = await executeVaultTool("vault_read_note", {
+      return executeAndRecord(context, "vault_read_note", {
         note: command.note ?? "",
         folder: command.folder,
       });
-
-      return {
-        route: "tools",
-        reply: formatVaultReply(result),
-      };
     }
 
     case "create": {
-      const result = await executeVaultTool("vault_create_note", {
+      return executeAndRecord(context, "vault_create_note", {
         title: command.note ?? "Untitled Vault Note",
         type: command.type ?? "note",
         folder: command.folder,
         project: command.project,
+        content: command.content,
       });
-
-      return {
-        route: "tools",
-        reply: formatVaultReply(result),
-      };
     }
 
     case "append": {
-      const result = await executeVaultTool("vault_append_note", {
+      return executeAndRecord(context, "vault_append_note", {
         note: command.note ?? "",
         content: command.content ?? "",
         folder: command.folder,
+        createIfMissing: true,
       });
-
-      return {
-        route: "tools",
-        reply: formatVaultReply(result),
-      };
     }
 
     case "link": {
-      const result = await executeVaultTool("vault_link_notes", {
+      return executeAndRecord(context, "vault_link_notes", {
         from: command.note ?? "",
         to: command.targetNote ?? "",
       });
-
-      return {
-        route: "tools",
-        reply: formatVaultReply(result),
-      };
     }
 
     case "backlinks": {
-      const result = await executeVaultTool("vault_backlinks", {
+      return executeAndRecord(context, "vault_backlinks", {
         note: command.note ?? "",
       });
-
-      return {
-        route: "tools",
-        reply: formatVaultReply(result),
-      };
     }
 
     case "orphans": {
-      const result = await executeVaultTool("vault_find_orphans", {
+      return executeAndRecord(context, "vault_find_orphans", {
         maxResults: 50,
       });
-
-      return {
-        route: "tools",
-        reply: formatVaultReply(result),
-      };
     }
 
     case "index": {
-      const result = await executeVaultTool("vault_generate_index", {
+      return executeAndRecord(context, "vault_generate_index", {
         project: command.project ?? command.note ?? "Chernobog",
         overwrite: true,
       });
-
-      return {
-        route: "tools",
-        reply: formatVaultReply(result),
-      };
     }
 
     case "daily_log": {
-      const result = await executeVaultTool("vault_daily_log", {
+      return executeAndRecord(context, "vault_daily_log", {
         project: command.project,
         content: command.content ?? context.userMessage,
       });
+    }
 
+    case "status": {
+      const state = getVaultSessionState(context.sessionId);
       return {
         route: "tools",
-        reply: formatVaultReply(result),
+        reply: summarizeVaultState(state),
+        modulePayload: buildVaultModulePayload(context.sessionId),
       };
     }
 
@@ -132,7 +120,23 @@ export async function handleVaultCommand(
       return {
         route: "tools",
         reply: `Vault command not implemented: ${command.action}`,
+        modulePayload: buildVaultModulePayload(context.sessionId),
       };
     }
   }
+}
+
+export async function handleVaultFollowUp(
+  context: Omit<ModuleCommandContext, "command">
+): Promise<ModuleCommandResult | null> {
+  const command = parseVaultFollowUp(context.sessionId, context.userMessage);
+
+  if (!command) {
+    return null;
+  }
+
+  return handleVaultCommand({
+    ...context,
+    command,
+  });
 }
