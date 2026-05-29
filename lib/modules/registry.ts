@@ -1,5 +1,6 @@
 import type { UnifiedCommand } from "@/lib/chernobog/command-language";
 import { obsidianVaultModule } from "@/lib/modules/adapters/obsidianVaultAdapter";
+import { fileWorkflowModule } from "@/lib/modules/file-workflow";
 import type {
   ChernobogModule,
   ModuleCommandContext,
@@ -10,6 +11,7 @@ import type {
 
 const registeredModules: ChernobogModule[] = [
   obsidianVaultModule,
+  fileWorkflowModule,
 ];
 
 function validateRegisteredModules(modules: ChernobogModule[]) {

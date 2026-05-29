@@ -31,11 +31,6 @@ import {
 } from "@/lib/chernobog/session/store";
 
 import {
-  looksLikeOrdinalFileFollowUp,
-  tryResolveFollowUp,
-} from "@/lib/chernobog/session/followups";
-
-import {
   setSelectedFileFromPath,
   updateSessionAfterRoute,
   updateSessionFromToolResult,
@@ -852,7 +847,6 @@ if (unifiedMemoryAction) {
       "V5.0 execution layer did not handle the message"
     );
 
-    const followUp = tryResolveFollowUp(userMessage, session);
     const unifiedToolCall = unifiedToToolCall(unifiedCommand);
 
     if (unifiedToolCall && unifiedCommand.confidenceLevel === "high") {
@@ -943,61 +937,6 @@ if (unifiedMemoryAction) {
       return finalizePipelinePayload(sessionId, route, reply, trace);
     }
 
-    if (followUp.kind === "needs_disambiguation") {
-      route = "tools";
-      setTraceRoute(trace, route);
-
-      addTraceStep(
-        trace,
-        "follow_up",
-        "Follow-up requires file disambiguation",
-        followUp.message,
-        followUp.pending
-      );
-
-      saveMessage("user", userMessage, route);
-
-      setPendingDisambiguation(session, followUp.pending);
-      saveSessionContext(session);
-
-      reply = followUp.message;
-    } else if (followUp.kind === "resolved_tool_action") {
-      route = "tools";
-      setTraceRoute(trace, route);
-      setTraceTool(trace, followUp.tool);
-
-      addTraceStep(
-        trace,
-        "follow_up",
-        "Follow-up resolved to tool action",
-        followUp.tool,
-        followUp.input
-      );
-
-      saveMessage("user", userMessage, route);
-
-      const toolResult = await executeAndTrackTool(
-        followUp.tool,
-        followUp.input,
-        sessionId
-      );
-
-      reply = formatToolReply(toolResult, sessionId);
-    } else if (looksLikeOrdinalFileFollowUp(userMessage)) {
-      route = "tools";
-      setTraceRoute(trace, route);
-
-      addTraceStep(
-        trace,
-        "follow_up",
-        "Ordinal file follow-up detected without valid active result set",
-        userMessage
-      );
-
-      saveMessage("user", userMessage, route);
-
-      reply = "I do not have a valid active file result set for that selection yet.";
-    } else {
       addTraceStep(trace, "orchestration", "Checking V4.4 orchestration layer");
 
       const orchestration = await orchestrateMessage(userMessage, session);
@@ -1260,7 +1199,7 @@ if (unifiedMemoryAction) {
           }
         }
       }
-    }
+    
   }
 
   return finalizePipelinePayload(sessionId, route, reply, trace);
