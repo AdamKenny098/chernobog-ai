@@ -24,9 +24,9 @@ export type DomainHandler = (
 ) => Promise<DomainHandlerResult>;
 
 export function getDomainHandler(domain: string): DomainHandler | null {
-  const module = getModuleForDomain(domain);
+  const registeredModule = getModuleForDomain(domain);
 
-  if (!module || !module.handleCommand) {
+  if (!registeredModule || !registeredModule.handleCommand) {
     return null;
   }
 
@@ -36,7 +36,7 @@ export function getDomainHandler(domain: string): DomainHandler | null {
     if (!result) {
       return {
         route: "chat",
-        moduleId: module.id,
+        moduleId: registeredModule.id,
         reply: `No module handler is registered for the "${domain}" domain.`,
       };
     }
