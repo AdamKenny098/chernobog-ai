@@ -346,6 +346,7 @@ import {
     id: "file-workflow",
     displayName: "File Workflow",
     domains: ["file"],
+    followUpPriority: 60,
   
     handleCommand: handleFileWorkflowCommand,
     handleFollowUp: handleFileWorkflowFollowUp,

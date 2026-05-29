@@ -14,6 +14,24 @@ const registeredModules: ChernobogModule[] = [
   fileWorkflowModule,
 ];
 
+const activeModuleBySession = new Map<string, string>();
+
+function getFollowUpPriority(module: ChernobogModule): number {
+  return module.followUpPriority ?? 0;
+}
+
+function getModulesByFollowUpPriority(): ChernobogModule[] {
+  return [...registeredModules].sort((a, b) => {
+    const priorityDelta = getFollowUpPriority(b) - getFollowUpPriority(a);
+
+    if (priorityDelta !== 0) {
+      return priorityDelta;
+    }
+
+    return a.id.localeCompare(b.id);
+  });
+}
+
 function validateRegisteredModules(modules: ChernobogModule[]) {
   const moduleIds = new Set<string>();
   const domains = new Map<string, string>();
@@ -44,6 +62,42 @@ function validateRegisteredModules(modules: ChernobogModule[]) {
   }
 }
 
+function markModuleActive(sessionId: string, moduleId: string) {
+  activeModuleBySession.set(sessionId, moduleId);
+}
+
+function getActiveModuleForSession(sessionId: string): ChernobogModule | null {
+  const moduleId = activeModuleBySession.get(sessionId);
+
+  if (!moduleId) {
+    return null;
+  }
+
+  return registeredModules.find((module) => module.id === moduleId) ?? null;
+}
+
+async function tryModuleFollowUp(
+  module: ChernobogModule,
+  context: ModuleFollowUpContext
+): Promise<ModuleHandlerResult | null> {
+  if (!module.handleFollowUp) {
+    return null;
+  }
+
+  const result = await module.handleFollowUp(context);
+
+  if (!result) {
+    return null;
+  }
+
+  markModuleActive(context.sessionId, module.id);
+
+  return {
+    ...result,
+    moduleId: result.moduleId ?? module.id,
+  };
+}
+
 validateRegisteredModules(registeredModules);
 
 export function getRegisteredModules(): ChernobogModule[] {
@@ -53,11 +107,13 @@ export function getRegisteredModules(): ChernobogModule[] {
 export function getModuleRegistrySnapshot(): ModuleRegistrySnapshot {
   return {
     moduleCount: registeredModules.length,
+    activeSessionCount: activeModuleBySession.size,
     modules: registeredModules.map((module) => ({
       id: module.id,
       displayName: module.displayName,
       domains: [...module.domains],
       toolCount: module.tools ? Object.keys(module.tools).length : 0,
+      followUpPriority: getFollowUpPriority(module),
       hasParser: Boolean(module.parseCommand),
       hasCommandHandler: Boolean(module.handleCommand),
       hasFollowUpHandler: Boolean(module.handleFollowUp),
@@ -129,6 +185,8 @@ export async function handleRegisteredModuleCommand(
 
   const result = await module.handleCommand(context);
 
+  markModuleActive(context.sessionId, module.id);
+
   return {
     ...result,
     moduleId: result.moduleId ?? module.id,
@@ -138,18 +196,27 @@ export async function handleRegisteredModuleCommand(
 export async function tryHandleRegisteredModuleFollowUp(
   context: ModuleFollowUpContext
 ): Promise<ModuleHandlerResult | null> {
-  for (const module of registeredModules) {
-    if (!module.handleFollowUp) {
+  const activeModule = getActiveModuleForSession(context.sessionId);
+
+  if (activeModule) {
+    const activeResult = await tryModuleFollowUp(activeModule, context);
+
+    if (activeResult) {
+      return activeResult;
+    }
+  }
+
+  const priorityModules = getModulesByFollowUpPriority();
+
+  for (const module of priorityModules) {
+    if (activeModule && module.id === activeModule.id) {
       continue;
     }
 
-    const result = await module.handleFollowUp(context);
+    const result = await tryModuleFollowUp(module, context);
 
     if (result) {
-      return {
-        ...result,
-        moduleId: result.moduleId ?? module.id,
-      };
+      return result;
     }
   }
 

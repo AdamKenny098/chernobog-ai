@@ -31,11 +31,13 @@ export type ModuleFollowUpHandler = (
 
 export type ModuleRegistrySnapshot = {
   moduleCount: number;
+  activeSessionCount: number;
   modules: Array<{
     id: string;
     displayName: string;
     domains: string[];
     toolCount: number;
+    followUpPriority: number;
     hasParser: boolean;
     hasCommandHandler: boolean;
     hasFollowUpHandler: boolean;
@@ -46,6 +48,12 @@ export type ChernobogModule = {
   id: string;
   displayName: string;
   domains: string[];
+
+  /**
+   * Higher values are tried earlier when there is no recent active module.
+   * Recent active module still gets first chance for that session.
+   */
+  followUpPriority?: number;
 
   tools?: Record<string, unknown>;
 

@@ -179,6 +179,7 @@ import type { ModuleCommandResult } from "@/lib/modules/obsidian-vault/contract"
     id: "obsidian-vault",
     displayName: "Obsidian Vault",
     domains: ["vault"],
+    followUpPriority: 80,
   
     tools: vaultToolRegistry,
   
