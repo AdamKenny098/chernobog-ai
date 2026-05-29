@@ -89,8 +89,137 @@ import type { ModuleCommandResult } from "@/lib/modules/obsidian-vault/contract"
       moduleCommand: command,
     };
   }
+
+  function normalizeVaultMessage(message: string): string {
+    return message.trim().replace(/\s+/g, " ");
+  }
+  
+  function cleanVaultValue(value: string): string {
+    return value
+      .trim()
+      .replace(/^\[\[|\]\]$/g, "")
+      .replace(/^['"]|['"]$/g, "")
+      .replace(/\.$/, "")
+      .trim();
+  }
+  
+  function parseUnifiedVaultGrammar(message: string): VaultParsedCommand | null {
+    const normalized = normalizeVaultMessage(message);
+  
+    let match = normalized.match(/^search\s+vault\s+(?:for|about)\s+(.+)$/i);
+  
+    if (match) {
+      return {
+        raw: message,
+        normalized,
+        domain: "vault",
+        action: "search",
+        query: cleanVaultValue(match[1]),
+        confidence: 0.9,
+        reasons: ["vault module parsed unified vault search grammar"],
+      };
+    }
+  
+    match = normalized.match(/^read\s+(?:vault\s+)?(?:note\s+)?(.+)$/i);
+  
+    if (match && /\bvault\b/i.test(normalized)) {
+      return {
+        raw: message,
+        normalized,
+        domain: "vault",
+        action: "read",
+        note: cleanVaultValue(match[1]),
+        confidence: 0.86,
+        reasons: ["vault module parsed unified vault read grammar"],
+      };
+    }
+  
+    match = normalized.match(/^read\s+note\s+(.+?)\s+from\s+vault$/i);
+  
+    if (match) {
+      return {
+        raw: message,
+        normalized,
+        domain: "vault",
+        action: "read",
+        note: cleanVaultValue(match[1]),
+        confidence: 0.88,
+        reasons: ["vault module parsed read note from vault grammar"],
+      };
+    }
+  
+    match = normalized.match(
+      /^(?:show\s+)?backlinks\s+(?:for\s+)?(?:vault\s+note\s+|note\s+)?(.+)$/i
+    );
+  
+    if (match) {
+      return {
+        raw: message,
+        normalized,
+        domain: "vault",
+        action: "backlinks",
+        note: cleanVaultValue(match[1]),
+        confidence: 0.84,
+        reasons: ["vault module parsed unified backlinks grammar"],
+      };
+    }
+  
+    match = normalized.match(/^create\s+vault\s+note\s+(.+)$/i);
+  
+    if (match) {
+      return {
+        raw: message,
+        normalized,
+        domain: "vault",
+        action: "create",
+        note: cleanVaultValue(match[1]),
+        confidence: 0.84,
+        reasons: ["vault module parsed unified create vault note grammar"],
+      };
+    }
+  
+    match = normalized.match(/^append\s+to\s+vault\s+note\s+(.+?)\s*[:\-]\s*(.+)$/i);
+  
+    if (match) {
+      return {
+        raw: message,
+        normalized,
+        domain: "vault",
+        action: "append",
+        note: cleanVaultValue(match[1]),
+        content: match[2].trim(),
+        confidence: 0.86,
+        reasons: ["vault module parsed unified append vault note grammar"],
+      };
+    }
+  
+    match = normalized.match(
+      /^link\s+vault\s+note\s+(.+?)\s+(?:to|with)\s+(.+)$/i
+    );
+  
+    if (match) {
+      return {
+        raw: message,
+        normalized,
+        domain: "vault",
+        action: "link",
+        note: cleanVaultValue(match[1]),
+        targetNote: cleanVaultValue(match[2]),
+        confidence: 0.86,
+        reasons: ["vault module parsed unified link vault note grammar"],
+      };
+    }
+  
+    return null;
+  }
   
   function parseObsidianVaultCommand(message: string): UnifiedCommand | null {
+    const unifiedGrammarCommand = parseUnifiedVaultGrammar(message);
+  
+    if (unifiedGrammarCommand) {
+      return adaptVaultCommand(unifiedGrammarCommand);
+    }
+  
     const parsed = parseVaultCommand(message);
   
     if (!parsed) {
