@@ -5,6 +5,7 @@ import {
   import type {
     DiscordApiChannel,
     DiscordApiErrorPayload,
+    DiscordApiMessage,
     DiscordApiUser,
     DiscordIngestStatus,
   } from "../types";
@@ -50,7 +51,7 @@ import {
   }
   
   async function discordFetch<T>(
-    path: string,
+    endpointPath: string,
     init?: RequestInit
   ): Promise<T> {
     const config = getDiscordIngestConfig();
@@ -64,7 +65,7 @@ import {
       );
     }
   
-    const response = await fetch(`${config.apiBaseUrl}${path}`, {
+    const response = await fetch(`${config.apiBaseUrl}${endpointPath}`, {
       ...init,
       headers: {
         Authorization: `Bot ${config.botToken}`,
@@ -83,6 +84,14 @@ import {
     return (await response.json()) as T;
   }
   
+  function clampMessageLimit(limit: number): number {
+    if (!Number.isFinite(limit)) {
+      return 25;
+    }
+  
+    return Math.max(1, Math.min(100, Math.floor(limit)));
+  }
+  
   export async function getDiscordBotUser(): Promise<DiscordApiUser> {
     return discordFetch<DiscordApiUser>("/users/@me");
   }
@@ -91,6 +100,20 @@ import {
     channelId: string
   ): Promise<DiscordApiChannel> {
     return discordFetch<DiscordApiChannel>(`/channels/${channelId}`);
+  }
+  
+  export async function fetchDiscordChannelMessages(args: {
+    channelId: string;
+    limit?: number;
+  }): Promise<DiscordApiMessage[]> {
+    const limit = clampMessageLimit(args.limit ?? 25);
+    const params = new URLSearchParams({
+      limit: String(limit),
+    });
+  
+    return discordFetch<DiscordApiMessage[]>(
+      `/channels/${args.channelId}/messages?${params.toString()}`
+    );
   }
   
   export async function getDiscordIngestStatus(): Promise<DiscordIngestStatus> {
