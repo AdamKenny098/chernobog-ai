@@ -8,7 +8,8 @@ export type CommandDomain =
   | "context"
   | "chat"
   | "guardian"
-  | "vault";
+  | "vault"
+  | "discord";
 
 export type CommandAction =
   | "none"
@@ -52,7 +53,10 @@ export type CommandTarget =
   | "vault_note"
   | "vault_graph"
   | "vault_index"
-  | "daily_log";
+  | "daily_log"
+  | "discord"
+  | "discord_channel"
+  |"status";
 
 export type CommandReference =
   | "none"
