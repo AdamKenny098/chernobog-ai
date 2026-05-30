@@ -83,6 +83,108 @@ export type DiscordIngestStatus = {
     limit: number;
   };
   
+  export type DiscordTriageModuleCommand = {
+    kind: "discord_triage_messages";
+    limit: number;
+  };
+  
+  export type DiscordMessageKind =
+    | "project_idea"
+    | "feature_request"
+    | "bug_report"
+    | "design_note"
+    | "architecture_note"
+    | "task"
+    | "decision"
+    | "question"
+    | "general_chatter"
+    | "ignore";
+  
+  export type DiscordMessageClassification = {
+    kind: DiscordMessageKind;
+    confidence: number;
+    shouldKeep: boolean;
+    titleGuess?: string;
+    projectGuess?: string;
+    reasoning: string[];
+  };
+  
+  export type DiscordIdeaFragment = {
+    id: string;
+    sourceMessageId: string;
+    fragmentIndex: number;
+    content: string;
+    sourceContent: string;
+    wasSplitFromMultiIdeaMessage: boolean;
+  };
+  
+  export type ClassifiedDiscordMessage = {
+    message: NormalizedDiscordMessage;
+    fragment: DiscordIdeaFragment;
+    classification: DiscordMessageClassification;
+  };
+  
+  export type VaultRoutingAction =
+    | "append_existing_note"
+    | "create_new_note"
+    | "append_inbox"
+    | "needs_review"
+    | "ignore";
+  
+  export type VaultRoutingDestination = {
+    noteTitle: string;
+    relativePath: string;
+    section?: string;
+  };
+  
+  export type VaultRoutingResult = {
+    action: VaultRoutingAction;
+    confidence: number;
+    destination?: VaultRoutingDestination;
+    reasoning: string[];
+  };
+  
+  export type RoutedDiscordTriageCandidate = ClassifiedDiscordMessage & {
+    vaultRoute: VaultRoutingResult;
+  };
+  
+  export type DiscordTriagePlan = {
+    source: {
+      channelId: string;
+      channelName?: string;
+      scannedMessageCount: number;
+      visibleMessageCount: number;
+    };
+    candidates: RoutedDiscordTriageCandidate[];
+    ignoredCount: number;
+  };
+
+  export type DiscordTriagePlanCommandKind =
+  | "discord_show_triage_plan"
+  | "discord_summarize_triage_plan"
+  | "discord_discard_triage_plan";
+
+export type DiscordTriagePlanModuleCommand = {
+  kind: DiscordTriagePlanCommandKind;
+};
+
+export type StoredDiscordTriagePlan = {
+  id: string;
+  createdAt: string;
+  source: {
+    channelId: string;
+    channelName?: string;
+    scannedMessageCount: number;
+    visibleMessageCount: number;
+  };
+  requestedLimit: number;
+  classifiedFragmentCount: number;
+  candidateCount: number;
+  ignoredCount: number;
+  actionCounts: Record<string, number>;
+  candidates: RoutedDiscordTriageCandidate[];
+};
+  
   export type DiscordApiErrorPayload = {
     message?: string;
     code?: number;

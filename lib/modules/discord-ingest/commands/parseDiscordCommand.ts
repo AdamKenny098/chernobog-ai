@@ -2,7 +2,11 @@ import type {
     CommandConfidenceLevel,
     UnifiedCommand,
   } from "@/lib/chernobog/command-language";
-  import type { DiscordScanModuleCommand } from "../types";
+  import type {
+    DiscordScanModuleCommand,
+    DiscordTriageModuleCommand,
+    DiscordTriagePlanModuleCommand,
+  } from "../types";
   
   function normalizeDiscordMessage(message: string): string {
     return message.trim().replace(/\s+/g, " ");
@@ -58,7 +62,10 @@ import type {
     };
   }
   
-  function buildDiscordScanCommand(message: string, confidence: number): UnifiedCommand {
+  function buildDiscordScanCommand(
+    message: string,
+    confidence: number
+  ): UnifiedCommand {
     const limit = getLimitFromMessage(message);
     const moduleCommand: DiscordScanModuleCommand = {
       kind: "discord_scan_messages",
@@ -76,6 +83,48 @@ import type {
     });
   }
   
+  function buildDiscordTriageCommand(
+    message: string,
+    confidence: number
+  ): UnifiedCommand {
+    const limit = getLimitFromMessage(message);
+    const moduleCommand: DiscordTriageModuleCommand = {
+      kind: "discord_triage_messages",
+      limit,
+    };
+  
+    return buildDiscordCommand({
+      raw: message,
+      action: "search",
+      target: "discord_channel",
+      query: "triage ideas",
+      confidence,
+      reasons: ["discord module parsed idea triage command"],
+      moduleCommand,
+    });
+  }
+  
+  function buildDiscordTriagePlanCommand(
+    message: string,
+    kind: DiscordTriagePlanModuleCommand["kind"],
+    confidence: number,
+    reason: string
+  ): UnifiedCommand {
+    const moduleCommand: DiscordTriagePlanModuleCommand = {
+      kind,
+    };
+  
+    return buildDiscordCommand({
+      raw: message,
+      action: "show",
+      target: "discord",
+      query: "triage plan",
+      confidence,
+      reasons: [reason],
+      moduleCommand,
+    });
+  }
+  
   export function parseDiscordCommand(message: string): UnifiedCommand | null {
     const normalized = normalizeDiscordMessage(message);
   
@@ -89,7 +138,9 @@ import type {
       });
     }
   
-    if (/^discord\s+(?:ingest\s+)?(?:check|health|connection)$/i.test(normalized)) {
+    if (
+      /^discord\s+(?:ingest\s+)?(?:check|health|connection)$/i.test(normalized)
+    ) {
       return buildDiscordCommand({
         raw: message,
         action: "status",
@@ -110,6 +161,55 @@ import type {
     }
   
     if (
+      /^(?:discord\s+)?(?:show|view|review)\s+triage\s+plan$/i.test(normalized)
+    ) {
+      return buildDiscordTriagePlanCommand(
+        message,
+        "discord_show_triage_plan",
+        0.94,
+        "discord module parsed show triage plan command"
+      );
+    }
+  
+    if (/^(?:discord\s+)?summari[sz]e\s+triage\s+plan$/i.test(normalized)) {
+      return buildDiscordTriagePlanCommand(
+        message,
+        "discord_summarize_triage_plan",
+        0.94,
+        "discord module parsed summarize triage plan command"
+      );
+    }
+  
+    if (
+      /^(?:discord\s+)?(?:discard|clear|delete)\s+triage\s+plan$/i.test(
+        normalized
+      )
+    ) {
+      return buildDiscordTriagePlanCommand(
+        message,
+        "discord_discard_triage_plan",
+        0.94,
+        "discord module parsed discard triage plan command"
+      );
+    }
+  
+    if (
+      /^discord\s+(?:triage|classify|analyze|analyse|route)\s+(?:ideas|idea\s+channel)$/i.test(
+        normalized
+      )
+    ) {
+      return buildDiscordTriageCommand(message, 0.94);
+    }
+  
+    if (
+      /^discord\s+(?:triage|classify|analyze|analyse|route)\s+(?:last|latest|recent)\s+\d{1,3}\s+(?:messages|ideas)$/i.test(
+        normalized
+      )
+    ) {
+      return buildDiscordTriageCommand(message, 0.92);
+    }
+  
+    if (
       /^discord\s+(?:scan|fetch|preview)\s+(?:ideas|idea\s+channel)$/i.test(
         normalized
       )
@@ -125,7 +225,11 @@ import type {
       return buildDiscordScanCommand(message, 0.9);
     }
   
-    if (/^discord\s+scan\s+last\s+\d{1,3}\s+messages\s+from\s+ideas$/i.test(normalized)) {
+    if (
+      /^discord\s+scan\s+last\s+\d{1,3}\s+messages\s+from\s+ideas$/i.test(
+        normalized
+      )
+    ) {
       return buildDiscordScanCommand(message, 0.9);
     }
   
