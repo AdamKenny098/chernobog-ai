@@ -2,10 +2,12 @@ import type {
     CommandConfidenceLevel,
     UnifiedCommand,
   } from "@/lib/chernobog/command-language";
+
   import type {
     DiscordScanModuleCommand,
     DiscordTriageModuleCommand,
     DiscordTriagePlanModuleCommand,
+    DiscordVaultPullRequestModuleCommand,
   } from "../types";
   
   function normalizeDiscordMessage(message: string): string {
@@ -124,6 +126,27 @@ import type {
       moduleCommand,
     });
   }
+
+  function buildDiscordVaultPullRequestCommand(
+    message: string,
+    kind: DiscordVaultPullRequestModuleCommand["kind"],
+    confidence: number,
+    reason: string
+  ): UnifiedCommand {
+    const moduleCommand: DiscordVaultPullRequestModuleCommand = {
+      kind,
+    };
+  
+    return buildDiscordCommand({
+      raw: message,
+      action: kind === "discord_create_vault_pr" ? "create" : "show",
+      target: "discord",
+      query: "vault pull request",
+      confidence,
+      reasons: [reason],
+      moduleCommand,
+    });
+  }
   
   export function parseDiscordCommand(message: string): UnifiedCommand | null {
     const normalized = normalizeDiscordMessage(message);
@@ -159,6 +182,54 @@ import type {
         reasons: ["discord module parsed natural status command"],
       });
     }
+
+    if (
+        /^(?:discord\s+)?create\s+(?:vault\s+)?pr\s+from\s+triage\s+plan$/i.test(
+          normalized
+        ) ||
+        /^(?:discord\s+)?create\s+vault\s+pull\s+request\s+from\s+triage\s+plan$/i.test(
+          normalized
+        )
+      ) {
+        return buildDiscordVaultPullRequestCommand(
+          message,
+          "discord_create_vault_pr",
+          0.96,
+          "discord module parsed create vault pull request command"
+        );
+      }
+    
+      if (
+        /^(?:discord\s+)?(?:show|view|review|open)\s+(?:vault\s+)?pr$/i.test(
+          normalized
+        ) ||
+        /^(?:discord\s+)?(?:show|view|review|open)\s+vault\s+pull\s+request$/i.test(
+          normalized
+        )
+      ) {
+        return buildDiscordVaultPullRequestCommand(
+          message,
+          "discord_show_vault_pr",
+          0.94,
+          "discord module parsed show vault pull request command"
+        );
+      }
+    
+      if (
+        /^(?:discord\s+)?(?:discard|clear|delete)\s+(?:vault\s+)?pr$/i.test(
+          normalized
+        ) ||
+        /^(?:discord\s+)?(?:discard|clear|delete)\s+vault\s+pull\s+request$/i.test(
+          normalized
+        )
+      ) {
+        return buildDiscordVaultPullRequestCommand(
+          message,
+          "discord_discard_vault_pr",
+          0.94,
+          "discord module parsed discard vault pull request command"
+        );
+      }
   
     if (
       /^(?:discord\s+)?(?:show|view|review)\s+triage\s+plan$/i.test(normalized)

@@ -17,14 +17,22 @@ import type {
     getLatestDiscordTriagePlan,
     setLatestDiscordTriagePlan,
   } from "../session/triagePlanStore";
+  import { buildVaultPullRequestFromTriagePlan } from "../approval/buildVaultPullRequest";
+  import {
+    clearLatestVaultPullRequest,
+    getLatestVaultPullRequest,
+    setLatestVaultPullRequest,
+  } from "../approval/pullRequestStore";
   import type {
     DiscordIngestStatus,
     DiscordScanModuleCommand,
     DiscordTriageModuleCommand,
     DiscordTriagePlanModuleCommand,
+    DiscordVaultPullRequestModuleCommand,
     NormalizedDiscordMessage,
     RoutedDiscordTriageCandidate,
     StoredDiscordTriagePlan,
+    VaultPullRequest,
   } from "../types";
   
   function formatDiscordStatusReply(status: DiscordIngestStatus): string {
@@ -43,7 +51,8 @@ import type {
       ? `#${status.channel.name}`
       : status.channel?.id ?? "unknown channel";
   
-    const botName = status.bot?.globalName ?? status.bot?.username ?? "unknown bot";
+    const botName =
+      status.bot?.globalName ?? status.bot?.username ?? "unknown bot";
   
     return [
       "Discord ingest is configured.",
@@ -52,7 +61,7 @@ import type {
       `Idea channel: ${channelName} (${status.channel?.id})`,
       `API base: ${status.apiBaseUrl}`,
       "",
-      "Discord scan, triage, and routing preview commands are available. Vault writes are still disabled.",
+      "Discord scan, triage, routing preview, and vault pull request commands are available. Vault writes are still disabled.",
     ].join("\n");
   }
   
@@ -99,6 +108,28 @@ import type {
       command.kind !== "discord_show_triage_plan" &&
       command.kind !== "discord_summarize_triage_plan" &&
       command.kind !== "discord_discard_triage_plan"
+    ) {
+      return null;
+    }
+  
+    return command;
+  }
+  
+  function getVaultPullRequestCommand(
+    context: ModuleCommandContext
+  ): DiscordVaultPullRequestModuleCommand | null {
+    const command = context.command.moduleCommand as
+      | DiscordVaultPullRequestModuleCommand
+      | undefined;
+  
+    if (!command) {
+      return null;
+    }
+  
+    if (
+      command.kind !== "discord_create_vault_pr" &&
+      command.kind !== "discord_show_vault_pr" &&
+      command.kind !== "discord_discard_vault_pr"
     ) {
       return null;
     }
@@ -204,7 +235,9 @@ import type {
       : `Message ${fragment.sourceMessageId}`;
     const destination = vaultRoute.destination
       ? `${vaultRoute.destination.relativePath}${
-          vaultRoute.destination.section ? ` → ${vaultRoute.destination.section}` : ""
+          vaultRoute.destination.section
+            ? ` → ${vaultRoute.destination.section}`
+            : ""
         }`
       : "none";
   
@@ -224,6 +257,15 @@ import type {
     ].join("\n");
   }
   
+  function getActionCounts(
+    candidates: RoutedDiscordTriageCandidate[]
+  ): Record<string, number> {
+    return candidates.reduce<Record<string, number>>((counts, item) => {
+      counts[item.vaultRoute.action] = (counts[item.vaultRoute.action] ?? 0) + 1;
+      return counts;
+    }, {});
+  }
+  
   function formatDiscordTriageReply(args: {
     channelName: string;
     requestedLimit: number;
@@ -236,7 +278,6 @@ import type {
         item.classification.shouldKeep && item.vaultRoute.action !== "ignore"
     );
     const ignoredCount = args.routed.length - kept.length;
-  
     const actionCounts = getActionCounts(kept);
   
     const lines: string[] = [
@@ -274,15 +315,6 @@ import type {
     lines.push("V5.5C routing preview only. No vault files were changed.");
   
     return lines.join("\n");
-  }
-  
-  function getActionCounts(
-    candidates: RoutedDiscordTriageCandidate[]
-  ): Record<string, number> {
-    return candidates.reduce<Record<string, number>>((counts, item) => {
-      counts[item.vaultRoute.action] = (counts[item.vaultRoute.action] ?? 0) + 1;
-      return counts;
-    }, {});
   }
   
   function createStoredTriagePlan(args: {
@@ -428,6 +460,66 @@ import type {
     lines.push("No vault files have been changed.");
   
     return lines.join("\n");
+  }
+  
+  function formatVaultPullRequest(pullRequest: VaultPullRequest): string {
+    const lines: string[] = [
+      `Vault pull request: ${pullRequest.id}`,
+      "",
+      `Status: ${pullRequest.status}`,
+      `Created: ${new Date(pullRequest.createdAt).toLocaleString()}`,
+      `Source: ${pullRequest.source}`,
+      `Triage plan: ${pullRequest.triagePlanId}`,
+      "",
+      "Summary:",
+      `- Total changes: ${pullRequest.summary.totalChanges}`,
+      `- New notes: ${pullRequest.summary.createCount}`,
+      `- Existing appends: ${pullRequest.summary.appendCount}`,
+      `- Inbox appends: ${pullRequest.summary.inboxCount}`,
+      `- Approved: ${pullRequest.summary.approvedCount}`,
+      `- Rejected: ${pullRequest.summary.rejectedCount}`,
+      `- Pending: ${pullRequest.summary.pendingCount}`,
+    ];
+  
+    if (pullRequest.changes.length > 0) {
+      lines.push("");
+      lines.push("Top proposed changes:");
+  
+      lines.push(
+        ...pullRequest.changes.slice(0, 12).map((change, index) => {
+          return `${index + 1}. [${change.status}] ${change.title} → ${change.action} → ${change.destinationPath}`;
+        })
+      );
+    }
+  
+    lines.push("");
+    lines.push("No vault files have been changed.");
+    lines.push(
+      "The full review workspace will render this pull request in V5.5D-2."
+    );
+  
+    return lines.join("\n");
+  }
+  
+  function formatVaultPullRequestCreated(
+    pullRequest: VaultPullRequest
+  ): string {
+    const reviewUrl = `/review/vault-pr/${pullRequest.id}`;
+  
+    return [
+      `Created vault pull request ${pullRequest.id}.`,
+      "",
+      `${pullRequest.summary.totalChanges} proposed change(s):`,
+      `- ${pullRequest.summary.createCount} new note(s)`,
+      `- ${pullRequest.summary.appendCount} existing note append(s)`,
+      `- ${pullRequest.summary.inboxCount} inbox append(s)`,
+      "",
+      "No vault files were changed.",
+      "",
+      `Review workspace: ${reviewUrl}`,
+      "",
+      "Use `show vault pr` for a command-line summary, or open the review workspace in a new tab.",
+    ].join("\n");
   }
   
   async function fetchIdeaChannelPreview(args: {
@@ -595,12 +687,100 @@ import type {
     };
   }
   
+  async function handleDiscordVaultPullRequestCommand(
+    context: ModuleCommandContext,
+    prCommand: DiscordVaultPullRequestModuleCommand
+  ): Promise<ModuleHandlerResult> {
+    if (prCommand.kind === "discord_discard_vault_pr") {
+      const cleared = clearLatestVaultPullRequest(context.sessionId);
+  
+      return {
+        route: "tools",
+        moduleId: "discord-ingest",
+        reply: cleared
+          ? "Discarded the latest Discord vault pull request for this session."
+          : "There was no Discord vault pull request to discard for this session.",
+        modulePayload: {
+          action: prCommand.kind,
+          cleared,
+        },
+      };
+    }
+  
+    if (prCommand.kind === "discord_show_vault_pr") {
+      const pullRequest = getLatestVaultPullRequest(context.sessionId);
+  
+      if (!pullRequest) {
+        return {
+          route: "tools",
+          moduleId: "discord-ingest",
+          reply:
+            "There is no Discord vault pull request in this session yet. Run `create vault pr from triage plan` first.",
+          modulePayload: {
+            action: prCommand.kind,
+            hasPullRequest: false,
+          },
+        };
+      }
+  
+      return {
+        route: "tools",
+        moduleId: "discord-ingest",
+        reply: formatVaultPullRequest(pullRequest),
+        modulePayload: {
+          action: prCommand.kind,
+          hasPullRequest: true,
+          pullRequest,
+        },
+      };
+    }
+  
+    const triagePlan = getLatestDiscordTriagePlan(context.sessionId);
+  
+    if (!triagePlan) {
+      return {
+        route: "tools",
+        moduleId: "discord-ingest",
+        reply:
+          "There is no Discord triage plan to convert into a vault pull request. Run `discord triage ideas` first.",
+        modulePayload: {
+          action: prCommand.kind,
+          hasTriagePlan: false,
+        },
+      };
+    }
+  
+    const pullRequest = buildVaultPullRequestFromTriagePlan(triagePlan);
+    setLatestVaultPullRequest(context.sessionId, pullRequest);
+  
+    return {
+      route: "tools",
+      moduleId: "discord-ingest",
+      reply: formatVaultPullRequestCreated(pullRequest),
+      modulePayload: {
+        action: prCommand.kind,
+        hasTriagePlan: true,
+        pullRequest,
+        reviewUrl: `/review/vault-pr/${pullRequest.id}`,
+      },
+    };
+  }
+  
   export async function handleDiscordCommand(
     context: ModuleCommandContext
   ): Promise<ModuleHandlerResult> {
     const config = getDiscordIngestConfig();
   
     try {
+      const vaultPullRequestCommand = getVaultPullRequestCommand(context);
+  
+      if (vaultPullRequestCommand) {
+        return await handleDiscordVaultPullRequestCommand(
+          context,
+          vaultPullRequestCommand
+        );
+      }
+  
       const triagePlanCommand = getTriagePlanCommand(context);
   
       if (triagePlanCommand) {
@@ -624,7 +804,7 @@ import type {
           route: "chat",
           moduleId: "discord-ingest",
           reply:
-            "The Discord module currently supports `discord status`, `discord scan ideas`, `discord triage ideas`, and triage plan review commands.",
+            "The Discord module currently supports `discord status`, `discord scan ideas`, `discord triage ideas`, triage plan review commands, and vault PR draft commands.",
         };
       }
   

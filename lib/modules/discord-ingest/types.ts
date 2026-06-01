@@ -184,6 +184,87 @@ export type StoredDiscordTriagePlan = {
   actionCounts: Record<string, number>;
   candidates: RoutedDiscordTriageCandidate[];
 };
+
+export type VaultPullRequestStatus =
+  | "draft"
+  | "approved"
+  | "partially_approved"
+  | "rejected"
+  | "applied"
+  | "discarded";
+
+export type VaultProposedChangeStatus = "pending" | "approved" | "rejected";
+
+export type VaultProposedChangeAction =
+  | "create_new_note"
+  | "append_existing_note"
+  | "append_inbox";
+
+export type VaultProposedChange = {
+  id: string;
+  status: VaultProposedChangeStatus;
+  action: VaultProposedChangeAction;
+  title: string;
+  destinationPath: string;
+  section?: string;
+  sourceMessageId: string;
+  sourceFragmentId: string;
+  sourceAuthor: string;
+  sourceText: string;
+  classificationKind: DiscordMessageKind;
+  classificationConfidence: number;
+  routeConfidence: number;
+  proposedContent: string;
+  reasoning: string[];
+};
+
+export type VaultPullRequest = {
+  id: string;
+  source: "discord-triage";
+  status: VaultPullRequestStatus;
+  createdAt: string;
+  triagePlanId: string;
+  summary: {
+    totalChanges: number;
+    createCount: number;
+    appendCount: number;
+    inboxCount: number;
+    approvedCount: number;
+    rejectedCount: number;
+    pendingCount: number;
+  };
+  changes: VaultProposedChange[];
+};
+
+export type DiscordVaultPullRequestCommandKind =
+  | "discord_create_vault_pr"
+  | "discord_show_vault_pr"
+  | "discord_discard_vault_pr";
+
+export type DiscordVaultPullRequestModuleCommand = {
+  kind: DiscordVaultPullRequestCommandKind;
+};
+
+export type VaultApplyChangeStatus = "applied" | "skipped" | "failed";
+
+export type VaultApplyChangeResult = {
+  changeId: string;
+  title: string;
+  action: VaultProposedChangeAction;
+  destinationPath: string;
+  status: VaultApplyChangeStatus;
+  reason: string;
+};
+
+export type VaultPullRequestApplyReport = {
+  pullRequestId: string;
+  appliedAt: string;
+  approvedChangeCount: number;
+  appliedCount: number;
+  skippedCount: number;
+  failedCount: number;
+  results: VaultApplyChangeResult[];
+};
   
   export type DiscordApiErrorPayload = {
     message?: string;

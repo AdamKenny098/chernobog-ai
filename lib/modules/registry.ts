@@ -153,22 +153,48 @@ export function buildModuleToolRegistry(): Record<string, unknown> {
 export function parseRegisteredModuleCommand(
   message: string
 ): UnifiedCommand | null {
-  for (const module of registeredModules) {
-    if (!module.parseCommand) {
+  const parsedCommands: UnifiedCommand[] = [];
+
+  for (const registeredModule of registeredModules) {
+    if (!registeredModule.parseCommand) {
       continue;
     }
 
-    const parsed = module.parseCommand(message);
+    const parsed = registeredModule.parseCommand(message);
 
-    if (parsed) {
-      return {
-        ...parsed,
-        moduleId: parsed.moduleId ?? module.id,
-      };
+    if (!parsed) {
+      continue;
     }
+
+    parsedCommands.push({
+      ...parsed,
+      moduleId: parsed.moduleId ?? registeredModule.id,
+    });
   }
 
-  return null;
+  if (parsedCommands.length === 0) {
+    return null;
+  }
+
+  return parsedCommands.sort((a, b) => {
+    const confidenceDelta = b.confidence - a.confidence;
+
+    if (confidenceDelta !== 0) {
+      return confidenceDelta;
+    }
+
+    const aModule = registeredModules.find(
+      (registeredModule) => registeredModule.id === a.moduleId
+    );
+    const bModule = registeredModules.find(
+      (registeredModule) => registeredModule.id === b.moduleId
+    );
+
+    const aPriority = aModule?.followUpPriority ?? 0;
+    const bPriority = bModule?.followUpPriority ?? 0;
+
+    return bPriority - aPriority;
+  })[0];
 }
 
 export function getModuleForDomain(domain: string): ChernobogModule | null {

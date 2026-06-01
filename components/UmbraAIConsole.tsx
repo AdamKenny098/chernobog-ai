@@ -187,6 +187,66 @@ function getOrCreateBrowserSessionId() {
   return created;
 }
 
+function getReviewUrlFromResponse(responseBody: unknown): string | null {
+  if (!responseBody || typeof responseBody !== "object") {
+    return null;
+  }
+
+  const body = responseBody as {
+    payload?: {
+      reply?: unknown;
+      modulePayload?: {
+        reviewUrl?: unknown;
+      };
+    };
+    modulePayload?: {
+      reviewUrl?: unknown;
+    };
+    reviewUrl?: unknown;
+    reply?: unknown;
+  };
+
+  const structuredReviewUrl =
+    body.payload?.modulePayload?.reviewUrl ??
+    body.modulePayload?.reviewUrl ??
+    body.reviewUrl;
+
+  if (
+    typeof structuredReviewUrl === "string" &&
+    structuredReviewUrl.trim().length > 0
+  ) {
+    return structuredReviewUrl;
+  }
+
+  const replyText =
+    typeof body.payload?.reply === "string"
+      ? body.payload.reply
+      : typeof body.reply === "string"
+        ? body.reply
+        : "";
+
+  const match = replyText.match(/\/review\/vault-pr\/[a-zA-Z0-9._-]+/);
+
+  return match?.[0] ?? null;
+}
+
+function openReviewWorkspace(reviewUrl: string): void {
+  const absoluteUrl = new URL(reviewUrl, window.location.origin).toString();
+
+  console.log("[Vault PR] Opening review workspace:", absoluteUrl);
+
+  const openedWindow = window.open(
+    absoluteUrl,
+    "chernobog-vault-pr-review",
+    "width=1500,height=950"
+  );
+
+  if (!openedWindow) {
+    console.warn("[Vault PR] Popup blocked. Opening in current tab.");
+    window.location.href = absoluteUrl;
+  }
+}
+
 export default function UmbraAIConsole() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [input, setInput] = useState("");
@@ -442,6 +502,14 @@ export default function UmbraAIConsole() {
       }
 
       const data: ChatApiResponse = await response.json();
+
+      const reviewUrl = getReviewUrlFromResponse(data);
+
+      console.log("[Vault PR reviewUrl]", reviewUrl);
+
+      if (reviewUrl) {
+        openReviewWorkspace(reviewUrl);
+      }
 
       if (!response.ok) {
         throw new Error(data?.details || data?.error || "Request failed.");
