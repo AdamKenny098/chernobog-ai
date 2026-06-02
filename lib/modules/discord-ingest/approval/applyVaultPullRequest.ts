@@ -27,7 +27,10 @@ function resolveVaultPath(relativePath: string): string {
   const normalizedRelativePath = normalizeRelativePath(relativePath);
   const resolvedPath = path.resolve(vaultRoot, normalizedRelativePath);
 
-  if (resolvedPath !== vaultRoot && !resolvedPath.startsWith(`${vaultRoot}${path.sep}`)) {
+  if (
+    resolvedPath !== vaultRoot &&
+    !resolvedPath.startsWith(`${vaultRoot}${path.sep}`)
+  ) {
     throw new Error(
       `Refusing to write outside vault root: ${normalizedRelativePath}`
     );
@@ -77,7 +80,8 @@ async function applyCreateNewNote(
     return resultForChange({
       change,
       status: "skipped",
-      reason: "destination already exists; create_new_note never overwrites existing files",
+      reason:
+        "destination already exists; create_new_note never overwrites existing files",
     });
   }
 
@@ -153,7 +157,8 @@ async function applyAppendGroup(args: {
       resultForChange({
         change,
         status: "skipped",
-        reason: "target note does not exist; append_existing_note never creates missing destination notes",
+        reason:
+          "target note does not exist; append_existing_note never creates missing destination notes",
       })
     );
   }
@@ -301,7 +306,9 @@ export async function applyApprovedVaultPullRequest(
     }
   }
 
-  for (const [destinationPath, changes] of groupChangesByDestination(inboxChanges)) {
+  for (const [destinationPath, changes] of groupChangesByDestination(
+    inboxChanges
+  )) {
     try {
       results.push(
         ...(await applyAppendGroup({
@@ -330,7 +337,10 @@ export async function applyApprovedVaultPullRequest(
   });
 
   if (report.failedCount === 0) {
-    markVaultPullRequestApplied(pullRequest.id);
+    markVaultPullRequestApplied({
+      pullRequestId: pullRequest.id,
+      report,
+    });
   }
 
   return report;

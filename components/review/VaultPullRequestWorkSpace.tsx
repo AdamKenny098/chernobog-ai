@@ -231,6 +231,8 @@ function ChangeListItem(props: {
   index: number;
   onSelect: (changeId: string) => void;
 }) {
+  const warningCount = props.change.reviewWarnings?.length ?? 0;
+
   return (
     <button
       type="button"
@@ -239,7 +241,9 @@ function ChangeListItem(props: {
         "w-full rounded-2xl border p-4 text-left transition",
         props.selected
           ? "border-red-500/70 bg-red-500/10 shadow-[0_0_35px_rgba(239,68,68,0.12)]"
-          : "border-zinc-800 bg-zinc-950/60 hover:border-zinc-700 hover:bg-zinc-900/60",
+          : warningCount > 0
+            ? "border-amber-500/40 bg-amber-500/5 hover:border-amber-400/60"
+            : "border-zinc-800 bg-zinc-950/60 hover:border-zinc-700 hover:bg-zinc-900/60",
       ].join(" ")}
     >
       <div className="flex items-start justify-between gap-4">
@@ -275,6 +279,18 @@ function ChangeListItem(props: {
         <span className="rounded-full border border-zinc-700 bg-zinc-900 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-zinc-400">
           {formatPercent(props.change.classificationConfidence)}
         </span>
+
+        {props.change.destinationExists ? (
+          <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-amber-200">
+            Exists
+          </span>
+        ) : null}
+
+        {warningCount > 0 ? (
+          <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-amber-200">
+            {warningCount} warning{warningCount === 1 ? "" : "s"}
+          </span>
+        ) : null}
       </div>
 
       <div className="mt-3 truncate font-mono text-xs text-zinc-500">
@@ -352,6 +368,66 @@ function ApplyReportPanel(props: {
         </div>
       ) : null}
     </section>
+  );
+}
+
+function ApplyConfirmationDialog(props: {
+  approvedCount: number;
+  totalChanges: number;
+  disabled?: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-6 backdrop-blur-sm">
+      <section className="w-full max-w-xl rounded-3xl border border-red-500/40 bg-[#080809] p-6 shadow-[0_0_80px_rgba(0,0,0,0.75)]">
+        <div className="text-xs uppercase tracking-[0.35em] text-red-400">
+          Confirm Vault Write
+        </div>
+
+        <h2 className="mt-3 text-2xl font-semibold text-zinc-100">
+          Apply approved changes?
+        </h2>
+
+        <p className="mt-4 text-sm leading-6 text-zinc-400">
+          Chernobog is about to write{" "}
+          <span className="font-semibold text-zinc-100">
+            {props.approvedCount}
+          </span>{" "}
+          approved change(s) to the vault. Pending and rejected changes will be
+          ignored.
+        </p>
+
+        <div className="mt-5 rounded-2xl border border-zinc-800 bg-black/35 p-4 text-sm text-zinc-400">
+          <div>Total proposed changes: {props.totalChanges}</div>
+          <div>Approved changes to apply: {props.approvedCount}</div>
+          <div>Write mode: approved-only</div>
+        </div>
+
+        <p className="mt-4 text-xs leading-5 text-zinc-500">
+          This action cannot overwrite existing project notes, but it can create
+          new notes and append to approved existing vault notes.
+        </p>
+
+        <div className="mt-6 flex flex-wrap justify-end gap-3">
+          <ActionButton
+            variant="neutral"
+            disabled={props.disabled}
+            onClick={props.onCancel}
+          >
+            Cancel
+          </ActionButton>
+
+          <ActionButton
+            variant="approve"
+            disabled={props.disabled}
+            onClick={props.onConfirm}
+          >
+            Confirm Apply
+          </ActionButton>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -443,6 +519,25 @@ function DetailPanel(props: {
         </ActionButton>
       </div>
 
+      {change.reviewWarnings && change.reviewWarnings.length > 0 ? (
+        <div className="border-b border-zinc-800 py-5">
+          <div className="text-xs uppercase tracking-[0.25em] text-amber-300">
+            Review Warnings
+          </div>
+
+          <div className="mt-3 space-y-2">
+            {change.reviewWarnings.map((warning) => (
+              <div
+                key={warning}
+                className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm leading-6 text-amber-100"
+              >
+                {warning}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       <div className="grid gap-4 border-b border-zinc-800 py-5 md:grid-cols-2">
         <div>
           <div className="text-xs uppercase tracking-[0.25em] text-zinc-500">
@@ -514,7 +609,10 @@ export function VaultPullRequestWorkspace({
   const [isApplying, setIsApplying] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [applyReport, setApplyReport] =
-    useState<VaultPullRequestApplyReport | null>(null);
+  useState<VaultPullRequestApplyReport | null>(
+    pullRequest.lastApplyReport ?? null
+  );
+const [showApplyConfirmation, setShowApplyConfirmation] = useState(false);
 
   const filteredChanges = useMemo(
     () =>
@@ -565,6 +663,15 @@ export function VaultPullRequestWorkspace({
   }
 
   async function applyApprovedChanges(): Promise<void> {
+    if (isLocked) {
+      setErrorMessage("This vault pull request is locked and cannot be applied.");
+      return;
+    }
+    
+    if (currentPullRequest.summary.approvedCount === 0) {
+      setErrorMessage("There are no approved changes to apply.");
+      return;
+    }
     setIsApplying(true);
     setErrorMessage(null);
     setApplyReport(null);
@@ -673,8 +780,24 @@ export function VaultPullRequestWorkspace({
 
   const filteredChangeIds = filteredChanges.map((change) => change.id);
 
-  return (
-    <main className="min-h-screen bg-[#050506] text-zinc-100">
+  const warningCount = currentPullRequest.changes.filter(
+    (change) => (change.reviewWarnings?.length ?? 0) > 0
+  ).length;
+
+    return (
+      <main className="min-h-screen bg-[#050506] text-zinc-100">
+        {showApplyConfirmation ? (
+          <ApplyConfirmationDialog
+            approvedCount={currentPullRequest.summary.approvedCount}
+            totalChanges={currentPullRequest.summary.totalChanges}
+            disabled={isBusy}
+            onCancel={() => setShowApplyConfirmation(false)}
+            onConfirm={() => {
+              setShowApplyConfirmation(false);
+              void applyApprovedChanges();
+            }}
+          />
+        ) : null}
       <div className="border-b border-zinc-800 bg-black/40 px-6 py-5 backdrop-blur">
         <div className="mx-auto max-w-[1800px]">
           <div className="flex flex-wrap items-start justify-between gap-5">
@@ -700,7 +823,7 @@ export function VaultPullRequestWorkspace({
             </div>
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-7">
+          <div className="mt-6 grid gap-4 md:grid-cols-8">
             <MetricCard
               label="Total"
               value={currentPullRequest.summary.totalChanges}
@@ -736,11 +859,24 @@ export function VaultPullRequestWorkspace({
               value={currentPullRequest.summary.pendingCount}
               detail="unreviewed"
             />
+            <MetricCard
+              label="Warnings"
+              value={warningCount}
+              detail="review before apply"
+            />
           </div>
 
           {errorMessage ? (
             <div className="mt-4 rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
               {errorMessage}
+            </div>
+          ) : null}
+
+          {isLocked ? (
+            <div className="mt-4 rounded-2xl border border-emerald-500/35 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+              This vault pull request is locked because its status is{" "}
+              <span className="font-semibold">{currentPullRequest.status}</span>.
+              Review state can no longer be changed.
             </div>
           ) : null}
         </div>
@@ -849,17 +985,17 @@ export function VaultPullRequestWorkspace({
             </div>
 
             <div className="mt-4 border-t border-zinc-800 pt-4">
-              <ActionButton
-                variant="approve"
-                disabled={
-                  isBusy ||
-                  isLocked ||
-                  currentPullRequest.summary.approvedCount === 0
-                }
-                onClick={applyApprovedChanges}
-              >
-                {isApplying ? "Applying..." : "Apply Approved"}
-              </ActionButton>
+            <ActionButton
+              variant="approve"
+              disabled={
+                isBusy ||
+                isLocked ||
+                currentPullRequest.summary.approvedCount === 0
+              }
+              onClick={() => setShowApplyConfirmation(true)}
+            >
+              {isApplying ? "Applying..." : "Apply Approved"}
+            </ActionButton>
 
               <p className="mt-3 text-xs leading-5 text-zinc-500">
                 Applies approved changes only. Pending and rejected changes are

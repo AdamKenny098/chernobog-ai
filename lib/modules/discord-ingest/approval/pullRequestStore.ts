@@ -4,6 +4,7 @@ import path from "node:path";
 import type {
   VaultProposedChangeStatus,
   VaultPullRequest,
+  VaultPullRequestApplyReport,
   VaultPullRequestStatus,
 } from "../types";
 
@@ -61,7 +62,9 @@ function writePullRequest(pullRequest: VaultPullRequest): void {
   writeJsonFile(getPullRequestPath(pullRequest.id), pullRequest);
 }
 
-function summarizePullRequest(pullRequest: VaultPullRequest): VaultPullRequest["summary"] {
+function summarizePullRequest(
+  pullRequest: VaultPullRequest
+): VaultPullRequest["summary"] {
   const createCount = pullRequest.changes.filter(
     (change) => change.action === "create_new_note"
   ).length;
@@ -132,18 +135,18 @@ function cachePullRequest(pullRequest: VaultPullRequest): void {
 }
 
 function readPullRequest(pullRequestId: string): VaultPullRequest | null {
-    const pullRequest = readJsonFile<VaultPullRequest>(
-      getPullRequestPath(pullRequestId)
-    );
-  
-    if (pullRequest) {
-      const normalized = normalizePullRequest(pullRequest);
-      cachePullRequest(normalized);
-      return normalized;
-    }
-  
-    return pullRequestsById.get(pullRequestId) ?? null;
+  const pullRequest = readJsonFile<VaultPullRequest>(
+    getPullRequestPath(pullRequestId)
+  );
+
+  if (pullRequest) {
+    const normalized = normalizePullRequest(pullRequest);
+    cachePullRequest(normalized);
+    return normalized;
   }
+
+  return pullRequestsById.get(pullRequestId) ?? null;
+}
 
 function savePullRequest(pullRequest: VaultPullRequest): VaultPullRequest {
   const normalized = normalizePullRequest(pullRequest);
@@ -244,6 +247,7 @@ export function setVaultPullRequestChangeStatus(args: {
   }
 
   change.status = args.status;
+  pullRequest.lastApplyReport = undefined;
 
   return savePullRequest(pullRequest);
 }
@@ -267,6 +271,8 @@ export function setVaultPullRequestManyChangeStatuses(args: {
     }
   }
 
+  pullRequest.lastApplyReport = undefined;
+
   return savePullRequest(pullRequest);
 }
 
@@ -284,19 +290,23 @@ export function setAllVaultPullRequestChangeStatuses(args: {
     change.status = args.status;
   }
 
+  pullRequest.lastApplyReport = undefined;
+
   return savePullRequest(pullRequest);
 }
 
-export function markVaultPullRequestApplied(
-    pullRequestId: string
-  ): VaultPullRequest | null {
-    const pullRequest = readPullRequest(pullRequestId);
-  
-    if (!pullRequest || pullRequest.status === "discarded") {
-      return null;
-    }
-  
-    pullRequest.status = "applied";
-  
-    return savePullRequest(pullRequest);
+export function markVaultPullRequestApplied(args: {
+  pullRequestId: string;
+  report: VaultPullRequestApplyReport;
+}): VaultPullRequest | null {
+  const pullRequest = readPullRequest(args.pullRequestId);
+
+  if (!pullRequest || pullRequest.status === "discarded") {
+    return null;
   }
+
+  pullRequest.status = "applied";
+  pullRequest.lastApplyReport = args.report;
+
+  return savePullRequest(pullRequest);
+}

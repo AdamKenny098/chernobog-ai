@@ -200,23 +200,27 @@ export type VaultProposedChangeAction =
   | "append_existing_note"
   | "append_inbox";
 
-export type VaultProposedChange = {
-  id: string;
-  status: VaultProposedChangeStatus;
-  action: VaultProposedChangeAction;
-  title: string;
-  destinationPath: string;
-  section?: string;
-  sourceMessageId: string;
-  sourceFragmentId: string;
-  sourceAuthor: string;
-  sourceText: string;
-  classificationKind: DiscordMessageKind;
-  classificationConfidence: number;
-  routeConfidence: number;
-  proposedContent: string;
-  reasoning: string[];
-};
+  export type VaultProposedChange = {
+    id: string;
+    status: VaultProposedChangeStatus;
+    action: VaultProposedChangeAction;
+    title: string;
+    destinationPath: string;
+    section?: string;
+    sourceMessageId: string;
+    sourceFragmentId: string;
+    sourceAuthor: string;
+    sourceText: string;
+    classificationKind: DiscordMessageKind;
+    classificationConfidence: number;
+    routeConfidence: number;
+    proposedContent: string;
+    reasoning: string[];
+    destinationExists?: boolean;
+    duplicateDestinationCount?: number;
+    duplicateGroupKey?: string;
+    reviewWarnings?: string[];
+  };
 
 export type VaultPullRequest = {
   id: string;
@@ -234,6 +238,7 @@ export type VaultPullRequest = {
     pendingCount: number;
   };
   changes: VaultProposedChange[];
+  lastApplyReport?: VaultPullRequestApplyReport;
 };
 
 export type DiscordVaultPullRequestCommandKind =
