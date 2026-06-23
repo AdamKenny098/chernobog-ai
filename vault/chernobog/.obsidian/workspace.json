@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "5077b4baaba215f3",
+        "id": "96cfb9ef8797f5a6",
         "type": "tabs",
         "children": [
           {
-            "id": "ec5b324de61f36c2",
+            "id": "7efdb49abc9e5142",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "checklists/v4-8-closure-checklist.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "v4-8-closure-checklist"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -183,34 +179,43 @@
       "bases:Create new base": false
     }
   },
-  "active": "ec5b324de61f36c2",
+  "active": "7efdb49abc9e5142",
   "lastOpenFiles": [
+    "content-watch/sessions/watch-session-20260623T105155-e45e00d7.json",
+    "content-watch/sessions/_index.json",
+    "content-watch/sessions/watch-session-20260623T105052-2cdd6f61.json",
+    "content-watch/sessions",
+    "content-watch",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-44-25-222-444dea06/summary.md",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-44-25-222-444dea06/run.json",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-44-25-222-444dea06",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-42-13-474-950270a7/summary.md",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-42-13-474-950270a7/run.json",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-42-13-474-950270a7",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-41-55-266-8cce8d8c/summary.md",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-41-55-266-8cce8d8c/run.json",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-41-55-266-8cce8d8c",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-41-54-855-844814b4/summary.md",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-32-52-961-bd555d95/summary.md",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-29-28-662-211b629d/summary.md",
+    "research/saved-content/scr-2026-06-22_11-16-52-370-10edaf42.md",
+    "research/saved-content/scr-2026-06-22_11-09-52-756-7ca25d3b.md",
+    "research/saved-content/scr-2026-06-22_11-11-37-191-a25ee4aa.md",
+    "command-language.md",
+    "architecture.md",
+    "checklists/v4-8-closure-checklist.md",
     "02_Projects/intelligence layer.md",
     "vault-module.md",
     "refactor-targets.md",
     "pipeline-map.md",
     "module-map.md",
     "module-contract.md",
-    "command-language.md",
     "decisions/ADR-0004-modules-own-domain-logic.md",
     "decisions/ADR-0003-domain-handlers-over-pipeline-bloat.md",
     "decisions/ADR-0002-obsidian-vault-as-project-knowledge-layer.md",
     "decisions/ADR-0001-modular-architecture.md",
-    "decisions",
     "checklists/v4-9-modularization-checklist.md",
-    "checklists/v4-8-closure-checklist.md",
-    "checklists",
     "known-failures.md",
-    "02_Projects",
-    "roadmap.md",
-    "self-development-rules.md",
-    "current-state.md",
-    "model-routing.md",
-    "design-doctrine.md",
-    "architecture.md",
-    "overview.md",
-    "patch-safety-rules.md",
-    "file-map.md",
-    "Welcome.md"
+    "roadmap.md"
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "path": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\data\\backups\\game-radar\\chernobog-game-radar-2026-06-20T11-04-58-219Z.sqlite",
+  "filename": "chernobog-game-radar-2026-06-20T11-04-58-219Z.sqlite",
+  "sizeBytes": 2375680,
+  "createdAt": "2026-06-20T11:04:58.284Z",
+  "sha256": "405ec2dcbc3c78483d6f6db3082ff75496b37b8a6d13ee237b351999769e0d2f",
+  "sourceDatabasePath": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\data\\chernobog-game-radar.sqlite",
+  "schemaVersion": 9,
+  "tableCount": 29
+}

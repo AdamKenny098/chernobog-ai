@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "tiktok-archive-scan-2026-06-23_00-41-54-855-844814b4",
+  "kind": "scan",
+  "status": "scanned",
+  "platform": "tiktok",
+  "archivePath": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\tmp\\v56p2-tiktok-real-export-fixture",
+  "createdAt": "2026-06-23T00:41:54.854Z",
+  "completedAt": "2026-06-23T00:41:54.855Z",
+  "stats": {
+    "filesScanned": 1,
+    "urlsFound": 0,
+    "candidatesFound": 0,
+    "added": 0,
+    "updated": 0,
+    "unchanged": 0,
+    "duplicatesSkipped": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "candidateIds": [],
+  "queueItemIds": [],
+  "warnings": [],
+  "errors": [],
+  "files": [
+    "tmp/v56p2-tiktok-real-export-fixture/user_data_tiktok.json"
+  ],
+  "candidates": []
+}

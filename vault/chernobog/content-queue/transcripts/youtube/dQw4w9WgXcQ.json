@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "platform": "youtube",
+  "externalId": "dQw4w9WgXcQ",
+  "sourceUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "fetchedAt": "2026-06-22T11:09:35.320Z",
+  "status": "available",
+  "language": "manual",
+  "segments": [
+    {
+      "text": "This is a manual transcript fixture for Chernobog."
+    },
+    {
+      "text": "It proves that unavailable YouTube captions can be bypassed with a local transcript file."
+    },
+    {
+      "text": "The saved content pipeline can now continue into chunking, summary, reason inference, and candidate extraction."
+    }
+  ],
+  "raw": {
+    "importSource": "manual-file",
+    "filePath": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\tmp\\v56k-manual-transcript.txt"
+  }
+}

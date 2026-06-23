@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-23T11:19:36.186Z",
+  "sessions": [
+    {
+      "id": "watch-session-20260623T105155-e45e00d7",
+      "title": "TikTok Favourites // 50 item watch session",
+      "status": "active",
+      "platform": "tiktok",
+      "filter": "active",
+      "order": "oldest",
+      "batchSize": 50,
+      "sourceLabel": "TikTok Favourites",
+      "itemCount": 50,
+      "currentIndex": 0,
+      "startedAt": "2026-06-23T10:51:55.334Z",
+      "updatedAt": "2026-06-23T11:19:36.183Z",
+      "pendingCount": 50,
+      "watchedCount": 0,
+      "analyzeLaterCount": 0,
+      "skippedCount": 0,
+      "dismissedCount": 0
+    },
+    {
+      "id": "watch-session-20260623T105052-2cdd6f61",
+      "title": "V5.6Q Smoke Test // 5 item watch session",
+      "status": "active",
+      "platform": "tiktok",
+      "filter": "active",
+      "order": "oldest",
+      "batchSize": 5,
+      "sourceLabel": "V5.6Q Smoke Test",
+      "itemCount": 5,
+      "currentIndex": 1,
+      "startedAt": "2026-06-23T10:50:52.276Z",
+      "updatedAt": "2026-06-23T10:50:52.635Z",
+      "pendingCount": 5,
+      "watchedCount": 0,
+      "analyzeLaterCount": 0,
+      "skippedCount": 0,
+      "dismissedCount": 0
+    }
+  ]
+}

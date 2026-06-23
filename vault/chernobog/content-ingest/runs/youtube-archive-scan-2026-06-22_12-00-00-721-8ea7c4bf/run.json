@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "id": "youtube-archive-scan-2026-06-22_12-00-00-721-8ea7c4bf",
+  "kind": "import",
+  "status": "imported",
+  "platform": "youtube",
+  "archivePath": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\tmp\\v56n-youtube-archive",
+  "createdAt": "2026-06-22T12:00:00.721Z",
+  "completedAt": "2026-06-22T12:00:00.727Z",
+  "stats": {
+    "filesScanned": 1,
+    "urlsFound": 3,
+    "candidatesFound": 3,
+    "added": 0,
+    "updated": 3,
+    "unchanged": 0,
+    "duplicatesSkipped": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "candidateIds": [
+    "youtube:dQw4w9WgXcQ",
+    "youtube:jNQXAC9IVRw",
+    "youtube:aqz-KE-bpKQ"
+  ],
+  "queueItemIds": [
+    "youtube:dQw4w9WgXcQ",
+    "youtube:jNQXAC9IVRw",
+    "youtube:aqz-KE-bpKQ"
+  ],
+  "warnings": [],
+  "errors": [],
+  "files": [
+    "tmp/v56n-youtube-archive/watch-later.txt"
+  ],
+  "candidates": [
+    {
+      "id": "youtube:dQw4w9WgXcQ",
+      "platform": "youtube",
+      "externalId": "dQw4w9WgXcQ",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "title": "Important Chernobog architecture video",
+      "sourceType": "watch-later",
+      "sourceContainerId": "youtube-archive:c3e174e64b31419c",
+      "sourceContainerTitle": "YouTube Archive Import",
+      "sourceFile": "tmp/v56n-youtube-archive/watch-later.txt",
+      "discoveredAt": "2026-06-22T12:00:00.721Z",
+      "raw": {
+        "originalUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "sourceFile": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\tmp\\v56n-youtube-archive\\watch-later.txt"
+      }
+    },
+    {
+      "id": "youtube:jNQXAC9IVRw",
+      "platform": "youtube",
+      "externalId": "jNQXAC9IVRw",
+      "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+      "title": "Another saved video",
+      "sourceType": "watch-later",
+      "sourceContainerId": "youtube-archive:c3e174e64b31419c",
+      "sourceContainerTitle": "YouTube Archive Import",
+      "sourceFile": "tmp/v56n-youtube-archive/watch-later.txt",
+      "discoveredAt": "2026-06-22T12:00:00.721Z",
+      "raw": {
+        "originalUrl": "https://youtu.be/jNQXAC9IVRw",
+        "sourceFile": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\tmp\\v56n-youtube-archive\\watch-later.txt"
+      }
+    },
+    {
+      "id": "youtube:aqz-KE-bpKQ",
+      "platform": "youtube",
+      "externalId": "aqz-KE-bpKQ",
+      "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+      "title": "Short fixture",
+      "sourceType": "watch-later",
+      "sourceContainerId": "youtube-archive:c3e174e64b31419c",
+      "sourceContainerTitle": "YouTube Archive Import",
+      "sourceFile": "tmp/v56n-youtube-archive/watch-later.txt",
+      "discoveredAt": "2026-06-22T12:00:00.721Z",
+      "raw": {
+        "originalUrl": "https://www.youtube.com/shorts/aqz-KE-bpKQ",
+        "sourceFile": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\tmp\\v56n-youtube-archive\\watch-later.txt"
+      }
+    }
+  ]
+}

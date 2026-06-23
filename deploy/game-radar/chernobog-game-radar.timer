@@ -1,0 +1,11 @@
+[Unit]
+Description=Check whether Chernobog Game Radar is due for refresh
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+Persistent=true
+Unit=chernobog-game-radar.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,45 @@
+{
+  "id": "scr-2026-06-22_11-16-52-370-10edaf42",
+  "sourceType": "saved-content",
+  "sourceItemId": "youtube:aqz-KE-bpKQ",
+  "title": "Saved YouTube Video",
+  "sourceUrl": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+  "platform": "youtube",
+  "status": "applied",
+  "summary": {
+    "id": "summary-c695bcec",
+    "kind": "summary",
+    "text": "Saved content item titled \"Saved YouTube Video\" from unknown creator. No transcript-derived summary is available yet.",
+    "confidence": 70,
+    "status": "approved",
+    "evidence": [
+      "Analysis path: content-queue/analysis/youtube/aqz-KE-bpKQ.analysis.json"
+    ]
+  },
+  "possibleReasonSaved": {
+    "id": "reason-635d206f",
+    "kind": "reason",
+    "text": "The reason saved is unclear from the title, description, and available transcript data.",
+    "confidence": 20,
+    "status": "approved",
+    "evidence": [
+      "Insufficient topic/project evidence."
+    ]
+  },
+  "projectLinks": [],
+  "tasks": [],
+  "ideas": [],
+  "warnings": [],
+  "sourceMeta": {
+    "sourceContentTitle": "Saved YouTube Video",
+    "sourceContainerTitle": "YouTube Saved Archive",
+    "queueStatus": "unprocessed",
+    "analysisStatus": "complete",
+    "transcriptStatus": "not-started",
+    "analysisPath": "content-queue/analysis/youtube/aqz-KE-bpKQ.analysis.json",
+    "candidateMemoryPath": "content-queue/candidates/youtube/aqz-KE-bpKQ.candidate-memory.json"
+  },
+  "createdAt": "2026-06-22T11:16:52.370Z",
+  "updatedAt": "2026-06-22T11:16:52.531Z",
+  "appliedAt": "2026-06-22T11:16:52.531Z"
+}

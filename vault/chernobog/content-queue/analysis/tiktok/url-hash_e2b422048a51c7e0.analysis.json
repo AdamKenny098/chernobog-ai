@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "platform": "tiktok",
+  "externalId": "url-hash:e2b422048a51c7e0",
+  "analyzedAt": "2026-06-22T12:00:01.030Z",
+  "summary": "Saved content item titled \"Saved TikTok Video\" from unknown creator. No transcript-derived summary is available yet.",
+  "keyPoints": [],
+  "topics": [],
+  "relatedProjects": [],
+  "possibleReasonSaved": "The reason saved is unclear from the title, description, and available transcript data.",
+  "reasonConfidence": 20,
+  "reasonEvidence": [
+    "Insufficient topic/project evidence."
+  ],
+  "extractedTasks": [],
+  "extractedIdeas": [],
+  "extractedWarnings": []
+}

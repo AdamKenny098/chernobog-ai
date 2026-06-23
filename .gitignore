@@ -47,7 +47,17 @@ data/*.db-wal
 data/*.sqlite
 data/*.sqlite3
 
+/data/chernobog-game-radar.sqlite
+/data/chernobog-game-radar.sqlite-shm
+/data/chernobog-game-radar.sqlite-wal
+
 # Local audit outputs
 repo-tree.txt
 repo-files.txt
 repo-files-clean.txt
+
+/lib/modules/itch-discovery
+/app/api/discovery/itch
+/components/discovery/games
+/lib/modules/game-radar
+/scripts

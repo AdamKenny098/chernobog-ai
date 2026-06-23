@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "platform": "youtube",
+  "externalId": "HgcGVL0cxY4",
+  "sourceUrl": "https://www.youtube.com/watch?v=HgcGVL0cxY4&list=PLMU4d-OqRsgTcfYtzNoKFDkc0uVVPZB2S",
+  "fetchedAt": "2026-06-22T01:05:36.249Z",
+  "status": "unavailable",
+  "language": "en",
+  "segments": [],
+  "error": "Caption track was found, but no transcript text could be parsed."
+}

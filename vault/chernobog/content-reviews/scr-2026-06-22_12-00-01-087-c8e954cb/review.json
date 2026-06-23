@@ -1,0 +1,56 @@
+{
+  "id": "scr-2026-06-22_12-00-01-087-c8e954cb",
+  "sourceType": "saved-content",
+  "sourceItemId": "tiktok:1234567890123456789",
+  "title": "TikTok saved archive fixture",
+  "sourceUrl": "https://www.tiktok.com/@example/video/1234567890123456789",
+  "platform": "tiktok",
+  "status": "pending-review",
+  "summary": {
+    "id": "summary-c2d07f5f",
+    "kind": "summary",
+    "text": "Saved content item titled \"TikTok saved archive fixture\" from @example. No transcript-derived summary is available yet.",
+    "confidence": 70,
+    "status": "pending",
+    "evidence": [
+      "Analysis path: content-queue/analysis/tiktok/1234567890123456789.analysis.json"
+    ]
+  },
+  "possibleReasonSaved": {
+    "id": "reason-e7c4b5f3",
+    "kind": "reason",
+    "text": "The reason saved is unclear from the title, description, and available transcript data.",
+    "confidence": 20,
+    "status": "pending",
+    "evidence": [
+      "Insufficient topic/project evidence."
+    ]
+  },
+  "projectLinks": [],
+  "tasks": [
+    {
+      "id": "task-dbcd08b0",
+      "kind": "task",
+      "text": "TikTok saved archive fixture",
+      "confidence": 65,
+      "status": "pending",
+      "evidence": [
+        "Extracted from saved-content analysis."
+      ]
+    }
+  ],
+  "ideas": [],
+  "warnings": [],
+  "sourceMeta": {
+    "creator": "@example",
+    "sourceContentTitle": "TikTok saved archive fixture",
+    "sourceContainerTitle": "TikTok Archive Import",
+    "queueStatus": "unprocessed",
+    "analysisStatus": "complete",
+    "transcriptStatus": "not-started",
+    "analysisPath": "content-queue/analysis/tiktok/1234567890123456789.analysis.json",
+    "candidateMemoryPath": "content-queue/candidates/tiktok/1234567890123456789.candidate-memory.json"
+  },
+  "createdAt": "2026-06-22T12:00:01.087Z",
+  "updatedAt": "2026-06-22T12:00:01.087Z"
+}

@@ -1,0 +1,1301 @@
+[
+  {
+    "id": "e4f875d4-e203-4b91-8613-401a86f48bca",
+    "title": "YouTube Playlist: Game Dev",
+    "body": "Imported YouTube playlist \"Game Dev\" from 098 Forge.\nThe playlist contains 51 retrieved video entries.\nPlaylist URL: https://www.youtube.com/playlist?list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+    "source": "youtube",
+    "memoryType": "summary",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.9,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-playlist",
+      "url": "https://www.youtube.com/playlist?list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg"
+    }
+  },
+  {
+    "id": "aa1edeeb-1ba4-4a09-80b9-686a517beff7",
+    "title": "YouTube Video: UNITY 2D NPC DIALOGUE SYSTEM TUTORIAL",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: UNITY 2D NPC DIALOGUE SYSTEM TUTORIAL\n\nChannel: diving_squid\n\nURL: https://www.youtube.com/watch?v=1nFNOyCalzo&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this tutorial we will look at how to make an NPC system with a dialogue box similar to games like Stardew Valley!\n\n********************************\n\nDiscord https://discord.io/divingsquid\nPatreon https://www.patreon.com/diving_squid\nPlay my games! https://diving-squid.itch.io\n\n********************************\n\nIf you have any problems, let me know in the comments!\n\nBye :)",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=1nFNOyCalzo&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "1nFNOyCalzo"
+    }
+  },
+  {
+    "id": "03b077ab-9e6d-45a2-a4de-402af9db1f56",
+    "title": "YouTube Video: Building NPC's and Dialogue for my 2D RPG",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Building NPC's and Dialogue for my 2D RPG\n\nChannel: DevDuck\n\nURL: https://www.youtube.com/watch?v=mPg0tMiDZ88&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nWelcome to another devlog for Dauphin! In this episode I introduce Dauphin's first NPC and create a basic dialogue system so that he can interact with the player. If you stick around to the end, you'll also hear a sneak peak at what might be the beginning of Dauphin's sound track! I had so much fun building all of this this past week, and I hope you all enjoy the video.\n\n#dauphin #devlog #gamedev #godot #godotengine\n\nMusic Theory in 30 Minutes!\nhttps://www.youtube.com/watch?v=rgaTLrZGlk0\n\nPlay Snow Pounce!\niOS: https://apps.apple.com/us/app/snow-pounce/id1493702259\nAndroid: https://play.google.com/store/apps/details?id=com.DevDuckLLC.SnowPounce\n\nPlay Blink!\niOS: https://apps.apple.com/us/app/blink-a-bugs-light/id1475168017?ls=1\nAndroid: https://play.google.com/store/apps/details?id=com.devduck.blink\n\nFollow me on Twitter!\nhttps://twitter.com/_devduck\n\nMY PC / DESK SETUP!\n\nApple iPad Pro: https://amzn.to/31Qq7xt\nApple Pencil: https://amzn.to/342QQbx\n\nMonitor - Alienware 34\" Ultrawide 3440x1440 @ 120hz GSYNC: https://amzn.to/2MtlbZx\nKeyboard - MASSDROP CTRL: https://amzn.to/2LZkjwO\nMouse - Logitech G502: https://amzn.to/317L06Y\nMicrophone - Blue Yeti: https://amzn.to/2MrC9rh\nWebcam - Razer Kiyo: https://amzn.to/2IDUAIh\n\nCustom Built PC\n\nCASE - Corsair AIR 540 ATX Mid Tower: https://amzn.to/2OAJiIq\nCPU - i7 9700K: https://amzn.to/2Ow4r6F\nFAN - Noctua NH-D15: https://amzn.to/311Xk8L\nMOBO - Gigabyte Z390 AORUS Ultra: https://amzn.to/3116K47\nGPU - Gigabyte RTX 2080: https://amzn.to/2M04s0Q\nRAM - Corsair Vengeance LPX 16GB DDR4 @3200: https://amzn.to/2p6UZvM\nSTORAGE - Samsung 970 Evo 1TB M.2: https://amzn.to/2VpE7fY\nPSU - EVGA SuperNOVA 850 G3: https://amzn.to/2B0h9m1\n\nDISCLAIMER: The above links are affiliate links, which means that if you click on one of the product links, I’ll receive a small commission.  Thanks for your support!\n\nMusic Credits:\n\n ► Music Credit: 'Low Frequency Music'\nTrack Name: 'Consideration'\nMusic By: Low Frequency Music @ https://soundcloud.com/user-551516820\nOfficial \"Low Frequency Music\" YouTube Channel HERE - https://www.youtube.com/LowFrequencyMusic\nDOWNLOAD @ https://www.chilloutmedia.com/low-frequency-music\nLicense for commercial use: Creative Commons Attribution 3.0 Unported \"Share Alike\" (CC BY-SA 3.0) License.\nFull License HERE - https://creativecommons.org/licenses/by-sa/3.0/legalcode\nMusic promoted by NCM https://goo.gl/fh3rEJ\n\nBefore I Forget by Artificial.Music https://soundcloud.com/artificial-music\nCreative Commons — Attribution 3.0 Unported  — CC BY 3.0 \nhttps://creativecommons.org/licenses/by-sa/3.0/\nMusic promoted by Audio Library https://youtu.be/DX3CPL4sZX8\n\n► Artist Attribution\nMusic By: \"EVOL\"\nTrack Name: \"SLEEP AWAY\"\n• Instagram - https://www.instagram.com/1nlove.mp3/\n• SoundCloud - https://soundcloud.com/inlove-sad-boy-780987\n• YouTube - https://www.youtube.com/channel/UCZSOooQT9sAQFztxE1b3OYw\n• DOWNLOAD @ https://www.chilloutmedia.com/\nLicence: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)\n- Full licence here: https://creativecommons.org/licenses/\n• Music released by: Chill Out Records @ https://goo.gl/fh3rEJ\n\n► Music Credit: 'Low Frequency Music'\nTrack Name: 'Kōtta mizūmi'\nMusic By: Low Frequency Music @ https://soundcloud.com/user-551516820\nOfficial \"Low Frequency Music\" YouTube Channel HERE - https://www.youtube.com/LowFrequencyMusic\nDOWNLOAD @ https://www.chilloutmedia.com/low-frequency-music\nLicense for commercial use: Creative Commons Attribution 3.0 Unported \"Share Alike\" (CC BY-SA 3.0) License.\nFull License HERE - https://creativecommons.org/licenses/by-sa/3.0/legalcode\nMusic promoted by NCM https://goo.gl/fh3rEJ\n\nDauphin Beach Shop Theme\nMe!",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=mPg0tMiDZ88&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "mPg0tMiDZ88"
+    }
+  },
+  {
+    "id": "d4b159fc-dc7f-479b-a257-27d5f896189c",
+    "title": "YouTube Video: PLAYER DASH ABILITY in UNDER 1 MINUTE! Unity 2D Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: PLAYER DASH ABILITY in UNDER 1 MINUTE! Unity 2D Tutorial\n\nChannel: Jake Makes Games\n\nURL: https://www.youtube.com/watch?v=tH57EInEb58&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this video I'll show you a quick and simple way to give your player a nice dashing ability! This tutorial is an extension from my previous 1 minute tutorial, where I show you how to create simple top down movement, you can find it here: https://www.youtube.com/watch?v=tFblCEFQoTs\n\nif there are any tutorials you'd like to see, feel free to leave a comment below!\n------------------------------\nFollow me on TWITTER: https://twitter.com/jakemakesgames\nThe music found in this video: https://www.youtube.com/watch?v=OcuQ4J_flbM\n(no copyright is intended by using this music, all rights go to their respective creators).\n------------------------------",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=tH57EInEb58&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "tH57EInEb58"
+    }
+  },
+  {
+    "id": "ac11509a-e560-4bca-937c-70f9995ca097",
+    "title": "YouTube Video: Dynamic Pixel Art Lighting in Unity (in 1 Minute Tutorial)",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Dynamic Pixel Art Lighting in Unity (in 1 Minute Tutorial)\n\nChannel: Tim Commandeur (Gamemaker Tim)\n\nURL: https://www.youtube.com/watch?v=DI9bSVTBlsA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this video I explain how I do dynamic lighting for my pixel art game Hat Wizard in Unity. Next week I will do a dev log again with the November update for Arcade Wizard.\n\nThe programs used are:\n- Aseprite\n- Spritelamp\n- Unity",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=DI9bSVTBlsA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "DI9bSVTBlsA"
+    }
+  },
+  {
+    "id": "56ac379a-ffec-47cf-b057-3341a7d43ae8",
+    "title": "YouTube Video: Enhance a top-down game with URP 2D lights | Unity at GDC 2023",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Enhance a top-down game with URP 2D lights | Unity at GDC 2023\n\nChannel: Unity\n\nURL: https://www.youtube.com/watch?v=YhrwKF_i-BI&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n2D top-down games can be beautiful, especially if you make the most out of Unity's new features with dynamic lighting, animation, or effects. This session walks you through the new upcoming 2D sample game, designed to help you show examples of high-end 2D art and tech coming together. This talk, in particular, offers a quick overview of some 2D lights and shadows techniques used in the sample.\n\nGet the e-book: https://on.unity.com/42VbUzE\n\nSpeaker\nMatt Dondelinger, Developer Advocate (Unity)\n\nTimestamps:\n0:00 Intro\n1:16 2D e-book\n2:05 Unity's 2D URP settings\n4:10 Different ways to create Normal Maps for 2D\n6:58 What are Mask maps in 2D\n10:30 Performance/art/gameplay considerations\n11:10 Creating ambient lighting\n12:00 Creating a sunlight\n12:29 Enabling depth effect with Normal Maps\n13:02 Creating shadows with negative lighting\n13:38 Creating blob shadows\n14:13 Creating infinite shadow projection\n14:48 Creating finite shadow projection\n15:42 Creating shadows for buildings\n16:45 More light and shadow possibilities\n17:38 Day/night cycle\n18:41 Notes on performance\n19:20 New features for lights and shadows\n#unity #gamedesign #URP",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=YhrwKF_i-BI&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "YhrwKF_i-BI"
+    }
+  },
+  {
+    "id": "7c601e4d-c206-48e3-8ec9-00fb8c570dec",
+    "title": "YouTube Video: Top Down Action 2D RPG Combat - Player, Slime Enemy, Damage, Physics Crash Course Unity 2022",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Top Down Action 2D RPG Combat - Player, Slime Enemy, Damage, Physics Crash Course Unity 2022\n\nChannel: Chris' Tutorials\n\nURL: https://www.youtube.com/watch?v=8rTK68omQow&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nStart from Here (Import into a New 2D URP Unity Project and then download the mystic woods art pack and put in the art directory): https://drive.google.com/file/d/13wAkLxFYcklkNKLLtpbGqRFQsZ6W4DKU/view?usp=drive_link\n\nImport https://game-endeavor.itch.io/mystic-woods Art into the folders with the metadata\n\nGuide on how to build a top down 2d RPG from the Ground up in Unity 2022. The goal of this crash course is to cover as many relevant beginners topics as we can but linked together in actually building out some prototype mechanics for a potential game.\n\nBetter Knockbacks Update Video https://youtu.be/yna_u1OASy0\nScripts and Project https://www.patreon.com/posts/70422725\n( Start a new project and import the assets. I used 2D URP as the project template. Download the art separately below )\n\nUnity 2022 Crash Course PART 1 https://www.youtube.com/watch?v=7iYWpzL9GkM\n\n➣ Downloadable Assets, Video Courses, and Other Places to Follow Me\nhttps://chris-tutorials.itch.io/\nhttps://linktr.ee/ChrisTutorials\n\n◢ Chris Recommends ◥\nMaster Skills with Skillshare Video Courses ►► https://www.skillshare.com/r/user/christutorials?gr_tch_ref=on\nSave Money Shopping Online with Honey Extension ►► https://joinhoney.com/ref/qd04c25\n\n00:00:00 - What to Expect\n00:00:10 - Part 1 Crash Course Link\n00:00:26 - Progress So Far\n00:00:55 - Mystic Woods Art Pack\n00:01:03 - Character Run and Sprite Flip\n00:01:52 - Player Controller Starting Point\n00:02:54 - Transition to Run Animation\n00:09:17 - Player Attack State\n00:16:32 - Slime Animator Setup\n00:24:08 - Slime Script\n00:25:36 - Sword Swing Hitbox\n00:38:58 - Receiving Damage\n00:40:59 - Slime - Hit and Death Animation Transitions\n00:47:25 - Controlling Sword Hit Direction\n00:53:28 - Hit Knockback\n00:56:07 - IDamageable Interface for Damageable Objects\n01:05:45 - Knockback Force and Direction\n01:11:27 - Destroy Object\n01:13:45 - Slime Hit Color Change\n01:16:02 - Correcting Player Transform for Sword Knockback\n01:19:04 - Slime Damage to Player\n01:22:31 - Health Manager Component\n01:28:06 - Lock Movement on Defeat\n01:29:18 - Knockback the Player\n01:32:32 - Player Movement by Forces\n01:34:56 - Setting a Max Speed for Player\n01:37:53 - Slimes Aggro and Chase Player\n01:47:21 - Floating Damage Numbers with Text Mesh Pro\n01:52:57 - Fading Text\n01:54:26 - Instantiating Text Prefabs above Hit Characters\n01:59:32 - Invulnerability Timer\n02:04:58 - Course Wrapup",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=8rTK68omQow&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "8rTK68omQow"
+    }
+  },
+  {
+    "id": "87ce72e6-a11e-4ac2-8105-500764dea126",
+    "title": "YouTube Video: Learn Unity Engine and C# by creating a real top down RPG [FULL COURSE][C# Unity Tutorial]",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Learn Unity Engine and C# by creating a real top down RPG [FULL COURSE][C# Unity Tutorial]\n\nChannel: Mercenary Camp\n\nURL: https://www.youtube.com/watch?v=b8YUfee_pzc&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n2024 edit!\nI've got a new course teaching multiplayer here on youtube! Check it out\nhttps://www.youtube.com/playlist?list=PLmcbjnHce7Scovukpm2UbvBmhPKvM52uD\n\n--- Livestream alert ----\nI'm live every Saturday morning, come say hello\nhttps://www.twitch.tv/n3rkmind\n\nThis is a full release of an Top Down RPG course made in Unity 2017\n\nHere's a link to the Dungeon Tile set!\nhttps://0x72.itch.io/16x16-dungeon-tileset\n\n0:00:00 - Intro\n0:01:31 - Setting up\n0:16:03 - Moving and Manual Collision Detection\n1:03:06 - Tilemap and Designing Dungeon\n1:40:31 - Interactive Objects and Inheritance\n2:15:37 - Saving Game's State\n2:41:31 - Floating Text System\n3:11:11 - Top Down Combat System\n4:13:32 - Animator and Weapon Swing Animation\n4:35:27 - Character Menu and the new UI System\n6:00:00 - Polishing and Adding Content\n\n► Develop a FULL Mobile Game with the help of my Udemy Course :\nhttps://www.udemy.com/course/unity-2020-android-game-development-create-a-complete-game/?referralCode=E35E869EC32DC2B355CA\n\n► Want the files? You can find everything on the website!\n► Need help? Join our discord community!\n\nDiscord 👊 https://discord.gg/eXnaSZw\nWebsite 📡 https://www.epitome.games\nEmail me! 📧 info.epitome.games@gmail.com\n\nPersonal channel 🇨🇦\nhttps://www.youtube.com/channel/UCiUTqBBgDMHYSs8ZaM4SBRg\n\nSocial Media 🤳\nhttps://www.instagram.com/michael.doyon/  📸\nhttps://twitter.com/N3K_Michael  🐦\n\n#gameDev #unityEngine #unityTutorial #n3k #epitome",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=b8YUfee_pzc&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "b8YUfee_pzc"
+    }
+  },
+  {
+    "id": "dd4bb49f-7c8b-4a34-b930-ca1e1a2de533",
+    "title": "YouTube Video: 2D Top Down Pixel Art RPG Game Dev in Unity 2022  ~ Crash Course Tutorial for Beginners",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: 2D Top Down Pixel Art RPG Game Dev in Unity 2022  ~ Crash Course Tutorial for Beginners\n\nChannel: Chris' Tutorials\n\nURL: https://www.youtube.com/watch?v=7iYWpzL9GkM&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nGuide on many of the first steps building up a top down 2d pixel art RPG from scratch in Unity 2022 version. The goal of this crash course is to cover as many relevant beginners topics as we can but linked together in actually building out some prototype mechanics for a potential game.\n\nFor the video, I'm using this mystic woods pack for this tutorial. https://game-endeavor.itch.io/mystic-woods You'll only need the free version to follow along for this video\n\nBetter Knockbacks Update Video! https://youtu.be/yna_u1OASy0\n\nScripts Download https://drive.google.com/file/d/1xvTrriQZ0Fr9C5CQ3FkPYGqNhAx9D-ti/view?usp=sharing\nPart 2 https://youtu.be/8rTK68omQow\nScripts and Project https://www.patreon.com/posts/70422725\n\n◢◤◣◥ My Latest Unity 2D GameDev Course ◢◤◣◥\nMake a 2D Platformer Character with State Machines in Unity 2020\nhttps://skl.sh/3lpWPQL\n\n◢◤◣◥ Chris Recommends ◢◤◣◥\nSkillshare for Online Video Courses ►► https://www.skillshare.com/r/user/christutorials\nProtonVPN for Internet Privacy ►►https://go.getproton.me/SHDO\n\n◢◤◣◥ See My Full Software Courses ◢◤◣◥\nhttp://christutorials.teachable.com\nhttps://www.udemy.com/user/chris-navarre/\nhttps://www.skillshare.com/r/user/christutorials\n\n➣ Follow Me On\nYouTube ►►https://www.youtube.com/user/darkskeletontuts\nOdysee ►► https://odysee.com/$/invite/@ChrisTutorials:b\nBitchute ►►https://www.bitchute.com/channel/hU2elaB5u3kB/\nPocketnet ►► https://pocketnet.app/christutorials\nMinds ►►https://www.minds.com/register?referrer=ChrisTutorials\nGab.ai ►► https://gab.ai/ChrisTutorials\n\n0:00 Project Setup\n1:22 Importing Art\n1:59 Settings for Pixel Art Imports\n4:24 Creating a Player Prefab\n8:20 Adjusting Camera for Pixel Art\n9:57 Building Tilemaps from Tileset Art\n21:57 InputSystem Package (New Player Input)\n25:11 Adding a Script and Choosing a Code Editor\n26:11 Player Conttroller Script\n38:01 Movement Testing\n41:38 Code - Sliding on Edges of Collision\n45:04 Animation Setup for Player\n57:07 Cinemachine Follow Camera\n58:44 Sword Attack Animation and Code\n1:04:16 Attack Collision Trigger and Dealing Damage\n1:15:09 Slime Setup, Collider, and Taking Damage\n1:24:17 Slime Animations\n1:28:57 Wrapup",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=7iYWpzL9GkM&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "7iYWpzL9GkM"
+    }
+  },
+  {
+    "id": "11003ad3-03fb-4eeb-aeaf-21b33c63d0ce",
+    "title": "YouTube Video: How NOT To Write a Villain",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How NOT To Write a Villain\n\nChannel: David's World\n\nURL: https://www.youtube.com/watch?v=S_4WujMQd7A&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nHelp me do this full time, on PATREON! https://www.patreon.com/MovieSketch\n\nHello everyone! Regular videos returning now! This one takes a look at some of the most prolific villain introductions.\n\nI will have a video next week that is taking a look at Tick Tick BOOM, and the theme of the struggling artist.\n\nAll music sourced using ARTLIST https://artlist.io/\n'Too Many Steps' by Tribe to Metropolis\n'Voyage' by Beyond\n'A Moon Walk' (Instrumental Version) by Yehezkel Raz\n'Piano Sonata No. 11 in a Major' by Brooklyn Classical\n'Valle de Anahuac' by When Mountains Move\n'Mirrors Sometimes Lie' by Marco Martini\n\nSubscribe for more :)",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=S_4WujMQd7A&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "S_4WujMQd7A"
+    }
+  },
+  {
+    "id": "4dd89c7c-4b6a-4644-a105-f9304a73af04",
+    "title": "YouTube Video: how games create limitless detail WITHOUT polygons",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: how games create limitless detail WITHOUT polygons\n\nChannel: Stylized Station\n\nURL: https://www.youtube.com/watch?v=68mTUM_cGAw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n⭐ Watch the next episode: https://patreon.com/stylizedstation\nBecome a games artist: https://courses.stylizedstation.com/",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=68mTUM_cGAw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "68mTUM_cGAw"
+    }
+  },
+  {
+    "id": "6dc6c15e-7f52-42fc-98ae-944bb89c2d3d",
+    "title": "YouTube Video: Everything you need to know about Pixel Art! | Pixel Art Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Everything you need to know about Pixel Art! | Pixel Art Tutorial\n\nChannel: Mochibeans\n\nURL: https://www.youtube.com/watch?v=TD5Rp__T668&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n( •͡˘ _•͡˘) Oh hi again👋, long time no see... \n\nWelcome back, 𝘧𝘪𝘯𝘢𝘭𝘭𝘺, to the mochibeans channel. Sorry for the long wait but I hope it's worth it! This video is on techniques, tips and secrets to help you master pixel art as a medium. \n\nIt covers workflows, picking colours, shading and so much more, so enjoy!\n\n🔹Join our Discord🔹: https://discord.gg/xcREcAw7c4\n\nVideo Chapters 📼:\n0:00 - Intro (duh :p)\n1:18 - Workflow\n3:12 - Linework\n5:16 - Shading n' Colour\n8:44 - Anti Aliasing\n9:47 - Dithering\n10:22 - Tips for Artistic Progression\n12:03 - Outro",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=TD5Rp__T668&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "TD5Rp__T668"
+    }
+  },
+  {
+    "id": "7de623a7-eedd-4abb-bed1-dc728c49fe41",
+    "title": "YouTube Video: Learn Unity Beginner/Intermediate 2026 (FREE COMPLETE Course - Unity Tutorial)",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Learn Unity Beginner/Intermediate 2026 (FREE COMPLETE Course - Unity Tutorial)\n\nChannel: Code Monkey\n\nURL: https://www.youtube.com/watch?v=AmGSEH7QcDg&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n💬 This was a ton of work to make so I really hope it helps you in your game dev journey! Hit the Like button!\n🌍 Course Website with Downloadable Assets, FAQ, Related Videos https://cmonkey.co/freecourse\n❤ Follow-up FREE Complete Multiplayer Course https://www.youtube.com/watch?v=7glCsF9fv3s\n🎮 Play the game on Steam! https://cmonkey.co/kitchenchaos\n❤ IF you can afford it you can get the paid ad-free version https://cmonkey.co/kitchenchaospaidcourse\n🌍 Check out my other Courses! ✅ https://unitycodemonkey.com/courses\n👍 Learn to make awesome games step-by-step from start to finish.\n🎮 Get my Steam Games https://unitycodemonkey.com/gamebundle\n🎮 Wishlist my Next Steam game! https://cmonkey.co/totalworldliberation\n\n🌍 Download the Project Files and Assets https://cmonkey.co/freecourse\n\n🔴 RELATED VIDEOS 🔴\nThere are too many to fit here, they're all linked in the course page for each Lecture https://cmonkey.co/freecourse\nLearn C# Beginner FREE Tutorial Course! https://www.youtube.com/watch?v=pReR6Z9rK-o\nLearn Unity in 17 MINUTES! [2023 UPDATED PINNED COMMENT] https://www.youtube.com/watch?v=E6A4WvsDeLE\nLearn C# BASICS in 10 MINUTES! https://www.youtube.com/watch?v=IFayQioG71A\nHow to Make a Game! Download and Create New Project (Unity Tutorial for Beginners Unity Basics) https://www.youtube.com/watch?v=hKXsL7XNa9M\n\n💬 Learn How to Make Games with Unity and C# in this massive FREE course!\nI've been working for the past 3 months on this very exciting project, a 10 hour course making a complete game from scratch!\nThe game features lots of interesting systems which makes for a great learning project.\nThis is for both Beginners and Intermediate users who want to learn how to write good high quality clean code and learn to manage a relatively complex project with a good structure.\nThe game itself is a fun Arcade game, using what you learn by making this game will enable you to build just about any game you can think of.\n\nThis has been a ton of work so I really hope you will enjoy it!\nGo ahead and hit the Like button and if you enjoy my teaching style check out my other paid courses.\nMy Turn Based Strategy course is the perfect follow up for this one. It dives even deeper into some more advanced topics to help you really reach the advanced level.\n\n❤ IF you can afford it you can get the paid ad-free version https://cmonkey.co/kitchenchaospaidcourse\n🌍 Check out my other Courses! ✅ https://unitycodemonkey.com/courses\n\n00:00:00 Intro, Overview\n00:12:24 Final Game Preview\n00:18:13 What you Should Know\n00:20:28 Create Project\n00:25:21 Unity Layout\n00:32:02 Visual Studio\n00:35:39 Code Style, Naming Rules\n00:39:30 Importing Assets\n00:41:19 Post Processing\n00:55:47 Character Controller\n01:14:50 Character Visual, Rotation\n01:22:59 Animations\n01:42:42 Cinemachine\n01:48:32 Input System Refactor\n02:04:08 Collision Detection\n02:17:02 Clear Counter\n02:38:18 Interact Action, C# Events\n02:47:42 Selected Counter Visual, Singleton Pattern\n03:11:18 Kitchen Object, Scriptable Objects\n03:24:46 Kitchen Object Parent\n03:37:47 Player Pick up, C# Interfaces\n03:49:23 Container Counter\n04:13:02 Player Pick up, Drop Objects\n04:23:37 Cutting Counter, Interact Alternate\n04:37:10 Cutting Recipe SO\n04:46:33 Cutting Progress, World Canvas\n05:05:51 Look At Camera\n05:14:24 Trash Counter\n05:19:33 Stove Counter, State Machine\n05:56:04 Plates Counter\n06:08:05 Plate Pick up Objects\n06:22:10 Plate Complete Visual\n06:30:19 Plate World UI Icons\n06:44:24 Delivery Counter, Shader Graph\n07:05:45 Delivery Manager\n07:21:20 Delivery Manager UI\n07:39:24 Music\n07:43:22 Sound Effects\n08:06:36 Game Start\n08:21:20 Game Over\n08:30:13 Main Menu, Loading\n08:48:43 Pause, Clear Statics\n09:07:18 Options, Audio Levels\n09:22:20 Options, Key Rebinding\n09:45:29 Controller Input, Menu Navigation\n10:00:36 Polish\n10:44:01 Final Game\n10:47:30 CONGRATULATIONS!\n\n🌍 Get Code Monkey on Steam!\n✅ https://store.steampowered.com/app/1294220/\nIf you have any questions post them in the comments and I'll do my best to answer them.\n\n🔔 Subscribe for more Unity Tutorials https://www.youtube.com/channel/UCFK6NCbuCIVzA6Yj1G_ZqCg?sub_confirmation=1\nSee you next time!\n\n📍 Support on Patreon https://www.patreon.com/unitycodemonkey\n📝 Get the Code Monkey Utilities at https://unitycodemonkey.com/utils.php\n\n#unitytutorial #unity3d #gamedev\n\n--------------------------------------------------------------------\nHello and Welcome!\nI'm your Code Monkey and here you will learn everything about Game Development in Unity using C#.\n\nI've been developing games for several years with 9 published games on Steam and now I'm sharing my knowledge to help you on your own game development journey.\n\nI do Unity Tutorials on just about every topic, Unity Tutorials for Beginners and Unity Tutorials for Advanced users.\n--------------------------------------------------------------------\n- Website: https://unitycodemonkey.com/\n- Twitter: https://twitter.com/UnityCodeMonkey\n- Steam: https://store.steampowered.com/developer/EndlessLoopStudios",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=AmGSEH7QcDg&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "AmGSEH7QcDg"
+    }
+  },
+  {
+    "id": "884e798b-846e-4852-927d-07d83f5113c8",
+    "title": "YouTube Video: The only head sculpting tutorial you will ever need ! Blender ( From beginner to pro ! )",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: The only head sculpting tutorial you will ever need ! Blender ( From beginner to pro ! )\n\nChannel: Just Tis Arts\n\nURL: https://www.youtube.com/watch?v=3Dw8FwCi5aY&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nShort video for sculpting mirror !  https://www.youtube.com/watch?v=M0GwLF6MZes&ab_channel=DevilPeaceArts\n\nHello, I made discord only to help you improve your skills with sculpting head. \n\nDiscord Link :  https://discord.gg/BuBCczRsHT\n\nIt's a beginner tutorial at first we start with simpler shapes and form. That way we make a good base from which we can more more in-depth and this way we can slowly increase the details and complexity of over project while not making it to complicated on workflow.\n\nThis is the whole series mash together for people who want to learn everything in one go. This tutorial contains how to sculpt: Head, eyes, nose ,mouth, ears, neck! Whole video is full on explanations and overdraws with annotations to show you thru the artist eyes!\n\nAfter the first half of the tutorial the sculpting becomes more advanced and shows how to polish the look of face features to reach the next level of sculpting.\n\nThis tutorial is aimed at the beginners but have in mind that this is sculpting tutorial and in it there is not a lot of explanation on how the program works! The video focuses on teaching the head sculpting itself and not the program! So before the tutorial starts I highly recommend for audience to watch and learn the program from other tutorials like Blenders guru doughnut tutorial series.\n\nTutorial series to help you learn sculpting head with simple techniques and overdraws with explanation and commentary. \n\nStarting with making the simple head and then going more in depth how to make it look more professional \n\nTutorial will be useful for person who just beginning to sculpt heads or for someone who is trying to do it but struggling.\n\nYou can get some free models from my gumroad:\nhttps://gumroad.com/justis\n\nIf by any chance you want to see my portfolio:\nhttps://www.artstation.com/justtis\n\nMatcaps you can get at:\nhttps://gumroad.com/justis#UwHoh\n\n\nIf you don't like whole tutorial format you can watch in separated parts !\nWhole playlist with separated parts : https://www.youtube.com/watch?v=HTgUyEHnKso&list=PL1U5sgiPZ1QI0o4OMIhMCmsdETYUrs7WO&ab_channel=DevilPeaceArts\n\nBlender beginner to pro head sculpting tutorial Part 1 ( Shaping head ) https://www.youtube.com/watch?v=HTgUyEHnKso&ab_channel=DevilPeaceArts\n\nBlender beginner to pro head sculpting tutorial Part 2 ( Nose )\nhttps://www.youtube.com/watch?v=7Msx7gEO6wQ&ab_channel=DevilPeaceArts\n\nBlender beginner to pro head sculpting tutorial Part 3 ( Eyes)\nhttps://www.youtube.com/watch?v=jsB21_A3BL0&t=9s&ab_channel=DevilPeaceArts\n\nBlender beginner to pro head sculpting tutorial Part 4 ( Mouth / Lips )\nhttps://www.youtube.com/watch?v=TmHPKrWkY_w&t=49s&ab_channel=DevilPeaceArts\n\nBlender beginner to pro head sculpting tutorial Part 5 ( Face muscles / Bones )\nhttps://www.youtube.com/watch?v=d3n-ERqrMMA&ab_channel=DevilPeaceArts\n\nBlender beginner to pro head sculpting tutorial Part 6 ( Finishing the Eyes)\nhttps://www.youtube.com/watch?v=QJvtIJMB6gM&ab_channel=DevilPeaceArts\n\nBlender beginner to pro head sculpting tutorial Part 7 ( Lips and Mouth)\nhttps://www.youtube.com/watch?v=aAVddziclPk&t=116s&ab_channel=DevilPeaceArts\n\nBlender beginner to pro head sculpting tutorial Part FINAL\nhttps://www.youtube.com/watch?v=hpF6HqeOOm4&ab_channel=DevilPeaceArts\n\nAnd the series doesn't end here there is other tutorials which go after the head!\n\nBlender tutorial, how to sculpt torso !\nhttps://www.youtube.com/watch?v=NYT1QG4GF5s&ab_channel=DevilPeaceArts\n\nBlender tutorial, sculpting arms and merging with torso\nhttps://www.youtube.com/watch?v=aynG6k5hoxg&t=1199s&ab_channel=DevilPeaceArts\n\nJoin object in sculpting mode finalizing the body\nhttps://www.youtube.com/watch?v=gm9b7hdSt08&t=1s&ab_channel=DevilPeaceArts\n\nBlender easy hair with curves\nhttps://www.youtube.com/watch?v=dlGeGSjCn_I&ab_channel=DevilPeaceArts\n\nFace retopology in blender, Character modeling series\nhttps://www.youtube.com/watch?v=UKgCnnwwS0U&ab_channel=DevilPeaceArts\n\nSkin texturing but first doing UV and some baking BLENDER !\nhttps://www.youtube.com/watch?v=cYJEo_o6GzM&t=1021s&ab_channel=DevilPeaceArts",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=3Dw8FwCi5aY&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "3Dw8FwCi5aY"
+    }
+  },
+  {
+    "id": "ccd536a7-a03b-4768-bde9-4dba3062cd85",
+    "title": "YouTube Video: The Trick I Used to Make Combat Fun! | Devlog",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: The Trick I Used to Make Combat Fun! | Devlog\n\nChannel: Game Endeavor\n\nURL: https://www.youtube.com/watch?v=6BrZryMz-ac&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nCombat keeps the player engaged as they explore my game, so I improved how the enemy interacts with the player and their environment. This tweak made combat so fun that a tester spent over an hour repeatedly fighting a handful of enemies. At this point I knew I had an engaging combat system!\n\nHowdy, and welcome to the 12th indie game devlog for Zoe and the Cursed Dreamer. A 2D Pixel Art Open World RPG made with the Godot Engine where you will explore an immersive world, meet lovable characters, and decorate your home!\n\nFollow on Kickstarter to get notified when it launches:\nhttps://www.kickstarter.com/projects/gameendeavor/zatcd\n\nJoin Our Community! We look forward to welcoming you.\nDiscord: https://discord.gg/w7qh74M\nTwitter: https://twitter.com/GameEndeavor\n\nBecome a patron to get exclusive content and support the channel:\nhttps://patreon.com/GameEndeavor\n\nMusic: https://opengameart.org/content/4-chiptunes-adventure\n\nThe article that inspired this:\nhttp://www.gameaipro.com/GameAIPro2/GameAIPro2_Chapter18_Context_Steering_Behavior-Driven_Steering_at_the_Macro_Scale.pdf",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=6BrZryMz-ac&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "6BrZryMz-ac"
+    }
+  },
+  {
+    "id": "63029a4e-860d-4268-9ee1-9ebf199ed669",
+    "title": "YouTube Video: The Ultimate Pixel Art Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: The Ultimate Pixel Art Tutorial\n\nChannel: Saultoons\n\nURL: https://www.youtube.com/watch?v=lfR7Qj04-UA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nThe ultimate pixel art tutorial teaches beginners and advanced pixel art techniques. Learn art fundamentals in this pixel art tutorial. \n\nIn this pixel art tutorial, learn how to make pixel art. Ever wanted to get started? Have you ever felt overwhelmed by all of the information out there? Well, this is the ultimate pixel tutorial for you.\nIn this tutorial, you will learn how to draw pixel art and learn key art fundamentals that will drive your pixelart, such as jaggies, doubles, what canvas size to use, value, colour, shading, and much more. I use aseprite but show you other pixel art software you can use when learning how to pixel art. \n\nPixel art for beginners is made easy with this pixel aseprite tutorial, but can be watched by advanced pixel artists too, to brush up on some skills!\n\n#pixelart #tutorial #pixelarttutorial\n\n\nSupport On Patreon - https://bit.ly/31YngFa\nSaultoons Store - https://bit.ly/3ctG2sh\n\nSubscribe - http://bit.ly/1UcUSkL\nDiscord - https://discord.gg/haNyETs\nInstagram - https://bit.ly/2UIwRxX\nTwitter - https://bit.ly/2IgrCyL\nTwitch - https://bit.ly/2FNS8MQ\nFacebook - https://bit.ly/2UqWcgw\n\n--- References And More Learning Resources That I Recommend ---\nMy Aseprite Tutorials - https://youtu.be/tFsETEP01k8\nBrandon James Greer - Amazing YouTube Pixel Artist - https://bit.ly/3zyY5Zh\nJames Gurney YouTube - https://www.youtube.com/jamesgurney\nJames Gurney Colour And Light Book - https://amzn.to/3zD74J8\nCRT Pixels Twitter (CRT Examples) - https://twitter.com/CRTpixels\nPedro Medeiros Great Pixel Art Tutorial - https://medium.com/@saintjust\nPixel Parmesan - Fantastic Pixel Art Tutorials - https://pixelparmesan.com/\nPixel Joint, Pixel Art Tutorial by Cure - https://bit.ly/3vyRTgJ\nDerek Yu Pixel Art Tutorial - https://bit.ly/2SyGXlX\n\n--- Amazing Art ---\nPortrait by Ptoing - http://pixeljoint.com/pixelart/133718.htm\nIncommunicado by Cure - https://pixeljoint.com/pixelart/113837.htm\nThe Spartan by Helm - https://pixeljoint.com/pixelart/12082.htm\nFalcon by Panda - https://pixeljoint.com/pixelart/41119.htm\n\n\n--- Video Chapters ---\n00:00 Introduction\n00:10 Equipment\n00:19 Software\n00:40 Process\n00:57 Silhouette\n01:10 Construction\n01:25 Rough\n01:44 2D Design\n02:07 Canvas Size\n02:33 Work Small\n02:50 Linework\n02:59 Doubles\n03:18 Jaggies\n03:47 Art Fundamentals Into\n03:52 Colour Picker\n04:49 Value\n05:15 Saturation\n05:39 Contrast\n06:17 Light And Shadow\n07:06 Pillow Shading\n07:19 Materials\n07:42 Warm And Cool\n08:11 Hue Shifting\n08:48 Colour Range\n09:03 Colour Palettes\n09:27 Dithering\n10:08 Anti-Aliasing\n11:06 Banding\n11:20 Outline Styles\n12:08 Cluster And Orphan Pixels\n12:43 Retro Game Reference\n13:28 Style Choice\n13:51 Have Fun\n14:07 Support",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=lfR7Qj04-UA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "lfR7Qj04-UA"
+    }
+  },
+  {
+    "id": "dece978a-3638-45e4-a45e-ee0dc8156382",
+    "title": "YouTube Video: Unity Easy DIALOGUE SYSTEM in 270 Seconds",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Unity Easy DIALOGUE SYSTEM in 270 Seconds\n\nChannel: Raycastly\n\nURL: https://www.youtube.com/watch?v=DOP_G5bsySA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nToday we will learn how to create a simple but extendable dialogue system in unity. You can grab the code below!\n\nGet the Asset Pack + 2D Water System + 2D Moving Platforms and MORE FOR FREE HERE:\nhttps://bit.ly/free-game-dev-assets\n\nIf you get stuck, you can ask for help on our discord server! Join through this link:\nhttps://discord.gg/gazxdzNU2w\n\nDialogueManager.cs\nhttps://pastebin.com/aBtSXSt0\n\nDialogueTrigger.cs\nhttps://pastebin.com/7J3yXugm\n\nHere are the colors I used for the dialogue box:\ndialogue box background color: #082430\ndialogue box header color: #155873\ndialogue box header text color: #FEC152\ndialogue line text color: white\n\n------\n\nTimecodes\n00:00 Intro\n00:12 Setup\n00:27 Theory\n00:58 Dialogue Trigger\n02:16 Dialogue Manager\n04:01 Finishing up",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=DOP_G5bsySA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "DOP_G5bsySA"
+    }
+  },
+  {
+    "id": "30d29a3d-0c76-4e02-b236-f50b491de26b",
+    "title": "YouTube Video: Introduction to shaders: Learn the basics!",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Introduction to shaders: Learn the basics!\n\nChannel: Barney Codes\n\nURL: https://www.youtube.com/watch?v=3mfvZ-mdtZQ&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n0:00 Intro\n1:24 What is a shader?\n3:37 Setting up shaders in P5js\n5:58 GLSL data types\n7:00 Vectors\n8:58 Attributes, Uniforms and Varying\n10:19 Barebones fragment shader\n11:00 Vertex shader\n14:57 Fragment shader revisited\n15:30 Gradients\n16:45 FragCoord tangent\n18:28 Mix function\n21:22 Setting uniforms\n22:43 Uniform images (sampler2D)\n24:58 p5.filterShader\n25:12 Uniform arrays\n27:05 Circles and SDFs\n31:47 Boolean logic\n33:25 Debugging shaders\n34:13 Conclusion\n\nResources:\nInigo Quilez YouTube: https://www.youtube.com/@InigoQuilez\nInigo Quilez shader: https://www.shadertoy.com/view/ldScDh\n\nKishimisu YouTube: https://www.youtube.com/@kishimisu\nKishimisu shader: https://www.shadertoy.com/view/mtyGWy\n\nTypes of shaders: https://www.khronos.org/opengl/wiki/Shader\nGLSL Data Types: https://www.khronos.org/opengl/wiki/Data_Type_%28GLSL%29\nAll available p5js shader attributes and uniforms: https://github.com/processing/p5.js/blob/main/contributor_docs/webgl_mode_architecture.md\ngl_FragCoord: https://registry.khronos.org/OpenGL-Refpages/gl4/html/gl_FragCoord.xhtml\nmix function: https://registry.khronos.org/OpenGL-Refpages/gl4/html/mix.xhtml\np5.filterShader Library: https://github.com/BarneyWhiteman/p5.filterShader\n2D SDFs: https://iquilezles.org/articles/distfunctions2d/\n\nExamples:\nAll examples: https://editor.p5js.org/BarneyCodes/collections/g_0h6nsR-\nVertex shader example: https://editor.p5js.org/BarneyCodes/sketches/ZPnUfPUaE\nFragment shader gradient example: https://editor.p5js.org/BarneyCodes/sketches/2Sa9hgvNn\nFragment shader position example: https://editor.p5js.org/BarneyCodes/sketches/NJYQgvpU6\nFragment shader image example: https://editor.p5js.org/BarneyCodes/sketches/Ema18Yjqj\nFragment shader array example: https://editor.p5js.org/BarneyCodes/sketches/QxtF99hH9\nFragment shader SDF example: https://editor.p5js.org/BarneyCodes/sketches/AQHT3p4Pz\nFragment shader logic example: https://editor.p5js.org/BarneyCodes/sketches/z114LFTfL\n\nShaders are an incredibly useful programming tool to have under your belt, especially for creative coding and generative art. They unlock a whole heap of potential, but they're a bit quirky to learn!\nThis video covers a lot of the fundamentals and will hopefully set you up well for using shaders in the future!\nThis is a bit of a long/dense video so be sure to take a break if you need, and you can always watch it more than once to help it all sink in!\n\nThis video and its examples use P5js in WEBGL mode, however the concepts are transferable to pretty much any environment that you can use shaders in (some syntax may vary, especially in the CPU code). \n\nFollow me:\nSupport the channel: https://www.youtube.com/@BarneyCodes/join\nTwitter: https://twitter.com/BarneyCodes\nReddit: https://www.reddit.com/user/BarneyCodes/\n\n#shaders #graphics #creativecoding",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=3mfvZ-mdtZQ&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "3mfvZ-mdtZQ"
+    }
+  },
+  {
+    "id": "3d128855-9975-4b47-b51d-d5e5bfec3dfa",
+    "title": "YouTube Video: Build a beautiful 3D open world in 5 minutes | Unity",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Build a beautiful 3D open world in 5 minutes | Unity\n\nChannel: spaderdabomb\n\nURL: https://www.youtube.com/watch?v=nCDGjLRecrs&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nLet's make a beautiful open world in just 5 minutes! In this tutorial, we make a 3D world in Unity from scratch using the built-in terrain system. \n\n····················································································\n\nUnity Asset Store Links:\n\nModular First Person Controller: https://assetstore.unity.com/packages/3d/characters/modular-first-person-controller-189884\nLowpoly Environment - Nature Pack Free: https://assetstore.unity.com/packages/3d/environments/lowpoly-environment-nature-pack-free-187052\nFantasy Skybox FREE: https://assetstore.unity.com/packages/2d/textures-materials/sky/fantasy-skybox-free-18353\n\n····················································································\n\nProject Files: https://github.com/spaderdabomb/Beautiful3DWorld/tree/main\n\n····················································································\n\nPatreon: https://www.patreon.com/spaderdabomb\nSubscribe: https://www.youtube.com/channel/UCRLa0eEG0rOR7APzAT1dPww\nJoin our Discord: https://discord.gg/NpK5CXe\nTwitter: https://twitter.com/spaderdabomb\nTwitch: https://www.twitch.tv/spaderdabomb\n\n····················································································\n\nChapters:\n\n0:00 Intro\n0:33 Terrain setup\n1:40 Textures and grass\n2:40 Lighting and effects\n3:27 Trees and objects\n5:32 Final project\n5:42 Outro\n\n····················································································",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=nCDGjLRecrs&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "nCDGjLRecrs"
+    }
+  },
+  {
+    "id": "cb50558a-835b-422b-bcfc-2586a75eb866",
+    "title": "YouTube Video: How to Create Seamless Textures for Indie Games | Beginner Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How to Create Seamless Textures for Indie Games | Beginner Tutorial\n\nChannel: Cartoon Coffee\n\nURL: https://www.youtube.com/watch?v=z-XrOB-XSHY&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n💡Learn 2D Game Art ▶ https://www.skool.com/gameart/about\n--- ⬇️Need VFX for your games?⬇️\n📄Spritesheets ▶ https://cartooncoffee.itch.io/megapack-spritesheets\n🎥PNGs and MOVs ▶ https://cartooncoffee.itch.io/megapack-video\n📦Unity Prefabs ▶ https://cartooncoffee.itch.io/ultimate-cartoon-vfx-mega-pack\n----\n🎁Free VFX🎁\nhttps://cartooncoffeegames.com/\n----\n🎮Discord - More Free Resources🎮\nhttps://discord.gg/zZcShdKdYj\n----\nCreating game art can be tricky. I want to share all my tips and tricks on how I create art for my games. Leave any questions or suggestions for topics down below!\n----\nJava Voice - 15.ai\nIndie Game Devlog",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=z-XrOB-XSHY&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "z-XrOB-XSHY"
+    }
+  },
+  {
+    "id": "ba541559-75a8-4533-a547-0f1daa835450",
+    "title": "YouTube Video: How To Make Music For Your Game",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How To Make Music For Your Game\n\nChannel: Valentine\n\nURL: https://www.youtube.com/watch?v=RtmFbohC0iw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nI really enjoy making music for my games, but not everybody knows how to do it! So in this video I will explain the steps i follow for how to make music for your game!\n\n=Social Media=-\nTwitter - https://twitter.com/ValentineOnl1ne\nItch.io - https://valentineonline.itch.io/\n\n=About Valentine=\nHi! I'm Valentine, a 19 year old indie game developer from the Netherlands. I like creating weird games and projects. I program, design en compose everything I do!\n\n=Other videos like this=\n- https://www.youtube.com/watch?v=QBmkPf9W_3Q\n- https://www.youtube.com/watch?v=fJmFJCLxfag\n\n\n#gamedev #indiedev #indiegamedev",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=RtmFbohC0iw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "RtmFbohC0iw"
+    }
+  },
+  {
+    "id": "1888ec7e-bd60-494d-824f-a956450fcc9c",
+    "title": "YouTube Video: How to make a Dialogue System with Choices in Unity2D | Unity + Ink tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How to make a Dialogue System with Choices in Unity2D | Unity + Ink tutorial\n\nChannel: Shaped by Rain Studios\n\nURL: https://www.youtube.com/watch?v=vY0Sk93YUhA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this video, I show how to make a dialogue system with choices for a 2D game in Unity.\n\nThe dialogue system features Ink, which is an open source narrative scripting language for creating video game dialogue that integrates nicely with Unity.\n\nThank you for watching and I hope the video was helpful! 🙂\n\nNOTE ABOUT INPUT HANDLING - If you're trying to imitate the Input system setup used in this video, here are a few things that will hopefully help based on FAQs I've gotten. Best of luck!\n- The InputManager script I'm using can be found here: https://github.com/trevermock/ink-dialogue-system/blob/8-ink-external-functions-example/Assets/Scripts/Input/InputManager.cs\n- When setting up the PlayerInput component in the inspector, for the game Events, make sure you drag in the InputManager gameobject and NOT the script. Dragging in the script will result in the corresponding dropdown not showing your methods.\n- This tutorial very loosely covers Input handling. Player input in Unity is it's own complex topic. If you're struggling with Input in Unity, I highly recommend learning more about how input can be handled in Unity. The Input System resource I put further down in the description of this video is an excellent place to start.\n\n► INK + UNITY TUTORIAL PLAYLIST\nThe full Ink + Unity tutorial playlist that this video is part of can be found here.\nhttps://www.youtube.com/watch?v=KSRpcftVyKg&list=PL3viUl9h9k78KsDxXoAzgQ1yRjhm7p8kl\n\n► TIMESTAMPS\n0:00 Intro\n0:53 How Ink works with Unity\n2:01 Dialogue System Design\n4:02 Project Setup Overview\n5:36 Import TextMeshPro\n6:09 Install/Import Ink\n6:50 Creating an Ink file\n7:50 Creating an NPC\n8:52 Triggering Dialogue\n11:55 Creating the Dialogue Panel\n14:05 Displaying Dialogue\n19:15 Freezing the Player\n19:59 Stopping the Dialogue Trigger\n20:29 Fixing the player jump issue\n21:33 Creating the Choices UI\n23:22 Code to support Choices\n26:10 Ink file with Choices\n26:46 Setting a First Selected Choice\n27:57 Making a Choice\n28:52 Adding new NPC's\n29:21 Outro\n\n► NEW INPUT SYSTEM RESOURCE\nIf you're struggling with understanding how Unity's new Input System works, this video by Samyam is one of the best I've seen on the topic.\nhttps://www.youtube.com/watch?v=m5WsmlEOFiA\n\n► INK UNITY INTEGRATION PLUGIN\nHere's the asset store link for the Ink Unity Integration plugin.\nhttps://assetstore.unity.com/packages/tools/integration/ink-unity-integration-60055\n\n► INKLE STUDIOS WEBSITE (to install the Inky editor)\nHere's a link to Inkle Studios website, where you can install the Inky editor.\nhttps://www.inklestudios.com/ink/\n\n► INK TUTORIAL VIDEO\nHere's a tutorial for if you're interested in learning more about writing Ink files.\nhttps://www.youtube.com/watch?v=KSRpcftVyKg&t=29s\n\n► POKEMON INK FILE EXAMPLE (shown in video)\nHere's a quick link to the ink file used towards the end of the video.\nhttps://github.com/shapedbyrainstudios/ink-dialogue-system/blob/end-of-video/Assets/Dialogue/pokemon.ink\n\n► GITHUB PROJECT\nThe '1-starting-point' branch is the projects starting point (with Ink/TMPro installed) and the '2-choices-implemented' branch is the final result by the end of this video.\nhttps://github.com/shapedbyrainstudios/ink-dialogue-system\n\n► MUSIC\nThe backing music is custom made by @themaykit.\nhttps://www.instagram.com/themaykit/\n\n► DISCORD\nCome ask questions, suggest a video topic, or just hang out!\n📱Discord ➔ https://discord.gg/99gcnaHFf9\n\n► THE PATH OF REN \nWishlist The Path of Ren on Steam!\n🎮 Steam (The Path of Ren) ➔ https://store.steampowered.com/app/1619920\n\n► SOCIAL MEDIA LINKS\n🐦 Twitter ➔ https://twitter.com/ShapedByRain \n📷 Instagram ➔ https://instagram.com/ShapedByRainStudios \n🕑 TikTok ➔ https://tiktok.com/@ShapedByRainStudios\n🌐 Website ➔ https://ShapedByRainStudios.com\n\n► SUPPORT \nAny support is much appreciated! I may receive a commission on any assets purchased using the below Unity Asset Store link. \n🛍️ Unity Asset Store Affiliate Link ➔ https://assetstore.unity.com/?aid=1100lrxm5 \n☕ Buy me a coffee! (Ko-fi) ➔ https://ko-fi.com/ShapedByRainStudios\n\n#gamedev #unity2d #unity",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=vY0Sk93YUhA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "vY0Sk93YUhA"
+    }
+  },
+  {
+    "id": "02db24d0-13e2-46dd-bdc4-3a5d69301d5c",
+    "title": "YouTube Video: How to Set Up Dynamic Water Physics and Boat Movement in Unity | Ship Buoyancy Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How to Set Up Dynamic Water Physics and Boat Movement in Unity | Ship Buoyancy Tutorial\n\nChannel: Tom Weiland\n\nURL: https://www.youtube.com/watch?v=eL_zHQEju8s&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this tutorial you'll learn how to set up boat movement and dynamic water physics in Unity.\n\nCheck out my devlogs: https://www.youtube.com/playlist?list=PLXkn83W0QkfmQI9lUzi--TxJaOFYIN7Q4\n\n⎯⎯⎯⎯⎯⎯\n\nCatlike Coding's article about shader-based vertex manipulation and Gerstner waves: https://catlikecoding.com/unity/tutorials/flow/waves/\n\nDiscord server: https://tomweiland.net/discord\nSupport me on GitHub Sponsors: https://github.com/sponsors/tom-weiland\nSupport me on Ko-fi: https://tomweiland.net/kofi\nGitHub: https://tomweiland.net/github\nWebsite: https://tomweiland.net/\n\n⎯⎯⎯⎯⎯⎯\n\nIn this buoyancy tutorial, we set up dynamic water physics and boat movement in Unity. We'll be making objects float and implementing physics based buoyancy for large objects like ships. While the core of the video is about buoyancy and flotation, setting up boat movement after watching this tutorial is as simple as applying a local forward force. Add some input-based rotational forces to the mix, and you've made a boat controller in Unity!\n\n#UnityTutorial #WaterPhysics #Unity3D #Buoyancy #GameDev\n\n\"Interplanetary Forest\" by Meydän is licensed under a Creative Commons Attribution license (https://creativecommons.org/licenses/...)\nArtist: https://soundcloud.com/meydansound/",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=eL_zHQEju8s&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "eL_zHQEju8s"
+    }
+  },
+  {
+    "id": "4d615dd7-1a97-4899-b74e-9ebcd4962659",
+    "title": "YouTube Video: FULL 3D ENEMY AI in 6 MINUTES! || Unity Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: FULL 3D ENEMY AI in 6 MINUTES! || Unity Tutorial\n\nChannel: Dave / GameDevelopment\n\nURL: https://www.youtube.com/watch?v=UjkSFoLxesw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nFULL 3D ENEMY AI in 6 MINUTES! || Unity Tutorial:\nToday I made a quick tutorial about Enemy Ai in Unity, if you have any questions just write a comment, I'll try to answer as many as I can :D\n\nAlso, don't forget to subscribe and like if you enjoyed the video! :D\nSee you next time.\n\nLinks:\n➤ NavMesh Components: https://github.com/Unity-Technologies/NavMeshComponents\n➤ DOWNLOAD the SCRIPT: https://www.mediafire.com/file/n58m8is65cto3it/EnemyAiTutorial.cs/file\n➤ DOWNLOAD the PROJECT (in the free-code-dave channel): https://discord.gg/5S3bBBq\n➤ DON'T CLICK: https://bit.ly/2VcrDZt\n\nIf you want here's the series about the GUN SYSTEM USED in the video:\n➤ https://www.youtube.com/watch?v=wZ2UUOC17AY&t=38s&ab_channel=Dave%2FGameDevelopment\n\n🏹 Get Access to my RANGED COMBAT LAB! 🏹\n➤ Trailer: https://youtu.be/j2YplilHjCA\n\n➡️ Get Access to my full MOVEMENT LAB! ➡️\n➤ Trailer: https://youtu.be/9_Q9UxK7VF8\n\nOther interesting videos :D\n➤ Full WALL RUN tutorial: https://www.youtube.com/watch?v=Ryi9JxbMCFM&t=92s&ab_channel=Dave%2FGameDevelopment\n➤ My FIRST YEAR of game development: https://www.youtube.com/watch?v=__qiHCzX6wo&t=303s&ab_channel=Dave%2FGameDevelopment\n\nSupport me on Patreon: \n➤ https://www.patreon.com/davegamedevelopment\n\nMusic used:\n➤ Elevate - LiQWYD: https://www.youtube.com/watch?v=nwV8HN0m2eA&ab_channel=AudioLibrary%E2%80%94Musicforcontentcreators\n➤ Night Out - LiQWYD: https://www.youtube.com/watch?v=tut9O8uaJho&ab_channel=AudioLibrary%E2%80%94Musicforcontentcreators\n\n#UnityTutorial #EnemyAi #UnityEnemyAi",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=UjkSFoLxesw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "UjkSFoLxesw"
+    }
+  },
+  {
+    "id": "d4e82e3f-ea82-40ff-8718-1c16d7ea673a",
+    "title": "YouTube Video: How to Make a Flexible Interaction System in 2 Minutes [C#] [Unity3D]",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How to Make a Flexible Interaction System in 2 Minutes [C#] [Unity3D]\n\nChannel: Rytech\n\nURL: https://www.youtube.com/watch?v=K06lVKiY-sY&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this video I go over the creation of a flexible interaction system in Unity3D.\nJoin my Discord! ► https://discord.gg/jrRJgfBz2y\nHow to Make Player Movement ► https://youtu.be/TOPj3uHZgQk\nExtra Resources ►\nhttps://docs.unity3d.com/ScriptReference/Physics.Raycast.html\nhttps://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/interface\n\n#unity3d #unitytutorials",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=K06lVKiY-sY&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "K06lVKiY-sY"
+    }
+  },
+  {
+    "id": "84dbb11a-11cd-48b7-ae43-61a32a8f27c6",
+    "title": "YouTube Video: How To Create Interactive NPC Talking System with Unity! #2",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How To Create Interactive NPC Talking System with Unity! #2\n\nChannel: KaiJPR\n\nURL: https://www.youtube.com/watch?v=a9bhK-P7r-0&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this video, I finish making the NPC system with unity!\n\nIf you are new, my channel makes content about programming and coding so if you think it's interesting, consider subscribing, it's free, and you can always change your mind later. I hope you guys enjoy the video!😘\n\n🚨Don't click this link: https://bit.ly/2QBeLxt\n\n#KaiJPR #unity3d #npcdialogue",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=a9bhK-P7r-0&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "a9bhK-P7r-0"
+    }
+  },
+  {
+    "id": "99664669-d30f-41a5-be96-331fc6fc2620",
+    "title": "YouTube Video: Setup 3D Pathfinding Agents In Minutes Using Unity",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Setup 3D Pathfinding Agents In Minutes Using Unity\n\nChannel: BMo\n\nURL: https://www.youtube.com/watch?v=mJu-zdZ9dyE&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nUnity offers so many tools that get under utilized... The Nav Mesh being something that is so powerful and used to be such a pain to setup in older engines yourself. \n\nI show how you can setup working pathfinding in a game in literally a few clicks. Obviously this is a simple example, but I think its important to jump into using it yourself to start playing around with it, and I think people get intimidated without seeing how easy it really is.\n\n✨Want to support the channel? \nBuy me a coffee ☕: https://ko-fi.com/bmoli \n\n➤SUBSCRIBE to see follow up videos in how we can use Nav Meshes in interesting ways.\n\n➤LIKE the video if you enjoyed, it really helps the channel! \n\n➤Join our DISCORD SERVER to become a god amongst men: https://discord.gg/g9j8yrHTED\n\nThanks for watching!\n\n#bmo #unity #tutorial",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=mJu-zdZ9dyE&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "mJu-zdZ9dyE"
+    }
+  },
+  {
+    "id": "e228b61f-3546-4c84-b9a2-eba0b360c9f6",
+    "title": "YouTube Video: How to Make A Randomly Walking A.I. in Unity",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How to Make A Randomly Walking A.I. in Unity\n\nChannel: The Game Dev Cave\n\nURL: https://www.youtube.com/watch?v=-Iwsz4gdgyQ&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nToday we're starting off a small mini series in which we make an enemy A.I. This first part focuses on making it patrol around, something that you'll want to re-use for a lot of different NPCs in most of the games you'll end up making! \n\nget the Project here : https://www.patreon.com/posts/unity-3d-75458669\n\nJoin the discord for any help you need! : https://discord.gg/24cdJBP\nsupport the channel and development over on patreon : https://www.patreon.com/thegamingcaves",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=-Iwsz4gdgyQ&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "-Iwsz4gdgyQ"
+    }
+  },
+  {
+    "id": "619dc16e-0f8f-4729-aae8-fe79450d19c7",
+    "title": "YouTube Video: Making a 3D Platformer in Unity - Player Follow Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Making a 3D Platformer in Unity - Player Follow Tutorial\n\nChannel: Kozmobot Games\n\nURL: https://www.youtube.com/watch?v=6Ai0xg6xTUk&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this video, you will learn how to make an enemy object that will follow your player. The first thing you need to do is to make a cube that will resemble an enemy. I have set this cube to be red colored, just by making a material and choosing the base color to red. You can also download the script files.\nDOWNLOAD THE SCRIPT: http://github.com/kozmobotgames/Character3D \n\nWARNING: Nav Mesh window used in this tutorial is now obsolete. If you use Unity 2022, here is the UPDATED TUTORIAL: https://youtu.be/5f3mrdKUKEs\n\nNav Mesh in Unity is a required component for fighting games, action and RPG games, especially because it offers an accurate movement direction for players. It's a very simple Unity tutorial that can tell you which things you should do and which things you shouldn't do.\n\nI can help you make a nav mesh agent in Unity, that will follow your player by using a component called AI. To ensure that you can use the plane as an AI object, you have to go Window / AI / Navigation and perform a Bake function that will \"bake\" the plane in order to become a place where enemies cannot leave. Baking is useful for navigation meshes and enemy management, because player can dodge them in order to escape. Certain enemies can travel inside only one area, making their navigation limited.\n\nIf you find this video helpful, consider subscribing. I will make videos every week. This is the fifth video in the 3D platformer tutorial series. Lastly, I will make more game development tutorials and other content related to game industry.\n\nSupport the Creator of Kozmobot on the social networks!\n\nCHECK OUT MY WEBSITE: http://kozmobot.com\n\nINSTAGRAM: https://www.instagram.com/kozmobot.channel\n\nTIKTOK: https://www.tiktok.com/@kozmobot.channel\n\nMusic in the video:\n\nMusic by DayFox from Pixabay\nWeeknds by Dayfox\nEscapism by Yung Logos",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=6Ai0xg6xTUk&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "6Ai0xg6xTUk"
+    }
+  },
+  {
+    "id": "07d45999-80c1-41b3-9744-5838c483970e",
+    "title": "YouTube Video: How to Make NPCs/AI Run Away (with examples in Unity)",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How to Make NPCs/AI Run Away (with examples in Unity)\n\nChannel: Feed My Kids\n\nURL: https://www.youtube.com/watch?v=RGjMBEGhd7Y&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this video you'll learn how to make one object \"run away\" from another. Hopefully, you'll learn a little vector math with simple examples.\n\nTo sum up the entire video: \n1. Get the direction to the object you're running from. (Dir = Obj2 Pos - Obj1 Pos)\n2. Negate the direction (Dir = -Dir)\n3. Run in that direction (Obj1.RunToPos (Obj1 Pos +. Dir))\n4. Scale the direction if you want by normalizing the direction vector. (Dir = Dir.normalized)\n5. Run a certain distance away using the normalized direction. \n[Obj1.RunToPos(MyPos + (Dir * desiredDistance))]\n\nYou'll need a copy of Unity for this: Try getting a version higher than Unity 5.6\n\nThe code, materials, and prefabs from this video can be found here: \nhttps://github.com/KampinKarl1/Unity-AI-Behaviours/tree/main/GamePlay/AI%20Strategies\n\nIcons from Flaticon.com: The hen and fox are from FreePik\n\nSong: When All of This is Over by The Westerlies",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=RGjMBEGhd7Y&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "RGjMBEGhd7Y"
+    }
+  },
+  {
+    "id": "2c2af8d5-716f-405d-8a0c-6596d842961c",
+    "title": "YouTube Video: Health Bar Unity Tutorial in 7 Minutes | DevLog 5",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Health Bar Unity Tutorial in 7 Minutes | DevLog 5\n\nChannel: BlackCitadel Studios\n\nURL: https://www.youtube.com/watch?v=3JjBJfoWDCM&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nWelcome to our Unity Health Bars tutorial, a comprehensive guide on how to create customizable health bars with an easing mechanic (Lerp) inspired by Dark Souls. In just 7 minutes, you'll learn how to create polished and professional-looking health bars that can add that extra bit of polish to your game. Whether you're a beginner or an advanced game developer, our step-by-step guide is easy to follow and perfect for anyone looking to add cool health bars to their Unity game. Our tutorial is packed with keywords like Unity tutorial, game development, health bars, easing mechanics, Dark Souls, and more to help you optimize your search results. In Dev Log #5, we'll explore the world of Unity game development and guide you through every step of the process, from start to finish. So grab a cup of coffee, sit back, and get ready to level up your Unity game development skills. Don't miss out on this essential tutorial!\n\nExcited to announce that we are now Live on Steam!!! 😮\nhttps://store.steampowered.com/app/2392420/Wisplight/\nYou can now add the game to your Wishlist!!! \n\nPatreon : https://patreon.com/BlackCitadelStudios\nUnity Asset Store : https://assetstore.unity.com/?aid=1011lB2FZ\nDiscord : https://discord.gg/vUsNcK9U7t\n\nThanks for the Support everyone!!! 🤗\n\n#unity #unity3d #devlog #indiegame #Wisplight #healthbars",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=3JjBJfoWDCM&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "3JjBJfoWDCM"
+    }
+  },
+  {
+    "id": "375e6f14-0892-4366-beeb-cd10bce4325c",
+    "title": "YouTube Video: Coins Burst VFX Effect Particle System| How to make Coins Burst  using unity Particle System VFX",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Coins Burst VFX Effect Particle System| How to make Coins Burst  using unity Particle System VFX\n\nChannel: Aqsa Nadeem\n\nURL: https://www.youtube.com/watch?v=M7DDGbzzJgA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nCoins Burst VFX/ Exploding coins Effect Particle System| How to make Coins Burst  using unity Particle System VFX\nUnity VFX with particle System Course on Udemy : https://www.udemy.com/course/visual-effects-in-unity-particle-systems-beginners-guide/?referralCode=A76C8B0001CA122E9227\n\nCheck out my Udemy Course: \nSpace Shooter Game: https://bit.ly/3sgp33f\n-----------------------------------------------------------------------------\nASSETS STORE:\nhttps://assetstore.unity.com/publishers/46326\n-----------------------------------------------------------------------------\nSubscribe to our channel: https://cutt.ly/6ljpTGK\n-----------------------------------------------------------------------------\n#unity #vfx #particlesystem",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=M7DDGbzzJgA&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "M7DDGbzzJgA"
+    }
+  },
+  {
+    "id": "48745afa-a583-4f99-a746-eb36e93a770a",
+    "title": "YouTube Video: How To Make a Jumpscare in Unity",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How To Make a Jumpscare in Unity\n\nChannel: OgunZz\n\nURL: https://www.youtube.com/watch?v=peNVI0O9mxY&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nSubscribe & Like for more Content like this.\n-------------------------------------------\nYoutube : https://www.youtube.com/c/GunzzYT\ntwitch : https://www.twitch.tv/gunzz___\n\nSound: https://pixabay.com/sound-effects/search/jump%20scare%20sound%202/?manual_search=1&order=None",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=peNVI0O9mxY&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "peNVI0O9mxY"
+    }
+  },
+  {
+    "id": "b8f33bc5-6e82-4775-b500-7c7cc68b5a3f",
+    "title": "YouTube Video: How create a Quest System in Unity | RPG Style | Including Data Persistence",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How create a Quest System in Unity | RPG Style | Including Data Persistence\n\nChannel: Shaped by Rain Studios\n\nURL: https://www.youtube.com/watch?v=UyTJLDGcT64&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nThis video covers one of the many ways to go about creating a Quest System in Unity. The Quest System focuses on RPG-style quests and includes persisting the state of all quests between playthroughs.\n\nI hope this helps and best of luck! 🙂\n\nThis video is sponsored by Unity. Check out what the 2022 LTS has to offer via the below link!\nhttps://on.unity.com/3OyB0jd\n\n► Quest System Playlist\nAll videos I've currently done for the Quest System series can be found in this playlist.\nhttps://www.youtube.com/watch?v=UyTJLDGcT64&list=PL3viUl9h9k7-oX3Sz8VvyKCIN24XOXNZR\n\n► TIMESTAMPS\n0:00 Intro\n1:22 Disclaimer and Prerequisite Knowledge\n2:43 Sponsorship\n3:48 Defining a Quest\n5:17 How we'll Store Static (non-changing) Data\n6:03 How Quest Steps will work\n8:34 How we'll Manage State Data\n9:31 How we'll Manage Quests\n12:26 Running through an example\n15:34 Project Overview\n18:51 Storing Static (non-changing) Data\n21:51 Creating a Quest Step\n24:54 Managing State Data\n27:46 Managing Quests\n30:04 Creating Quest Management Events\n32:38 Creating the Quest Point\n37:12 Creating the Quest Icon Visual\n40:07 Managing Quest Requirements\n42:39 Starting a Quest\n43:31 Advancing a Quest\n45:10 Finishing a Quest\n45:57 Ensure Multiple Steps are Working\n46:24 How we'll Persist Quest State\n49:48 Managing Quest Step State\n54:31 Saving Quest Data\n56:03 Loading Quest Data\n59:03 Disabling Persistence for Development\n59:35 Creating One More Quest\n1:02:50 Outro\n\n► GITHUB PROJECT\nThe '2-quest-system-implemented' branch contains the code by the end of this tutorial.\nhttps://github.com/shapedbyrainstudios/quest-system\n\n► RESOURCES\nSave & Load System Tutorial Series (also covers Serialization/Deserialization)\nhttps://www.youtube.com/watch?v=aUi9aijvpgs&list=PL3viUl9h9k7-tMGkSApPdu4hlUBagKial\n\nExcellent video for an introduction into Unity Events\nhttps://www.youtube.com/watch?v=gx0Lt4tCDE0\n\nExcellent video on Unity's new Input System\nhttps://www.youtube.com/watch?v=m5WsmlEOFiA&t\n\nUnity Lifecycle methods documentation\nhttps://docs.unity3d.com/Manual/ExecutionOrder.html\n\nExcellent video on Unity Prefabs\nhttps://www.youtube.com/watch?v=EH5epbeX3ek\n\nExcellent video covering the basics of Scriptable Objects\nhttps://www.youtube.com/watch?v=aPXvoWVabPY\n\n► MUSIC\nThe backing music for this video is by Panda Beats.\nWebsite: https://pandabeatsmusic.com/\nYouTube Channel: https://www.youtube.com/@PandaBeatsMusic\nPlaylist: https://www.youtube.com/watch?v=ejGmSTVKJrU&list=PLPEwKpHq_H2Csme-WtKAON7ha7E4bRhxx\n\n► DISCORD\nCome ask questions, suggest a video topic, or just hang out!\n📱Discord ➔ https://discord.gg/99gcnaHFf9\n\n► THE PATH OF REN \nWishlist The Path of Ren on Steam!\n🎮 Steam (The Path of Ren) ➔ https://store.steampowered.com/app/1619920\n\n► SOCIAL MEDIA LINKS\n🐦 Twitter ➔ https://twitter.com/ShapedByRain \n📷 Instagram ➔ https://instagram.com/ShapedByRainStudios \n🕑 TikTok ➔ https://tiktok.com/@ShapedByRainStudios\n🌐 Website ➔ https://ShapedByRainStudios.com\n\n► SUPPORT \nAny support is much appreciated! I may receive a commission on any assets purchased using the below Unity Asset Store link. \n🛍️ Unity Asset Store Affiliate Link ➔ https://assetstore.unity.com/?aid=1100lrxm5 \n☕ Buy me a coffee! (Ko-fi) ➔ https://ko-fi.com/ShapedByRainStudios\n\n#gamedev #quests #unity",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=UyTJLDGcT64&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "UyTJLDGcT64"
+    }
+  },
+  {
+    "id": "02b19490-e6f9-4eee-b20e-ea5eb4dc09d6",
+    "title": "YouTube Video: Use PERFECT ICONS for your game! | Unity tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Use PERFECT ICONS for your game! | Unity tutorial\n\nChannel: Coco Code\n\nURL: https://www.youtube.com/watch?v=P6G-mwVy8qs&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nMaster Unity UI! Start here➡️ https://cococode.net/courses/master-unity-ui?utm_source=youtube&utm_medium=video&utm_campaign=110\n\n🎮 Download Core to create games for FREE: https://bit.ly/Core-CocoCode\n🎁 Support me and DOWNLOAD Unity project: https://www.patreon.com/posts/57922857?s=yt\n\nThis tutorial/guide will show you how to find and add icons to your Unity project. I myself spend hundreds of hours in my life searching for the pictograms that would fit well in my projects and now I'm sharing with you some basics on how to create notes before icon hunting and where to find the best options. Hope this tutorial will help you build a perfect UI for your game!\n\n--------------------------------------------------------------------------------\n🔗 LINKS IN THIS VIDEO:\nhttps://www.flaticon.com\nhttps://fonts.google.com/icons\n\n--------------------------------------------------------------------------------\n👨‍💻 SOCIALS:\n💜 Join our Discord: https://discord.gg/hNnZRnqf4s\n🔵 Follow me on Twitter: https://twitter.com/bionicl333\n\n--------------------------------------------------------------------------------\n🎓 YOU WILL LEARN:\n- How to add icons to Unity\n- Where to find icons for your game\n- How to add material design icons to Unity\n- Where to download material icons\n- Is Unity compatible with SVG files?\n- How to create buttons with icons?\n\n--------------------------------------------------------------------------------\n⚙️ VIDEO CHAPTERS:\n0:00 - Intro\n1:04 - Where to put ICONS and what to search for?\n2:07 - Download icons - #1 website\n4:19 - Core games [sponsored segment]\n5:38 - Adding icons to Unity\n6:15 - Download icons - #2 website\n8:27 - Import Google icons to your Unity project",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=P6G-mwVy8qs&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "P6G-mwVy8qs"
+    }
+  },
+  {
+    "id": "ae5a3df3-3138-4a27-ba8a-52422a4914f3",
+    "title": "YouTube Video: Icon Creator Tutorial - Quick Start - Unity Asset",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Icon Creator Tutorial - Quick Start - Unity Asset\n\nChannel: Harpia Games\n\nURL: https://www.youtube.com/watch?v=CBs1E4X8CyQ&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nCheck it on Asset Store\nhttps://assetstore.unity.com/packages/tools/game-toolkits/icon-creator-generate-fast-easy-complete-icons-generator-198488?aid=1100lACye\n\nDocumentation: https://harpiagamesstudio.com/iconcreator/documentation/index.php\n\n#IconCreatorAsset #Unity3D #GameDevTools #AssetStore #UnityTools #3DModeling #IconDesign #GameDevelopment #IndieDev #UnityAssetStore #ARVRDev #3DAsset #GameAssets #IconCreation #GameDevResources",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=CBs1E4X8CyQ&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "CBs1E4X8CyQ"
+    }
+  },
+  {
+    "id": "1350ee10-3abe-49e0-b84f-d3f33769eedf",
+    "title": "YouTube Video: Unity3D - Hunger / Thirst Survival Game System Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Unity3D - Hunger / Thirst Survival Game System Tutorial\n\nChannel: Australian Game Development\n\nURL: https://www.youtube.com/watch?v=i2uUuS6-KCc&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nHow to create hunger/thirst for your game.\r\n\r\n-------------\r\nSusbcribe",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=i2uUuS6-KCc&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "i2uUuS6-KCc"
+    }
+  },
+  {
+    "id": "06cb1e6d-324e-48f5-95fc-b828c5e2900d",
+    "title": "YouTube Video: every step to actually make your dream game (then sell it)",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: every step to actually make your dream game (then sell it)\n\nChannel: samyam\n\nURL: https://www.youtube.com/watch?v=dXy8_T4Z5Kc&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nSign up to Milanote for free with no time-limit: https://milanote.com/samyam\n\nYou may ask: what game engine should you choose? I break it step by step down here:\nhttps://youtu.be/aMgB018o71U\n\nWishlist my new mining incremental game:\nhttps://store.steampowered.com/app/4425150/Totally_Rigged/\n\nGet my other game! \nhttps://store.steampowered.com/app/2978180/Desktop_Cat_Cafe/\n\nGet my Unity Source Code bundle with dozens of beginner projects and concept to help get you started!\nhttps://sam-yam.itch.io/samyam-full-source-code-to-all-videos\n\nJoin 500+ Game Developers to bootstrap your journey into game development https://samyam.dev/\n\nJoin my Discord! https://discord.gg/pRPNyACWdQ\n\n0:00 Step 1 Mindset\n2:52 Step 2 Gear\n4:05 Step 3 Learning \n8:01 Step 4 Planning\n9:41 Step 5 Development \n16:37 Step 6 Playtesting\n20:34 Step 7 Marketing",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=dXy8_T4Z5Kc&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "dXy8_T4Z5Kc"
+    }
+  },
+  {
+    "id": "5141add8-0a1e-4fb0-9fab-061cbd164509",
+    "title": "YouTube Video: Light Your World in Unity - 1 Minute Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Light Your World in Unity - 1 Minute Tutorial\n\nChannel: HIYU\n\nURL: https://www.youtube.com/watch?v=NOv31HSqs6U&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nYour VRChat world will thank you!\nVideo style entirely stolen from the original legend, Ian Hubert: https://www.youtube.com/mrdodobird\nThumbnail is from Furality Luma: https://furality.org/\nEnding is VirtualFurence: https://twitter.com/virtualfurence\n\nMore advice:\n- Spot Lights are (almost) always better than Point Lights\n- Keep realtime/mixed lights down to just the most important ones\n- The sun is REALLY bright\n\nThanks go to my Patrons on Patreon: https://www.patreon.com/hiyu\nTwitter: https://twitter.com/HiyuMarten",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=NOv31HSqs6U&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "NOv31HSqs6U"
+    }
+  },
+  {
+    "id": "694a02fb-a729-45c7-9bc9-856de97a7821",
+    "title": "YouTube Video: 6 Minute PAUSE MENU Unity Tutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: 6 Minute PAUSE MENU Unity Tutorial\n\nChannel: BMo\n\nURL: https://www.youtube.com/watch?v=9dYDBomQpBQ&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nUnless you're purposefully omitting one, chances are your game will need some sort of Pause Menu. This Unity Tutorial will walk you through the essentials of setting one up in just a few minutes.\n\nIt might not be a 5 minute tutorial, but it's close enough for me :) \n\nHeres the game I made for Ludum Dare 46: https://youtu.be/w1FXNDkN0Is\n\n✨Want to support the channel? \nBuy me a coffee ☕: https://ko-fi.com/bmoli \n\n➤Join the new DISCORD SERVER: https://discord.gg/g9j8yrHTED\n➤Want to make video games? Start with my tutorial Playlist: https://www.youtube.com/playlist?list=PLhrayuv80FeWPrco0bqfYSHDifVB2PXpW\n➤5 Minute Tutorial Series: https://www.youtube.com/playlist?list=PLhrayuv80FeVbdfce8bQLwe-GxXf6LGtZ\n\n➤Don't forget to SUBSCRIBE for all the upcoming content.\n\n#bmo #unity #tutorial",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=9dYDBomQpBQ&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "9dYDBomQpBQ"
+    }
+  },
+  {
+    "id": "37ad558b-999b-4ad5-accc-d5e868f4793b",
+    "title": "YouTube Video: How to Pick up and Drop Objects/Items! (First and Third Person, Unity Tutorial)",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How to Pick up and Drop Objects/Items! (First and Third Person, Unity Tutorial)\n\nChannel: Code Monkey\n\nURL: https://www.youtube.com/watch?v=2IhzPTS4av4&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n🎮Get the Synty Shops pack https://cmonkey.co/synty_shops_pickupdrop\n✅Get the Project files and Utilities at https://unitycodemonkey.com/video.php?v=2IhzPTS4av4\n🌍Get my Complete Courses! ✅ https://unitycodemonkey.com/courses\n👍 Learn to make awesome games step-by-step from start to finish.\n👇 Click on Show More\n🎮 Get my Steam Games https://unitycodemonkey.com/gamebundle\n\n🔴 RELATED VIDEOS 🔴\nAwesome UNIQUE Crafting System! (Max Immersion, No Inventory, Hydroneer) https://youtu.be/_aC3NVIQ-ok\nKickstart your game with First and Third Person Controllers! (FREE Unity Starter Assets) https://www.youtube.com/watch?v=jXz5b_9z0Bc\nSMOOTH with LERP! (Move, Rotate, Float) https://youtube.com/shorts/jAN2IoWdPzM\nWhat are Interfaces? (C# Basics) https://www.youtube.com/watch?v=MZOrGXk4XFI\n\n💬 Learn how to Pick up and Drop objects. Very easy to use, just attach the component to any object and you can easily grab it. Technically it works on anything so you can pick up a simple Muffin or a giant Car.\nStay tuned for the next video where I will use this in remaking a really interesting unique crafting system like in Hydroneer!\n\n📝 Some Links are Affiliate links which means it costs the same to you and I get a nice commission.\n🌍 Get Code Monkey on Steam!\n👍 Interactive Tutorials, Complete Games and More!\n✅ https://store.steampowered.com/app/1294220/\n\nIf you have any questions post them in the comments and I'll do my best to answer them.\n\n🔔 Subscribe for more Unity Tutorials https://www.youtube.com/channel/UCFK6NCbuCIVzA6Yj1G_ZqCg?sub_confirmation=1\n\nSee you next time!\n\n📍 Support on Patreon https://www.patreon.com/unitycodemonkey\n🎮 Grab the Game Bundle at https://unitycodemonkey.com/gameBundle.php\n📝 Get the Code Monkey Utilities at https://unitycodemonkey.com/utils.php\n\n#unitytutorial #unity3d #gamedev\n\n--------------------------------------------------------------------\nHello and Welcome!\nI'm your Code Monkey and here you will learn everything about Game Development in Unity using C#.\n\nI've been developing games for several years with 8 published games on Steam and now I'm sharing my knowledge to help you on your own game development journey.\n\nI do Unity Tutorials on just about every topic, Unity Tutorials for Beginners and Unity Tutorials for Advanced users.\n\nYou can see my games at www.endlessloopstudios.com\n--------------------------------------------------------------------\n- Other great Unity channels:\nUnity - https://www.youtube.com/user/Unity3D\nBrackeys - https://www.youtube.com/user/Brackeys\nDani - https://www.youtube.com/channel/UCIabPXjvT5BVTxRDPCBBOOQ\nJabrils - https://www.youtube.com/channel/UCQALLeQPoZdZC4JNUboVEUg\nBlackthornProd - https://www.youtube.com/channel/UC9Z1XWw1kmnvOOFsj6Bzy2g\nSykoo - https://www.youtube.com/user/SykooTV\nJason Weimann - https://www.youtube.com/channel/UCX_b3NNQN5bzExm-22-NVVg\nJonas Tyroller - https://www.youtube.com/channel/UC_p_9arduPuxM8DHTGIuSOg\n--------------------------------------------------------------------\n- Website: https://unitycodemonkey.com/\n- Twitter: https://twitter.com/UnityCodeMonkey\n- Steam: https://store.steampowered.com/developer/EndlessLoopStudios",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=2IhzPTS4av4&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "2IhzPTS4av4"
+    }
+  },
+  {
+    "id": "457ed023-d11c-461e-8424-32a7b5b6fd4e",
+    "title": "YouTube Video: Where to get Sound Effects and Music for your Game (Free and Paid)",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Where to get Sound Effects and Music for your Game (Free and Paid)\n\nChannel: Picster\n\nURL: https://www.youtube.com/watch?v=eFSKkNdHh_k&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this video I am showing different sources for sounds and music for your game.\n\nThe most important things about licenses are also covered quickly.\n\nLinks mentioned in the video:\nFree Sounds\nhttps://freesound.org/\nhttps://99sounds.org/free-sound-effects/\nhttps://opengameart.org/\nhttps://kenney.nl/\n\nCheap Sounds\nhttps://zapsplat.com/\nhttps://audiojungle.net/\nhttps://www.fiverr.com/\nhttps://bandcamp.com\nhttps://bandcamp.com/tag/creative-commons\nhttps://assetstore.unity.com/audio \n\nPricey Sounds\nhttps://www.boomlibrary.com/\nhttps://www.pmsfx.com/\n\nDIY / Experimental / Creative\nhttps://www.leshylabs.com/apps/sfMaker/\nhttp://bfxr.net\n\n\nBuy me a coffee:\nhttps://www.buymeacoffee.com/raffa\n\nFollow me on Twitter:\nhttps://twitter.com/MV_Raffa\n\nJoin the nice Community at the Everett Station Discord:\nhttps://discord.com/invite/JU3y5WkQ4g\n\n\nTimestamps:\n00:00 Intro\n00:30 Licensing (IMPORTANT! Please watch!)\n01:45 Free Sounds\n03:52 Cheap / Affordable Sounds\n08:35 Pricey Sounds\n11:05 DIY Sounds",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=eFSKkNdHh_k&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "eFSKkNdHh_k"
+    }
+  },
+  {
+    "id": "687e56dd-6739-4433-81ca-cbd0c1fad528",
+    "title": "YouTube Video: How to Create a Low Poly Tree in 1 Minute",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How to Create a Low Poly Tree in 1 Minute\n\nChannel: CG Geek\n\nURL: https://www.youtube.com/watch?v=y7PdiGXbrD0&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nLearn how to Create a Low Poly Tree in this Blender 2.8 Tutorial in 1 Minute! Perfect for Game Engine use. Download Tree Model on Patreon: https://www.patreon.com/cggeek \n\nHELP US ACHIEVE OUR GOAL OF PLANTING 20,000,000 TREES!\r\nPLEASE DONATE ! -  https://teamtrees.org/ \n\n----------\nMy CPU: https://amzn.to/3IfaSJh\nMy GPU: https://amzn.to/44AcBQY\n----------\n\nLow Poly Tree is perfect for use in Unity or Unreal Game Engines!\n\nFree Branch and Bark Textures: http://bit.ly/3440URc \n\nSubscribe For More: https://www.youtube.com/subscription_center?add_user=CGGeek \n\nInstagram: https://www.instagram.com/cg_geeks/\r\nTwitter: https://twitter.com/CGGeeks\r\nFacebook: https://www.facebook.com/CGgeeks/\n#blender #tutorial #tree",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=y7PdiGXbrD0&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "y7PdiGXbrD0"
+    }
+  },
+  {
+    "id": "40e12140-a5c4-473b-aeb6-fb064ddafe12",
+    "title": "YouTube Video: Easy Rain Animation in Blender in 1 min🔥😱 #shorts #blender #tutorial #blendertutorial",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Easy Rain Animation in Blender in 1 min🔥😱 #shorts #blender #tutorial #blendertutorial\n\nChannel: Malikose  Studio\n\nURL: https://www.youtube.com/watch?v=PZpgPsEJXrw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nHow to Make a Rain animation in Blender. I hope you will enjoy it.\nyour Malikose.\n\nMusic From : Karl Casey @ White Bat Audio .\n\n#shorts \n#tutorial \n#blender\n#blender3d",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=PZpgPsEJXrw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "PZpgPsEJXrw"
+    }
+  },
+  {
+    "id": "58d13437-46ea-41dd-9c95-08d945cf5b34",
+    "title": "YouTube Video: How to use Unity NavMesh Pathfinding! (Unity Tutorial)",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: How to use Unity NavMesh Pathfinding! (Unity Tutorial)\n\nChannel: Code Monkey\n\nURL: https://www.youtube.com/watch?v=atCOd4o7tG4&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n✅ Get the FULL course here at 80% OFF!! 🌍 https://unitycodemonkey.com/courseultimateoverview.php\n👍 Learn how to make BETTER games FASTER by using all the Unity Tools and Features at your disposal!\n👇\n🌍 Get my Complete Courses! ✅ https://unitycodemonkey.com/courses\n👍 Learn to make awesome games step-by-step from start to finish.\n🎮 Get my Steam Games https://unitycodemonkey.com/gamebundle\n\n💬 Let's learn how to use Unity NavMesh which is the built-in Pathfinding System.\nSet up your scene, define what objects are walkable, bake the NavMesh and use NavMesh Agents to traverse it.\nExpand upon it with some penalties and tags along with some Jumps and Off Mesh Links.\n\n✅ Get the FULL course here at 80% OFF!! 🌍 https://unitycodemonkey.com/courseultimateoverview.php\n👍 Learn how to make BETTER games FASTER by using all the Unity Tools and Features at your disposal!\n\n🌍 Get Code Monkey on Steam!\n👍 Interactive Tutorials, Complete Games and More!\n✅ https://store.steampowered.com/app/1294220/\n\nIf you have any questions post them in the comments and I'll do my best to answer them.\n\n🔔 Subscribe for more Unity Tutorials https://www.youtube.com/channel/UCFK6NCbuCIVzA6Yj1G_ZqCg?sub_confirmation=1\n\nSee you next time!\n\n📍 Support on Patreon https://www.patreon.com/unitycodemonkey\n🤖 Join the Community Discord https://discord.gg/eHjUVrm\n🎮 Grab the Game Bundle at https://unitycodemonkey.com/gameBundle.php\n📝 Get the Code Monkey Utilities at https://unitycodemonkey.com/utils.php\n\n#unitytutorial #unity3d #gamedev #unity​ #gamedev​ #indiegame​ #gamedevelopment #madewithunity​ #indiedev​\n\n--------------------------------------------------------------------\n\nHello and Welcome!\nI'm your Code Monkey and here you will learn everything about Game Development in Unity using C#.\n\nI've been developing games for several years with 8 published games on Steam and now I'm sharing my knowledge to help you on your own game development journey.\n\nI do Unity Tutorials on just about every topic, Unity Tutorials for Beginners and Unity Tutorials for Advanced users.\n\nYou can see my games at www.endlessloopstudios.com\n\n--------------------------------------------------------------------\n- Other great Unity channels:\nBrackeys - https://www.youtube.com/user/Brackeys\nDani - https://www.youtube.com/channel/UCIabPXjvT5BVTxRDPCBBOOQ\nJabrils - https://www.youtube.com/channel/UCQALLeQPoZdZC4JNUboVEUg\nBlackthornProd - https://www.youtube.com/channel/UC9Z1XWw1kmnvOOFsj6Bzy2g\nSykoo - https://www.youtube.com/user/SykooTV\nJason Weimann - https://www.youtube.com/channel/UCX_b3NNQN5bzExm-22-NVVg\nJonas Tyroller - https://www.youtube.com/channel/UC_p_9arduPuxM8DHTGIuSOg\n--------------------------------------------------------------------\n\n- Website: https://unitycodemonkey.com/\n- Twitter: https://twitter.com/UnityCodeMonkey\n- Steam: https://store.steampowered.com/developer/EndlessLoopStudios",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=atCOd4o7tG4&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "atCOd4o7tG4"
+    }
+  },
+  {
+    "id": "37ef641a-37c0-4c47-b9e5-67fbd0eb3999",
+    "title": "YouTube Video: Golden Triangle",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Golden Triangle\n\nChannel: Pirate Software\n\nURL: https://www.youtube.com/watch?v=OSd9935ltj8&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nWatch the stream here:\nhttps://piratesoftware.live\n\nJoin the community here:\nhttps://discord.gg/piratesoftware\n\n#Shorts #Twitch #PirateSoftware",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=OSd9935ltj8&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "OSd9935ltj8"
+    }
+  },
+  {
+    "id": "fe02c1f7-89fa-4b52-805b-ec8062c1370d",
+    "title": "YouTube Video: Better Save/Load using Data Binding in Unity",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Better Save/Load using Data Binding in Unity\n\nChannel: git-amend\n\nURL: https://www.youtube.com/watch?v=z1sMhGIgfoo&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nData Binding in Unity can speed up your save times tremendously by keeping the persistent state of the game ready to save at a moments notice.  Data binding is a fast and efficient way to save data quickly at runtime, and can help improve your data modelling.  Let's build a Save/Load system to see this in practice.\n\nNOTES: If using the SerializableGuid from the repo, don't forget the PropertyDrawer!\n\nSupport for saving Scriptable Object references using SerializableGuid has been added to the repository - feel free to check that out as well as several additional Serializable Types.\n\n🔔 Subscribe for more Unity Tutorials  https://youtube.com/@git-amend\n\nDiscord: https://discord.gg/FDRZGQBBUC\n\n#unity3d #gamedev #indiedev\n\n▬ Contents of this video  ▬▬▬▬▬▬▬▬▬▬\n\n0:00 Overview\n1:15 Save/Load System\n8:15 Binding\n\n*Source code:* https://github.com/adammyhre/Unity-Inventory-System\n\nAssets Shown In This Video (Affiliate Links)\nCartoon Fantasy UI: https://assetstore.unity.com/packages/2d/gui/cartoon-fantasy-gui-74743?aid=1101lw3sv\nEole Foliage Shader: https://assetstore.unity.com/packages/vfx/shaders/eole-stylized-foliage-shaders-265842?aid=1101lw3sv\nDungeon Mason Tiny Hero Duo: (FREE): https://assetstore.unity.com/packages/3d/characters/humanoids/rpg-tiny-hero-duo-pbr-polyart-225148?aid=1101lw3sv\nKronnect Beautify: https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/beautify-3-advanced-post-processing-233073?aid=1101lw3sv\nSlate Cinematic Sequencer: https://assetstore.unity.com/packages/tools/animation/slate-cinematic-sequencer-56558?aid=1101lw3sv\nProtofactor Animals: https://assetstore.unity.com/packages/3d/characters/animals/animals-full-pack-5032?aid=1101lw3sv\n\n*Follow me!*\nhttps://linktr.ee/gitamend",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=z1sMhGIgfoo&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "z1sMhGIgfoo"
+    }
+  },
+  {
+    "id": "d225e5a9-e549-4ec6-bcf1-dc403730927a",
+    "title": "YouTube Video: Audio Fatigue",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Audio Fatigue\n\nChannel: Pirate Software\n\nURL: https://www.youtube.com/watch?v=GNzUFyuZtWM&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nWatch the stream here:\nhttps://piratesoftware.live\n\nJoin the community here:\nhttps://discord.gg/piratesoftware\n\n#Shorts #Twitch #PirateSoftware",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=GNzUFyuZtWM&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "GNzUFyuZtWM"
+    }
+  },
+  {
+    "id": "3748c8df-106b-4e39-833f-ad17ac348f73",
+    "title": "YouTube Video: Creating Little Castles with Wave Function Collapse",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Creating Little Castles with Wave Function Collapse\n\nChannel: Tom\n\nURL: https://www.youtube.com/watch?v=MyMbbmWVCDw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nIn this video i create some castles procedurally using the wave function collapse algorithm and describe how it works under the hood.\n\nFurther videos to watch on the subject:\nSuperpositions, Sudoku, the Wave Function Collapse algorithm. \nMartin Donald\nhttps://www.youtube.com/watch?v=2SuvO4Gi7uY&t=5s\n\nCoding Challenge 171: Wave Function Collapse\nThe Coding Train\nhttps://www.youtube.com/watch?v=rI_y2GAlQFM\n\nEPC2018 - Oskar Stalberg - Wave Function Collapse in Bad North\nBUas Games\nhttps://www.youtube.com/watch?v=0bcZb-SsnrA\n\nMusic (Sourced from Epedemic Sound):\nSubliminal Space - Lama House\n\nJJJreact incase jacksfilms wants to watch it.",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=MyMbbmWVCDw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "MyMbbmWVCDw"
+    }
+  },
+  {
+    "id": "b3f5a54b-df9b-4c55-b9f6-c3e9a86f11b0",
+    "title": "YouTube Video: Ultimate Indie Gamedev Genre Tierlist",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Ultimate Indie Gamedev Genre Tierlist\n\nChannel: BiteMe Games\n\nURL: https://www.youtube.com/watch?v=Yg8wig1LTtE&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nWe're doing something different for this one, Tier Lists! We all love to play various game genres, but what about making them...? Thomas and Marnix sit down to discuss what are the best (and worst) game genres for making your own game as a beginning indie dev. \n\nGet me to coach your game & gamedev career: https://calendly.com/bitemegames/gamedev-coaching\n\nTimestamps\n00:00 Intro\n00:47 Shooters\n02:22 Sandbox Survival\n04:57 Platformer\n06:52 Top-down Strategy\n09:47 Sim games\n12:46 Puzzle\n15:03 RPG\n18:28 MOBA\n19:53 Rythmn\n22:58 Racing\n26:05 MetroidVania\n27:47 Outro\n\n---\nWishlist our game now on Steam: http://wishlist.forge-industry.com/\n\nJoin our Discord: https://discord.gg/WSus22f8aM\n\nGet 1-to-1 coaching for your game or studio: https://www.fiverr.com/s/jGmQgL \n\nIn need of some Unity Assets? Use our affiliate link to support us, it's free, and we get a small kickback from it: https://prf.hn/click/camref:1101loA4S\n\nWant to reach out to us? send us an email at hello@bitemegames.com",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=Yg8wig1LTtE&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "Yg8wig1LTtE"
+    }
+  },
+  {
+    "id": "238900d7-1394-4630-9e55-adc4615547d5",
+    "title": "YouTube Video: Unity Performance Tips: Draw Calls",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: Unity Performance Tips: Draw Calls\n\nChannel: Lofi Dev\n\nURL: https://www.youtube.com/watch?v=IrYPkSIvpIw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\nA short video on how to improve your frame rate in Unity. This video covers various optimizations to reduce draw calls such as combining meshes, batching and gpu instancing. \n\n\nMusic Credit: LAKEY INSPIRED\nTrack Name: \"The Process\"\nMusic By: LAKEY INSPIRED\nOfficial SoundCloud  https://soundcloud.com/lakeyinspired\nOfficial YouTube Channel:https://www.youtube.com/channel/UCOmy8wuTpC95lefU5d1dt2Q\nLicense for commercial use: Creative Commons Attribution 3.0 Unported \"Share Alike\" (CC BY-SA 3.0) \nhttps://creativecommons.org/licenses/by-sa/3.0/legalcode\nMusic promoted by: Chill Out Records @ https://goo.gl/fh3rEJ www.ChillOutMedia.com / www.LoFi-HipHop.com\n\nMusic Credit: \"KaizanBlu\"\nTrack Name: \"Remember\"\n• Instagram - https://www.instagram.com/kaizanblu/\n• SoundCloud - https://soundcloud.com/kaizanblu/\n• Facebook - https://www.facebook.com/kaizanblumusic/\n• TikTok - @kaizanblu http://vm.tiktok.com/aCYwfx/\n• YouTube -https://www.youtube.com/channel/UCUtxQO1jg3bJcRjBWnYAzmw\nLicence: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)\n• Music released by: Chill Out Records https://goo.gl/fh3rEJ @www.ChillOutMedia.com / www.LoFi-HipHop.com",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=IrYPkSIvpIw&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "IrYPkSIvpIw"
+    }
+  },
+  {
+    "id": "1fb8c995-cfa8-40ef-9dca-bd41fe24440a",
+    "title": "YouTube Video: CHEAT SHEET for BOOSTING your GAMES!",
+    "body": "Video from playlist \"Game Dev\".\n\nVideo title: CHEAT SHEET for BOOSTING your GAMES!\n\nChannel: Code Monkey\n\nURL: https://www.youtube.com/watch?v=bl9pc7xaH9Q&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg\n\nDescription:\n🌍 Get 99% OFF Environments and VFX! https://cmonkey.co/humblebundle\n✅ FREE Game Dev Report Newsletter https://cmonkey.co/gamedevreportnewsletter\n❤️ FREE Complete Courses https://cmonkey.co/freecourses\n🎮 Get my Code Monkey Toolkit! https://cmonkey.co/toolkit\n✅ Get my C# Complete Course! https://cmonkey.co/csharpcourse\n🎮 Play my Steam game! https://cmonkey.co/dinkyguardians\n❤️ Watch my FREE Complete Courses https://www.youtube.com/watch?v=oZCbmB6opxY\n🌍 Get my Complete Courses! ✅ https://unitycodemonkey.com/courses\n👍 Learn to make awesome games step-by-step from start to finish.\n🎮 Get my Steam Games https://unitycodemonkey.com/gamebundle\n\nJanky game made $28 MILLION, and Optimization Cheat sheet\nhttps://gamedevreport.beehiiv.com/p/janky-game-made-28-million-and-optimization-cheat-sheet\n\nTop TIPS to Optimize your Games!\n\n🔴 RELATED VIDEOS 🔴\nLearn Unity DOTS! (FREE Tutorial Course) https://www.youtube.com/watch?v=1gSnTlUjs-s\nEXTREME PERFORMANCE with Unity DOTS! (ECS, Job System, Burst, Hybrid Game Objects) https://www.youtube.com/watch?v=4ZYn9sR3btg\nWhy you should NOT make everything PUBLIC! https://www.youtube.com/watch?v=pD27YuJG3L8\nI made the MOST PROFITABLE Game as a Test! https://www.youtube.com/watch?v=W_XOZAWJF24\n\n💬 Optimization is a very tricky subject, many things are very specific to each individual scenario so it's hard to give general advice that is applicable to every game.\nBut here are a bunch of tips that may or may not massively help boost your game. \nAnd in the end I also include my favorite performance tip that is indeed applicable to EVERY project!\n\n📝 Some Links are Affiliate links which means it costs the same to you and I get a nice commission.\n🌍 Get Code Monkey on Steam!\n👍 Interactive Tutorials, Complete Games and More!\n✅ https://store.steampowered.com/app/1294220/\n\nIf you have any questions post them in the comments and I'll do my best to answer them.\n\n🔔 Subscribe for more Unity Tutorials https://www.youtube.com/channel/UCFK6NCbuCIVzA6Yj1G_ZqCg?sub_confirmation=1\n\nSee you next time!\n\n📍 Support on Patreon https://www.patreon.com/unitycodemonkey\n🎮 Grab the Game Bundle at https://unitycodemonkey.com/gameBundle.php\n📝 Get the Code Monkey Utilities at https://unitycodemonkey.com/utils.php\n\n#gamedev\n\n--------------------------------------------------------------------\nHello and Welcome!\nI'm your Code Monkey and here you will learn everything about Game Development in Unity using C#.\n\nI've been developing games for several years with 8 published games on Steam and now I'm sharing my knowledge to help you on your own game development journey.\n\nI do Unity Tutorials on just about every topic, Unity Tutorials for Beginners and Unity Tutorials for Advanced users.\n--------------------------------------------------------------------\n- Website: https://unitycodemonkey.com/\n- Twitter: https://twitter.com/UnityCodeMonkey\n- Steam: https://store.steampowered.com/developer/EndlessLoopStudios",
+    "source": "youtube",
+    "memoryType": "media-reference",
+    "status": "candidate",
+    "projectId": "chernobog",
+    "tags": [
+      "youtube",
+      "playlist",
+      "vault-ingest",
+      "youtube-ingest",
+      "command-ingest"
+    ],
+    "confidence": 0.75,
+    "createdAt": "2026-06-22T23:17:45.793Z",
+    "updatedAt": "2026-06-22T23:17:45.793Z",
+    "sourceRef": {
+      "type": "youtube-video",
+      "url": "https://www.youtube.com/watch?v=bl9pc7xaH9Q&list=PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "videoId": "bl9pc7xaH9Q"
+    }
+  }
+]

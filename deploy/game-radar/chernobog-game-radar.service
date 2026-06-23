@@ -1,0 +1,15 @@
+[Unit]
+Description=Chernobog Game Radar scheduled due check
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=__CHERNOBOG_REPOSITORY__
+ExecStart=/usr/bin/env npm run game-radar:schedule:check
+ExecStartPost=/usr/bin/env npm run game-radar:backup -- --if-stale-hours 24
+User=__CHERNOBOG_USER__
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-22T23:17:45.803Z",
+  "imports": [
+    {
+      "importId": "2026-06-22_23-17-45-792_PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg_game-dev",
+      "playlistId": "PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg",
+      "playlistTitle": "Game Dev",
+      "channelTitle": "098 Forge",
+      "videoCount": 51,
+      "contentHash": "19b55f4cca03b6f47c28b4eb4fe99132deac4c4d421260a8c79ba81bf42fab62",
+      "importedAt": "2026-06-22T23:17:45.783Z",
+      "updatedAt": "2026-06-22T23:17:45.802Z",
+      "vaultPaths": {
+        "importFolder": "inbox/youtube/2026-06-22_23-17-45-792_PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg_game-dev",
+        "rawJson": "inbox/youtube/2026-06-22_23-17-45-792_PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg_game-dev/raw-playlist.json",
+        "summaryMarkdown": "inbox/youtube/2026-06-22_23-17-45-792_PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg_game-dev/summary.candidate.md",
+        "candidateMemoryJson": "inbox/youtube/2026-06-22_23-17-45-792_PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg_game-dev/candidate-memory.json",
+        "videoIndexMarkdown": "inbox/youtube/2026-06-22_23-17-45-792_PLMU4d-OqRsgRnR83Z9gnyqDLa6w_Dy9gg_game-dev/video-index.candidate.md",
+        "manifest": "inbox/youtube/_manifest.json"
+      }
+    }
+  ]
+}

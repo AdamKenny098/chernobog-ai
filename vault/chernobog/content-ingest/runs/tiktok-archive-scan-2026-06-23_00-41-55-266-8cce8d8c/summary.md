@@ -1,0 +1,134 @@
+---
+run_id: tiktok-archive-scan-2026-06-23_00-41-55-266-8cce8d8c
+kind: scan
+status: scanned
+platform: tiktok
+created_at: 2026-06-23T00:41:55.009Z
+completed_at: 2026-06-23T00:41:55.266Z
+---
+# Content Ingest Run — tiktok-archive-scan-2026-06-23_00-41-55-266-8cce8d8c
+## Summary
+- Kind: scan
+- Status: scanned
+- Platform: tiktok
+- Archive path: C:\Users\adamt\Documents\chernobog-ai-ui\imports\tiktok-export
+## Stats
+- Files scanned: 1
+- URLs found: 1487
+- Candidates found: 1487
+- Queue added: 0
+- Queue updated: 0
+- Queue unchanged: 0
+- Duplicates skipped: 0
+- Warnings: 6
+- Errors: 0
+## Candidates
+- tiktok:7654268138317417748 — Saved TikTok Video
+- tiktok:7653137876506496278 — Saved TikTok Video
+- tiktok:7650184424830618902 — Saved TikTok Video
+- tiktok:7641712804495412513 — Saved TikTok Video
+- tiktok:7652348710571085078 — Saved TikTok Video
+- tiktok:7653042040686546198 — Saved TikTok Video
+- tiktok:7653136810108816660 — Saved TikTok Video
+- tiktok:7652107775484513566 — Saved TikTok Video
+- tiktok:7652855468746116372 — Saved TikTok Video
+- tiktok:7652097129950743838 — Saved TikTok Video
+- tiktok:7651956410518883616 — Saved TikTok Video
+- tiktok:7651714731711024398 — Saved TikTok Video
+- tiktok:7651094738816257311 — Saved TikTok Video
+- tiktok:7651098115008744724 — Saved TikTok Video
+- tiktok:7644564331971218706 — Saved TikTok Video
+- tiktok:7649659264662818070 — Saved TikTok Video
+- tiktok:7644654423586786567 — Saved TikTok Video
+- tiktok:7650539375910046998 — Saved TikTok Video
+- tiktok:7621936700188560671 — Saved TikTok Video
+- tiktok:7623909673145503006 — Saved TikTok Video
+- tiktok:7640982095065582870 — Saved TikTok Video
+- tiktok:7650818301316156680 — Saved TikTok Video
+- tiktok:7651100452481682696 — Saved TikTok Video
+- tiktok:7644193190068636960 — Saved TikTok Video
+- tiktok:7632770915285077271 — Saved TikTok Video
+- tiktok:7622076287015750933 — Saved TikTok Video
+- tiktok:7626220727439527199 — Saved TikTok Video
+- tiktok:7650277944845208852 — Saved TikTok Video
+- tiktok:7650705797273406727 — Saved TikTok Video
+- tiktok:7637390573044813077 — Saved TikTok Video
+- tiktok:7648683952953150733 — Saved TikTok Video
+- tiktok:7642055898805882126 — Saved TikTok Video
+- tiktok:7624304957621112095 — Saved TikTok Video
+- tiktok:7619170344846232853 — Saved TikTok Video
+- tiktok:7650647833409752322 — Saved TikTok Video
+- tiktok:7639571372561173780 — Saved TikTok Video
+- tiktok:7648352025897471252 — Saved TikTok Video
+- tiktok:7643320548323314952 — Saved TikTok Video
+- tiktok:7650632192237800718 — Saved TikTok Video
+- tiktok:7647061664210242846 — Saved TikTok Video
+- tiktok:7644897109463797022 — Saved TikTok Video
+- tiktok:7617945320390954262 — Saved TikTok Video
+- tiktok:7641664322636172576 — Saved TikTok Video
+- tiktok:7639796880989261089 — Saved TikTok Video
+- tiktok:7643001258780953864 — Saved TikTok Video
+- tiktok:7619303995579927840 — Saved TikTok Video
+- tiktok:7644678662809324814 — Saved TikTok Video
+- tiktok:7647804480406211860 — Saved TikTok Video
+- tiktok:7640855159458909460 — Saved TikTok Video
+- tiktok:7638575005172894996 — Saved TikTok Video
+- tiktok:7641025033929854238 — Saved TikTok Video
+- tiktok:7646064378344639758 — Saved TikTok Video
+- tiktok:7650115357398617365 — Saved TikTok Video
+- tiktok:7649794063297957141 — Saved TikTok Video
+- tiktok:7650240787036343574 — Saved TikTok Video
+- tiktok:7642312146746985729 — Saved TikTok Video
+- tiktok:7649381064028196109 — Saved TikTok Video
+- tiktok:7633072865247644946 — Saved TikTok Video
+- tiktok:7646563081803353362 — Saved TikTok Video
+- tiktok:7635127880736853268 — Saved TikTok Video
+- tiktok:7637907925050182943 — Saved TikTok Video
+- tiktok:7649871307609263382 — Saved TikTok Video
+- tiktok:7640656569255890207 — Saved TikTok Video
+- tiktok:7643777502426451213 — Saved TikTok Video
+- tiktok:7624437728813305096 — Saved TikTok Video
+- tiktok:7645808835508079886 — Saved TikTok Video
+- tiktok:7649839328952290583 — Saved TikTok Video
+- tiktok:7649067150157630721 — Saved TikTok Video
+- tiktok:7649823098232900897 — Saved TikTok Video
+- tiktok:7649680028870905110 — Saved TikTok Video
+- tiktok:7620976369341664534 — Saved TikTok Video
+- tiktok:7628583720475184414 — Saved TikTok Video
+- tiktok:7649390013041347854 — Saved TikTok Video
+- tiktok:7649315609599134989 — Saved TikTok Video
+- tiktok:7648335596213128470 — Saved TikTok Video
+- tiktok:7648372103191776525 — Saved TikTok Video
+- tiktok:7648766121922792726 — Saved TikTok Video
+- tiktok:7648751711556848914 — Saved TikTok Video
+- tiktok:7648650288282209558 — Saved TikTok Video
+- tiktok:7630890957659065622 — Saved TikTok Video
+- tiktok:7645141967160085790 — Saved TikTok Video
+- tiktok:7627327795772837127 — Saved TikTok Video
+- tiktok:7620835334707776776 — Saved TikTok Video
+- tiktok:7624572495575731477 — Saved TikTok Video
+- tiktok:7633121823172922646 — Saved TikTok Video
+- tiktok:7648758415849688343 — Saved TikTok Video
+- tiktok:7627722227227593991 — Saved TikTok Video
+- tiktok:7648607047281429768 — Saved TikTok Video
+- tiktok:7648006536320535815 — Saved TikTok Video
+- tiktok:7648273973133757718 — Saved TikTok Video
+- tiktok:7648607031754116366 — Saved TikTok Video
+- tiktok:7638979718636768525 — Saved TikTok Video
+- tiktok:7648347956365610243 — Saved TikTok Video
+- tiktok:7632650795988552974 — Saved TikTok Video
+- tiktok:7639455475855019285 — Saved TikTok Video
+- tiktok:7621306932141247776 — Saved TikTok Video
+- tiktok:7631616142691421462 — Saved TikTok Video
+- tiktok:7646525577700150558 — Saved TikTok Video
+- tiktok:7647745772561141022 — Saved TikTok Video
+- tiktok:7646799863157394718 — Saved TikTok Video
+## Warnings
+- Importing 1487 item(s) from Likes and Favorites.Favorite Videos.FavoriteVideoList.
+- Detected but skipped 6000 item(s) from Likes and Favorites.Like List.ItemFavoriteList.
+- Detected but skipped 177033 item(s) from Your Activity.Watch History.VideoList.
+- Detected but skipped 3375 item(s) from Your Activity.Reposts.RepostList.
+- Detected but skipped 1291 item(s) from Your Activity.Share History.ShareHistoryList.
+- Skipped liked/watch-history/repost/share lists by default to avoid flooding the saved-content queue.
+## Errors
+_None_

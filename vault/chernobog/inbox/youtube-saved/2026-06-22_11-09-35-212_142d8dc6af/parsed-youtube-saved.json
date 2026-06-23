@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "importedAt": "2026-06-22T11:09:35.212Z",
+  "archivePath": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\tmp\\v56k-youtube-saved-fixture",
+  "videos": [
+    {
+      "videoId": "dQw4w9WgXcQ",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      "videoId": "jNQXAC9IVRw",
+      "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw"
+    },
+    {
+      "videoId": "aqz-KE-bpKQ",
+      "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ"
+    }
+  ],
+  "items": [
+    {
+      "id": "youtube:dQw4w9WgXcQ",
+      "platform": "youtube",
+      "sourceType": "watch-later",
+      "externalId": "dQw4w9WgXcQ",
+      "sourceContainerId": "youtube-saved-archive",
+      "sourceContainerTitle": "YouTube Saved Archive",
+      "title": "First Fixture Video",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "importedAt": "2026-06-22T11:09:35.212Z",
+      "queueStatus": "unprocessed",
+      "analysisStatus": "not-started",
+      "transcriptStatus": "not-started",
+      "relatedProjects": [],
+      "topics": [],
+      "extractedTasks": [],
+      "extractedIdeas": [],
+      "extractedWarnings": [],
+      "keyPoints": [],
+      "reasonEvidence": [],
+      "createdAt": "2026-06-22T11:09:35.219Z",
+      "updatedAt": "2026-06-22T11:09:35.219Z"
+    },
+    {
+      "id": "youtube:jNQXAC9IVRw",
+      "platform": "youtube",
+      "sourceType": "watch-later",
+      "externalId": "jNQXAC9IVRw",
+      "sourceContainerId": "youtube-saved-archive",
+      "sourceContainerTitle": "YouTube Saved Archive",
+      "title": "Saved YouTube Video",
+      "url": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+      "importedAt": "2026-06-22T11:09:35.212Z",
+      "queueStatus": "unprocessed",
+      "analysisStatus": "not-started",
+      "transcriptStatus": "not-started",
+      "relatedProjects": [],
+      "topics": [],
+      "extractedTasks": [],
+      "extractedIdeas": [],
+      "extractedWarnings": [],
+      "keyPoints": [],
+      "reasonEvidence": [],
+      "createdAt": "2026-06-22T11:09:35.219Z",
+      "updatedAt": "2026-06-22T11:09:35.219Z"
+    },
+    {
+      "id": "youtube:aqz-KE-bpKQ",
+      "platform": "youtube",
+      "sourceType": "watch-later",
+      "externalId": "aqz-KE-bpKQ",
+      "sourceContainerId": "youtube-saved-archive",
+      "sourceContainerTitle": "YouTube Saved Archive",
+      "title": "Saved YouTube Video",
+      "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+      "importedAt": "2026-06-22T11:09:35.212Z",
+      "queueStatus": "unprocessed",
+      "analysisStatus": "not-started",
+      "transcriptStatus": "not-started",
+      "relatedProjects": [],
+      "topics": [],
+      "extractedTasks": [],
+      "extractedIdeas": [],
+      "extractedWarnings": [],
+      "keyPoints": [],
+      "reasonEvidence": [],
+      "createdAt": "2026-06-22T11:09:35.219Z",
+      "updatedAt": "2026-06-22T11:09:35.219Z"
+    }
+  ]
+}

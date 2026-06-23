@@ -1,0 +1,39 @@
+﻿{
+  "Likes and Favorites": {
+    "Favorite Videos": {
+      "App": 123,
+      "FavoriteVideoList": [
+        {
+          "Date": "2026-01-01 10:00:00",
+          "Link": "https://www.tiktok.com/@minecraftbuilder/video/1111111111111111111",
+          "Title": "Minecraft build reference"
+        },
+        {
+          "Date": "2026-01-02 11:00:00",
+          "Link": "https://www.tiktokv.com/share/video/2222222222222222222/",
+          "Title": "Create mod reference"
+        }
+      ]
+    },
+    "Like List": {
+      "App": 123,
+      "ItemFavoriteList": [
+        {
+          "date": "2026-01-03 12:00:00",
+          "link": "https://www.tiktok.com/@likedonly/video/3333333333333333333"
+        }
+      ]
+    }
+  },
+  "Your Activity": {
+    "Watch History": {
+      "VideoList": [
+        {
+          "Date": "2026-01-04 13:00:00",
+          "Link": "https://www.tiktok.com/@watchedonly/video/4444444444444444444",
+          "Title": "Watched only"
+        }
+      ]
+    }
+  }
+}

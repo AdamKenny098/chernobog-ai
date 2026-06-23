@@ -1,0 +1,44 @@
+{
+  "id": "scr-2026-06-22_12-00-01-098-3377e958",
+  "sourceType": "saved-content",
+  "sourceItemId": "tiktok:url-hash:e2b422048a51c7e0",
+  "title": "Saved TikTok Video",
+  "sourceUrl": "https://vm.tiktok.com/ZMTestFixture/",
+  "platform": "tiktok",
+  "status": "pending-review",
+  "summary": {
+    "id": "summary-a210ef59",
+    "kind": "summary",
+    "text": "Saved content item titled \"Saved TikTok Video\" from unknown creator. No transcript-derived summary is available yet.",
+    "confidence": 70,
+    "status": "pending",
+    "evidence": [
+      "Analysis path: content-queue/analysis/tiktok/url-hash_e2b422048a51c7e0.analysis.json"
+    ]
+  },
+  "possibleReasonSaved": {
+    "id": "reason-c6bc87fa",
+    "kind": "reason",
+    "text": "The reason saved is unclear from the title, description, and available transcript data.",
+    "confidence": 20,
+    "status": "pending",
+    "evidence": [
+      "Insufficient topic/project evidence."
+    ]
+  },
+  "projectLinks": [],
+  "tasks": [],
+  "ideas": [],
+  "warnings": [],
+  "sourceMeta": {
+    "sourceContentTitle": "Saved TikTok Video",
+    "sourceContainerTitle": "TikTok Archive Import",
+    "queueStatus": "unprocessed",
+    "analysisStatus": "complete",
+    "transcriptStatus": "not-started",
+    "analysisPath": "content-queue/analysis/tiktok/url-hash_e2b422048a51c7e0.analysis.json",
+    "candidateMemoryPath": "content-queue/candidates/tiktok/url-hash_e2b422048a51c7e0.candidate-memory.json"
+  },
+  "createdAt": "2026-06-22T12:00:01.098Z",
+  "updatedAt": "2026-06-22T12:00:01.098Z"
+}

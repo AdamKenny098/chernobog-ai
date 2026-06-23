@@ -1,0 +1,462 @@
+.page {
+  min-height: 100vh;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(181, 111, 47, 0.14), transparent 34%),
+    linear-gradient(180deg, #070707 0%, #0b0908 48%, #070707 100%);
+  color: #efe2d0;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.topShell,
+.commandGrid,
+.actionLog,
+.summaryGrid {
+  border: 1px solid rgba(177, 103, 39, 0.32);
+  background:
+    linear-gradient(135deg, rgba(29, 20, 13, 0.9), rgba(8, 8, 8, 0.96)),
+    repeating-linear-gradient(90deg, rgba(255, 163, 75, 0.025) 0, rgba(255, 163, 75, 0.025) 1px, transparent 1px, transparent 32px);
+  box-shadow: inset 0 0 0 1px rgba(255, 169, 75, 0.04), 0 0 28px rgba(0, 0, 0, 0.6);
+}
+
+.topShell {
+  display: grid;
+  grid-template-columns: 76px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.brandMark {
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(177, 103, 39, 0.45);
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, rgba(233, 165, 87, 0.18), transparent 60%);
+}
+
+.eyeCore {
+  width: 26px;
+  height: 38px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #ffd7a0 0%, #f2a14d 28%, rgba(169, 82, 28, 0.45) 45%, transparent 70%);
+  box-shadow: 0 0 24px rgba(243, 156, 73, 0.55);
+}
+
+.headerCopy h1 {
+  margin: 4px 0;
+  letter-spacing: 0.16em;
+  font-size: clamp(26px, 3vw, 42px);
+  font-weight: 800;
+}
+
+.headerCopy p {
+  margin: 0;
+  color: #9d8870;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.kicker {
+  color: #b6783d !important;
+  text-transform: uppercase;
+  letter-spacing: 0.22em !important;
+  font-size: 10px !important;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerButton,
+.smallButton {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 0;
+  color: #f3ddbd;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.primaryButton {
+  border-color: rgba(243, 165, 78, 0.75);
+  background: rgba(122, 65, 21, 0.42);
+  padding: 12px 14px;
+}
+
+.secondaryButton {
+  border-color: rgba(62, 217, 158, 0.45);
+  background: rgba(11, 57, 43, 0.32);
+  padding: 12px 14px;
+}
+
+.dangerButton {
+  border-color: rgba(190, 74, 54, 0.64);
+  background: rgba(88, 25, 18, 0.34);
+  padding: 8px 10px;
+}
+
+.smallButton {
+  border-color: rgba(177, 103, 39, 0.42);
+  background: rgba(16, 12, 9, 0.82);
+  padding: 8px 10px;
+}
+
+.errorPanel {
+  border: 1px solid rgba(190, 74, 54, 0.64);
+  background: rgba(88, 25, 18, 0.34);
+  padding: 12px;
+  margin-bottom: 16px;
+  color: #ffd1c7;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  gap: 1px;
+  padding: 1px;
+  margin-bottom: 16px;
+}
+
+.summaryCard {
+  background: rgba(7, 7, 7, 0.72);
+  padding: 13px;
+  min-height: 72px;
+  border: 1px solid rgba(177, 103, 39, 0.16);
+}
+
+.summaryCard span {
+  display: block;
+  color: #a5835e;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 9px;
+}
+
+.summaryCard strong {
+  display: block;
+  margin-top: 9px;
+  color: #ffe4bd;
+  font-size: 24px;
+}
+
+.commandGrid {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 360px;
+  gap: 14px;
+  padding: 14px;
+}
+
+.filterRail,
+.workbench,
+.inspector {
+  border: 1px solid rgba(177, 103, 39, 0.24);
+  background: rgba(6, 6, 6, 0.68);
+}
+
+.filterRail {
+  padding: 12px;
+}
+
+.railSection {
+  margin-bottom: 18px;
+}
+
+.railTitle,
+.panelTitle {
+  color: #bd7b3d;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 10px;
+  margin-bottom: 10px;
+}
+
+.railButton {
+  width: 100%;
+  display: block;
+  text-align: left;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(177, 103, 39, 0.18);
+  background: rgba(14, 11, 9, 0.92);
+  color: #bfa98f;
+  padding: 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+}
+
+.railButtonActive {
+  border-color: rgba(243, 165, 78, 0.75);
+  background: rgba(121, 65, 21, 0.36);
+  color: #ffe1b8;
+}
+
+.workbench,
+.inspector {
+  min-height: 660px;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.workbenchHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.workbenchTitle {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.workbenchSubtitle {
+  margin: 4px 0 0;
+  color: #9d8870;
+  font-size: 12px;
+}
+
+.queueList {
+  display: grid;
+  gap: 10px;
+  max-height: 620px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.queueRow {
+  display: grid;
+  grid-template-columns: 136px minmax(0, 1fr);
+  gap: 12px;
+  border: 1px solid rgba(177, 103, 39, 0.2);
+  background: linear-gradient(90deg, rgba(15, 12, 9, 0.94), rgba(8, 8, 8, 0.88));
+  padding: 10px;
+  cursor: pointer;
+}
+
+.queueRowSelected {
+  border-color: rgba(243, 165, 78, 0.78);
+  box-shadow: inset 3px 0 0 rgba(243, 165, 78, 0.8);
+}
+
+.thumbnail {
+  position: relative;
+  min-height: 78px;
+  border: 1px solid rgba(177, 103, 39, 0.24);
+  background:
+    linear-gradient(135deg, rgba(68, 39, 18, 0.35), transparent),
+    #050505;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnailFallback {
+  color: #bd7b3d;
+  letter-spacing: 0.18em;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.rowTitle {
+  margin: 0 0 6px;
+  color: #f4dfbf;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.rowMeta {
+  color: #9d8870;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+.badgeRow,
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.actionRow {
+  margin-top: 10px;
+}
+
+.badge {
+  display: inline-block;
+  border: 1px solid rgba(177, 103, 39, 0.32);
+  background: rgba(10, 9, 8, 0.82);
+  color: #d5b68b;
+  padding: 4px 7px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.badgeGreen {
+  border-color: rgba(62, 217, 158, 0.45);
+  color: #7ef0c6;
+}
+
+.badgeBlue {
+  border-color: rgba(72, 157, 205, 0.45);
+  color: #9ccfee;
+}
+
+.badgeRed {
+  border-color: rgba(190, 74, 54, 0.64);
+  color: #ffb6a8;
+}
+
+.inspectorEmpty,
+.emptyState {
+  color: #9d8870;
+  border: 1px dashed rgba(177, 103, 39, 0.2);
+  padding: 18px;
+}
+
+.inspectorTitle {
+  margin: 0;
+  color: #f4dfbf;
+  font-size: 18px;
+}
+
+.inspectorMeta {
+  color: #9d8870;
+  font-size: 11px;
+  margin: 8px 0 12px;
+}
+
+.inspectorSection {
+  border-top: 1px solid rgba(177, 103, 39, 0.18);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.inspectorSection h3 {
+  color: #bd7b3d;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  margin: 0 0 8px;
+}
+
+.inspectorSection p,
+.inspectorSection li {
+  color: #c5ad91;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.inspectorSection ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.link {
+  color: #7ef0c6;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.importGrid,
+.diagnosticGrid,
+.reviewGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.importPanel,
+.diagnosticCard,
+.reviewCard,
+.runCard {
+  border: 1px solid rgba(177, 103, 39, 0.22);
+  background: rgba(12, 10, 8, 0.84);
+  padding: 12px;
+}
+
+.input,
+.select {
+  width: 100%;
+  border: 1px solid rgba(177, 103, 39, 0.35);
+  background: #050505;
+  color: #f4dfbf;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+.label {
+  color: #a5835e;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+}
+
+.actionLog {
+  margin-top: 16px;
+  padding: 14px;
+}
+
+.actionLog pre {
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 320px;
+  color: #c5ad91;
+  background: rgba(4, 4, 4, 0.72);
+  padding: 12px;
+  border: 1px solid rgba(177, 103, 39, 0.16);
+}
+
+@media (max-width: 1180px) {
+  .commandGrid {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+
+  .inspector {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 780px) {
+  .page {
+    padding: 12px;
+  }
+
+  .topShell {
+    grid-template-columns: 1fr;
+  }
+
+  .headerActions {
+    flex-wrap: wrap;
+  }
+
+  .commandGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .queueRow {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "id": "scr-2026-06-22_12-00-01-107-6d21c949",
+  "sourceType": "saved-content",
+  "sourceItemId": "youtube:HgcGVL0cxY4",
+  "title": "Project Starfall V 0 1",
+  "sourceUrl": "https://www.youtube.com/watch?v=HgcGVL0cxY4&list=PLMU4d-OqRsgTcfYtzNoKFDkc0uVVPZB2S",
+  "platform": "youtube",
+  "status": "applied",
+  "summary": {
+    "id": "summary-adbd9125",
+    "kind": "summary",
+    "text": "Game Dev Practicum CA. Delivery 0.1",
+    "confidence": 70,
+    "status": "rejected",
+    "evidence": [
+      "Analysis path: content-queue/analysis/youtube/HgcGVL0cxY4.analysis.json"
+    ],
+    "targetProject": "chernobog"
+  },
+  "possibleReasonSaved": {
+    "id": "reason-322531ca",
+    "kind": "reason",
+    "text": "The reason saved is unclear from the title, description, and available transcript data.",
+    "confidence": 20,
+    "status": "rejected",
+    "evidence": [
+      "Insufficient topic/project evidence."
+    ],
+    "targetProject": "chernobog"
+  },
+  "projectLinks": [
+    {
+      "id": "project-76cc3be7",
+      "kind": "project",
+      "text": "Link this saved content to project: chernobog",
+      "confidence": 70,
+      "status": "rejected",
+      "evidence": [
+        "SavedContentItem.relatedProjects contains \"chernobog\"."
+      ],
+      "targetProject": "chernobog"
+    }
+  ],
+  "tasks": [],
+  "ideas": [],
+  "warnings": [],
+  "sourceMeta": {
+    "creator": "098 Forge",
+    "sourceContentTitle": "Project Starfall V 0 1",
+    "sourceContainerTitle": "Game Dev Practicum",
+    "queueStatus": "analyze-next",
+    "analysisStatus": "complete",
+    "transcriptStatus": "unavailable",
+    "analysisPath": "content-queue/analysis/youtube/HgcGVL0cxY4.analysis.json",
+    "candidateMemoryPath": "content-queue/candidates/youtube/HgcGVL0cxY4.candidate-memory.json"
+  },
+  "createdAt": "2026-06-22T12:00:01.107Z",
+  "updatedAt": "2026-06-22T23:33:58.063Z",
+  "appliedAt": "2026-06-22T23:33:58.063Z"
+}

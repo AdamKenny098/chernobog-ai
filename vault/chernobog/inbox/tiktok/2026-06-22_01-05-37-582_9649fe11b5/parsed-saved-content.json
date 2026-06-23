@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "importedAt": "2026-06-22T01:05:37.582Z",
+  "archivePath": "C:\\Users\\adamt\\Documents\\chernobog-ai-ui\\tmp\\v56j-tiktok-fixture",
+  "urls": [
+    "https://www.tiktok.com/@example/video/1234567890123456789",
+    "https://vm.tiktok.com/ZMTestFixture/"
+  ],
+  "items": [
+    {
+      "id": "tiktok:a4fcfaa1d796fc71295fc614",
+      "platform": "tiktok",
+      "sourceType": "favorites",
+      "externalId": "a4fcfaa1d796fc71295fc614",
+      "title": "Saved TikTok",
+      "url": "https://www.tiktok.com/@example/video/1234567890123456789",
+      "importedAt": "2026-06-22T01:05:37.582Z",
+      "queueStatus": "unprocessed",
+      "analysisStatus": "not-started",
+      "transcriptStatus": "not-started",
+      "relatedProjects": [],
+      "topics": [],
+      "extractedTasks": [],
+      "extractedIdeas": [],
+      "extractedWarnings": [],
+      "keyPoints": [],
+      "reasonEvidence": [],
+      "createdAt": "2026-06-22T01:05:37.587Z",
+      "updatedAt": "2026-06-22T01:05:37.587Z"
+    },
+    {
+      "id": "tiktok:e2b422048a51c7e01ea6a075",
+      "platform": "tiktok",
+      "sourceType": "favorites",
+      "externalId": "e2b422048a51c7e01ea6a075",
+      "title": "Saved TikTok",
+      "url": "https://vm.tiktok.com/ZMTestFixture/",
+      "importedAt": "2026-06-22T01:05:37.582Z",
+      "queueStatus": "unprocessed",
+      "analysisStatus": "not-started",
+      "transcriptStatus": "not-started",
+      "relatedProjects": [],
+      "topics": [],
+      "extractedTasks": [],
+      "extractedIdeas": [],
+      "extractedWarnings": [],
+      "keyPoints": [],
+      "reasonEvidence": [],
+      "createdAt": "2026-06-22T01:05:37.587Z",
+      "updatedAt": "2026-06-22T01:05:37.587Z"
+    }
+  ]
+}

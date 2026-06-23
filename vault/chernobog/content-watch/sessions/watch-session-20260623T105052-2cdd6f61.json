@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "id": "watch-session-20260623T105052-2cdd6f61",
+  "title": "V5.6Q Smoke Test // 5 item watch session",
+  "status": "active",
+  "platform": "tiktok",
+  "filter": "active",
+  "order": "oldest",
+  "batchSize": 5,
+  "sourceLabel": "V5.6Q Smoke Test",
+  "itemIds": [
+    "tiktok:a4fcfaa1d796fc71295fc614",
+    "tiktok:e2b422048a51c7e01ea6a075",
+    "tiktok:7654268138317417748",
+    "tiktok:7653137876506496278",
+    "tiktok:7650184424830618902"
+  ],
+  "itemStates": [
+    {
+      "itemId": "tiktok:a4fcfaa1d796fc71295fc614",
+      "position": 0,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:e2b422048a51c7e01ea6a075",
+      "position": 1,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7654268138317417748",
+      "position": 2,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7653137876506496278",
+      "position": 3,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7650184424830618902",
+      "position": 4,
+      "decision": "pending"
+    }
+  ],
+  "currentIndex": 1,
+  "startedAt": "2026-06-23T10:50:52.276Z",
+  "updatedAt": "2026-06-23T10:50:52.635Z"
+}

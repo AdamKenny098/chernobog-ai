@@ -82,6 +82,42 @@ import {
   tryHandleModuleFollowUp,
 } from "./domainHandlers";
 
+import {
+  executeSavedContentCommand,
+  isSavedContentCommand,
+} from "@/lib/modules/saved-content";
+
+import {
+  executeYouTubeOAuthCommand,
+  isYouTubeOAuthCommand,
+} from "@/lib/modules/youtube-oauth";
+
+import {
+  executeSavedContentReliabilityCommand,
+  isSavedContentReliabilityCommand,
+} from "@/lib/modules/saved-content-reliability";
+
+import {
+  executeContentReviewCommand,
+  isContentReviewCommand,
+} from "@/lib/modules/content-review";
+
+import {
+  executeVaultBrainCommand,
+  isVaultBrainCommand,
+} from "@/lib/modules/vault-brain";
+
+import {
+  executeContentIngestCommand,
+  isContentIngestCommand,
+} from "@/lib/modules/content-ingest";
+
+import {
+  executeYouTubeIngestCommand,
+  isYouTubeIngestCommand,
+} from "@/lib/modules/youtube-ingest";
+
+
 type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {
   executionState?: ExecutionState;
 };
@@ -93,8 +129,6 @@ export async function runCommandPipeline(
   let route: RouteName = "chat";
   let reply = "";
   const trace = createTrustTrace(userMessage, sessionId);
-
-  
 
   const startingSession = getSessionContext(sessionId);
 
@@ -108,23 +142,205 @@ export async function runCommandPipeline(
 
   const unifiedCommand = parseUnifiedCommand(userMessage);
 
-addTraceStep(
-  trace,
-  "router",
-  "Unified command language parsed input",
-  `${unifiedCommand.domain}.${unifiedCommand.action}.${unifiedCommand.target}`,
-  {
-    domain: unifiedCommand.domain,
-    action: unifiedCommand.action,
-    target: unifiedCommand.target,
-    reference: unifiedCommand.reference,
-    confidence: unifiedCommand.confidence,
-    confidenceLevel: unifiedCommand.confidenceLevel,
-    query: unifiedCommand.query,
-    stepIndex: unifiedCommand.stepIndex,
-    reasons: unifiedCommand.reasons,
+  addTraceStep(
+    trace,
+    "router",
+    "Unified command language parsed input",
+    `${unifiedCommand.domain}.${unifiedCommand.action}.${unifiedCommand.target}`,
+    {
+      domain: unifiedCommand.domain,
+      action: unifiedCommand.action,
+      target: unifiedCommand.target,
+      reference: unifiedCommand.reference,
+      confidence: unifiedCommand.confidence,
+      confidenceLevel: unifiedCommand.confidenceLevel,
+      query: unifiedCommand.query,
+      stepIndex: unifiedCommand.stepIndex,
+      reasons: unifiedCommand.reasons,
+    }
+  );
+
+  if (isVaultBrainCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Vault brain command detected",
+      "vault-brain",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route);
+
+    const vaultBrainResult = await executeVaultBrainCommand(userMessage);
+
+    reply = [
+      vaultBrainResult.title,
+      "",
+      vaultBrainResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
   }
-);
+
+  if (isContentReviewCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Content review command detected",
+      "content-review",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route);
+
+    const contentReviewResult = await executeContentReviewCommand(userMessage);
+
+    reply = [
+      contentReviewResult.title,
+      "",
+      contentReviewResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isContentIngestCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Content ingest command detected",
+      "content-ingest",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route);
+
+    const contentIngestResult = await executeContentIngestCommand(userMessage);
+
+    reply = [
+      contentIngestResult.title,
+      "",
+      contentIngestResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isYouTubeIngestCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "YouTube playlist ingest command detected",
+      "youtube-playlist-ingest",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route);
+
+    const youtubeIngestResult = await executeYouTubeIngestCommand(userMessage);
+
+    reply = [
+      youtubeIngestResult.title,
+      "",
+      youtubeIngestResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isSavedContentReliabilityCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Saved content reliability command detected",
+      "saved-content-reliability",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route);
+
+    const reliabilityResult =
+      await executeSavedContentReliabilityCommand(userMessage);
+
+    reply = [
+      reliabilityResult.title,
+      "",
+      reliabilityResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isYouTubeOAuthCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "YouTube OAuth command detected",
+      "youtube-oauth",
+      {
+        userMessage,
+      }
+    );
+
+    saveMessage("user", userMessage, route);
+
+    const youtubeOAuthResult = await executeYouTubeOAuthCommand(userMessage);
+
+    reply = [
+      youtubeOAuthResult.title,
+      "",
+      youtubeOAuthResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isSavedContentCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Saved content command detected",
+      "saved-content",
+      {
+        userMessage,
+      }
+    );
+
+    saveMessage("user", userMessage, route);
+
+    const savedContentResult = await executeSavedContentCommand(userMessage);
+
+    reply = [
+      savedContentResult.title,
+      "",
+      savedContentResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  
 
   if (isWipeMemoriesRequest(userMessage)) {
     route = "memory";
