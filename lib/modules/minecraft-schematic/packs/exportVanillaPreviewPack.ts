@@ -334,8 +334,13 @@ export async function exportLatestVanillaPreviewPack(): Promise<VanillaPreviewPa
   }
 
   const generatedPreviewCount = records.filter((record) => record.status === "generated").length;
-  const status = generatedPreviewCount === records.length ? "generated" : generatedPreviewCount > 0 ? "partial" : "failed";
-
+  const status: VanillaPreviewPackResult["status"] =
+  generatedPreviewCount === records.length
+    ? "generated"
+    : generatedPreviewCount > 0
+      ? "partial"
+      : "failed";
+      
   const data = {
     packId: manifest.packId,
     sourcePack: manifest.outputRoot,

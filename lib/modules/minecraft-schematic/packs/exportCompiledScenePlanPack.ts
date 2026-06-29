@@ -75,7 +75,20 @@ function createStructureMetadata(
       errors: record.errors,
       warnings: record.warnings,
     },
-    buildReport: build.buildReport,
+    buildReport: {
+      buildId: build.buildId,
+      displayName: build.displayName ?? build.buildId,
+      generatorName: build.generatorName,
+      variant: build.variant,
+      profile: build.profile,
+      size: build.size,
+      blockCount: build.blockCount,
+      validationOk: record.validationOk,
+      readBackOk: record.readBackOk,
+      status: record.status,
+      errors: record.errors,
+      warnings: record.warnings,
+    },
   };
 }
 

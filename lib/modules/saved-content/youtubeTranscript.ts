@@ -70,8 +70,10 @@ function parseJson3Transcript(raw: unknown) {
 }
 
 function extractCaptionTracks(html: string) {
-  const match = html.match(/"captionTracks":(\[.*?\])(?=,"audioTracks"|,"translationLanguages"|})/s);
-
+  const match = html.match(
+    /"captionTracks":(\[[\s\S]*?\])(?=,"audioTracks"|,"translationLanguages"|})/
+  );
+  
   if (!match?.[1]) {
     return [];
   }
