@@ -6,6 +6,34 @@ import {
 
 export const runtime = "nodejs";
 
+type SerializableTaskState = {
+  goal?: string;
+  status?: string;
+};
+
+type SerializableExecutionState = {
+  selectedFilePath?: string;
+  selectedFolderPath?: string;
+  lastReadFilePath?: string;
+  lastReadText?: unknown;
+  lastCreatedFilePath?: string;
+  lastCreatedFolderPath?: string;
+  lastAppendedFilePath?: string;
+  lastRenamedFilePath?: string;
+  lastRenamedFolderPath?: string;
+  lastCopiedFilePath?: string;
+  lastCopiedFolderPath?: string;
+  lastMovedFilePath?: string;
+  lastMovedFolderPath?: string;
+  lastOpenedApp?: string;
+  lastOpenedUrl?: string;
+  lastSystemStatus?: unknown;
+  lastPathInfo?: unknown;
+  lastListedDirectory?: unknown;
+  activeTask?: SerializableTaskState;
+  lastTask?: SerializableTaskState;
+};
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const sessionId = resolveSessionId(url.searchParams.get("sessionId"));
@@ -27,47 +55,23 @@ export async function GET(req: Request) {
         )
       : null;
 
-      function serializeExecutionState(session: any) {
-        const state = session.executionState;
-      
-        if (!state) {
-          return null;
-        }
-      
-        return {
-          selectedFilePath: state.selectedFilePath,
-          selectedFolderPath: state.selectedFolderPath,
-      
-          lastReadFilePath: state.lastReadFilePath,
-          hasLastReadText: state.lastReadText !== undefined,
-      
-          lastCreatedFilePath: state.lastCreatedFilePath,
-          lastCreatedFolderPath: state.lastCreatedFolderPath,
-      
-          lastAppendedFilePath: state.lastAppendedFilePath,
-      
-          lastRenamedFilePath: state.lastRenamedFilePath,
-          lastRenamedFolderPath: state.lastRenamedFolderPath,
-      
-          lastCopiedFilePath: state.lastCopiedFilePath,
-          lastCopiedFolderPath: state.lastCopiedFolderPath,
-      
-          lastMovedFilePath: state.lastMovedFilePath,
-          lastMovedFolderPath: state.lastMovedFolderPath,
-      
-          lastOpenedApp: state.lastOpenedApp,
-          lastOpenedUrl: state.lastOpenedUrl,
-      
-          hasSystemStatus: state.lastSystemStatus !== undefined,
-          hasPathInfo: state.lastPathInfo !== undefined,
-          hasListedDirectory: state.lastListedDirectory !== undefined,
-      
-          activeTaskGoal: state.activeTask?.goal,
-          activeTaskStatus: state.activeTask?.status,
-          lastTaskGoal: state.lastTask?.goal,
-          lastTaskStatus: state.lastTask?.status,
-        };
-      }
+      function serializeExecutionState(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+
+  if (!("executionState" in value)) {
+    return null;
+  }
+
+  const executionState = (value as { executionState?: unknown }).executionState;
+
+  if (!executionState || typeof executionState !== "object") {
+    return null;
+  }
+
+  return executionState as Record<string, unknown>;
+}
 
   return NextResponse.json({
     sessionId,

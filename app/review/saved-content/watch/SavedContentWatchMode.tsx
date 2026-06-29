@@ -199,7 +199,7 @@ export default function SavedContentWatchMode() {
         setIsBusy(false);
       }
     },
-    [currentItem?.id, session]
+    [currentItem, session]
   );
 
   function openCurrent() {
@@ -213,7 +213,9 @@ export default function SavedContentWatchMode() {
   }
 
   useEffect(() => {
-    void loadSession();
+    queueMicrotask(() => {
+      void loadSession();
+    });
   }, [loadSession]);
 
   useEffect(() => {

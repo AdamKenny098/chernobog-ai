@@ -155,7 +155,9 @@ export default function SavedContentDashboard() {
   }
 
   useEffect(() => {
-    void loadDashboard();
+    queueMicrotask(() => {
+      void loadDashboard();
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

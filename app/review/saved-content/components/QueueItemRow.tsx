@@ -49,7 +49,7 @@ export default function QueueItemRow({
       <div>
         <h3 className={styles.rowTitle}>{item.title}</h3>
         <div className={styles.rowMeta}>
-          {item.platform} // {item.sourceType}
+          {item.platform}{" // "}{item.sourceType}
           {item.creator ? ` // ${item.creator}` : ""}
         </div>
 

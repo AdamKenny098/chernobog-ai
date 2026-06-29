@@ -56,7 +56,7 @@ export default function ReviewBoard({
             >
               <h3 className={styles.rowTitle}>{review.title}</h3>
               <div className={styles.rowMeta}>
-                {review.id} // {review.platform}
+                {review.id}{" // "}{review.platform}
               </div>
               <div className={styles.badgeRow}>
                 <StatusBadge value={review.status} />

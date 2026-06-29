@@ -24,7 +24,7 @@ import {
   readTextFileTool,
 } from "@/lib/chernobog/tools/builtins/files";
 import { findFilesTool } from "@/lib/chernobog/tools/builtins/search";
-import type { ToolDefinition, ToolResult } from "@/lib/chernobog/tools/types";
+import type { ToolExecutionContext, ToolResult } from "@/lib/chernobog/tools/types";
 import {
   createToolFailure,
   createToolSuccess,
@@ -59,15 +59,15 @@ type ReadTextFileResultData = {
   truncated: boolean;
 };
 
-type FileToolDefinition = ToolDefinition<any, any>;
 
-const fileWorkflowTools: Record<FileToolName, FileToolDefinition> = {
+
+const fileWorkflowTools = {
   find_files: findFilesTool,
   read_text_file: readTextFileTool,
   open_file: openFileTool,
   open_folder: openFolderTool,
   list_files: listFilesTool,
-};
+} as const;
 
 function isFileToolName(value: string): value is FileToolName {
   return value in fileWorkflowTools;
@@ -85,7 +85,11 @@ async function executeFileWorkflowTool(
 
   try {
     const validatedInput = tool.inputSchema.parse(input);
-    const output = await tool.execute(validatedInput, {
+    const executeTool = tool.execute as (
+      input: unknown,
+      context?: ToolExecutionContext
+    ) => Promise<unknown> | unknown;
+    const output = await executeTool(validatedInput, {
       platform: process.platform,
     });
 

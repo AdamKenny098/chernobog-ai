@@ -47,17 +47,17 @@ function getFactoryProfileSettings(options: GenerateStructureOptions): {
   };
 }
 
-function useCreateBlocks(options: GenerateStructureOptions): boolean {
+function shouldUseCreateBlocks(options: GenerateStructureOptions): boolean {
   const settings = getFactoryProfileSettings(options);
   return settings.profile === "siriocraft-create" && settings.allowModdedBlocks;
 }
 
 function resolveIndustrialPalette(options: GenerateStructureOptions): StructurePalette {
-  return useCreateBlocks(options) ? createIndustrialPalette : vanillaIndustrialPalette;
+  return shouldUseCreateBlocks(options) ? createIndustrialPalette : vanillaIndustrialPalette;
 }
 
 function createProfileFeatureFlags(options: GenerateStructureOptions): string[] {
-  return useCreateBlocks(options)
+  return shouldUseCreateBlocks(options)
     ? [
         "siriocraft_create_profile",
         "create_cogwheel_blocks",
@@ -535,7 +535,7 @@ function addVanillaRailSiding(grid: SchematicBlockGrid, x1: number, x2: number, 
 }
 
 function addIndustrialBuildWarning(label: string, options: GenerateStructureOptions): string[] {
-  if (useCreateBlocks(options)) {
+  if (shouldUseCreateBlocks(options)) {
     return [
       `${label} uses the SirioCraft Create profile with selected Create block IDs.`,
       "Create belts/mechanical arms are still not emitted because their useful block states need a stricter resolver pass.",

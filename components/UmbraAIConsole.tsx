@@ -256,7 +256,10 @@ export default function UmbraAIConsole() {
   const [debugVisible, setDebugVisible] = useState(true);
   const [developerMode, setDeveloperMode] = useState(true);
 
-  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [logs, setLogs] = useState<LogEntry[]>(() => [
+    makeLog("SYSTEM", "God Program interface initialized."),
+    makeLog("SYSTEM", "Core intelligence online. Session orchestration stable."),
+  ]);
 
   const [session, setSession] = useState<SessionSnapshot>({
     sessionId: "pending",
@@ -280,17 +283,14 @@ export default function UmbraAIConsole() {
   useEffect(() => {
     const browserSessionId = getOrCreateBrowserSessionId();
 
-    setSessionId(browserSessionId);
+    queueMicrotask(() => {
+      setSessionId(browserSessionId);
 
-    setSession((prev) => ({
+      setSession((prev) => ({
       ...prev,
       sessionId: browserSessionId,
     }));
-
-    setLogs([
-      makeLog("SYSTEM", "God Program interface initialized."),
-      makeLog("SYSTEM", "Core intelligence online. Session orchestration stable."),
-    ]);
+    });
   }, []);
 
   useEffect(() => {

@@ -1,4 +1,3 @@
-import type { ToolDefinition } from "@/lib/chernobog/tools/types";
 import { vaultSearchTool } from "./vaultSearchTool";
 import { vaultReadNoteTool } from "./vaultReadNoteTool";
 import { vaultCreateNoteTool } from "./vaultCreateNoteTool";
@@ -19,6 +18,6 @@ export const vaultToolRegistry = {
   vault_find_orphans: vaultOrphansTool,
   vault_generate_index: vaultIndexTool,
   vault_daily_log: vaultDailyLogTool,
-} satisfies Record<string, ToolDefinition<any, any>>;
+} as const;
 
 export type VaultToolName = keyof typeof vaultToolRegistry;

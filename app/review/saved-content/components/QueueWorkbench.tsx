@@ -54,7 +54,7 @@ export default function QueueWorkbench({
         <div>
           <h2 className={styles.workbenchTitle}>Queue Workbench</h2>
           <p className={styles.workbenchSubtitle}>
-            Filter: {filter} // Items: {filtered.length}
+            Filter: {filter}{" // Items: "}{filtered.length}
           </p>
         </div>
       </div>

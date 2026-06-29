@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 ﻿const fs = require("fs");
 
 const file = "./imports/tiktok-export/user_data_tiktok.json";

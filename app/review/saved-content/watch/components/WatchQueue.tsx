@@ -40,7 +40,7 @@ export default function WatchQueue({
               <div>
                 <p className={styles.queueTitle}>{item.title}</p>
                 <div className={styles.queueMeta}>
-                  {item.platform} // {item.decision}
+                  {item.platform}{" // "}{item.decision}
                 </div>
               </div>
             </article>

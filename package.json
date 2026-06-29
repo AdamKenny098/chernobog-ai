@@ -65,7 +65,8 @@
     "game-radar:adult:discover": "tsx scripts/discover-itch-adult-games.ts",
     "game-radar:stage-p": "tsx scripts/game-radar-stage-p.ts",
     "game-radar:stage-p:verify": "tsx scripts/verify-itch-discovery-stage-p.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "chernobog:v5.6.1:verify": "tsx scripts/verify-chernobog-v5-6-1.ts"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1",

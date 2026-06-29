@@ -50,7 +50,7 @@ export default function WatchViewer({
   const [playerMode, setPlayerMode] = useState<PlayerMode>("embed");
 
   useEffect(() => {
-    setPlayerMode("embed");
+    queueMicrotask(() => setPlayerMode("embed"));
   }, [item?.id]);
 
   if (!session) {
@@ -77,7 +77,7 @@ export default function WatchViewer({
         <div>
           <h2 className={styles.viewerTitle}>{item.title}</h2>
           <div className={styles.viewerMeta}>
-            {item.platform} // {item.sourceType}
+            {item.platform}{" // "}{item.sourceType}
             {item.creator ? ` // ${item.creator}` : ""}
           </div>
         </div>
@@ -344,14 +344,13 @@ function ThumbnailLarge({
       thumbnail?.thumbnailUrl,
       thumbnail?.fallbackUrl,
     ].filter((value): value is string => Boolean(value));
-
-    return Array.from(new Set(candidates));
+return Array.from(new Set(candidates));
   }, [thumbnail?.fallbackUrl, thumbnail?.thumbnailUrl, thumbnail?.thumbnailUrls]);
 
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    setIndex(0);
+    queueMicrotask(() => setIndex(0));
   }, [urls.join("|")]);
 
   const src = urls[index];

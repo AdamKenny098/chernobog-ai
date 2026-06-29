@@ -156,7 +156,7 @@ export default function WatchControls({
               >
                 <strong>{session.title}</strong>
                 <br />
-                {session.status} // {session.itemCount} items // {session.pendingCount} pending
+                {session.status}{" // "}{session.itemCount} items // {session.pendingCount} pending
               </button>
             ))
           )}

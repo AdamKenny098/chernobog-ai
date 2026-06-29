@@ -103,7 +103,7 @@ export default function ImportPanel({ ingestRuns, runAction }: ImportPanelProps)
               <article className={styles.runCard} key={run.id}>
                 <div className={styles.rowTitle}>{run.id}</div>
                 <div className={styles.rowMeta}>
-                  {run.platform ?? "mixed"} // {run.kind} // candidates {run.candidatesFound} // queue {run.queueItems}
+                  {run.platform ?? "mixed"}{" // "}{run.kind}{" // candidates "}{run.candidatesFound}{" // queue "}{run.queueItems}
                 </div>
                 <StatusBadge value={run.status} />
                 <div className={styles.actionRow}>

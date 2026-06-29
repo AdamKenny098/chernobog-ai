@@ -1,9 +1,8 @@
 import type { UnifiedCommand } from "@/lib/chernobog/command-language";
 import { obsidianVaultModule } from "@/lib/modules/adapters/obsidianVaultAdapter";
-import { fileWorkflowModule } from "@/lib/modules/file-workflow";
 import { discordIngestModule } from "@/lib/modules/discord-ingest";
+import { fileWorkflowModule } from "@/lib/modules/file-workflow";
 import { minecraftSchematicModule } from "@/lib/modules/minecraft-schematic";
-
 import type {
   ChernobogModule,
   ModuleCommandContext,
@@ -21,8 +20,8 @@ const registeredModules: ChernobogModule[] = [
 
 const activeModuleBySession = new Map<string, string>();
 
-function getFollowUpPriority(module: ChernobogModule): number {
-  return module.followUpPriority ?? 0;
+function getFollowUpPriority(moduleEntry: ChernobogModule): number {
+  return moduleEntry.followUpPriority ?? 0;
 }
 
 function getModulesByFollowUpPriority(): ChernobogModule[] {
@@ -42,23 +41,23 @@ function validateRegisteredModules(modules: ChernobogModule[]) {
   const domains = new Map<string, string>();
   const errors: string[] = [];
 
-  for (const module of modules) {
-    if (moduleIds.has(module.id)) {
-      errors.push(`Duplicate module id registered: ${module.id}`);
+  for (const moduleEntry of modules) {
+    if (moduleIds.has(moduleEntry.id)) {
+      errors.push(`Duplicate module id registered: ${moduleEntry.id}`);
     }
 
-    moduleIds.add(module.id);
+    moduleIds.add(moduleEntry.id);
 
-    for (const domain of module.domains) {
+    for (const domain of moduleEntry.domains) {
       const existingOwner = domains.get(domain);
 
       if (existingOwner) {
         errors.push(
-          `Domain "${domain}" is claimed by both "${existingOwner}" and "${module.id}".`
+          `Domain "${domain}" is claimed by both "${existingOwner}" and "${moduleEntry.id}".`
         );
       }
 
-      domains.set(domain, module.id);
+      domains.set(domain, moduleEntry.id);
     }
   }
 
@@ -78,28 +77,30 @@ function getActiveModuleForSession(sessionId: string): ChernobogModule | null {
     return null;
   }
 
-  return registeredModules.find((module) => module.id === moduleId) ?? null;
+  return (
+    registeredModules.find((moduleEntry) => moduleEntry.id === moduleId) ?? null
+  );
 }
 
 async function tryModuleFollowUp(
-  module: ChernobogModule,
+  moduleEntry: ChernobogModule,
   context: ModuleFollowUpContext
 ): Promise<ModuleHandlerResult | null> {
-  if (!module.handleFollowUp) {
+  if (!moduleEntry.handleFollowUp) {
     return null;
   }
 
-  const result = await module.handleFollowUp(context);
+  const result = await moduleEntry.handleFollowUp(context);
 
   if (!result) {
     return null;
   }
 
-  markModuleActive(context.sessionId, module.id);
+  markModuleActive(context.sessionId, moduleEntry.id);
 
   return {
     ...result,
-    moduleId: result.moduleId ?? module.id,
+    moduleId: result.moduleId ?? moduleEntry.id,
   };
 }
 
@@ -113,15 +114,15 @@ export function getModuleRegistrySnapshot(): ModuleRegistrySnapshot {
   return {
     moduleCount: registeredModules.length,
     activeSessionCount: activeModuleBySession.size,
-    modules: registeredModules.map((module) => ({
-      id: module.id,
-      displayName: module.displayName,
-      domains: [...module.domains],
-      toolCount: module.tools ? Object.keys(module.tools).length : 0,
-      followUpPriority: getFollowUpPriority(module),
-      hasParser: Boolean(module.parseCommand),
-      hasCommandHandler: Boolean(module.handleCommand),
-      hasFollowUpHandler: Boolean(module.handleFollowUp),
+    modules: registeredModules.map((moduleEntry) => ({
+      id: moduleEntry.id,
+      displayName: moduleEntry.displayName,
+      domains: [...moduleEntry.domains],
+      toolCount: moduleEntry.tools ? Object.keys(moduleEntry.tools).length : 0,
+      followUpPriority: getFollowUpPriority(moduleEntry),
+      hasParser: Boolean(moduleEntry.parseCommand),
+      hasCommandHandler: Boolean(moduleEntry.handleCommand),
+      hasFollowUpHandler: Boolean(moduleEntry.handleFollowUp),
     })),
   };
 }
@@ -130,21 +131,21 @@ export function buildModuleToolRegistry(): Record<string, unknown> {
   const tools: Record<string, unknown> = {};
   const owners = new Map<string, string>();
 
-  for (const module of registeredModules) {
-    if (!module.tools) {
+  for (const moduleEntry of registeredModules) {
+    if (!moduleEntry.tools) {
       continue;
     }
 
-    for (const [toolName, toolDefinition] of Object.entries(module.tools)) {
+    for (const [toolName, toolDefinition] of Object.entries(moduleEntry.tools)) {
       const existingOwner = owners.get(toolName);
 
       if (existingOwner) {
         throw new Error(
-          `Tool "${toolName}" is registered by both "${existingOwner}" and "${module.id}".`
+          `Tool "${toolName}" is registered by both "${existingOwner}" and "${moduleEntry.id}".`
         );
       }
 
-      owners.set(toolName, module.id);
+      owners.set(toolName, moduleEntry.id);
       tools[toolName] = toolDefinition;
     }
   }
@@ -157,12 +158,12 @@ export function parseRegisteredModuleCommand(
 ): UnifiedCommand | null {
   const parsedCommands: UnifiedCommand[] = [];
 
-  for (const registeredModule of registeredModules) {
-    if (!registeredModule.parseCommand) {
+  for (const moduleEntry of registeredModules) {
+    if (!moduleEntry.parseCommand) {
       continue;
     }
 
-    const parsed = registeredModule.parseCommand(message);
+    const parsed = moduleEntry.parseCommand(message);
 
     if (!parsed) {
       continue;
@@ -170,7 +171,7 @@ export function parseRegisteredModuleCommand(
 
     parsedCommands.push({
       ...parsed,
-      moduleId: parsed.moduleId ?? registeredModule.id,
+      moduleId: parsed.moduleId ?? moduleEntry.id,
     });
   }
 
@@ -186,10 +187,10 @@ export function parseRegisteredModuleCommand(
     }
 
     const aModule = registeredModules.find(
-      (registeredModule) => registeredModule.id === a.moduleId
+      (moduleEntry) => moduleEntry.id === a.moduleId
     );
     const bModule = registeredModules.find(
-      (registeredModule) => registeredModule.id === b.moduleId
+      (moduleEntry) => moduleEntry.id === b.moduleId
     );
 
     const aPriority = aModule?.followUpPriority ?? 0;
@@ -201,26 +202,26 @@ export function parseRegisteredModuleCommand(
 
 export function getModuleForDomain(domain: string): ChernobogModule | null {
   return (
-    registeredModules.find((module) => module.domains.includes(domain)) ?? null
+    registeredModules.find((moduleEntry) => moduleEntry.domains.includes(domain)) ??
+    null
   );
 }
 
 export async function handleRegisteredModuleCommand(
   context: ModuleCommandContext
 ): Promise<ModuleHandlerResult | null> {
-  const module = getModuleForDomain(context.command.domain);
+  const moduleEntry = getModuleForDomain(context.command.domain);
 
-  if (!module || !module.handleCommand) {
+  if (!moduleEntry || !moduleEntry.handleCommand) {
     return null;
   }
 
-  const result = await module.handleCommand(context);
-
-  markModuleActive(context.sessionId, module.id);
+  const result = await moduleEntry.handleCommand(context);
+  markModuleActive(context.sessionId, moduleEntry.id);
 
   return {
     ...result,
-    moduleId: result.moduleId ?? module.id,
+    moduleId: result.moduleId ?? moduleEntry.id,
   };
 }
 
@@ -239,12 +240,12 @@ export async function tryHandleRegisteredModuleFollowUp(
 
   const priorityModules = getModulesByFollowUpPriority();
 
-  for (const module of priorityModules) {
-    if (activeModule && module.id === activeModule.id) {
+  for (const moduleEntry of priorityModules) {
+    if (activeModule && moduleEntry.id === activeModule.id) {
       continue;
     }
 
-    const result = await tryModuleFollowUp(module, context);
+    const result = await tryModuleFollowUp(moduleEntry, context);
 
     if (result) {
       return result;

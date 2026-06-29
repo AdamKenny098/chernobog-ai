@@ -51,7 +51,7 @@ export default function ItemInspector({ item, runAction }: ItemInspectorProps) {
       <div className={styles.inspectorSection}>
         <h2 className={styles.inspectorTitle}>{item.title}</h2>
         <div className={styles.inspectorMeta}>
-          {item.platform} // {item.sourceType} // {item.externalId ?? "no external id"}
+          {item.platform}{" // "}{item.sourceType}{" // "}{item.externalId ?? "no external id"}
         </div>
 
         <div className={styles.badgeRow}>

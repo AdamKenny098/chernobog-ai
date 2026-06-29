@@ -20,14 +20,13 @@ export default function ThumbnailFrame({ title, platform, thumbnail }: Thumbnail
       thumbnail?.thumbnailUrl,
       thumbnail?.fallbackUrl,
     ].filter((value): value is string => Boolean(value));
-
-    return Array.from(new Set(candidates));
+return Array.from(new Set(candidates));
   }, [thumbnail?.fallbackUrl, thumbnail?.thumbnailUrl, thumbnail?.thumbnailUrls]);
 
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    setIndex(0);
+    queueMicrotask(() => setIndex(0));
   }, [urls.join("|")]);
 
   const src = urls[index];

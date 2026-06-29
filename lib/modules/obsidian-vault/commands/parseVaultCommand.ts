@@ -64,7 +64,7 @@ export function parseVaultCommand(message: string): VaultParsedCommand | null {
     };
   }
 
-  let reviewMatch = withoutPrefix.match(/^(review|inspect|what do you remember about)\s+(.+)$/i);
+  const reviewMatch = withoutPrefix.match(/^(review|inspect|what do you remember about)\s+(.+)$/i);
   if (reviewMatch) {
     return {
       ...base(message),
