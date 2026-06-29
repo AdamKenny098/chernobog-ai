@@ -1,0 +1,46 @@
+# Minecraft Schematic — siriocraft_gatehouse-2026-06-27T15-24-25-871Z
+
+## Summary
+
+- Build ID: siriocraft_gatehouse-2026-06-27T15-24-25-871Z
+- Generated At: 2026-06-27T15:24:25.871Z
+- Generator: gatehouse
+- Variant: gatehouse
+- Minecraft Version: 1.21.1
+- Size: 27 x 18 x 13
+- Block Count: 1850
+- Validation Result: Passed
+
+## Prompt / Command
+
+```txt
+generate minecraft schematic: gatehouse
+```
+
+## Palette
+
+- minecraft:air
+- minecraft:stone_bricks
+- minecraft:chiseled_stone_bricks
+- minecraft:iron_bars
+- minecraft:oak_wall_sign[facing=north,waterlogged=false]
+- minecraft:glass_pane
+- minecraft:smooth_stone
+- minecraft:lantern
+- minecraft:stone_brick_slab
+- minecraft:stone_brick_wall
+
+## Generated Files
+
+- Debug JSON: exports/schematics/debug/siriocraft_gatehouse-2026-06-27T15-24-25-871Z.debug.json
+- Metadata JSON: exports/schematics/metadata/siriocraft_gatehouse-2026-06-27T15-24-25-871Z.metadata.json
+- Schematic: exports/schematics/siriocraft_gatehouse-2026-06-27T15-24-25-871Z.schem
+- Vault Note: vault/chernobog/Minecraft/Schematics/siriocraft_gatehouse-2026-06-27T15-24-25-871Z.md
+
+## Validation Warnings
+
+- Sign text is recorded as block entity placeholder metadata.
+
+## Validation Errors
+
+- None

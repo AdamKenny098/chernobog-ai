@@ -1,0 +1,10 @@
+{
+  "planId": "factory-yard-2026-06-29T00-46-02-022Z",
+  "prompt": "create factory yard with train platform",
+  "sceneType": "factory_yard",
+  "biomeHint": "unknown",
+  "scale": "medium",
+  "structureCount": 5,
+  "planPath": "exports/build-department/plans/factory-yard-2026-06-29T00-46-02-022Z/plan.json",
+  "placementGuidePath": "exports/build-department/plans/factory-yard-2026-06-29T00-46-02-022Z/placement-guide.md"
+}

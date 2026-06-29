@@ -1,0 +1,115 @@
+{
+  "buildId": "machine_house-2026-06-27T19-12-22-790Z",
+  "displayName": "Machine House",
+  "generatedAt": "2026-06-27T19:12:22.790Z",
+  "generatorName": "factory",
+  "variant": "machine_house",
+  "presetId": "machine_house",
+  "profile": "vanilla",
+  "allowModdedBlocks": false,
+  "fallbackToVanilla": true,
+  "prompt": "machine house",
+  "command": "generate minecraft schematic: machine house",
+  "minecraftVersion": "1.21.1",
+  "size": {
+    "x": 32,
+    "y": 22,
+    "z": 28
+  },
+  "palette": [
+    "minecraft:air",
+    "minecraft:deepslate_bricks",
+    "minecraft:smooth_stone",
+    "minecraft:polished_deepslate",
+    "minecraft:bricks",
+    "minecraft:iron_block",
+    "minecraft:copper_block",
+    "minecraft:barrel[facing=north,open=false]",
+    "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "minecraft:barrel[facing=west,open=false]",
+    "minecraft:barrel[facing=east,open=false]",
+    "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "minecraft:glass_pane",
+    "minecraft:cut_copper",
+    "minecraft:dark_oak_planks",
+    "minecraft:campfire",
+    "minecraft:iron_bars",
+    "minecraft:cobweb",
+    "minecraft:dark_oak_slab"
+  ],
+  "blockCount": 4260,
+  "blockEntities": [
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 5,
+      "y": 2,
+      "z": 19,
+      "label": "Machine house storage barrel"
+    },
+    {
+      "id": "minecraft:chest",
+      "kind": "chest",
+      "x": 6,
+      "y": 2,
+      "z": 19,
+      "label": "Machine house storage chest"
+    },
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 7,
+      "y": 2,
+      "z": 19,
+      "label": "Machine house storage spare barrel"
+    },
+    {
+      "id": "minecraft:oak_wall_sign",
+      "kind": "sign",
+      "x": 16,
+      "y": 5,
+      "z": 4,
+      "text": [
+        "Machine",
+        "House"
+      ],
+      "label": "Machine house sign"
+    }
+  ],
+  "features": [
+    "machine_hall",
+    "sawtooth_roof",
+    "pipe_network",
+    "machine_bed_placeholders",
+    "chimney_stack",
+    "roof_vents",
+    "vanilla_cogwheel_motifs",
+    "sign_text_metadata"
+  ],
+  "outputPaths": {
+    "debugJsonPath": "exports/schematics/debug/machine_house-2026-06-27T19-12-22-790Z.debug.json",
+    "metadataJsonPath": "exports/schematics/metadata/machine_house-2026-06-27T19-12-22-790Z.metadata.json",
+    "schemPath": "exports/schematics/machine_house-2026-06-27T19-12-22-790Z.schem",
+    "vaultNotePath": "vault/chernobog/Minecraft/Schematics/machine_house-2026-06-27T19-12-22-790Z.md"
+  },
+  "validation": {
+    "ok": true,
+    "warnings": [
+      "Generator factory did not report required feature: large_hall.",
+      "Generator factory did not report required feature: chimney.",
+      "Generator factory did not report required feature: loading_door.",
+      "Generator factory did not report required feature: big_windows.",
+      "Generator factory did not report required feature: industrial_roof.",
+      "Generator factory did not report required feature: catwalks.",
+      "Generator factory did not report required feature: pipes.",
+      "Machine house uses vanilla-only industrial placeholders in V1.2B.",
+      "Create belts, shafts, depots, and mechanical arms are intentionally deferred until the Create profile is enabled."
+    ],
+    "errors": []
+  },
+  "placementWarnings": [
+    "Machine house uses vanilla-only industrial placeholders in V1.2B.",
+    "Create belts, shafts, depots, and mechanical arms are intentionally deferred until the Create profile is enabled."
+  ],
+  "unsupportedBlockWarnings": []
+}

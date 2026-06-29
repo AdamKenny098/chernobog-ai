@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-
     "game-radar:stage-a:verify": "tsx scripts/verify-itch-discovery-stage-a.ts",
     "game-radar:stage-b:verify": "tsx scripts/verify-itch-discovery-stage-b.ts",
     "game-radar:rss:refresh": "tsx scripts/refresh-itch-rss.ts",
@@ -36,7 +35,6 @@
     "game-radar:pipeline": "tsx scripts/run-itch-pipeline.ts",
     "game-radar:status": "tsx scripts/show-itch-status.ts",
     "game-radar:stage-i:verify": "tsx scripts/verify-itch-discovery-stage-i.ts",
-
     "game-radar:stage-j:verify": "tsx scripts/verify-itch-discovery-stage-j.ts",
     "game-radar:feedback:learn": "tsx scripts/apply-itch-feedback-learning.ts",
     "game-radar:feedback:candidates": "tsx scripts/list-itch-feedback-candidates.ts",
@@ -66,15 +64,19 @@
     "game-radar:adult:sources:list": "tsx scripts/list-itch-adult-sources.ts",
     "game-radar:adult:discover": "tsx scripts/discover-itch-adult-games.ts",
     "game-radar:stage-p": "tsx scripts/game-radar-stage-p.ts",
-    "game-radar:stage-p:verify": "tsx scripts/verify-itch-discovery-stage-p.ts"
+    "game-radar:stage-p:verify": "tsx scripts/verify-itch-discovery-stage-p.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
+    "minecraft-data": "^3.111.0",
     "next": "16.2.4",
+    "prismarine-schematic": "^1.3.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "vec3": "^0.2.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

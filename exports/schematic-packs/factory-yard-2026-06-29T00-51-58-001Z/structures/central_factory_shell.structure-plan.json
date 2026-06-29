@@ -1,0 +1,44 @@
+{
+  "packId": "factory-yard-2026-06-29T00-51-58-001Z",
+  "structure": {
+    "id": "central_factory_shell",
+    "kind": "factory_shell",
+    "displayName": "Central Factory Shell",
+    "origin": {
+      "x": 0,
+      "z": 0
+    },
+    "size": {
+      "x": 31,
+      "z": 25
+    },
+    "orientation": "south",
+    "priority": 1,
+    "generatorHint": "factory",
+    "schematicName": "central_factory_shell.schem",
+    "purpose": "Main industrial shell for Create machinery and future processing lines.",
+    "dependencies": [],
+    "tags": [
+      "industrial",
+      "landmark",
+      "create"
+    ],
+    "placementNotes": [
+      "Paste this first. Roads and yard modules align around it."
+    ]
+  },
+  "export": {
+    "structureId": "central_factory_shell",
+    "displayName": "Central Factory Shell",
+    "kind": "factory_shell",
+    "schematicName": "central_factory_shell.schem",
+    "plannedSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/schematics/central_factory_shell.schem",
+    "manifestPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/structures/central_factory_shell.structure-plan.json",
+    "generatorHint": "factory",
+    "priority": 1,
+    "status": "planned",
+    "warnings": [
+      "M6-E exports the pack plan and folder structure. M6-F will wire real per-structure .schem generation into this slot."
+    ]
+  }
+}

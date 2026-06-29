@@ -1,0 +1,73 @@
+{
+  "packId": "factory-yard-2026-06-29T00-46-20-676Z",
+  "structureId": "train_platform",
+  "buildId": "factory-yard-2026-06-29T00-46-20-676Z_train_platform",
+  "displayName": "Train Platform",
+  "generatorName": "train_station",
+  "variant": "train_station_small",
+  "profile": "vanilla",
+  "size": {
+    "x": 27,
+    "y": 13,
+    "z": 47
+  },
+  "blockCount": 5188,
+  "palette": [
+    "minecraft:air",
+    "minecraft:deepslate_bricks",
+    "minecraft:smooth_stone",
+    "minecraft:gravel",
+    "minecraft:rail",
+    "minecraft:oak_planks",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_door[facing=south,half=lower,hinge=left,open=false,powered=false]",
+    "minecraft:oak_slab",
+    "minecraft:stripped_spruce_log",
+    "minecraft:spruce_fence",
+    "minecraft:barrel[facing=north,open=false]",
+    "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "minecraft:glass_pane",
+    "minecraft:oak_wall_sign[facing=east,waterlogged=false]",
+    "minecraft:barrel[facing=east,open=false]",
+    "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "minecraft:dark_oak_slab",
+    "minecraft:lantern",
+    "minecraft:dark_oak_planks"
+  ],
+  "features": [
+    "platform",
+    "rails",
+    "canopy",
+    "interval_support_posts",
+    "waiting_room",
+    "ticket_booth",
+    "lamps",
+    "cargo_area",
+    "platform_trim",
+    "sign_metadata",
+    "m6f1_quality_scene_pack_structure",
+    "scene_pack_high_quality_delegation",
+    "quality_source_generateTrainStation",
+    "scene_factory_yard",
+    "structure_train_stop",
+    "transport",
+    "train",
+    "create"
+  ],
+  "files": {
+    "schemPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/schematics/train_platform.schem",
+    "debugJsonPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/metadata/train_platform.debug.json",
+    "metadataJsonPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/metadata/train_platform.metadata.json"
+  },
+  "validation": {
+    "ok": true,
+    "readBackOk": true,
+    "errors": [],
+    "warnings": [
+      "Rails are vanilla placeholders. Create train track blocks are intentionally gated for a later profile pass.",
+      "Scene pack placement offset: x:-36, z:0. Facing east.",
+      "M6-F.1 uses the existing high-quality single-structure generator instead of prototype pack geometry."
+    ]
+  }
+}

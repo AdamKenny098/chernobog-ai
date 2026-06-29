@@ -1,0 +1,173 @@
+{
+  "buildId": "create_starter_factory-2026-06-27T18-39-54-533Z",
+  "displayName": "Create-Style Starter Factory",
+  "generatedAt": "2026-06-27T18:39:54.533Z",
+  "generatorName": "factory",
+  "variant": "create_starter_factory",
+  "presetId": "create_starter_factory",
+  "profile": "vanilla",
+  "allowModdedBlocks": false,
+  "fallbackToVanilla": true,
+  "prompt": "small Create-style starter factory",
+  "command": "generate minecraft schematic: small Create-style starter factory",
+  "minecraftVersion": "1.21.1",
+  "size": {
+    "x": 43,
+    "y": 27,
+    "z": 35
+  },
+  "palette": [
+    "minecraft:air",
+    "minecraft:deepslate_bricks",
+    "minecraft:stone_bricks",
+    "minecraft:smooth_stone",
+    "minecraft:polished_deepslate",
+    "minecraft:iron_bars",
+    "minecraft:deepslate_brick_wall",
+    "minecraft:bricks",
+    "minecraft:barrel[facing=north,open=false]",
+    "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "minecraft:barrel[facing=west,open=false]",
+    "minecraft:iron_block",
+    "minecraft:copper_block",
+    "minecraft:barrel[facing=east,open=false]",
+    "minecraft:glass_pane",
+    "minecraft:cut_copper",
+    "minecraft:lantern",
+    "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "minecraft:dark_oak_slab",
+    "minecraft:dark_oak_planks",
+    "minecraft:campfire",
+    "minecraft:cobweb"
+  ],
+  "blockCount": 7804,
+  "blockEntities": [
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 33,
+      "y": 2,
+      "z": 6,
+      "label": "Yard input barrel"
+    },
+    {
+      "id": "minecraft:chest",
+      "kind": "chest",
+      "x": 34,
+      "y": 2,
+      "z": 6,
+      "label": "Yard input chest"
+    },
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 35,
+      "y": 2,
+      "z": 6,
+      "label": "Yard input spare barrel"
+    },
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 37,
+      "y": 2,
+      "z": 9,
+      "label": "Yard output barrel"
+    },
+    {
+      "id": "minecraft:chest",
+      "kind": "chest",
+      "x": 38,
+      "y": 2,
+      "z": 9,
+      "label": "Yard output chest"
+    },
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 39,
+      "y": 2,
+      "z": 9,
+      "label": "Yard output spare barrel"
+    },
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 31,
+      "y": 2,
+      "z": 25,
+      "label": "Annex storage barrel"
+    },
+    {
+      "id": "minecraft:chest",
+      "kind": "chest",
+      "x": 32,
+      "y": 2,
+      "z": 25,
+      "label": "Annex storage chest"
+    },
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 33,
+      "y": 2,
+      "z": 25,
+      "label": "Annex storage spare barrel"
+    },
+    {
+      "id": "minecraft:oak_wall_sign",
+      "kind": "sign",
+      "x": 21,
+      "y": 5,
+      "z": 4,
+      "text": [
+        "SirioCraft",
+        "Starter",
+        "Factory"
+      ],
+      "label": "Factory sign"
+    }
+  ],
+  "features": [
+    "large_industrial_hall",
+    "sawtooth_roof",
+    "side_annex",
+    "loading_bay",
+    "yard_foundation",
+    "chimney_stack",
+    "roof_vents",
+    "industrial_window_bands",
+    "catwalks",
+    "pipe_runs",
+    "machine_wall_placeholders",
+    "vanilla_cogwheel_motifs",
+    "gantry_crane_placeholder",
+    "labelled_storage_placeholders",
+    "sign_text_metadata"
+  ],
+  "outputPaths": {
+    "debugJsonPath": "exports/schematics/debug/create_starter_factory-2026-06-27T18-39-54-533Z.debug.json",
+    "metadataJsonPath": "exports/schematics/metadata/create_starter_factory-2026-06-27T18-39-54-533Z.metadata.json",
+    "schemPath": "exports/schematics/create_starter_factory-2026-06-27T18-39-54-533Z.schem",
+    "vaultNotePath": "vault/chernobog/Minecraft/Schematics/create_starter_factory-2026-06-27T18-39-54-533Z.md"
+  },
+  "validation": {
+    "ok": true,
+    "warnings": [
+      "Generator factory did not report required feature: large_hall.",
+      "Generator factory did not report required feature: chimney.",
+      "Generator factory did not report required feature: loading_door.",
+      "Generator factory did not report required feature: big_windows.",
+      "Generator factory did not report required feature: industrial_roof.",
+      "Generator factory did not report required feature: pipes.",
+      "Create-style factory details use vanilla fallback blocks only in V1.2A.",
+      "Machine wall, gantry crane, shafts, and cog details are visual placeholders until the Create profile is enabled."
+    ],
+    "errors": []
+  },
+  "placementWarnings": [
+    "Create-style factory details use vanilla fallback blocks only in V1.2A.",
+    "Machine wall, gantry crane, shafts, and cog details are visual placeholders until the Create profile is enabled."
+  ],
+  "unsupportedBlockWarnings": []
+}

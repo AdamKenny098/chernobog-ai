@@ -1,0 +1,72 @@
+{
+  "packId": "factory-yard-2026-06-29T00-46-20-676Z",
+  "structureId": "press_line_module",
+  "buildId": "factory-yard-2026-06-29T00-46-20-676Z_press_line_module",
+  "displayName": "Press Line Module",
+  "generatorName": "factory",
+  "variant": "press_line",
+  "profile": "siriocraft-create",
+  "size": {
+    "x": 11,
+    "y": 7,
+    "z": 7
+  },
+  "blockCount": 133,
+  "palette": [
+    "minecraft:air",
+    "create:railway_casing",
+    "minecraft:polished_andesite",
+    "create:metal_girder",
+    "create:water_wheel",
+    "create:andesite_casing",
+    "create:shaft",
+    "create:gearbox",
+    "create:belt"
+  ],
+  "features": [
+    "create_mechanical_graph",
+    "create_press_line",
+    "m6c_create_graph_compiler",
+    "foundation_platform",
+    "support_columns",
+    "corner_frames",
+    "perimeter_rails",
+    "purpose_specific_machine_polish",
+    "m6f1_quality_scene_pack_structure",
+    "scene_pack_high_quality_delegation",
+    "quality_source_compileCreateMachineGraph_press_line",
+    "scene_factory_yard",
+    "structure_machine_module",
+    "machine_module",
+    "create",
+    "machine",
+    "press"
+  ],
+  "files": {
+    "schemPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/schematics/press_line_module.schem",
+    "debugJsonPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/metadata/press_line_module.debug.json",
+    "metadataJsonPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/metadata/press_line_module.metadata.json"
+  },
+  "validation": {
+    "ok": true,
+    "readBackOk": true,
+    "errors": [],
+    "warnings": [
+      "Generator factory did not report required feature: large_hall.",
+      "Generator factory did not report required feature: chimney.",
+      "Generator factory did not report required feature: loading_door.",
+      "Generator factory did not report required feature: big_windows.",
+      "Generator factory did not report required feature: industrial_roof.",
+      "Generator factory did not report required feature: catwalks.",
+      "Generator factory did not report required feature: pipes.",
+      "Scene pack placement offset: x:3, z:-22. Facing south.",
+      "M6-F.1 uses the existing high-quality single-structure generator instead of prototype pack geometry."
+    ]
+  },
+  "buildReport": {
+    "status": "prototype",
+    "sirioCraftUseCase": "Create machine module for SirioCraft build-pack pipeline validation and future factory-yard composition.",
+    "suggestedPlacement": "Paste on flat Create-enabled test terrain. This prototype includes its own foundation, rails, and support frame.",
+    "recommendedNextAction": "Inspect in a Create-enabled client/world. Schemat.io may not preview the modded blocks correctly."
+  }
+}

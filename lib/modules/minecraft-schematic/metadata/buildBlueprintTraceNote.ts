@@ -1,0 +1,57 @@
+import type { BlueprintTraceMetadata } from "../types/blueprint";
+
+export function buildBlueprintTraceNote(trace: BlueprintTraceMetadata): string {
+  const now = new Date().toISOString();
+
+  return [
+    "---",
+    "type: minecraft-schematic-generation",
+    "generator: tower",
+    `theme: ${trace.finalBlueprint.theme}`,
+    `created: ${now}`,
+    "---",
+    "",
+    "# Minecraft Schematic Generation Trace",
+    "",
+    "## Original Prompt",
+    "",
+    trace.originalPrompt,
+    "",
+    "## Build Brief",
+    "",
+    "```json",
+    JSON.stringify(trace.buildBrief, null, 2),
+    "```",
+    "",
+    "## Final Blueprint",
+    "",
+    "```json",
+    JSON.stringify(trace.finalBlueprint, null, 2),
+    "```",
+    "",
+    "## Repaired Fields",
+    "",
+    "```json",
+    JSON.stringify(trace.repairedFields, null, 2),
+    "```",
+    "",
+    "## Validation Warnings",
+    "",
+    trace.validationWarnings.length > 0
+      ? trace.validationWarnings.map((warning) => `- ${warning}`).join("\n")
+      : "- None",
+    "",
+    "## Rejected Fields",
+    "",
+    "```json",
+    JSON.stringify(trace.rejectedFields, null, 2),
+    "```",
+    "",
+    "## Output Paths",
+    "",
+    "```json",
+    JSON.stringify(trace.outputPaths ?? {}, null, 2),
+    "```",
+    "",
+  ].join("\n");
+}

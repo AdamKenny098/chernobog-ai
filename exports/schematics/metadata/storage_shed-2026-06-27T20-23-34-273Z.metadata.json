@@ -1,0 +1,269 @@
+{
+  "buildId": "storage_shed-2026-06-27T20-23-34-273Z",
+  "displayName": "Storage Shed",
+  "generatedAt": "2026-06-27T20:23:34.273Z",
+  "generatorName": "house",
+  "variant": "storage_shed",
+  "presetId": "storage_shed",
+  "profile": "vanilla",
+  "allowModdedBlocks": false,
+  "fallbackToVanilla": true,
+  "prompt": "SirioCraft preset: Storage Shed",
+  "command": "generate minecraft schematic preset storage_shed",
+  "minecraftVersion": "1.21.1",
+  "size": {
+    "x": 13,
+    "y": 10,
+    "z": 13
+  },
+  "palette": [
+    "minecraft:air",
+    "minecraft:stone_bricks",
+    "minecraft:stripped_spruce_log",
+    "minecraft:oak_planks",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_door[facing=south,half=lower,hinge=left,open=false,powered=false]",
+    "minecraft:barrel[facing=north,open=false]",
+    "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "minecraft:spruce_door[facing=south,half=upper,hinge=left,open=false,powered=false]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=false,powered=false,waterlogged=false]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=false,powered=false,waterlogged=false]",
+    "minecraft:glass_pane",
+    "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "minecraft:deepslate_tile_slab"
+  ],
+  "blockCount": 463,
+  "blockEntities": [
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 4,
+      "y": 2,
+      "z": 4,
+      "label": "Tool barrel",
+      "metadata": {
+        "items": []
+      },
+      "nbtId": "minecraft:barrel",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    },
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 8,
+      "y": 2,
+      "z": 4,
+      "label": "Supply barrel",
+      "metadata": {
+        "items": []
+      },
+      "nbtId": "minecraft:barrel",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    },
+    {
+      "id": "minecraft:chest",
+      "kind": "chest",
+      "x": 4,
+      "y": 2,
+      "z": 8,
+      "label": "Storage chest",
+      "metadata": {
+        "items": []
+      },
+      "nbtId": "minecraft:chest",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    },
+    {
+      "id": "minecraft:chest",
+      "kind": "chest",
+      "x": 8,
+      "y": 2,
+      "z": 8,
+      "label": "Spare parts chest",
+      "metadata": {
+        "items": []
+      },
+      "nbtId": "minecraft:chest",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    }
+  ],
+  "blockEntityExport": {
+    "total": 4,
+    "signs": 0,
+    "chests": 2,
+    "barrels": 2,
+    "placeholders": 0,
+    "nbtWritten": 4,
+    "metadataOnly": 0,
+    "warnings": []
+  },
+  "features": [
+    "storage_shed",
+    "small_roof",
+    "utility_shell",
+    "storage_barrels",
+    "storage_chests",
+    "windows"
+  ],
+  "outputPaths": {
+    "debugJsonPath": "exports/schematics/debug/storage_shed-2026-06-27T20-23-34-273Z.debug.json",
+    "metadataJsonPath": "exports/schematics/metadata/storage_shed-2026-06-27T20-23-34-273Z.metadata.json",
+    "schemPath": "exports/schematics/storage_shed-2026-06-27T20-23-34-273Z.schem",
+    "vaultNotePath": "vault/chernobog/Minecraft/Schematics/storage_shed-2026-06-27T20-23-34-273Z.md"
+  },
+  "validation": {
+    "ok": true,
+    "warnings": [
+      "Generator house did not report required feature: foundation.",
+      "Generator house did not report required feature: walls.",
+      "Generator house did not report required feature: roof.",
+      "Generator house did not report required feature: door.",
+      "Generator house did not report required feature: chimney.",
+      "Generator house did not report required feature: interior_zones.",
+      "Storage containers are exported as empty NBT containers and labelled in metadata."
+    ],
+    "errors": []
+  },
+  "placementWarnings": [
+    "Storage containers are exported as empty NBT containers and labelled in metadata."
+  ],
+  "unsupportedBlockWarnings": [],
+  "buildReport": {
+    "title": "Storage Shed",
+    "status": "warning",
+    "sirioCraftUseCase": "Settlement housing, spawn village filler, faction base housing, or roadside shelter.",
+    "suggestedPlacement": "Place inside a town plot or faction settlement; connect porch and doorway to the local path network.",
+    "recommendedNextAction": "Usable, but review warnings before placing. Paste into a test world before using on the live SirioCraft server.",
+    "qualityNotes": [
+      "Generated as house/storage_shed using preset storage_shed.",
+      "Footprint is 13 x 10 x 13 with 463 placed block(s).",
+      "Recorded features: storage_shed, small_roof, utility_shell, storage_barrels, storage_chests, windows.",
+      "4 block entity NBT record(s) written and 0 metadata-only placeholder(s) recorded."
+    ],
+    "knownLimitations": [
+      "Uses the current profile's block rules. Create-specific blocks are not used unless the SirioCraft Create profile is enabled later."
+    ],
+    "warningSummary": [
+      "Generator house did not report required feature: foundation.",
+      "Generator house did not report required feature: walls.",
+      "Generator house did not report required feature: roof.",
+      "Generator house did not report required feature: door.",
+      "Generator house did not report required feature: chimney.",
+      "Generator house did not report required feature: interior_zones.",
+      "Storage containers are exported as empty NBT containers and labelled in metadata.",
+      "Storage containers are exported as empty NBT containers and labelled in metadata."
+    ],
+    "paletteSummary": [
+      {
+        "block": "minecraft:air",
+        "role": "palette"
+      },
+      {
+        "block": "minecraft:stone_bricks",
+        "role": "structure"
+      },
+      {
+        "block": "minecraft:stripped_spruce_log",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:oak_planks",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:spruce_planks",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:spruce_door[facing=south,half=lower,hinge=left,open=false,powered=false]",
+        "role": "palette"
+      },
+      {
+        "block": "minecraft:barrel[facing=north,open=false]",
+        "role": "storage"
+      },
+      {
+        "block": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:spruce_door[facing=south,half=upper,hinge=left,open=false,powered=false]",
+        "role": "palette"
+      },
+      {
+        "block": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=false,powered=false,waterlogged=false]",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=false,powered=false,waterlogged=false]",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:glass_pane",
+        "role": "window"
+      },
+      {
+        "block": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:deepslate_tile_slab",
+        "role": "structure"
+      }
+    ],
+    "blockEntitySummary": {
+      "total": 4,
+      "nbtWritten": 4,
+      "metadataOnly": 0,
+      "labels": [
+        "Tool barrel",
+        "Supply barrel",
+        "Storage chest",
+        "Spare parts chest"
+      ]
+    },
+    "outputSummary": [
+      {
+        "kind": "schem",
+        "label": "Schematic",
+        "path": "exports/schematics/storage_shed-2026-06-27T20-23-34-273Z.schem"
+      },
+      {
+        "kind": "metadata",
+        "label": "Metadata JSON",
+        "path": "exports/schematics/metadata/storage_shed-2026-06-27T20-23-34-273Z.metadata.json"
+      },
+      {
+        "kind": "debug",
+        "label": "Debug JSON",
+        "path": "exports/schematics/debug/storage_shed-2026-06-27T20-23-34-273Z.debug.json"
+      },
+      {
+        "kind": "vault-note",
+        "label": "Vault Note",
+        "path": "vault/chernobog/Minecraft/Schematics/storage_shed-2026-06-27T20-23-34-273Z.md"
+      }
+    ],
+    "reviewRoute": "/review/schematic/storage_shed-2026-06-27T20-23-34-273Z",
+    "tags": [
+      "house",
+      "storage_shed",
+      "vanilla",
+      "small_roof",
+      "utility_shell",
+      "storage_barrels",
+      "storage_chests",
+      "windows",
+      "town"
+    ]
+  }
+}

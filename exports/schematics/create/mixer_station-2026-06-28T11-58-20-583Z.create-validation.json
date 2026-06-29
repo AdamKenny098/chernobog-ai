@@ -1,0 +1,13 @@
+{
+  "kind": "create_mechanical_validation",
+  "graphId": "create_mixer_station_01",
+  "status": "passed",
+  "summary": {
+    "nodes": 7,
+    "connections": 6,
+    "errors": 0,
+    "warnings": 0,
+    "info": 0
+  },
+  "issues": []
+}

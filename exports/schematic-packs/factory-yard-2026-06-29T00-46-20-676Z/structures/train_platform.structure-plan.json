@@ -1,0 +1,46 @@
+{
+  "packId": "factory-yard-2026-06-29T00-46-20-676Z",
+  "structure": {
+    "id": "train_platform",
+    "kind": "train_stop",
+    "displayName": "Train Platform",
+    "origin": {
+      "x": -36,
+      "z": 0
+    },
+    "size": {
+      "x": 37,
+      "z": 9
+    },
+    "orientation": "east",
+    "priority": 2,
+    "generatorHint": "train_station",
+    "schematicName": "train_platform.schem",
+    "purpose": "Track-adjacent arrival point and cargo platform.",
+    "dependencies": [
+      "central_factory_shell"
+    ],
+    "tags": [
+      "transport",
+      "train",
+      "create"
+    ],
+    "placementNotes": [
+      "Align long edge beside existing or planned Create track."
+    ]
+  },
+  "export": {
+    "structureId": "train_platform",
+    "displayName": "Train Platform",
+    "kind": "train_stop",
+    "schematicName": "train_platform.schem",
+    "plannedSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/schematics/train_platform.schem",
+    "manifestPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/structures/train_platform.structure-plan.json",
+    "generatorHint": "train_station",
+    "priority": 2,
+    "status": "planned",
+    "warnings": [
+      "M6-E exports the pack plan and folder structure. M6-F will wire real per-structure .schem generation into this slot."
+    ]
+  }
+}

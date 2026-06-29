@@ -1,0 +1,47 @@
+{
+  "packId": "factory-yard-2026-06-29T00-51-58-001Z",
+  "structure": {
+    "id": "press_line_module",
+    "kind": "machine_module",
+    "displayName": "Press Line Module",
+    "origin": {
+      "x": 3,
+      "z": -22
+    },
+    "size": {
+      "x": 15,
+      "z": 11
+    },
+    "orientation": "south",
+    "priority": 4,
+    "generatorHint": "create_press_line",
+    "schematicName": "press_line_module.schem",
+    "purpose": "First functional Create machine module for the factory yard.",
+    "dependencies": [
+      "central_factory_shell"
+    ],
+    "tags": [
+      "create",
+      "machine",
+      "press"
+    ],
+    "createMachinePreset": "press_line",
+    "placementNotes": [
+      "Can be pasted inside the factory shell or as an exterior yard machine."
+    ]
+  },
+  "export": {
+    "structureId": "press_line_module",
+    "displayName": "Press Line Module",
+    "kind": "machine_module",
+    "schematicName": "press_line_module.schem",
+    "plannedSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/schematics/press_line_module.schem",
+    "manifestPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/structures/press_line_module.structure-plan.json",
+    "generatorHint": "create_press_line",
+    "priority": 4,
+    "status": "planned",
+    "warnings": [
+      "M6-E exports the pack plan and folder structure. M6-F will wire real per-structure .schem generation into this slot."
+    ]
+  }
+}

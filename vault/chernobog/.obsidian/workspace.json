@@ -11,10 +11,14 @@
             "id": "7efdb49abc9e5142",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-32-52-961-bd555d95/summary.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "summary"
             }
           }
         ]

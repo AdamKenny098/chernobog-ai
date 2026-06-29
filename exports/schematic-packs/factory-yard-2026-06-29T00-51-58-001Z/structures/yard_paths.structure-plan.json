@@ -1,0 +1,47 @@
+{
+  "packId": "factory-yard-2026-06-29T00-51-58-001Z",
+  "structure": {
+    "id": "yard_paths",
+    "kind": "road_segment",
+    "displayName": "Yard Paths",
+    "origin": {
+      "x": 0,
+      "z": 28
+    },
+    "size": {
+      "x": 55,
+      "z": 17
+    },
+    "orientation": "north",
+    "priority": 5,
+    "generatorHint": "paths",
+    "schematicName": "yard_paths.schem",
+    "purpose": "Connects platform, factory, storage, and machine modules.",
+    "dependencies": [
+      "central_factory_shell",
+      "train_platform",
+      "storage_yard"
+    ],
+    "tags": [
+      "path",
+      "layout"
+    ],
+    "placementNotes": [
+      "Paste after major structures to avoid accidental overlap."
+    ]
+  },
+  "export": {
+    "structureId": "yard_paths",
+    "displayName": "Yard Paths",
+    "kind": "road_segment",
+    "schematicName": "yard_paths.schem",
+    "plannedSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/schematics/yard_paths.schem",
+    "manifestPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/structures/yard_paths.structure-plan.json",
+    "generatorHint": "paths",
+    "priority": 5,
+    "status": "planned",
+    "warnings": [
+      "M6-E exports the pack plan and folder structure. M6-F will wire real per-structure .schem generation into this slot."
+    ]
+  }
+}

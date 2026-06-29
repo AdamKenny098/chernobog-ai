@@ -1,0 +1,130 @@
+{
+  "buildId": "ruined_outpost-2026-06-27T20-00-29-855Z",
+  "displayName": "Ruined Outpost",
+  "generatedAt": "2026-06-27T20:00:29.855Z",
+  "generatorName": "outpost",
+  "variant": "ruined_outpost",
+  "presetId": "ruined_outpost",
+  "profile": "vanilla",
+  "allowModdedBlocks": false,
+  "fallbackToVanilla": true,
+  "prompt": "ruined outpost",
+  "command": "generate minecraft schematic: ruined outpost",
+  "minecraftVersion": "1.21.1",
+  "size": {
+    "x": 23,
+    "y": 10,
+    "z": 23
+  },
+  "palette": [
+    "minecraft:air",
+    "minecraft:coarse_dirt",
+    "minecraft:stone_bricks",
+    "minecraft:mossy_cobblestone",
+    "minecraft:mossy_stone_bricks",
+    "minecraft:cracked_stone_bricks",
+    "minecraft:cobblestone",
+    "minecraft:oak_fence",
+    "minecraft:oak_slab",
+    "minecraft:campfire",
+    "minecraft:oak_planks",
+    "minecraft:stripped_spruce_log",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_door[facing=south,half=lower,hinge=left,open=true,powered=false]",
+    "minecraft:barrel[facing=north,open=false]",
+    "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "minecraft:iron_bars",
+    "minecraft:spruce_door[facing=south,half=upper,hinge=left,open=true,powered=false]",
+    "minecraft:smooth_stone",
+    "minecraft:stone_brick_wall",
+    "minecraft:deepslate_tile_slab"
+  ],
+  "blockCount": 822,
+  "blockEntities": [
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 14,
+      "y": 2,
+      "z": 16,
+      "label": "Abandoned outpost supplies",
+      "metadata": {
+        "items": []
+      },
+      "nbtId": "minecraft:barrel",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    },
+    {
+      "id": "minecraft:chest",
+      "kind": "chest",
+      "x": 16,
+      "y": 2,
+      "z": 16,
+      "label": "Ruined outpost cache",
+      "metadata": {
+        "items": []
+      },
+      "nbtId": "minecraft:chest",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    },
+    {
+      "id": "minecraft:oak_sign",
+      "kind": "sign",
+      "x": 11,
+      "y": 3,
+      "z": 1,
+      "text": [
+        "Ruined",
+        "Outpost",
+        "",
+        ""
+      ],
+      "label": "Ruined outpost sign",
+      "nbtId": "minecraft:sign",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    }
+  ],
+  "blockEntityExport": {
+    "total": 3,
+    "signs": 1,
+    "chests": 1,
+    "barrels": 1,
+    "placeholders": 0,
+    "nbtWritten": 3,
+    "metadataOnly": 0,
+    "warnings": []
+  },
+  "features": [
+    "broken_perimeter_walls",
+    "gate_gap",
+    "corner_lookout_ruin",
+    "ruined_hut",
+    "camp_area",
+    "storage_placeholders",
+    "sign_metadata",
+    "fallen_debris"
+  ],
+  "outputPaths": {
+    "debugJsonPath": "exports/schematics/debug/ruined_outpost-2026-06-27T20-00-29-855Z.debug.json",
+    "metadataJsonPath": "exports/schematics/metadata/ruined_outpost-2026-06-27T20-00-29-855Z.metadata.json",
+    "schemPath": "exports/schematics/ruined_outpost-2026-06-27T20-00-29-855Z.schem",
+    "vaultNotePath": "vault/chernobog/Minecraft/Schematics/ruined_outpost-2026-06-27T20-00-29-855Z.md"
+  },
+  "validation": {
+    "ok": true,
+    "warnings": [
+      "Ruined outpost is now its own compound generator, not a tower preset.",
+      "Supported chest/barrel/sign block entities are exported as NBT and mirrored in metadata."
+    ],
+    "errors": []
+  },
+  "placementWarnings": [
+    "Ruined outpost is now its own compound generator, not a tower preset.",
+    "Supported chest/barrel/sign block entities are exported as NBT and mirrored in metadata."
+  ],
+  "unsupportedBlockWarnings": []
+}

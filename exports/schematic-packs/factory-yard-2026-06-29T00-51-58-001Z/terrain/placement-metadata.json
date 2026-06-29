@@ -1,0 +1,24 @@
+{
+  "recommendedPasteOrigin": {
+    "x": 0,
+    "y": 72,
+    "z": 0
+  },
+  "foundationDepth": 3,
+  "terrainFlatteningBounds": {
+    "min": {
+      "x": -48,
+      "z": -48
+    },
+    "max": {
+      "x": 48,
+      "z": 48
+    }
+  },
+  "supportStilts": false,
+  "basementFill": true,
+  "biomeDressingHints": [
+    "Use local biome blocks for path edges, vegetation, and retaining walls.",
+    "Keep major roads readable from above."
+  ]
+}

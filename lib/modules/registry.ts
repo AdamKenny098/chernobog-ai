@@ -2,6 +2,7 @@ import type { UnifiedCommand } from "@/lib/chernobog/command-language";
 import { obsidianVaultModule } from "@/lib/modules/adapters/obsidianVaultAdapter";
 import { fileWorkflowModule } from "@/lib/modules/file-workflow";
 import { discordIngestModule } from "@/lib/modules/discord-ingest";
+import { minecraftSchematicModule } from "@/lib/modules/minecraft-schematic";
 
 import type {
   ChernobogModule,
@@ -15,6 +16,7 @@ const registeredModules: ChernobogModule[] = [
   obsidianVaultModule,
   fileWorkflowModule,
   discordIngestModule,
+  minecraftSchematicModule,
 ];
 
 const activeModuleBySession = new Map<string, string>();

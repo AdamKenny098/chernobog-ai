@@ -9,7 +9,8 @@ export type CommandDomain =
   | "chat"
   | "guardian"
   | "vault"
-  | "discord";
+  | "discord"
+  | "schematic";
 
 export type CommandAction =
   | "none"
@@ -33,7 +34,8 @@ export type CommandAction =
   | "backlinks"
   | "orphans"
   | "index"
-  | "daily_log";
+  | "daily_log"
+  | "generate";
 
 export type CommandTarget =
   | "none"
@@ -56,7 +58,8 @@ export type CommandTarget =
   | "daily_log"
   | "discord"
   | "discord_channel"
-  |"status";
+  | "status"
+  | "schematic";
 
 export type CommandReference =
   | "none"
@@ -83,7 +86,6 @@ export type UnifiedCommand = {
   confidence: number;
   confidenceLevel: CommandConfidenceLevel;
   reasons: string[];
-
   moduleId?: string;
   moduleCommand?: unknown;
 };

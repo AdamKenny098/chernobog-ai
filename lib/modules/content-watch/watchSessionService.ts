@@ -272,6 +272,10 @@ export async function getWatchSessionView(sessionId?: string): Promise<WatchSess
 
   const rawItems = ((store.items ?? []) as unknown[]).map(asRecord);
   const rawById = new Map(rawItems.map((item) => [String(item.id ?? ""), item]));
+  const thumbnailsByItemId =
+    thumbnailStore.thumbnails as Record<string, WatchQueueItem["thumbnail"]>;
+
+  
 
   const items = session.itemIds
     .map((itemId) => {
@@ -284,7 +288,7 @@ export async function getWatchSessionView(sessionId?: string): Promise<WatchSess
       return toWatchQueueItem({
         rawItem,
         session,
-        thumbnail: thumbnailStore.thumbnails[itemId],
+        thumbnail: thumbnailsByItemId[itemId],
       });
     })
     .filter((item): item is WatchQueueItem => Boolean(item));

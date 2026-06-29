@@ -1,0 +1,271 @@
+{
+  "buildId": "spawn_market_stall-2026-06-27T20-23-28-438Z",
+  "displayName": "Spawn Market Stall",
+  "generatedAt": "2026-06-27T20:23:28.438Z",
+  "generatorName": "house",
+  "variant": "market_stall",
+  "presetId": "spawn_market_stall",
+  "profile": "vanilla",
+  "allowModdedBlocks": false,
+  "fallbackToVanilla": true,
+  "prompt": "SirioCraft preset: Spawn Market Stall",
+  "command": "generate minecraft schematic preset spawn_market_stall",
+  "minecraftVersion": "1.21.1",
+  "size": {
+    "x": 13,
+    "y": 9,
+    "z": 11
+  },
+  "palette": [
+    "minecraft:air",
+    "minecraft:stone_bricks",
+    "minecraft:oak_planks",
+    "minecraft:stripped_spruce_log",
+    "minecraft:spruce_slab",
+    "minecraft:barrel[facing=north,open=false]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false,powered=false]",
+    "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false,powered=false]",
+    "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "minecraft:lantern",
+    "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "minecraft:deepslate_tile_slab"
+  ],
+  "blockCount": 239,
+  "blockEntities": [
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 3,
+      "y": 2,
+      "z": 3,
+      "label": "Market goods",
+      "metadata": {
+        "items": []
+      },
+      "nbtId": "minecraft:barrel",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    },
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 9,
+      "y": 2,
+      "z": 3,
+      "label": "Market stock",
+      "metadata": {
+        "items": []
+      },
+      "nbtId": "minecraft:barrel",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    },
+    {
+      "id": "minecraft:barrel",
+      "kind": "barrel",
+      "x": 3,
+      "y": 2,
+      "z": 7,
+      "label": "Merchant storage",
+      "metadata": {
+        "items": []
+      },
+      "nbtId": "minecraft:barrel",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    },
+    {
+      "id": "minecraft:oak_sign",
+      "kind": "sign",
+      "x": 6,
+      "y": 4,
+      "z": 1,
+      "text": [
+        "SirioCraft",
+        "Market",
+        "Stall",
+        ""
+      ],
+      "label": "Market stall sign",
+      "nbtId": "minecraft:sign",
+      "nbtStatus": "written",
+      "nbtWarnings": []
+    }
+  ],
+  "blockEntityExport": {
+    "total": 4,
+    "signs": 1,
+    "chests": 0,
+    "barrels": 3,
+    "placeholders": 0,
+    "nbtWritten": 4,
+    "metadataOnly": 0,
+    "warnings": []
+  },
+  "features": [
+    "open_market_stall",
+    "counter",
+    "canopy",
+    "barrel_storage",
+    "spawn_trade_use",
+    "sign_metadata"
+  ],
+  "outputPaths": {
+    "debugJsonPath": "exports/schematics/debug/spawn_market_stall-2026-06-27T20-23-28-438Z.debug.json",
+    "metadataJsonPath": "exports/schematics/metadata/spawn_market_stall-2026-06-27T20-23-28-438Z.metadata.json",
+    "schemPath": "exports/schematics/spawn_market_stall-2026-06-27T20-23-28-438Z.schem",
+    "vaultNotePath": "vault/chernobog/Minecraft/Schematics/spawn_market_stall-2026-06-27T20-23-28-438Z.md"
+  },
+  "validation": {
+    "ok": true,
+    "warnings": [
+      "Generator house did not report required feature: foundation.",
+      "Generator house did not report required feature: walls.",
+      "Generator house did not report required feature: roof.",
+      "Generator house did not report required feature: door.",
+      "Generator house did not report required feature: windows.",
+      "Generator house did not report required feature: chimney.",
+      "Generator house did not report required feature: interior_zones.",
+      "Market inventory is intentionally empty; fill barrels manually after placement."
+    ],
+    "errors": []
+  },
+  "placementWarnings": [
+    "Market inventory is intentionally empty; fill barrels manually after placement."
+  ],
+  "unsupportedBlockWarnings": [],
+  "buildReport": {
+    "title": "Spawn Market Stall",
+    "status": "warning",
+    "sirioCraftUseCase": "Settlement housing, spawn village filler, faction base housing, or roadside shelter.",
+    "suggestedPlacement": "Place inside a town plot or faction settlement; connect porch and doorway to the local path network.",
+    "recommendedNextAction": "Usable, but review warnings before placing. Paste into a test world before using on the live SirioCraft server.",
+    "qualityNotes": [
+      "Generated as house/market_stall using preset spawn_market_stall.",
+      "Footprint is 13 x 9 x 11 with 239 placed block(s).",
+      "Recorded features: open_market_stall, counter, canopy, barrel_storage, spawn_trade_use, sign_metadata.",
+      "4 block entity NBT record(s) written and 0 metadata-only placeholder(s) recorded."
+    ],
+    "knownLimitations": [
+      "Uses the current profile's block rules. Create-specific blocks are not used unless the SirioCraft Create profile is enabled later."
+    ],
+    "warningSummary": [
+      "Generator house did not report required feature: foundation.",
+      "Generator house did not report required feature: walls.",
+      "Generator house did not report required feature: roof.",
+      "Generator house did not report required feature: door.",
+      "Generator house did not report required feature: windows.",
+      "Generator house did not report required feature: chimney.",
+      "Generator house did not report required feature: interior_zones.",
+      "Market inventory is intentionally empty; fill barrels manually after placement.",
+      "Market inventory is intentionally empty; fill barrels manually after placement."
+    ],
+    "paletteSummary": [
+      {
+        "block": "minecraft:air",
+        "role": "palette"
+      },
+      {
+        "block": "minecraft:stone_bricks",
+        "role": "structure"
+      },
+      {
+        "block": "minecraft:oak_planks",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:stripped_spruce_log",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:spruce_slab",
+        "role": "palette"
+      },
+      {
+        "block": "minecraft:barrel[facing=north,open=false]",
+        "role": "storage"
+      },
+      {
+        "block": "minecraft:spruce_planks",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false,powered=false]",
+        "role": "palette"
+      },
+      {
+        "block": "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false,powered=false]",
+        "role": "palette"
+      },
+      {
+        "block": "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:lantern",
+        "role": "lighting"
+      },
+      {
+        "block": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+        "role": "wood/detail"
+      },
+      {
+        "block": "minecraft:deepslate_tile_slab",
+        "role": "structure"
+      }
+    ],
+    "blockEntitySummary": {
+      "total": 4,
+      "nbtWritten": 4,
+      "metadataOnly": 0,
+      "labels": [
+        "Market goods",
+        "Market stock",
+        "Merchant storage",
+        "Market stall sign"
+      ]
+    },
+    "outputSummary": [
+      {
+        "kind": "schem",
+        "label": "Schematic",
+        "path": "exports/schematics/spawn_market_stall-2026-06-27T20-23-28-438Z.schem"
+      },
+      {
+        "kind": "metadata",
+        "label": "Metadata JSON",
+        "path": "exports/schematics/metadata/spawn_market_stall-2026-06-27T20-23-28-438Z.metadata.json"
+      },
+      {
+        "kind": "debug",
+        "label": "Debug JSON",
+        "path": "exports/schematics/debug/spawn_market_stall-2026-06-27T20-23-28-438Z.debug.json"
+      },
+      {
+        "kind": "vault-note",
+        "label": "Vault Note",
+        "path": "vault/chernobog/Minecraft/Schematics/spawn_market_stall-2026-06-27T20-23-28-438Z.md"
+      }
+    ],
+    "reviewRoute": "/review/schematic/spawn_market_stall-2026-06-27T20-23-28-438Z",
+    "tags": [
+      "house",
+      "market_stall",
+      "spawn_market_stall",
+      "vanilla",
+      "open_market_stall",
+      "counter",
+      "canopy",
+      "barrel_storage",
+      "spawn_trade_use",
+      "sign_metadata",
+      "town"
+    ]
+  }
+}

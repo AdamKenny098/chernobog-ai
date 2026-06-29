@@ -1,0 +1,41 @@
+{
+  "buildId": "mixer_station-2026-06-28T11-58-20-583Z",
+  "graphId": "create_mixer_station_01",
+  "purpose": "mixer_station",
+  "placementOffset": {
+    "x": 3,
+    "y": 1,
+    "z": 4
+  },
+  "bounds": {
+    "min": {
+      "x": 0,
+      "y": 0,
+      "z": -1
+    },
+    "max": {
+      "x": 3,
+      "y": 2,
+      "z": 0
+    },
+    "size": {
+      "x": 10,
+      "y": 6,
+      "z": 8
+    }
+  },
+  "notes": [
+    "M6-C compile result: Create mechanical graph was compiled into a more legible machine module.",
+    "This pass adds stronger foundations, corner frames, perimeter rails, support columns, and purpose-specific machine hints.",
+    "M6-C still uses registry-safe base block IDs for legacy exporter fields and preserves serialized Create states as rawState/createState.",
+    "M6-D should start scene-pack planning and multi-structure exports.",
+    "M6-C added basin casing pad and fluid pipe hints.",
+    "M6-C added a brass casing header above the mechanical mixer."
+  ],
+  "blockCount": 129,
+  "size": {
+    "x": 10,
+    "y": 6,
+    "z": 8
+  }
+}

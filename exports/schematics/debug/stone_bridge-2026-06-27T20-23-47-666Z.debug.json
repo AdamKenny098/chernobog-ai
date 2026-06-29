@@ -1,0 +1,7013 @@
+{
+  "format": "chernobog-debug-block-grid-v2",
+  "buildId": "stone_bridge-2026-06-27T20-23-47-666Z",
+  "displayName": "Stone Bridge",
+  "generatedAt": "2026-06-27T20:23:47.666Z",
+  "generatorName": "bridge",
+  "variant": "stone_bridge",
+  "presetId": "stone_bridge",
+  "profile": "vanilla",
+  "allowModdedBlocks": false,
+  "fallbackToVanilla": true,
+  "prompt": "SirioCraft preset: Stone Bridge",
+  "command": "generate minecraft schematic preset stone_bridge",
+  "minecraftVersion": "1.21.1",
+  "size": {
+    "x": 11,
+    "y": 12,
+    "z": 37
+  },
+  "palette": [
+    "minecraft:air",
+    "minecraft:chiseled_stone_bricks",
+    "minecraft:stone_bricks",
+    "minecraft:stone_brick_slab",
+    "minecraft:stone_brick_wall",
+    "minecraft:gravel",
+    "minecraft:spruce_fence",
+    "minecraft:lantern"
+  ],
+  "blockCount": 1158,
+  "features": [
+    "open_side_arches",
+    "slimmer_deck",
+    "thick_abutments",
+    "road_deck",
+    "center_path_strip",
+    "railings",
+    "lamp_posts",
+    "longitudinal_underside_beams",
+    "traversable_deck"
+  ],
+  "blockEntities": [],
+  "blockEntityExport": {
+    "total": 0,
+    "signs": 0,
+    "chests": 0,
+    "barrels": 0,
+    "placeholders": 0,
+    "nbtWritten": 0,
+    "metadataOnly": 0,
+    "warnings": []
+  },
+  "validation": {
+    "ok": true,
+    "warnings": [
+      "Generator bridge did not report required feature: supports.",
+      "Generator bridge did not report required feature: lamps."
+    ],
+    "errors": []
+  },
+  "placementWarnings": [],
+  "unsupportedBlockWarnings": [],
+  "blocks": [
+    {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 0,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 0,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 0,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 0,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 0,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 0,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 0,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 0,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 0,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 0,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 0,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 0,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 0,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 0,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 1,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 1,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 11,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 11,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 13,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 13,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 23,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 23,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 25,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 25,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 35,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 35,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 2,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 2,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 3,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 3,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 9,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 9,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 10,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 10,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 14,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 14,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 15,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 15,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 21,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 21,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 22,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 22,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 26,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 26,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 27,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 27,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 33,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 33,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 34,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 34,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 0,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 1,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 1,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 1,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 2,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 2,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 2,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 2,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 2,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 3,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 3,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 3,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 3,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 3,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 4,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 4,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 4,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 4,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 4,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 5,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 5,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 5,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 5,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 5,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 6,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 7,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 7,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 7,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 7,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 7,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 8,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 8,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 8,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 8,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 8,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 9,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 9,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 9,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 9,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 9,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 10,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 10,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 10,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 10,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 10,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 11,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 11,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 11,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 6,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 13,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 13,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 13,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 14,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 14,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 14,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 14,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 14,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 15,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 15,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 15,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 15,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 15,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 16,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 16,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 16,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 16,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 16,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 17,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 17,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 17,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 17,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 17,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 18,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 19,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 19,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 19,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 19,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 19,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 20,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 20,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 20,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 20,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 20,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 21,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 21,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 21,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 21,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 21,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 22,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 22,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 22,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 22,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 22,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 23,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 23,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 23,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 6,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 25,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 25,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 25,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 26,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 26,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 26,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 26,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 26,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 27,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 27,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 27,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 27,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 27,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 28,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 28,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 28,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 28,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 28,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 29,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 29,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 29,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 29,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 29,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 30,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 31,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 31,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 31,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 31,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 31,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 32,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 32,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 32,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 32,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 32,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 33,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 33,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 33,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 33,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 33,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 34,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 34,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 34,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 34,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 34,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 35,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 35,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 35,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "z": 36,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 1,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 2,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 2,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 2,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 2,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 2,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 2,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 2,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 3,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 3,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 3,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 3,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 3,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 3,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 3,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 4,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 4,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 4,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 4,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 4,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 4,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 4,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 4,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "z": 4,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 5,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 5,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 5,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 5,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 5,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 5,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 5,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 6,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 6,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 6,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 6,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 6,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 6,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 6,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 7,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 7,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 7,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 7,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 7,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 7,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 7,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 8,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 8,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 8,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 8,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 8,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 8,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 8,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 9,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 9,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 9,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 9,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 9,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 9,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 9,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 10,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 10,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 10,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 10,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 10,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 10,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 10,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 11,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 12,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 13,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 14,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 14,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 14,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 14,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 14,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 14,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 14,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 15,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 15,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 15,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 15,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 15,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 15,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 15,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 16,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 16,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 16,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 16,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 16,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 16,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 16,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 17,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 17,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 17,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 17,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 17,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 17,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 17,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 18,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 18,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 18,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 18,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 18,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 18,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 18,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 19,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 19,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 19,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 19,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 19,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 19,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 19,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 20,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 20,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 20,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 20,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 20,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 20,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 20,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 20,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "z": 20,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 21,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 21,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 21,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 21,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 21,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 21,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 21,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 22,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 22,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 22,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 22,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 22,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 22,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 22,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 23,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 24,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 25,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 26,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 26,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 26,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 26,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 26,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 26,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 26,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 27,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 27,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 27,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 27,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 27,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 27,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 27,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 28,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 28,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 28,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 28,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 28,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 28,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 28,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 28,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "z": 28,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 29,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 29,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 29,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 29,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 29,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 29,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 29,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 30,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 30,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 30,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 30,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 30,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 30,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 30,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 31,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 31,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 31,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 31,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 31,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 31,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 31,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 32,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 32,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 32,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 32,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 32,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 32,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 32,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 33,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 33,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 33,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 33,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 33,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 33,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 33,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 34,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 34,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 34,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 34,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 34,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 34,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 34,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 34,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "z": 34,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 35,
+      "block": "minecraft:stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 9,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 0,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 0,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 0,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 0,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 0,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 0,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 0,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 1,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 1,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 1,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 1,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 1,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 1,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 1,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 2,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 2,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 2,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 2,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 2,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 3,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 3,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 3,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 3,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 3,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 3,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 3,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 4,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 4,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 4,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 4,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 4,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 4,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 4,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 5,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 5,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 5,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 5,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 5,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 5,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 5,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 6,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 6,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 6,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 6,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 6,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 7,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 7,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 7,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 7,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 7,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 7,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 7,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 8,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 8,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 8,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 8,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 8,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 8,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 8,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 9,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 9,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 9,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 9,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 9,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 9,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 9,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 10,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 10,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 10,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 10,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 10,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 11,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 11,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 11,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 11,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 11,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 11,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 11,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 12,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 12,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 12,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 12,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 12,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 12,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 13,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 13,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 13,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 13,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 13,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 13,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 13,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 14,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 14,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 14,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 14,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 14,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 15,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 15,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 15,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 15,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 15,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 15,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 15,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 16,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 16,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 16,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 16,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 16,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 16,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 16,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 17,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 17,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 17,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 17,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 17,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 17,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 17,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 18,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 18,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 18,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 18,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 18,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 19,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 19,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 19,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 19,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 19,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 19,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 19,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 20,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 20,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 20,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 20,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 20,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 20,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 20,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 21,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 21,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 21,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 21,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 21,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 21,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 21,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 22,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 22,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 22,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 22,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 22,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 23,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 23,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 23,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 23,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 23,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 23,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 23,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 24,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 24,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 24,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 24,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 24,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 24,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 24,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 25,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 25,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 25,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 25,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 25,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 25,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 25,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 26,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 26,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 26,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 26,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 26,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 27,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 27,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 27,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 27,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 27,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 27,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 27,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 28,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 28,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 28,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 28,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 28,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 28,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 28,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 29,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 29,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 29,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 29,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 29,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 29,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 29,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 30,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 30,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 30,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 30,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 30,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 31,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 31,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 31,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 31,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 31,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 31,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 31,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 32,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 32,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 32,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 32,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 32,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 32,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 32,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 33,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 33,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 33,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 33,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 33,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 33,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 33,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 34,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 34,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 34,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 34,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 34,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 34,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 34,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 35,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 35,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 35,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 35,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 35,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 35,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 35,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "z": 36,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "z": 36,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "z": 36,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "z": 36,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "z": 36,
+      "block": "minecraft:gravel"
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "z": 36,
+      "block": "minecraft:stone_brick_slab"
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "z": 36,
+      "block": "minecraft:stone_brick_wall"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 0,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 4,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 4,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 8,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 8,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 12,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 12,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 16,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 16,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 20,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 20,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 24,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 28,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 28,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 32,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 32,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 34,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 34,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "z": 36,
+      "block": "minecraft:chiseled_stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 9,
+      "z": 4,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 9,
+      "z": 4,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 9,
+      "z": 12,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 9,
+      "z": 12,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 9,
+      "z": 20,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 9,
+      "z": 20,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 9,
+      "z": 28,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 9,
+      "z": 28,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 9,
+      "z": 34,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 10,
+      "y": 9,
+      "z": 34,
+      "block": "minecraft:spruce_fence"
+    },
+    {
+      "x": 0,
+      "y": 10,
+      "z": 4,
+      "block": "minecraft:lantern"
+    },
+    {
+      "x": 10,
+      "y": 10,
+      "z": 4,
+      "block": "minecraft:lantern"
+    },
+    {
+      "x": 0,
+      "y": 10,
+      "z": 12,
+      "block": "minecraft:lantern"
+    },
+    {
+      "x": 10,
+      "y": 10,
+      "z": 12,
+      "block": "minecraft:lantern"
+    },
+    {
+      "x": 0,
+      "y": 10,
+      "z": 20,
+      "block": "minecraft:lantern"
+    },
+    {
+      "x": 10,
+      "y": 10,
+      "z": 20,
+      "block": "minecraft:lantern"
+    },
+    {
+      "x": 0,
+      "y": 10,
+      "z": 28,
+      "block": "minecraft:lantern"
+    },
+    {
+      "x": 10,
+      "y": 10,
+      "z": 28,
+      "block": "minecraft:lantern"
+    },
+    {
+      "x": 0,
+      "y": 10,
+      "z": 34,
+      "block": "minecraft:lantern"
+    },
+    {
+      "x": 10,
+      "y": 10,
+      "z": 34,
+      "block": "minecraft:lantern"
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+{
+  "id": "create_mixer_station_01",
+  "purpose": "mixer_station",
+  "profileId": "create_1_21_1_neoforge",
+  "nodes": [
+    {
+      "id": "water_wheel_01",
+      "kind": "water_wheel",
+      "position": {
+        "x": 0,
+        "y": 2,
+        "z": 0
+      },
+      "axis": "x",
+      "role": "power_source",
+      "blockId": "create:water_wheel"
+    },
+    {
+      "id": "shaft_01",
+      "kind": "shaft",
+      "position": {
+        "x": 1,
+        "y": 2,
+        "z": 0
+      },
+      "axis": "x",
+      "role": "power_transfer",
+      "blockId": "create:shaft"
+    },
+    {
+      "id": "gearbox_01",
+      "kind": "gearbox",
+      "position": {
+        "x": 2,
+        "y": 2,
+        "z": 0
+      },
+      "axis": "x",
+      "role": "rotation_router",
+      "blockId": "create:gearbox"
+    },
+    {
+      "id": "shaft_mixer",
+      "kind": "shaft",
+      "position": {
+        "x": 3,
+        "y": 2,
+        "z": 0
+      },
+      "axis": "x",
+      "role": "machine_input_shaft",
+      "blockId": "create:shaft"
+    },
+    {
+      "id": "mixer_01",
+      "kind": "mechanical_mixer",
+      "position": {
+        "x": 3,
+        "y": 1,
+        "z": 0
+      },
+      "facing": "down",
+      "role": "processor",
+      "blockId": "create:mechanical_mixer"
+    },
+    {
+      "id": "basin_01",
+      "kind": "basin",
+      "position": {
+        "x": 3,
+        "y": 0,
+        "z": 0
+      },
+      "role": "input_output_container",
+      "blockId": "create:basin"
+    },
+    {
+      "id": "funnel_01",
+      "kind": "funnel",
+      "position": {
+        "x": 3,
+        "y": 0,
+        "z": -1
+      },
+      "facing": "south",
+      "role": "item_io_hint",
+      "blockId": "create:andesite_funnel"
+    }
+  ],
+  "connections": [
+    {
+      "id": "c_water_to_shaft_01",
+      "kind": "shaft",
+      "from": "water_wheel_01",
+      "to": "shaft_01",
+      "axis": "x"
+    },
+    {
+      "id": "c_shaft_01_to_gearbox",
+      "kind": "shaft",
+      "from": "shaft_01",
+      "to": "gearbox_01",
+      "axis": "x"
+    },
+    {
+      "id": "c_gearbox_to_mixer_shaft",
+      "kind": "gearbox",
+      "from": "gearbox_01",
+      "to": "shaft_mixer",
+      "axis": "x"
+    },
+    {
+      "id": "c_mixer_power",
+      "kind": "machine_input",
+      "from": "shaft_mixer",
+      "to": "mixer_01",
+      "axis": "x"
+    },
+    {
+      "id": "c_basin_to_mixer",
+      "kind": "machine_input",
+      "from": "basin_01",
+      "to": "mixer_01"
+    },
+    {
+      "id": "c_funnel_to_basin",
+      "kind": "item_flow",
+      "from": "funnel_01",
+      "to": "basin_01"
+    }
+  ],
+  "flowHints": [
+    "Items enter through funnel_01.",
+    "basin_01 holds the recipe contents.",
+    "mixer_01 processes contents directly above basin_01."
+  ],
+  "blockPlacements": [
+    {
+      "id": "water_wheel_01",
+      "blockId": "create:water_wheel",
+      "position": {
+        "x": 0,
+        "y": 2,
+        "z": 0
+      },
+      "properties": {
+        "axis": "x"
+      },
+      "role": "power_source"
+    },
+    {
+      "id": "shaft_01",
+      "blockId": "create:shaft",
+      "position": {
+        "x": 1,
+        "y": 2,
+        "z": 0
+      },
+      "properties": {
+        "axis": "x"
+      },
+      "role": "power_transfer"
+    },
+    {
+      "id": "gearbox_01",
+      "blockId": "create:gearbox",
+      "position": {
+        "x": 2,
+        "y": 2,
+        "z": 0
+      },
+      "properties": {
+        "axis": "x"
+      },
+      "role": "rotation_router"
+    },
+    {
+      "id": "shaft_mixer",
+      "blockId": "create:shaft",
+      "position": {
+        "x": 3,
+        "y": 2,
+        "z": 0
+      },
+      "properties": {
+        "axis": "x"
+      },
+      "role": "machine_input_shaft"
+    },
+    {
+      "id": "mixer_01",
+      "blockId": "create:mechanical_mixer",
+      "position": {
+        "x": 3,
+        "y": 1,
+        "z": 0
+      },
+      "properties": {
+        "facing": "down"
+      },
+      "role": "processor"
+    },
+    {
+      "id": "basin_01",
+      "blockId": "create:basin",
+      "position": {
+        "x": 3,
+        "y": 0,
+        "z": 0
+      },
+      "role": "input_output_container"
+    },
+    {
+      "id": "funnel_01",
+      "blockId": "create:andesite_funnel",
+      "position": {
+        "x": 3,
+        "y": 0,
+        "z": -1
+      },
+      "properties": {
+        "facing": "south"
+      },
+      "role": "item_io_hint"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "packId": "factory-yard-2026-06-29T00-51-58-001Z",
+  "createdAt": "2026-06-29T00:51:58.018Z",
+  "status": "generated",
+  "prompt": "create factory yard with train platform",
+  "sceneType": "factory_yard",
+  "biomeHint": "unknown",
+  "scale": "medium",
+  "styleProfile": "siriocraft-create",
+  "purpose": "Server-ready Create factory yard scene plan with train and storage logistics.",
+  "structureCount": 5,
+  "plannedSchematicCount": 5,
+  "generatedSchematicCount": 5,
+  "outputRoot": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z",
+  "structures": [
+    {
+      "structureId": "central_factory_shell",
+      "displayName": "Central Factory Shell",
+      "kind": "factory_shell",
+      "schematicName": "central_factory_shell.schem",
+      "plannedSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/schematics/central_factory_shell.schem",
+      "manifestPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/structures/central_factory_shell.structure-plan.json",
+      "generatorHint": "factory",
+      "priority": 1,
+      "status": "generated",
+      "warnings": [
+        "M6-E exports the pack plan and folder structure. M6-F will wire real per-structure .schem generation into this slot.",
+        "Factory with yard uses the SirioCraft Create profile with selected Create block IDs.",
+        "Create belts/mechanical arms are still not emitted because their useful block states need a stricter resolver pass.",
+        "fallbackToVanilla remains enabled so unsupported Create blocks can be replaced safely if the profile changes.",
+        "Scene pack placement offset: x:0, z:0. Facing south.",
+        "M6-F.1 uses the existing high-quality single-structure generator instead of prototype pack geometry."
+      ]
+    },
+    {
+      "structureId": "train_platform",
+      "displayName": "Train Platform",
+      "kind": "train_stop",
+      "schematicName": "train_platform.schem",
+      "plannedSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/schematics/train_platform.schem",
+      "manifestPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/structures/train_platform.structure-plan.json",
+      "generatorHint": "train_station",
+      "priority": 2,
+      "status": "generated",
+      "warnings": [
+        "M6-E exports the pack plan and folder structure. M6-F will wire real per-structure .schem generation into this slot.",
+        "Rails are vanilla placeholders. Create train track blocks are intentionally gated for a later profile pass.",
+        "Scene pack placement offset: x:-36, z:0. Facing east.",
+        "M6-F.1 uses the existing high-quality single-structure generator instead of prototype pack geometry."
+      ]
+    },
+    {
+      "structureId": "storage_yard",
+      "displayName": "Storage Yard",
+      "kind": "storage_yard",
+      "schematicName": "storage_yard.schem",
+      "plannedSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/schematics/storage_yard.schem",
+      "manifestPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/structures/storage_yard.structure-plan.json",
+      "generatorHint": "storage_yard",
+      "priority": 3,
+      "status": "generated",
+      "warnings": [
+        "M6-E exports the pack plan and folder structure. M6-F will wire real per-structure .schem generation into this slot.",
+        "Generator factory did not report required feature: large_hall.",
+        "Generator factory did not report required feature: chimney.",
+        "Generator factory did not report required feature: loading_door.",
+        "Generator factory did not report required feature: big_windows.",
+        "Generator factory did not report required feature: industrial_roof.",
+        "Generator factory did not report required feature: catwalks.",
+        "Generator factory did not report required feature: pipes.",
+        "Industrial storage yard uses the SirioCraft Create profile with selected Create block IDs.",
+        "Create belts/mechanical arms are still not emitted because their useful block states need a stricter resolver pass.",
+        "fallbackToVanilla remains enabled so unsupported Create blocks can be replaced safely if the profile changes.",
+        "Scene pack placement offset: x:34, z:4. Facing west.",
+        "M6-F.1 uses the existing high-quality single-structure generator instead of prototype pack geometry."
+      ]
+    },
+    {
+      "structureId": "press_line_module",
+      "displayName": "Press Line Module",
+      "kind": "machine_module",
+      "schematicName": "press_line_module.schem",
+      "plannedSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/schematics/press_line_module.schem",
+      "manifestPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/structures/press_line_module.structure-plan.json",
+      "generatorHint": "create_press_line",
+      "priority": 4,
+      "status": "generated",
+      "warnings": [
+        "M6-E exports the pack plan and folder structure. M6-F will wire real per-structure .schem generation into this slot.",
+        "Generator factory did not report required feature: large_hall.",
+        "Generator factory did not report required feature: chimney.",
+        "Generator factory did not report required feature: loading_door.",
+        "Generator factory did not report required feature: big_windows.",
+        "Generator factory did not report required feature: industrial_roof.",
+        "Generator factory did not report required feature: catwalks.",
+        "Generator factory did not report required feature: pipes.",
+        "Scene pack placement offset: x:3, z:-22. Facing south.",
+        "M6-F.1 uses the existing high-quality single-structure generator instead of prototype pack geometry."
+      ]
+    },
+    {
+      "structureId": "yard_paths",
+      "displayName": "Yard Paths",
+      "kind": "road_segment",
+      "schematicName": "yard_paths.schem",
+      "plannedSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/schematics/yard_paths.schem",
+      "manifestPath": "exports/schematic-packs/factory-yard-2026-06-29T00-51-58-001Z/structures/yard_paths.structure-plan.json",
+      "generatorHint": "paths",
+      "priority": 5,
+      "status": "generated",
+      "warnings": [
+        "M6-E exports the pack plan and folder structure. M6-F will wire real per-structure .schem generation into this slot.",
+        "Road/path modules are still fallback geometry. Major buildings now use high-quality individual generators.",
+        "Scene pack placement offset: x:0, z:28. Facing north."
+      ]
+    }
+  ],
+  "warnings": [
+    "M6-D is a scene planning layer only. It does not yet export multi-schematic packs.",
+    "Structure generators are referenced by generatorHint and will be wired in M6-E.",
+    "Pack contains deterministic structure manifests and placement metadata. Actual multi-schematic compilation is the M6-F target."
+  ],
+  "notes": [
+    "Scene planning is now separated from individual structure generation.",
+    "Roads, zones, terrain notes, paste order, and schematic names are deterministic.",
+    "M6-E should compile this plan into multiple schematics and a pack folder.",
+    "M6-E created the build-pack filesystem contract.",
+    "M6-F should replace planned schematic slots with actual .schem exports.",
+    "M6-F generated 5/5 planned schematic file(s)."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "structureId": "yard_paths",
+  "displayName": "Yard Paths",
+  "sourceSchematicName": "yard_paths.schem",
+  "previewSchematicName": "yard_paths.preview.schem",
+  "sourceDebugJsonPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/metadata/yard_paths.debug.json",
+  "previewSchematicPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/vanilla-preview/schematics/yard_paths.preview.schem",
+  "previewDebugJsonPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/vanilla-preview/metadata/yard_paths.preview.debug.json",
+  "previewMetadataJsonPath": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z/vanilla-preview/metadata/yard_paths.preview.metadata.json",
+  "status": "generated",
+  "validationOk": true,
+  "readBackOk": true,
+  "replacementCount": 0,
+  "replacements": {},
+  "errors": [],
+  "warnings": [
+    "Road/path modules are still fallback geometry. Major buildings now use high-quality individual generators.",
+    "Scene pack placement offset: x:0, z:28. Facing north.",
+    "M6-H vanilla preview: this schematic is for browser preview only and is not the real Create/modded build.",
+    "Use the original schematics for final Minecraft placement.",
+    "Preview build generated with vanilla fallback blocks.",
+    "Create/modded states were intentionally removed for Schemat.io-style compatibility.",
+    "Original schematic files were not modified.",
+    "This is a preview-only schematic. It is not the real modded/Create schematic."
+  ],
+  "sourcePackId": "factory-yard-2026-06-29T00-46-20-676Z",
+  "sourceOutputRoot": "exports/schematic-packs/factory-yard-2026-06-29T00-46-20-676Z",
+  "previewPurpose": "Browser/Schemat.io-compatible visual preview."
+}
