@@ -1,34 +1,46 @@
+import { formatVaultBrainAnswer, answerFromVault } from "./answerComposer";
+import { isControlledExecutionCommand, executeControlledExecutionCommand } from "./controlledExecutionCommands";
+import { formatStaleVaultBrainFiles, formatVaultBrainDiagnostics, inspectVaultSource } from "./diagnostics";
+import { buildVaultBrainIndex } from "./indexer";
+import { formatVaultBrainSearchResults, searchVaultBrain } from "./search";
+import { getVaultBrainStatus } from "./store";
+import { isChernobogIncCommand, executeChernobogIncCommand } from "./chernobogIncCommands";
+import { isChernobogMissionCommand, executeChernobogMissionCommand } from "./chernobogMissionCommands";
+import { executeGovernanceCommand, isGovernanceCommand } from "./governanceCommands";
+import { executeCurrentStateBriefingCommand, isCurrentStateBriefingCommand } from "./currentStateBriefingCommands";
+import { executeCodeSummaryMemoryCommand, isCodeSummaryMemoryCommand } from "./codeSummaryCommands";
+import { executeMemoryCorrectionCommand, isMemoryCorrectionCommand } from "./memoryCorrectionCommands";
+import { executeVaultOnlyAnswerCommand, isVaultOnlyAnswerCommand } from "./vaultOnlyAnswerCommands";
+import { executeProjectMemoryProfileCommand, isProjectMemoryProfileCommand } from "./projectMemoryProfileCommands";
 import {
-  formatVaultBrainAnswer,
-  answerFromVault,
-} from "./answerComposer";
-import {
-  formatStaleVaultBrainFiles,
-  formatVaultBrainDiagnostics,
-  inspectVaultSource,
-} from "./diagnostics";
-import {
-  buildVaultBrainIndex,
-} from "./indexer";
-import {
-  formatVaultBrainSearchResults,
-  searchVaultBrain,
-} from "./search";
-import {
-  getVaultBrainStatus,
-} from "./store";
-import {
-  VaultBrainCommandResult,
-} from "./types";
+  executeStructuredMemoryCommand,
+  executeStructuredVaultMemoryCommand,
+  isStructuredMemoryCommand,
+  isStructuredVaultMemoryCommand,
+} from "./structuredMemoryCommands";
+import { executeStructuredMemoryReviewCommand, isStructuredMemoryReviewCommand } from "./memoryReview";
+import type { VaultBrainCommandResult } from "./types";
 
+import { executeV6ReadinessCommand, isV6ReadinessCommand } from "./v6ReadinessCommands";
+import { executeV6PersonalIntelligenceCommand, isV6PersonalIntelligenceCommand } from "./personalIntelligenceCommands";
 function normalize(command: string) {
   return command.trim().replace(/\s+/g, " ");
 }
 
 export function isVaultBrainCommand(command: string) {
   const normalized = normalize(command);
+  if (isChernobogIncCommand(normalized)) return true;
 
   return (
+    isGovernanceCommand(normalized) ||
+    isCurrentStateBriefingCommand(normalized) ||
+    isCodeSummaryMemoryCommand(normalized) ||
+    isMemoryCorrectionCommand(normalized) ||
+    isVaultOnlyAnswerCommand(normalized) ||
+    isProjectMemoryProfileCommand(normalized) ||
+    isStructuredMemoryCommand(normalized) ||
+    isStructuredMemoryReviewCommand(normalized) ||
+    isStructuredVaultMemoryCommand(normalized) ||
     /^index vault brain$/i.test(normalized) ||
     /^refresh vault brain$/i.test(normalized) ||
     /^show vault brain status$/i.test(normalized) ||
@@ -38,13 +50,78 @@ export function isVaultBrainCommand(command: string) {
     /^ask vault\s+.+$/i.test(normalized) ||
     /^ask vault brain\s+.+$/i.test(normalized) ||
     /^inspect vault source\s+.+$/i.test(normalized)
-  );
+   ||
+    isChernobogMissionCommand(normalized) ||
+    isControlledExecutionCommand(normalized) ||
+    isV6ReadinessCommand(normalized) ||
+    isV6PersonalIntelligenceCommand(normalized));
 }
 
 export async function executeVaultBrainCommand(
   command: string
 ): Promise<VaultBrainCommandResult> {
   const normalized = normalize(command);
+
+  if (isV6PersonalIntelligenceCommand(normalized)) {
+    return executeV6PersonalIntelligenceCommand(normalized);
+  }
+
+  if (isV6ReadinessCommand(normalized)) {
+    return executeV6ReadinessCommand(normalized);
+  }
+
+  if (isControlledExecutionCommand(normalized)) {
+    return executeControlledExecutionCommand(normalized);
+  }
+
+  if (isChernobogMissionCommand(normalized)) {
+    return executeChernobogMissionCommand(normalized);
+  }
+  if (isChernobogIncCommand(normalized)) return executeChernobogIncCommand(normalized);
+
+  if (isGovernanceCommand(normalized)) {
+    return executeGovernanceCommand(normalized);
+  }
+
+
+  if (isCurrentStateBriefingCommand(normalized)) {
+    return executeCurrentStateBriefingCommand(normalized);
+  }
+
+
+  if (isCodeSummaryMemoryCommand(normalized)) {
+    return executeCodeSummaryMemoryCommand(normalized);
+  }
+
+
+  if (isMemoryCorrectionCommand(normalized)) {
+    return executeMemoryCorrectionCommand(normalized);
+  }
+
+
+  if (isVaultOnlyAnswerCommand(normalized)) {
+    return executeVaultOnlyAnswerCommand(normalized);
+  }
+
+
+  if (isProjectMemoryProfileCommand(normalized)) {
+    return executeProjectMemoryProfileCommand(normalized);
+  }
+
+
+  if (isStructuredMemoryCommand(normalized)) {
+    return executeStructuredMemoryCommand(normalized);
+  }
+
+
+  if (isStructuredMemoryReviewCommand(normalized)) {
+    return executeStructuredMemoryReviewCommand(normalized);
+  }
+
+
+  if (isStructuredVaultMemoryCommand(normalized)) {
+    return executeStructuredVaultMemoryCommand(normalized);
+  }
 
   if (/^(index|refresh) vault brain$/i.test(normalized)) {
     const result = await buildVaultBrainIndex();
@@ -66,7 +143,9 @@ export async function executeVaultBrainCommand(
         result.diagnostics.skipped.length > 0
           ? [
               "Skipped:",
-              ...result.diagnostics.skipped.slice(0, 10).map((item) => `- ${item.path}: ${item.reason}`),
+              ...result.diagnostics.skipped
+                .slice(0, 10)
+                .map((item: { path: string; reason: string }) => `- ${item.path}: ${item.reason}`),
             ].join("\n")
           : "Skipped: none",
       ].join("\n"),
@@ -136,7 +215,6 @@ export async function executeVaultBrainCommand(
     const question = normalized
       .replace(/^ask vault brain\s+/i, "")
       .replace(/^ask vault\s+/i, "");
-
     const answer = await answerFromVault(question);
 
     return {
@@ -181,8 +259,9 @@ export async function executeVaultBrainCommand(
       "Try one of these:",
       "- index vault brain",
       "- show vault brain status",
-      "- show vault brain diagnostics",
-      "- show stale vault brain files",
+      "- show structured memory status",
+      "- recall approved memory Chernobog V5.6.2",
+      "- ask approved vault what is the current Chernobog state?",
       "- search vault brain Chernobog saved content",
       "- ask vault what is the current Chernobog roadmap?",
       "- inspect vault source projects/chernobog/Tasks.md",

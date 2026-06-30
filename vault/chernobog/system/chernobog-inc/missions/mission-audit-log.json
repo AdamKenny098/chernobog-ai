@@ -1,0 +1,121 @@
+[
+  {
+    "id": "mission-audit-mqz5zjx0-fsfajp",
+    "createdAt": "2026-06-29T11:58:43.860Z",
+    "missionId": "mission-v5-9-verification-mission-1782734323850-mqz5zjws",
+    "action": "created",
+    "summary": "Mission created: V5.9 Verification Mission 1782734323850",
+    "nextStatus": "proposed"
+  },
+  {
+    "id": "mission-audit-mqz5zjxb-c1h4rf",
+    "createdAt": "2026-06-29T11:58:43.871Z",
+    "missionId": "mission-v5-9-verification-mission-1782734323850-mqz5zjws",
+    "action": "checkpoint-approved",
+    "summary": "Mission checkpoint approved: ceo-approval"
+  },
+  {
+    "id": "mission-audit-mqz5zjxi-90bhy2",
+    "createdAt": "2026-06-29T11:58:43.878Z",
+    "missionId": "mission-v5-9-verification-mission-1782734323850-mqz5zjws",
+    "action": "checkpoint-approved",
+    "summary": "Mission checkpoint approved: security-review"
+  },
+  {
+    "id": "mission-audit-mqz5zjxo-y6m709",
+    "createdAt": "2026-06-29T11:58:43.884Z",
+    "missionId": "mission-v5-9-verification-mission-1782734323850-mqz5zjws",
+    "action": "status-updated",
+    "summary": "Mission status updated: proposed -> approved",
+    "previousStatus": "proposed",
+    "nextStatus": "approved"
+  },
+  {
+    "id": "mission-audit-mqz5zjy7-97o6sx",
+    "createdAt": "2026-06-29T11:58:43.903Z",
+    "missionId": "mission-v5-9-verification-mission-1782734323850-mqz5zjws",
+    "action": "status-updated",
+    "summary": "Mission status updated: approved -> in_progress",
+    "previousStatus": "approved",
+    "nextStatus": "in_progress"
+  },
+  {
+    "id": "mission-audit-mqz62haj-79ym7m",
+    "createdAt": "2026-06-29T12:01:00.427Z",
+    "missionId": "mission-v5-9-verification-mission-1782734460421-mqz62hae",
+    "action": "created",
+    "summary": "Mission created: V5.9 Verification Mission 1782734460421",
+    "nextStatus": "proposed"
+  },
+  {
+    "id": "mission-audit-mqz62har-aed4xu",
+    "createdAt": "2026-06-29T12:01:00.435Z",
+    "missionId": "mission-v5-9-verification-mission-1782734460421-mqz62hae",
+    "action": "checkpoint-approved",
+    "summary": "Mission checkpoint approved: ceo-approval"
+  },
+  {
+    "id": "mission-audit-mqz62hav-56994p",
+    "createdAt": "2026-06-29T12:01:00.439Z",
+    "missionId": "mission-v5-9-verification-mission-1782734460421-mqz62hae",
+    "action": "checkpoint-approved",
+    "summary": "Mission checkpoint approved: security-review"
+  },
+  {
+    "id": "mission-audit-mqz62haz-xhu2b0",
+    "createdAt": "2026-06-29T12:01:00.443Z",
+    "missionId": "mission-v5-9-verification-mission-1782734460421-mqz62hae",
+    "action": "status-updated",
+    "summary": "Mission status updated: proposed -> approved",
+    "previousStatus": "proposed",
+    "nextStatus": "approved"
+  },
+  {
+    "id": "mission-audit-mqz62hb4-yz92bn",
+    "createdAt": "2026-06-29T12:01:00.448Z",
+    "missionId": "mission-v5-9-verification-mission-1782734460421-mqz62hae",
+    "action": "status-updated",
+    "summary": "Mission status updated: approved -> in_progress",
+    "previousStatus": "approved",
+    "nextStatus": "in_progress"
+  },
+  {
+    "id": "mission-audit-mqz6ltxc-t7w0in",
+    "createdAt": "2026-06-29T12:16:03.264Z",
+    "missionId": "mission-v5-9-5-proposed-mission-1782735363258-mqz6ltx8",
+    "action": "created",
+    "summary": "Mission created: V5.9.5 Proposed Mission 1782735363258",
+    "nextStatus": "proposed"
+  },
+  {
+    "id": "mission-audit-mqz6ltxi-7zwlwe",
+    "createdAt": "2026-06-29T12:16:03.270Z",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "created",
+    "summary": "Mission created: V5.9.5 Verification Mission 1782735363266",
+    "nextStatus": "proposed"
+  },
+  {
+    "id": "mission-audit-mqz6ltxn-sonfi3",
+    "createdAt": "2026-06-29T12:16:03.275Z",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "checkpoint-approved",
+    "summary": "Mission checkpoint approved: ceo-approval"
+  },
+  {
+    "id": "mission-audit-mqz6ltxr-acugqu",
+    "createdAt": "2026-06-29T12:16:03.279Z",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "checkpoint-approved",
+    "summary": "Mission checkpoint approved: security-review"
+  },
+  {
+    "id": "mission-audit-mqz6ltxv-axyomo",
+    "createdAt": "2026-06-29T12:16:03.283Z",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "status-updated",
+    "summary": "Mission status updated: proposed -> approved",
+    "previousStatus": "proposed",
+    "nextStatus": "approved"
+  }
+]

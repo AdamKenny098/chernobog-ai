@@ -1,0 +1,66 @@
+[
+  {
+    "id": "execution-audit-mqz6lty4-6xgx7r",
+    "createdAt": "2026-06-29T12:16:03.292Z",
+    "planId": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "plan-created",
+    "summary": "Controlled execution plan created with 4 planned step(s)."
+  },
+  {
+    "id": "execution-audit-mqz6ltyc-itfaxr",
+    "createdAt": "2026-06-29T12:16:03.300Z",
+    "planId": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "checkpoint-approved",
+    "summary": "Controlled execution checkpoint approved: ceo-execution-approval"
+  },
+  {
+    "id": "execution-audit-mqz6ltyh-mfyfg2",
+    "createdAt": "2026-06-29T12:16:03.305Z",
+    "planId": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "checkpoint-approved",
+    "summary": "Controlled execution checkpoint approved: security-execution-review"
+  },
+  {
+    "id": "execution-audit-mqz6ltym-0c31a6",
+    "createdAt": "2026-06-29T12:16:03.310Z",
+    "planId": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "checkpoint-approved",
+    "summary": "Controlled execution checkpoint approved: checkpoint-step-02-prepare-proposed-implementation-patch"
+  },
+  {
+    "id": "execution-audit-mqz6ltyq-kboj4o",
+    "createdAt": "2026-06-29T12:16:03.314Z",
+    "planId": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "checkpoint-approved",
+    "summary": "Controlled execution checkpoint approved: checkpoint-step-03-run-verification-command-set"
+  },
+  {
+    "id": "execution-audit-mqz6ltyu-dl2wai",
+    "createdAt": "2026-06-29T12:16:03.318Z",
+    "planId": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "checkpoint-approved",
+    "summary": "Controlled execution checkpoint approved: checkpoint-step-04-security-review-before-any-future-execution"
+  },
+  {
+    "id": "execution-audit-mqz6ltyy-bdq088",
+    "createdAt": "2026-06-29T12:16:03.322Z",
+    "planId": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "plan-approved",
+    "summary": "Controlled execution plan approved for dry-run planning only. Tool execution remains blocked."
+  },
+  {
+    "id": "execution-audit-mqz6ltz4-y6fwnq",
+    "createdAt": "2026-06-29T12:16:03.328Z",
+    "planId": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "action": "dry-run-created",
+    "summary": "Controlled execution dry-run created with 4 non-executing step(s)."
+  }
+]

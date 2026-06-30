@@ -1,0 +1,250 @@
+[
+  {
+    "id": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "title": "Controlled execution plan for V5.9.5 Verification Mission 1782735363266",
+    "objective": "Prepare a controlled execution plan for a safe verification patch.",
+    "status": "approved",
+    "mode": "dry-run",
+    "projectId": "chernobog",
+    "version": "v5.9.5",
+    "departments": [
+      "engineering",
+      "security"
+    ],
+    "steps": [
+      {
+        "title": "Read mission and approved vault context",
+        "description": "Collect mission context and approved memory before planning any changes.",
+        "actionType": "memory-read",
+        "requestedTool": "vault.memory.read",
+        "target": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+        "department": "research",
+        "workerRole": "planner",
+        "expectedChange": "No mutation. Context only.",
+        "rollbackNote": "No rollback required for read-only context gathering.",
+        "id": "step-01-read-mission-and-approved-vault-context",
+        "status": "planned",
+        "trustDecision": {
+          "id": "trust-20260629121603-ic6hwqg",
+          "request": {
+            "title": "Read mission and approved vault context",
+            "description": "Collect mission context and approved memory before planning any changes.",
+            "actionType": "memory-read",
+            "requestedTool": "vault.memory.read",
+            "target": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+            "actor": "chernobog-inc/research/planner",
+            "metadata": {
+              "executionPlanStep": true
+            }
+          },
+          "risk": "safe_auto",
+          "status": "allowed",
+          "approvalRequired": false,
+          "explicitApprovalRequired": false,
+          "auditRequired": false,
+          "allowedToExecute": true,
+          "reason": "Reading approved structured memory is non-mutating.",
+          "policyRuleId": "trust.memory.read",
+          "createdAt": "2026-06-29T12:16:03.286Z"
+        },
+        "checkpointRequired": false,
+        "createdAt": "2026-06-29T12:16:03.286Z",
+        "updatedAt": "2026-06-29T12:16:03.286Z"
+      },
+      {
+        "title": "Prepare proposed implementation patch",
+        "description": "Prepare a patch plan for: Prepare a controlled execution plan for a safe verification patch.",
+        "actionType": "file-write",
+        "requestedTool": "files.write",
+        "target": "repo patch proposal",
+        "department": "engineering",
+        "workerRole": "creator",
+        "expectedChange": "Potential repo file changes, but V5.9.5 records only the plan.",
+        "rollbackNote": "Keep changed file list and restoration notes before any later write-capable milestone.",
+        "securityReviewRequired": true,
+        "id": "step-02-prepare-proposed-implementation-patch",
+        "status": "approved",
+        "trustDecision": {
+          "id": "trust-20260629121603-a93f0sv",
+          "request": {
+            "title": "Prepare proposed implementation patch",
+            "description": "Prepare a patch plan for: Prepare a controlled execution plan for a safe verification patch.",
+            "actionType": "file-write",
+            "requestedTool": "files.write",
+            "target": "repo patch proposal",
+            "actor": "chernobog-inc/engineering/creator",
+            "metadata": {
+              "executionPlanStep": true
+            }
+          },
+          "risk": "requires_approval",
+          "status": "approval-required",
+          "approvalRequired": true,
+          "explicitApprovalRequired": false,
+          "auditRequired": true,
+          "allowedToExecute": false,
+          "reason": "Writing files can alter the repo or vault and should be checkpointed.",
+          "policyRuleId": "trust.file.write.approval",
+          "createdAt": "2026-06-29T12:16:03.286Z"
+        },
+        "checkpointRequired": true,
+        "checkpointId": "checkpoint-step-02-prepare-proposed-implementation-patch",
+        "createdAt": "2026-06-29T12:16:03.286Z",
+        "updatedAt": "2026-06-29T12:16:03.307Z"
+      },
+      {
+        "title": "Run verification command set",
+        "description": "Plan the verification command sequence for the patch.",
+        "actionType": "project-command",
+        "requestedTool": "project.command",
+        "target": "npm run verify; npx tsc --noEmit; npm run lint",
+        "department": "engineering",
+        "workerRole": "reviewer",
+        "expectedChange": "No repo mutation expected from verification commands, but command execution is still gated.",
+        "rollbackNote": "Capture output and stop on first failure.",
+        "securityReviewRequired": true,
+        "id": "step-03-run-verification-command-set",
+        "status": "approved",
+        "trustDecision": {
+          "id": "trust-20260629121603-xfcyez3",
+          "request": {
+            "title": "Run verification command set",
+            "description": "Plan the verification command sequence for the patch.",
+            "actionType": "project-command",
+            "requestedTool": "project.command",
+            "target": "npm run verify; npx tsc --noEmit; npm run lint",
+            "actor": "chernobog-inc/engineering/reviewer",
+            "metadata": {
+              "executionPlanStep": true
+            }
+          },
+          "risk": "dangerous_requires_explicit_approval",
+          "status": "approval-required",
+          "approvalRequired": true,
+          "explicitApprovalRequired": true,
+          "auditRequired": true,
+          "allowedToExecute": false,
+          "reason": "Commands may change generated files, install packages, or mutate project state.",
+          "policyRuleId": "trust.project.command.explicit",
+          "createdAt": "2026-06-29T12:16:03.286Z"
+        },
+        "checkpointRequired": true,
+        "checkpointId": "checkpoint-step-03-run-verification-command-set",
+        "createdAt": "2026-06-29T12:16:03.286Z",
+        "updatedAt": "2026-06-29T12:16:03.312Z"
+      },
+      {
+        "title": "Security review before any future execution",
+        "description": "Review action risks, forbidden targets, rollback notes, and approval status.",
+        "actionType": "governance-edit",
+        "requestedTool": "governance.review",
+        "target": "controlled execution plan",
+        "department": "security",
+        "workerRole": "security-analyst",
+        "expectedChange": "No mutation. Produces a safety decision.",
+        "rollbackNote": "Do not proceed if security review is rejected or blocked.",
+        "securityReviewRequired": true,
+        "id": "step-04-security-review-before-any-future-execution",
+        "status": "approved",
+        "trustDecision": {
+          "id": "trust-20260629121603-372ljm2",
+          "request": {
+            "title": "Security review before any future execution",
+            "description": "Review action risks, forbidden targets, rollback notes, and approval status.",
+            "actionType": "governance-edit",
+            "requestedTool": "governance.review",
+            "target": "controlled execution plan",
+            "actor": "chernobog-inc/security/security-analyst",
+            "metadata": {
+              "executionPlanStep": true
+            }
+          },
+          "risk": "dangerous_requires_explicit_approval",
+          "status": "approval-required",
+          "approvalRequired": true,
+          "explicitApprovalRequired": true,
+          "auditRequired": true,
+          "allowedToExecute": false,
+          "reason": "Changing the trust model changes what Chernobog is allowed to do.",
+          "policyRuleId": "trust.governance.edit.explicit",
+          "createdAt": "2026-06-29T12:16:03.286Z"
+        },
+        "checkpointRequired": true,
+        "checkpointId": "checkpoint-step-04-security-review-before-any-future-execution",
+        "createdAt": "2026-06-29T12:16:03.286Z",
+        "updatedAt": "2026-06-29T12:16:03.317Z"
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "ceo-execution-approval",
+        "title": "CEO execution approval",
+        "description": "The user must approve the controlled execution plan before it can leave pending approval.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T12:16:03.286Z",
+        "updatedAt": "2026-06-29T12:16:03.298Z",
+        "approvedAt": "2026-06-29T12:16:03.298Z"
+      },
+      {
+        "id": "security-execution-review",
+        "title": "Security execution review",
+        "description": "Security must review the plan, rollback notes, and governance decisions before later execution is considered.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T12:16:03.286Z",
+        "updatedAt": "2026-06-29T12:16:03.303Z",
+        "approvedAt": "2026-06-29T12:16:03.303Z"
+      },
+      {
+        "id": "checkpoint-step-02-prepare-proposed-implementation-patch",
+        "stepId": "step-02-prepare-proposed-implementation-patch",
+        "title": "Step approval: Prepare proposed implementation patch",
+        "description": "Approve or reject this planned step. Governance decision: approval-required.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T12:16:03.286Z",
+        "updatedAt": "2026-06-29T12:16:03.307Z",
+        "approvedAt": "2026-06-29T12:16:03.307Z"
+      },
+      {
+        "id": "checkpoint-step-03-run-verification-command-set",
+        "stepId": "step-03-run-verification-command-set",
+        "title": "Step approval: Run verification command set",
+        "description": "Approve or reject this planned step. Governance decision: approval-required.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T12:16:03.286Z",
+        "updatedAt": "2026-06-29T12:16:03.312Z",
+        "approvedAt": "2026-06-29T12:16:03.312Z"
+      },
+      {
+        "id": "checkpoint-step-04-security-review-before-any-future-execution",
+        "stepId": "step-04-security-review-before-any-future-execution",
+        "title": "Step approval: Security review before any future execution",
+        "description": "Approve or reject this planned step. Governance decision: approval-required.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T12:16:03.286Z",
+        "updatedAt": "2026-06-29T12:16:03.317Z",
+        "approvedAt": "2026-06-29T12:16:03.317Z"
+      }
+    ],
+    "executionAllowed": false,
+    "toolExecutionAllowed": false,
+    "autonomousExecutionAllowed": false,
+    "dryRunOnly": true,
+    "governanceEvaluated": true,
+    "securityReviewRequired": true,
+    "rollbackNotes": [
+      "No rollback required for read-only context gathering.",
+      "Keep changed file list and restoration notes before any later write-capable milestone.",
+      "Capture output and stop on first failure.",
+      "Do not proceed if security review is rejected or blocked."
+    ],
+    "createdBy": "system",
+    "createdAt": "2026-06-29T12:16:03.286Z",
+    "updatedAt": "2026-06-29T12:16:03.320Z"
+  }
+]

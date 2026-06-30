@@ -1,0 +1,60 @@
+[
+  {
+    "id": "dry-run-mqz6ltz1-sq578h",
+    "planId": "execution-controlled-execution-plan-for-v5-9-5-verificatio-mqz6ltxy",
+    "missionId": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "createdAt": "2026-06-29T12:16:03.325Z",
+    "wouldExecute": false,
+    "steps": [
+      {
+        "stepId": "step-01-read-mission-and-approved-vault-context",
+        "title": "Read mission and approved vault context",
+        "actionType": "memory-read",
+        "requestedTool": "vault.memory.read",
+        "target": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+        "wouldExecute": false,
+        "decisionStatus": "allowed",
+        "risk": "safe_auto",
+        "reason": "Reading approved structured memory is non-mutating."
+      },
+      {
+        "stepId": "step-02-prepare-proposed-implementation-patch",
+        "title": "Prepare proposed implementation patch",
+        "actionType": "file-write",
+        "requestedTool": "files.write",
+        "target": "repo patch proposal",
+        "wouldExecute": false,
+        "decisionStatus": "approval-required",
+        "risk": "requires_approval",
+        "reason": "Writing files can alter the repo or vault and should be checkpointed."
+      },
+      {
+        "stepId": "step-03-run-verification-command-set",
+        "title": "Run verification command set",
+        "actionType": "project-command",
+        "requestedTool": "project.command",
+        "target": "npm run verify; npx tsc --noEmit; npm run lint",
+        "wouldExecute": false,
+        "decisionStatus": "approval-required",
+        "risk": "dangerous_requires_explicit_approval",
+        "reason": "Commands may change generated files, install packages, or mutate project state."
+      },
+      {
+        "stepId": "step-04-security-review-before-any-future-execution",
+        "title": "Security review before any future execution",
+        "actionType": "governance-edit",
+        "requestedTool": "governance.review",
+        "target": "controlled execution plan",
+        "wouldExecute": false,
+        "decisionStatus": "approval-required",
+        "risk": "dangerous_requires_explicit_approval",
+        "reason": "Changing the trust model changes what Chernobog is allowed to do."
+      }
+    ],
+    "notes": [
+      "Dry run created without executing tools.",
+      "V5.9.5 records what would happen and which governance decisions apply.",
+      "Actual execution remains blocked until a later explicit execution milestone."
+    ]
+  }
+]

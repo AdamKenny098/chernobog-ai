@@ -1,0 +1,265 @@
+[
+  {
+    "id": "mission-v5-9-verification-mission-1782734323850-mqz5zjws",
+    "title": "V5.9 Verification Mission 1782734323850",
+    "objective": "Verify controlled mission records, department assignment, approval checkpoints, and blocked execution.",
+    "status": "in_progress",
+    "priority": "high",
+    "projectId": "chernobog",
+    "version": "v5.9",
+    "departments": [
+      "engineering",
+      "security"
+    ],
+    "workerAssignments": [
+      {
+        "department": "engineering",
+        "roles": [
+          "project-lead",
+          "planner",
+          "creator",
+          "reviewer",
+          "security-analyst"
+        ],
+        "leadRole": "project-lead"
+      },
+      {
+        "department": "security",
+        "roles": [
+          "planner",
+          "reviewer",
+          "security-analyst"
+        ],
+        "leadRole": "project-lead"
+      }
+    ],
+    "approvalCheckpoints": [
+      {
+        "id": "ceo-approval",
+        "title": "CEO approval",
+        "description": "The user must approve this mission before it can move out of proposed state.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T11:58:43.852Z",
+        "updatedAt": "2026-06-29T11:58:43.867Z",
+        "approvedAt": "2026-06-29T11:58:43.867Z"
+      },
+      {
+        "id": "security-review",
+        "title": "Security review",
+        "description": "Security must review the mission before approved mission work begins.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T11:58:43.852Z",
+        "updatedAt": "2026-06-29T11:58:43.875Z",
+        "approvedAt": "2026-06-29T11:58:43.875Z"
+      }
+    ],
+    "executionAllowed": false,
+    "toolExecutionAllowed": false,
+    "autonomousExecutionAllowed": false,
+    "createdBy": "system",
+    "tags": [
+      "verification",
+      "v5.9"
+    ],
+    "createdAt": "2026-06-29T11:58:43.851Z",
+    "updatedAt": "2026-06-29T11:58:43.901Z"
+  },
+  {
+    "id": "mission-v5-9-verification-mission-1782734460421-mqz62hae",
+    "title": "V5.9 Verification Mission 1782734460421",
+    "objective": "Verify controlled mission records, department assignment, approval checkpoints, and blocked execution.",
+    "status": "in_progress",
+    "priority": "high",
+    "projectId": "chernobog",
+    "version": "v5.9",
+    "departments": [
+      "engineering",
+      "security"
+    ],
+    "workerAssignments": [
+      {
+        "department": "engineering",
+        "roles": [
+          "project-lead",
+          "planner",
+          "creator",
+          "reviewer",
+          "security-analyst"
+        ],
+        "leadRole": "project-lead"
+      },
+      {
+        "department": "security",
+        "roles": [
+          "planner",
+          "reviewer",
+          "security-analyst"
+        ],
+        "leadRole": "project-lead"
+      }
+    ],
+    "approvalCheckpoints": [
+      {
+        "id": "ceo-approval",
+        "title": "CEO approval",
+        "description": "The user must approve this mission before it can move out of proposed state.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T12:01:00.422Z",
+        "updatedAt": "2026-06-29T12:01:00.433Z",
+        "approvedAt": "2026-06-29T12:01:00.433Z"
+      },
+      {
+        "id": "security-review",
+        "title": "Security review",
+        "description": "Security must review the mission before approved mission work begins.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T12:01:00.422Z",
+        "updatedAt": "2026-06-29T12:01:00.437Z",
+        "approvedAt": "2026-06-29T12:01:00.437Z"
+      }
+    ],
+    "executionAllowed": false,
+    "toolExecutionAllowed": false,
+    "autonomousExecutionAllowed": false,
+    "createdBy": "system",
+    "tags": [
+      "verification",
+      "v5.9"
+    ],
+    "createdAt": "2026-06-29T12:01:00.421Z",
+    "updatedAt": "2026-06-29T12:01:00.446Z"
+  },
+  {
+    "id": "mission-v5-9-5-proposed-mission-1782735363258-mqz6ltx8",
+    "title": "V5.9.5 Proposed Mission 1782735363258",
+    "objective": "Verify proposed missions cannot create controlled execution plans.",
+    "status": "proposed",
+    "priority": "normal",
+    "projectId": "chernobog",
+    "version": "v5.9.5",
+    "departments": [
+      "engineering",
+      "security"
+    ],
+    "workerAssignments": [
+      {
+        "department": "engineering",
+        "roles": [
+          "project-lead",
+          "planner",
+          "creator",
+          "reviewer",
+          "security-analyst"
+        ],
+        "leadRole": "project-lead"
+      },
+      {
+        "department": "security",
+        "roles": [
+          "planner",
+          "reviewer",
+          "security-analyst"
+        ],
+        "leadRole": "project-lead"
+      }
+    ],
+    "approvalCheckpoints": [
+      {
+        "id": "ceo-approval",
+        "title": "CEO approval",
+        "description": "The user must approve this mission before it can move out of proposed state.",
+        "required": true,
+        "status": "pending",
+        "createdAt": "2026-06-29T12:16:03.260Z",
+        "updatedAt": "2026-06-29T12:16:03.260Z"
+      },
+      {
+        "id": "security-review",
+        "title": "Security review",
+        "description": "Security must review the mission before approved mission work begins.",
+        "required": true,
+        "status": "pending",
+        "createdAt": "2026-06-29T12:16:03.260Z",
+        "updatedAt": "2026-06-29T12:16:03.260Z"
+      }
+    ],
+    "executionAllowed": false,
+    "toolExecutionAllowed": false,
+    "autonomousExecutionAllowed": false,
+    "createdBy": "system",
+    "tags": [],
+    "createdAt": "2026-06-29T12:16:03.259Z",
+    "updatedAt": "2026-06-29T12:16:03.259Z"
+  },
+  {
+    "id": "mission-v5-9-5-verification-mission-1782735363266-mqz6ltxe",
+    "title": "V5.9.5 Verification Mission 1782735363266",
+    "objective": "Verify controlled execution plans, governance evaluation, checkpoints, and dry-run boundaries.",
+    "status": "approved",
+    "priority": "high",
+    "projectId": "chernobog",
+    "version": "v5.9.5",
+    "departments": [
+      "engineering",
+      "security"
+    ],
+    "workerAssignments": [
+      {
+        "department": "engineering",
+        "roles": [
+          "project-lead",
+          "planner",
+          "creator",
+          "reviewer",
+          "security-analyst"
+        ],
+        "leadRole": "project-lead"
+      },
+      {
+        "department": "security",
+        "roles": [
+          "planner",
+          "reviewer",
+          "security-analyst"
+        ],
+        "leadRole": "project-lead"
+      }
+    ],
+    "approvalCheckpoints": [
+      {
+        "id": "ceo-approval",
+        "title": "CEO approval",
+        "description": "The user must approve this mission before it can move out of proposed state.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T12:16:03.266Z",
+        "updatedAt": "2026-06-29T12:16:03.272Z",
+        "approvedAt": "2026-06-29T12:16:03.272Z"
+      },
+      {
+        "id": "security-review",
+        "title": "Security review",
+        "description": "Security must review the mission before approved mission work begins.",
+        "required": true,
+        "status": "approved",
+        "createdAt": "2026-06-29T12:16:03.266Z",
+        "updatedAt": "2026-06-29T12:16:03.277Z",
+        "approvedAt": "2026-06-29T12:16:03.277Z"
+      }
+    ],
+    "executionAllowed": false,
+    "toolExecutionAllowed": false,
+    "autonomousExecutionAllowed": false,
+    "createdBy": "system",
+    "tags": [
+      "verification",
+      "v5.9.5"
+    ],
+    "createdAt": "2026-06-29T12:16:03.266Z",
+    "updatedAt": "2026-06-29T12:16:03.281Z"
+  }
+]
