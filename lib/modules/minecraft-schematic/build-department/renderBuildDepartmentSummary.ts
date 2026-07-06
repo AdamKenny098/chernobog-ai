@@ -47,9 +47,9 @@ export function renderBuildDepartmentPlan(result: BuildDepartmentPlanResult): st
     `- Placement Guide: ${result.placementGuidePath}`,
     "",
     "Planned structures:",
-    ...result.plan.structures
-      .sort((left, right) => left.priority - right.priority)
-      .map((structure) => `- ${structure.schematicName} — ${structure.displayName}`),
+    ...[...result.plan.structures]
+    .sort((left, right) => left.priority - right.priority)
+    .map((structure) => `- ${structure.schematicName} — ${structure.displayName}`),
     "",
     "Next action:",
     `- build department generate ${result.plan.prompt}`,

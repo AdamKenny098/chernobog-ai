@@ -3,9 +3,6 @@ export * from "./core/BlockGrid";
 
 export * from "./primitives";
 
-export * from "./builders/buildDebugTower"
-
-export * from "./commands/types";
 export * from "./commands/parseMinecraftSchematicCommand";
 export * from "./commands/executeMinecraftSchematicCommand";
 

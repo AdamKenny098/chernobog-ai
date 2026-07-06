@@ -1,10 +1,6 @@
 import type { ModuleCommandParser } from "../../types";
-import { parseMilestone6CreateCommand } from "./parseMilestone6CreateCommand";
-import { parseMilestone6ScenePackCommand } from "./parseMilestone6ScenePackCommand";
-import { parseMilestone6PackReviewCommand } from "./parseMilestone6PackReviewCommand";
-import { parseMilestone6PreviewCommand } from "./parseMilestone6PreviewCommand";
-import { parseMilestone6BuildDepartmentCommand } from "./parseMilestone6BuildDepartmentCommand";
-import { parseMilestone6FinalizationCommand } from "./parseMilestone6FinalizationCommand";
+import { parseCreateMechanicalGraphCommand } from "./parseCreateMechanicalGraphCommand";
+import { parseMilestone6CompatibilityCommand } from "./parseMilestone6CompatibilityCommands";
 import { normalizeBlockRegistryProfileId } from "../block-registry/blockRegistry";
 import { findSirioCraftPresetByPrompt, getSirioCraftPreset, normalizePresetId } from "../presets/siriocraft";
 import type {
@@ -162,9 +158,11 @@ function normalize(input: string): string {
 function isMinecraftSchematicInput(normalized: string): boolean {
   return (
     normalized.startsWith("schematic") ||
+    normalized.startsWith("minecraft schematic") ||
     normalized.startsWith("scene pack") ||
     normalized.startsWith("generate minecraft schematic") ||
     normalized.startsWith("generate create") ||
+    normalized.startsWith("create ") ||
     normalized.includes("factory yard") ||
     normalized.includes("train platform") ||
     normalized.includes("faction outpost") ||
@@ -174,7 +172,6 @@ function isMinecraftSchematicInput(normalized: string): boolean {
     normalized.includes("build pack")
   );
 }
-
 function includesAny(text: string, terms: string[]): boolean {
   return terms.some((term) => text.includes(term));
 }
@@ -720,34 +717,14 @@ export function parseMinecraftSchematicCommand(input: string): MinecraftSchemati
     } as unknown as MinecraftSchematicParsedCommand;
   }
 
-  const milestone6FinalizationCommand = parseMilestone6FinalizationCommand(input);
-  if (milestone6FinalizationCommand) {
-    return milestone6FinalizationCommand as unknown as MinecraftSchematicParsedCommand;
+  const milestone6CompatibilityCommand = parseMilestone6CompatibilityCommand(input);
+  if (milestone6CompatibilityCommand) {
+    return milestone6CompatibilityCommand as unknown as MinecraftSchematicParsedCommand;
   }
 
-  const milestone6BuildDepartmentCommand = parseMilestone6BuildDepartmentCommand(input);
-  if (milestone6BuildDepartmentCommand) {
-    return milestone6BuildDepartmentCommand as unknown as MinecraftSchematicParsedCommand;
-  }
-
-  const milestone6PreviewCommand = parseMilestone6PreviewCommand(input);
-  if (milestone6PreviewCommand) {
-    return milestone6PreviewCommand as unknown as MinecraftSchematicParsedCommand;
-  }
-
-  const milestone6PackReviewCommand = parseMilestone6PackReviewCommand(input);
-  if (milestone6PackReviewCommand) {
-    return milestone6PackReviewCommand as unknown as MinecraftSchematicParsedCommand;
-  }
-
-  const milestone6ScenePackCommand = parseMilestone6ScenePackCommand(input);
-  if (milestone6ScenePackCommand) {
-    return milestone6ScenePackCommand as unknown as MinecraftSchematicParsedCommand;
-  }
-
-  const milestone6CreateCommand = parseMilestone6CreateCommand(input);
-  if (milestone6CreateCommand) {
-    return milestone6CreateCommand as unknown as MinecraftSchematicParsedCommand;
+  const createMechanicalGraphCommand = parseCreateMechanicalGraphCommand(input);
+  if (createMechanicalGraphCommand) {
+    return createMechanicalGraphCommand as unknown as MinecraftSchematicParsedCommand;
   }
 
   if (normalized === "schematic status") {
@@ -785,7 +762,10 @@ export function parseMinecraftSchematicCommand(input: string): MinecraftSchemati
     return { kind: "show-build", buildId: showBuildId, raw: input };
   }
 
-  if (normalized === "schematic validate latest") {
+    if (
+    normalized === "schematic validate latest" ||
+    normalized === "minecraft schematic validate latest"
+  ) {
     return { kind: "validate-latest", raw: input };
   }
 

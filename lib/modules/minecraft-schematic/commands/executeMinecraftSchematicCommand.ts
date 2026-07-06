@@ -52,18 +52,24 @@ import {
   parseMinecraftSchematicCommandWithVersionSupport,
   parseMinecraftVersionTargetFromText,
 } from "./minecraftVersionCommandSupport";
-import { executeMilestone6CreateCommand } from "./executeMilestone6CreateCommand";
-import { executeMilestone6ScenePackCommand } from "./executeMilestone6ScenePackCommand";
-import { executeMilestone6PackReviewCommand } from "./executeMilestone6PackReviewCommand";
-import { executeMilestone6PreviewCommand } from "./executeMilestone6PreviewCommand";
-import { executeMilestone6BuildDepartmentCommand } from "./executeMilestone6BuildDepartmentCommand";
-import { executeMilestone6FinalizationCommand } from "./executeMilestone6FinalizationCommand";
-import type { Milestone6CreateParsedCommand } from "./parseMilestone6CreateCommand";
-import type { Milestone6ScenePackParsedCommand } from "./parseMilestone6ScenePackCommand";
-import type { Milestone6PackReviewParsedCommand } from "./parseMilestone6PackReviewCommand";
-import type { Milestone6PreviewParsedCommand } from "./parseMilestone6PreviewCommand";
-import type { Milestone6BuildDepartmentParsedCommand } from "./parseMilestone6BuildDepartmentCommand";
-import type { Milestone6FinalizationParsedCommand } from "./parseMilestone6FinalizationCommand";
+import { executeCreateMechanicalGraphCommand } from "./executeCreateMechanicalGraphCommand";
+import {
+  executeMilestone6BuildDepartmentCommand,
+  executeMilestone6FinalizationCommand,
+  executeMilestone6PackReviewCommand,
+  executeMilestone6PreviewCommand,
+  executeMilestone6ScenePackCommand,
+} from "./executeMilestone6CompatibilityCommands";
+
+import type { Milestone6CreateParsedCommand } from "./parseCreateMechanicalGraphCommand";
+import type {
+  Milestone6BuildDepartmentParsedCommand,
+  Milestone6FinalizationParsedCommand,
+  Milestone6PackReviewParsedCommand,
+  Milestone6PreviewParsedCommand,
+  Milestone6ScenePackParsedCommand,
+} from "./parseMilestone6CompatibilityCommands";
+
 import { compileCreateMachineGraph } from "../create-support/compileCreateMachineGraph";
 import { exportCreateMechanicalArtifacts } from "../create-support/exportCreateMechanicalArtifacts";
 
@@ -1495,7 +1501,7 @@ function asMinecraftSchematicParsedCommand(command: Milestone6CreateParsedComman
 }
 
 function formatCreateValidationIssueLines(
-  result: ReturnType<typeof executeMilestone6CreateCommand>,
+  result: ReturnType<typeof executeCreateMechanicalGraphCommand>,
 ): string[] {
   if (result.validation.issues.length === 0) {
     return ["Validation issues: none"];
@@ -1512,7 +1518,7 @@ function formatCreateValidationIssueLines(
 }
 
 function formatMilestone6CreateResult(
-  result: ReturnType<typeof executeMilestone6CreateCommand>,
+  result: ReturnType<typeof executeCreateMechanicalGraphCommand>,
 ): MinecraftSchematicCommandResult {
   return {
     ok: result.ok,
@@ -1541,7 +1547,7 @@ function formatMilestone6CreateResult(
 async function executeMilestone6CreateSchematic(
   command: Milestone6CreateParsedCommand,
 ): Promise<MinecraftSchematicCommandResult> {
-  const createResult = executeMilestone6CreateCommand(command);
+  const createResult = executeCreateMechanicalGraphCommand(command);
 
   if (!createResult.ok) {
     return formatMilestone6CreateResult(createResult);

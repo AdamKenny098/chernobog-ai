@@ -41,10 +41,15 @@ export {
 } from "./minecraftVersion";
 
 export {
-  runMinecraftBlockRegistrySelfTest,
-} from "./blockRegistry.selftest";
-export { applyVersionSafePaletteIntentToBuild, createVersionSafePaletteIntentReport } from "./applyVersionSafePaletteIntentToBuild";
-export type { VersionSafePaletteIntentReport, VersionSafePaletteReplacementRecord, VersionSafePaletteUnresolvedRecord } from "./applyVersionSafePaletteIntentToBuild";
+  applyVersionSafePaletteIntentToBuild,
+  createVersionSafePaletteIntentReport,
+} from "./applyVersionSafePaletteIntentToBuild";
+
+export type {
+  VersionSafePaletteIntentReport,
+  VersionSafePaletteReplacementRecord,
+  VersionSafePaletteUnresolvedRecord,
+} from "./applyVersionSafePaletteIntentToBuild";
 
 export {
   applyBlockVersionValidationToBuild,

@@ -1,16 +1,27 @@
 import type { CreateMachinePreset } from "../create-support/types";
 
-export type Milestone6CreateParsedCommand = {
+export type CreateMechanicalGraphParsedCommand = {
+  /**
+   * Kept as milestone6_create_machine for compatibility with the existing
+   * schematic command executor.
+   */
   kind: "milestone6_create_machine";
   preset: CreateMachinePreset;
   raw: string;
 };
 
+/**
+ * Compatibility alias for old executor/parser type names.
+ */
+export type Milestone6CreateParsedCommand = CreateMechanicalGraphParsedCommand;
+
 function normalize(input: string): string {
   return input.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
-export function parseMilestone6CreateCommand(input: string): Milestone6CreateParsedCommand | null {
+export function parseCreateMechanicalGraphCommand(
+  input: string,
+): CreateMechanicalGraphParsedCommand | null {
   const text = normalize(input);
 
   if (!text.includes("create")) {
@@ -25,7 +36,11 @@ export function parseMilestone6CreateCommand(input: string): Milestone6CreatePar
     };
   }
 
-  if (text.includes("mixer station") || text.includes("mechanical mixer") || text.includes("basin")) {
+  if (
+    text.includes("mixer station") ||
+    text.includes("mechanical mixer") ||
+    text.includes("basin")
+  ) {
     return {
       kind: "milestone6_create_machine",
       preset: "mixer_station",
