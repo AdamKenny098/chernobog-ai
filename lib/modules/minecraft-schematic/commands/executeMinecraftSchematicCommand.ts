@@ -11,6 +11,7 @@ import {
   getBlockRegistryProfile,
   normalizeBlockRegistryProfileId,
 } from "../block-registry/blockRegistry";
+import { createBlockVersionLimitReport } from "../block-registry";
 import { exportDebugJson } from "../exporters/exportDebugJson";
 import { exportSchem, validateSchemFile } from "../exporters/exportSchem";
 import { generateStructure } from "../generators/structures/generateStructure";
@@ -43,6 +44,13 @@ import type {
 import { validateGeneratedBuild } from "../validation/validateGeneratedBuild";
 import { writeSchematicVaultNote } from "../vault/writeSchematicVaultNote";
 import { parseMinecraftSchematicCommand } from "./parseMinecraftSchematicCommand";
+import {
+  applyVersionOptionsToGeneratedBuild,
+  enrichMinecraftSchematicParsedCommandWithVersion,
+  formatMinecraftVersionParserSelfTest,
+  parseMinecraftSchematicCommandWithVersionSupport,
+  parseMinecraftVersionTargetFromText,
+} from "./minecraftVersionCommandSupport";
 import { executeMilestone6CreateCommand } from "./executeMilestone6CreateCommand";
 import { executeMilestone6ScenePackCommand } from "./executeMilestone6ScenePackCommand";
 import { executeMilestone6PackReviewCommand } from "./executeMilestone6PackReviewCommand";
@@ -57,6 +65,13 @@ import type { Milestone6BuildDepartmentParsedCommand } from "./parseMilestone6Bu
 import type { Milestone6FinalizationParsedCommand } from "./parseMilestone6FinalizationCommand";
 import { compileCreateMachineGraph } from "../create-support/compileCreateMachineGraph";
 import { exportCreateMechanicalArtifacts } from "../create-support/exportCreateMechanicalArtifacts";
+
+import {
+  executeSchematicLibraryCommand,
+  SchematicLibraryExecutableCommand,
+} from "../library/executeSchematicLibraryCommand";
+
+import { registerGeneratedSchematic } from "../library/registerGeneratedSchematic";
 
 const execFileAsync = promisify(execFile);
 
@@ -81,6 +96,11 @@ function helpMessage(): string {
     "- schematic status",
     "- schematic help",
     "- schematic list",
+    "- list schematics",
+    "- search schematics <query>",
+    "- show schematic <id>",
+    "- duplicate schematic <id>",
+    "- delete schematic <id>",
     "- schematic list presets",
     "- schematic list presets <category>",
     "- schematic list presets category <category>",
@@ -88,6 +108,14 @@ function helpMessage(): string {
     "- schematic list profiles",
     "- schematic show profile vanilla",
     "- schematic show profile siriocraft-create",
+    "- generate tower version 1.8.8",
+    "- generate house version 1.12.2",
+    "- generate medieval house using only 1.12.2 blocks",
+    "- generate factory vanilla 1.20.1",
+    "- generate spawn compatible with 1.8.8",
+    "- validate schematic <build-id> version 1.8.8",
+    "- convert schematic <build-id> to version 1.8.8",
+    "- test version parser",
     "- schematic search presets <query>",
     "- schematic recommend preset <query>",
     "- schematic show preset <preset-id>",
@@ -109,6 +137,53 @@ function helpMessage(): string {
     "- generate create water wheel power test",
     "- schematic milestone status",
     "- schematic test plan",
+  ].join("\n");
+}
+
+function getParsedCommandKind(command: unknown): string | undefined {
+  if (
+    typeof command === "object" &&
+    command !== null &&
+    "kind" in command &&
+    typeof (command as { kind?: unknown }).kind === "string"
+  ) {
+    return (command as { kind: string }).kind;
+  }
+
+  return undefined;
+}
+
+async function safelyRegisterGeneratedSchematic(input: {
+  name: string;
+  category?: string;
+  theme?: string;
+  targetMinecraftVersion?: string;
+  requiredMods?: string[];
+  size?: {
+    width?: number;
+    height?: number;
+    length?: number;
+  };
+  blockCount?: number;
+  tags?: string[];
+  generatorSource?: string;
+  notes?: string;
+  sourceAssetPath?: string;
+  schematicJson?: unknown;
+}): Promise<string> {
+  const result = await registerGeneratedSchematic(input);
+
+  if (!result.ok) {
+    return `\n\nLibrary warning: generated schematic was not registered. ${result.warning}`;
+  }
+
+  return [
+    "",
+    "",
+    "Library asset registered.",
+    `Library id: ${result.id}`,
+    `Metadata: ${result.metadataPath}`,
+    result.assetPath ? `Asset: ${result.assetPath}` : "Asset: metadata only",
   ].join("\n");
 }
 
@@ -226,11 +301,29 @@ async function openPathInOs(absolutePath: string): Promise<{ attempted: boolean;
   }
 }
 
+
+function repairGeneratedBuildVersionVariantLeak(
+  build: GeneratedSchematicBuild,
+): GeneratedSchematicBuild {
+  const variant = typeof build.variant === "string" ? build.variant.trim() : "";
+
+  if (!/^\d+\.\d+(?:\.\d+)?$/.test(variant)) {
+    return build;
+  }
+
+  return {
+    ...build,
+    variant: "default",
+    targetMinecraftVersion: build.targetMinecraftVersion ?? variant,
+  };
+}
+
 async function persistGeneratedBuild(
   build: GeneratedSchematicBuild,
   generatedTitle: string,
 ): Promise<MinecraftSchematicCommandResult> {
-  const registryBuild = applyBlockRegistryToBuild(build);
+  const repairedBuild = repairGeneratedBuildVersionVariantLeak(build);
+  const registryBuild = applyBlockRegistryToBuild(repairedBuild);
   const normalized = normalizeBlockEntitiesForBuild(registryBuild);
   const exportBuild = normalized.build;
   const validation = validateGeneratedBuild(exportBuild);
@@ -267,6 +360,9 @@ async function persistGeneratedBuild(
       ok: false,
       title: "Schematic export failed",
       message: [
+        "9B_ACTIVE_PERSIST_MARKER",
+        `DEBUG exportBuild.variant=${exportBuild.variant}`,
+        `DEBUG exportBuild.targetMinecraftVersion=${exportBuild.targetMinecraftVersion ?? "missing"}`,
         `Build ID: ${exportBuild.buildId}`,
         "",
         "The generator produced a valid build object, but the .schem file was not written.",
@@ -325,6 +421,44 @@ async function persistGeneratedBuild(
     };
   }
 
+  const libraryMessage = await safelyRegisterGeneratedSchematic({
+    name: exportBuild.displayName ?? exportBuild.buildId,
+    category: exportBuild.generatorName,
+    theme: exportBuild.variant,
+    targetMinecraftVersion: exportBuild.targetMinecraftVersion ?? exportBuild.minecraftVersion,
+    requiredMods: [
+      "minecraft",
+      ...(exportBuild.profile === "siriocraft-create" || exportBuild.allowModdedBlocks
+        ? ["create"]
+        : []),
+    ],
+    size: {
+      width: exportBuild.size.x,
+      height: exportBuild.size.y,
+      length: exportBuild.size.z,
+    },
+    blockCount: exportBuild.blockCount,
+    tags: [
+      "generated",
+      "milestone-7",
+      exportBuild.generatorName,
+      exportBuild.variant,
+      exportBuild.presetId ?? "",
+      exportBuild.profile ?? "",
+      ...(exportBuild.features ?? []),
+    ].filter((tag) => tag.trim().length > 0),
+    generatorSource: `minecraft-schematic:${exportBuild.generatorName}`,
+    notes: [
+      `Registered automatically from generated build ${exportBuild.buildId}.`,
+      `Generated title: ${generatedTitle}.`,
+      exportBuild.presetId ? `Preset: ${exportBuild.presetId}.` : "",
+      exportBuild.profile ? `Profile: ${exportBuild.profile}.` : "",
+    ]
+      .filter(Boolean)
+      .join("\n"),
+    sourceAssetPath: absolutePaths.schemPath,
+  });
+
   return {
     ok: true,
     title: `${generatedTitle} generated`,
@@ -335,6 +469,7 @@ async function persistGeneratedBuild(
       `Variant: ${exportBuild.variant}`,
       ...(exportBuild.presetId ? [`Preset: ${exportBuild.presetId}`] : []),
       ...(exportBuild.profile ? [`Profile: ${exportBuild.profile}`] : []),
+      ...(exportBuild.targetMinecraftVersion ? [`Target Minecraft Version: ${exportBuild.targetMinecraftVersion}`] : []),
       ...(exportBuild.blockRegistryReport ? [`Block Registry: ${exportBuild.blockRegistryReport.profileId} | ${exportBuild.blockRegistryReport.changedBlocks} fallback replacement(s) | ${exportBuild.blockRegistryReport.unsupportedBlocks.length} unsupported block(s)`] : []),
       ...(metadata.buildReport ? [`Use Case: ${metadata.buildReport.sirioCraftUseCase}`, `Next Action: ${metadata.buildReport.recommendedNextAction}`] : []),
       `Size: ${exportBuild.size.x} x ${exportBuild.size.y} x ${exportBuild.size.z}`,
@@ -357,6 +492,7 @@ async function persistGeneratedBuild(
       `Schematic Bytes: ${schemFile.size}`,
       "",
       `Read-back Validation: ${schemValidation.ok ? "passed" : "failed"}`,
+      libraryMessage,
       ...(exportBuild.shapeValidation ? ["", ...formatShapeValidation(exportBuild.shapeValidation)] : []),
     ].join("\n"),
     data: metadata,
@@ -366,11 +502,14 @@ async function persistGeneratedBuild(
 async function executeGenerateTower(
   command: Extract<MinecraftSchematicParsedCommand, { kind: "generate-tower" }>,
 ): Promise<MinecraftSchematicCommandResult> {
-  const build = generateTower({
-    variant: command.variant,
-    prompt: command.raw,
-    command: command.raw,
-  });
+  const build = applyVersionOptionsToGeneratedBuild(
+    generateTower({
+      variant: command.variant,
+      prompt: command.raw,
+      command: command.raw,
+    }),
+    command,
+  );
 
   return persistGeneratedBuild(
     {
@@ -388,13 +527,16 @@ async function executeGenerateTower(
 async function executeGenerateStructure(
   command: Extract<MinecraftSchematicParsedCommand, { kind: "generate-structure" }>,
 ): Promise<MinecraftSchematicCommandResult> {
-  const build = generateStructure({
-    generator: command.generator,
-    variant: command.variant,
-    presetId: command.presetId,
-    prompt: command.prompt,
-    command: command.raw,
-  });
+  const build = applyVersionOptionsToGeneratedBuild(
+    generateStructure({
+      generator: command.generator,
+      variant: command.variant,
+      presetId: command.presetId,
+      prompt: command.prompt,
+      command: command.raw,
+    }),
+    command,
+  );
 
   return persistGeneratedBuild(build, "Minecraft schematic");
 }
@@ -415,13 +557,16 @@ async function executeGeneratePreset(
     };
   }
 
-  const build = generateStructure({
-    generator: preset.generator,
-    variant: preset.variant,
-    presetId: preset.id,
-    prompt: `SirioCraft preset: ${preset.displayName}`,
-    command: command.raw,
-  });
+  const build = applyVersionOptionsToGeneratedBuild(
+    generateStructure({
+      generator: preset.generator,
+      variant: preset.variant,
+      presetId: preset.id,
+      prompt: `SirioCraft preset: ${preset.displayName}`,
+      command: command.raw,
+    }),
+    command,
+  );
 
   return persistGeneratedBuild(build, `Minecraft schematic preset ${preset.id}`);
 }
@@ -435,6 +580,7 @@ function formatMetadataSummary(metadata: SchematicMetadata): string[] {
     `Variant: ${metadata.variant}`,
     ...(metadata.presetId ? [`Preset: ${metadata.presetId}`] : []),
     ...(metadata.profile ? [`Profile: ${metadata.profile}`] : []),
+    ...(metadata.targetMinecraftVersion ? [`Target Minecraft Version: ${metadata.targetMinecraftVersion}`] : []),
     ...(metadata.blockRegistryReport ? [`Block Registry: ${metadata.blockRegistryReport.profileId} | ${metadata.blockRegistryReport.changedBlocks} fallback replacement(s) | ${metadata.blockRegistryReport.unsupportedBlocks.length} unsupported block(s)`] : []),
     ...(metadata.buildReport ? [`Use Case: ${metadata.buildReport.sirioCraftUseCase}`, `Suggested Placement: ${metadata.buildReport.suggestedPlacement}`, `Next Action: ${metadata.buildReport.recommendedNextAction}`] : []),
     `Size: ${metadata.size.x} x ${metadata.size.y} x ${metadata.size.z}`,
@@ -559,6 +705,136 @@ async function executeValidateLatest(): Promise<MinecraftSchematicCommandResult>
       shapeValidation: metadata.shapeValidation,
       shapeResolverReports: metadata.shapeResolverReports,
     },
+  };
+}
+
+async function executeValidateBuildVersion(
+  command: Extract<MinecraftSchematicParsedCommand, { kind: "validate-build-version" }>,
+): Promise<MinecraftSchematicCommandResult> {
+  const safeId = safeBuildId(command.buildId);
+
+  if (!safeId) {
+    return {
+      ok: false,
+      title: "Invalid schematic build id",
+      message: "Build ids may only contain letters, numbers, underscores, hyphens, and periods.",
+    };
+  }
+
+  const metadata = await readMetadataByBuildId(safeId);
+
+  if (!metadata) {
+    return {
+      ok: false,
+      title: "Schematic metadata not found",
+      message: [
+        `Build ID: ${safeId}`,
+        "Could not run version compatibility parse check because metadata was not found.",
+        "Run schematic list to see available generated builds.",
+      ].join("\n"),
+    };
+  }
+
+  const report = createBlockVersionLimitReport({
+    blockIds: metadata.palette,
+    targetMinecraftVersion: command.targetMinecraftVersion,
+  });
+
+  const ok = report.incompatibleBlocks.length === 0;
+
+  return {
+    ok,
+    title: ok ? "Schematic version compatibility check parsed" : "Schematic has version compatibility warnings",
+    message: [
+      `Build ID: ${metadata.buildId}`,
+      `Target Minecraft Version: ${command.targetMinecraftVersion}`,
+      `Palette entries checked: ${report.checkedBlockCount}`,
+      `Allowed: ${report.allowedBlocks.length}`,
+      `Substituted: ${report.substitutedBlocks.length}`,
+      `Omitted: ${report.omittedBlocks.length}`,
+      `Incompatible: ${report.incompatibleBlocks.length}`,
+      "",
+      ...(report.substitutedBlocks.length
+        ? [
+            "Suggested substitutions:",
+            ...report.substitutedBlocks.slice(0, 30).map((item) => `- ${item.from} -> ${item.to}`),
+            "",
+          ]
+        : []),
+      ...(report.incompatibleBlocks.length
+        ? [
+            "Incompatible blocks:",
+            ...report.incompatibleBlocks.slice(0, 30).map((item) => `- ${item.blockId}: ${item.reason}`),
+            "",
+          ]
+        : []),
+      "Milestone 9B note: command parsing and palette-level compatibility reporting are active. Full block-by-block validator integration lands in 9D.",
+    ].join("\n"),
+    data: {
+      metadata,
+      report,
+    },
+  };
+}
+
+async function executeConvertBuildVersion(
+  command: Extract<MinecraftSchematicParsedCommand, { kind: "convert-build-version" }>,
+): Promise<MinecraftSchematicCommandResult> {
+  const safeId = safeBuildId(command.buildId);
+
+  if (!safeId) {
+    return {
+      ok: false,
+      title: "Invalid schematic build id",
+      message: "Build ids may only contain letters, numbers, underscores, hyphens, and periods.",
+    };
+  }
+
+  const metadata = await readMetadataByBuildId(safeId);
+
+  if (!metadata) {
+    return {
+      ok: false,
+      title: "Schematic metadata not found",
+      message: [
+        `Build ID: ${safeId}`,
+        "Could not prepare version conversion because metadata was not found.",
+        "Run schematic list to see available generated builds.",
+      ].join("\n"),
+    };
+  }
+
+  const report = createBlockVersionLimitReport({
+    blockIds: metadata.palette,
+    targetMinecraftVersion: command.targetMinecraftVersion,
+  });
+
+  return {
+    ok: true,
+    title: "Schematic version conversion parsed",
+    message: [
+      `Build ID: ${metadata.buildId}`,
+      `Requested Target Minecraft Version: ${command.targetMinecraftVersion}`,
+      `Palette entries checked: ${report.checkedBlockCount}`,
+      `Potential substitutions: ${report.substitutedBlocks.length}`,
+      `Potential omissions: ${report.omittedBlocks.length}`,
+      `Potential incompatibilities: ${report.incompatibleBlocks.length}`,
+      "",
+      "Milestone 9B note: this command now parses and reports conversion intent. Actual converted schematic writing lands in 9F.",
+    ].join("\n"),
+    data: {
+      metadata,
+      report,
+      targetMinecraftVersion: command.targetMinecraftVersion,
+    },
+  };
+}
+
+function executeVersionParserSelfTest(): MinecraftSchematicCommandResult {
+  return {
+    ok: true,
+    title: "Minecraft version parser self-test",
+    message: formatMinecraftVersionParserSelfTest(),
   };
 }
 
@@ -1368,9 +1644,48 @@ async function executeMilestone6CreateSchematic(
   };
 }
 
+function readVersionLikeTextFromParsedInput(input: Record<string, unknown>): string | undefined {
+  const candidates = [
+    input.targetMinecraftVersion,
+    input.minecraftVersionTarget,
+    input.minecraftVersion,
+    input.version,
+    input.variant,
+    input.target,
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate !== "string") {
+      continue;
+    }
+
+    const parsed = parseMinecraftVersionTargetFromText(candidate);
+
+    if (parsed) {
+      return parsed;
+    }
+  }
+
+  return undefined;
+}
+
+function isVersionOnlyVariant(value: unknown): boolean {
+  return typeof value === "string" && /^\d+\.\d+(?:\.\d+)?$/.test(value.trim());
+}
+
+function readTargetMinecraftVersionForParsedInput(
+  input: Record<string, unknown>,
+  raw: string,
+): string | undefined {
+  return (
+    parseMinecraftVersionTargetFromText(raw) ??
+    readVersionLikeTextFromParsedInput(input)
+  );
+}
+
 function coerceMinecraftSchematicCommand(input: unknown): MinecraftSchematicParsedCommand {
   if (typeof input === "string") {
-    return parseMinecraftSchematicCommand(input);
+    return parseMinecraftSchematicCommandWithVersionSupport(input, parseMinecraftSchematicCommand);
   }
 
   if (!isRecord(input)) {
@@ -1402,6 +1717,27 @@ function coerceMinecraftSchematicCommand(input: unknown): MinecraftSchematicPars
       : typeof input.action === "string"
         ? input.action
         : "";
+
+  if (raw) {
+    const versionAwareCommand = parseMinecraftSchematicCommandWithVersionSupport(
+      raw,
+      parseMinecraftSchematicCommand,
+    );
+
+    if (
+      versionAwareCommand.kind === "validate-build-version" ||
+      versionAwareCommand.kind === "convert-build-version" ||
+      versionAwareCommand.kind === "version-parser-self-test" ||
+      ((versionAwareCommand.kind === "generate-tower" ||
+        versionAwareCommand.kind === "generate-structure" ||
+        versionAwareCommand.kind === "generate-preset" ||
+        versionAwareCommand.kind === "validate-latest") &&
+        "targetMinecraftVersion" in versionAwareCommand &&
+        typeof versionAwareCommand.targetMinecraftVersion === "string")
+    ) {
+      return versionAwareCommand;
+    }
+  }
 
   const milestone6FinalizationCommand = readMilestone6FinalizationCommand(input);
   if (milestone6FinalizationCommand) {
@@ -1536,21 +1872,39 @@ function coerceMinecraftSchematicCommand(input: unknown): MinecraftSchematicPars
   }
 
   if (kind === "generate-tower" || (kind === "generate" && input.target === "tower")) {
+    const targetMinecraftVersion = readTargetMinecraftVersionForParsedInput(input, raw);
+    const variant = isVersionOnlyVariant(input.variant)
+      ? "default"
+      : (typeof input.variant === "string" ? input.variant : "default");
+
     return {
       kind: "generate-tower",
-      variant: (typeof input.variant === "string" ? input.variant : "default") as TowerVariant,
+      variant: variant as TowerVariant,
       presetId: typeof input.presetId === "string" ? input.presetId : undefined,
+      targetMinecraftVersion,
+      profile: typeof input.profile === "string" ? input.profile : undefined,
+      allowModdedBlocks: typeof input.allowModdedBlocks === "boolean" ? input.allowModdedBlocks : undefined,
+      fallbackToVanilla: typeof input.fallbackToVanilla === "boolean" ? input.fallbackToVanilla : undefined,
       raw,
     };
   }
 
   if (kind === "generate-structure" || kind === "generate") {
+    const targetMinecraftVersion = readTargetMinecraftVersionForParsedInput(input, raw);
+    const variant = isVersionOnlyVariant(input.variant)
+      ? "default"
+      : (typeof input.variant === "string" ? input.variant : "default");
+
     return {
       kind: "generate-structure",
       generator: coerceGenerator(input.generator ?? input.target),
-      variant: typeof input.variant === "string" ? input.variant : "default",
+      variant,
       presetId: typeof input.presetId === "string" ? input.presetId : undefined,
       prompt: typeof input.prompt === "string" ? input.prompt : raw,
+      targetMinecraftVersion,
+      profile: typeof input.profile === "string" ? input.profile : undefined,
+      allowModdedBlocks: typeof input.allowModdedBlocks === "boolean" ? input.allowModdedBlocks : undefined,
+      fallbackToVanilla: typeof input.fallbackToVanilla === "boolean" ? input.fallbackToVanilla : undefined,
       raw,
     };
   }
@@ -1663,7 +2017,28 @@ function executeMilestoneTestPlan(): MinecraftSchematicCommandResult {
 export async function executeMinecraftSchematicCommand(
   inputOrCommand: unknown,
 ): Promise<MinecraftSchematicCommandResult> {
-  const command = coerceMinecraftSchematicCommand(inputOrCommand);
+  const command = enrichMinecraftSchematicParsedCommandWithVersion(
+    coerceMinecraftSchematicCommand(inputOrCommand),
+    inputOrCommand,
+  );
+
+  const parsedCommandKind = getParsedCommandKind(command);
+
+  if (
+    parsedCommandKind === "schematic-library" ||
+    parsedCommandKind === "schematic-library-error"
+  ) {
+    const libraryResult = await executeSchematicLibraryCommand(
+      command as unknown as SchematicLibraryExecutableCommand,
+    );
+
+    return {
+      ok: libraryResult.ok,
+      title: libraryResult.title,
+      message: libraryResult.message,
+      data: libraryResult.data,
+    } as unknown as Awaited<ReturnType<typeof executeMinecraftSchematicCommand>>;
+  }
 
   const milestone6FinalizationCommand = readMilestone6FinalizationCommand(command);
   if (milestone6FinalizationCommand) {
@@ -1738,6 +2113,15 @@ export async function executeMinecraftSchematicCommand(
 
     case "validate-latest":
       return executeValidateLatest();
+
+    case "validate-build-version":
+      return executeValidateBuildVersion(command);
+
+    case "convert-build-version":
+      return executeConvertBuildVersion(command);
+
+    case "version-parser-self-test":
+      return executeVersionParserSelfTest();
 
     case "list":
       return executeList();

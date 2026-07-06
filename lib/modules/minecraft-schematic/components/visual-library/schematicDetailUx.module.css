@@ -1,0 +1,273 @@
+.detailHero {
+  display: grid;
+  grid-template-columns: minmax(190px, 260px) minmax(0, 1fr) minmax(180px, 240px);
+  gap: 20px;
+  align-items: stretch;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+  padding: 20px;
+  background:
+    radial-gradient(circle at top left, rgba(186, 230, 253, 0.08), transparent 26rem),
+    rgba(255, 255, 255, 0.045);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.26);
+}
+
+.heroThumbnailWrap {
+  overflow: hidden;
+  min-height: 180px;
+  border-radius: 20px;
+}
+
+.heroThumbnailWrap > * {
+  min-height: 100%;
+}
+
+.heroTextBlock {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+
+.heroStatRail {
+  display: grid;
+  gap: 10px;
+  align-content: center;
+}
+
+.heroStatCard {
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.heroStatCard span {
+  color: #8b8d98;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.heroStatCard strong {
+  color: #f4f4f5;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.detailShell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.75fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.viewerColumn {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.detailAside {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.viewerControlBar {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.controlGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controlLabel {
+  min-width: 68px;
+  color: #8b8d98;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.controlButton,
+.activeControlButton,
+.controlReadout,
+.tab,
+.activeTab {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: #f4f4f5;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.controlButton,
+.tab {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.activeControlButton,
+.activeTab {
+  border: 1px solid rgba(186, 230, 253, 0.36);
+  background: rgba(186, 230, 253, 0.13);
+  color: #e0f2fe;
+}
+
+.controlButton:hover,
+.activeControlButton:hover,
+.tab:hover,
+.activeTab:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.controlReadout {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.panelTitleRowCompact {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.summaryGridCompact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.summaryMetricCompact,
+.activeStateBox {
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.summaryMetricCompact span,
+.activeStateBox span {
+  color: #8b8d98;
+  font-size: 12px;
+}
+
+.summaryMetricCompact strong,
+.activeStateBox strong {
+  color: #f4f4f5;
+  overflow-wrap: anywhere;
+}
+
+.activeStateBox + .activeStateBox {
+  margin-top: 10px;
+}
+
+.lowerWorkbench {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.sectionTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lowerGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.debugDetails {
+  margin-top: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.debugDetails summary {
+  cursor: pointer;
+  padding: 12px 14px;
+  color: #f4f4f5;
+}
+
+.debugPre {
+  overflow: auto;
+  max-height: 520px;
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px;
+  color: #d4d4d8;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@media (max-width: 1180px) {
+  .detailHero,
+  .detailShell {
+    grid-template-columns: 1fr;
+  }
+
+  .heroStatRail {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .detailHero {
+    padding: 14px;
+  }
+
+  .heroStatRail,
+  .summaryGridCompact {
+    grid-template-columns: 1fr;
+  }
+
+  .controlGroup {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .controlLabel {
+    min-width: 0;
+  }
+
+  .controlButton,
+  .activeControlButton,
+  .controlReadout,
+  .tab,
+  .activeTab {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}

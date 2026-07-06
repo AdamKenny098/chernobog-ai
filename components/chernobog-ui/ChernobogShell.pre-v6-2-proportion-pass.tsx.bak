@@ -1,0 +1,39 @@
+import type { ReactNode } from "react";
+import { ChernobogContextPanel } from "./ChernobogContextPanel";
+import { ChernobogSidebar } from "./ChernobogSidebar";
+import { ChernobogTopBar } from "./ChernobogTopBar";
+
+export function ChernobogShell({
+  children,
+  currentArea,
+  mode = "framed",
+}: {
+  children: ReactNode;
+  currentArea?: string;
+  mode?: "framed" | "bare";
+}) {
+  if (mode === "bare") {
+    return (
+      <div className="min-h-screen overflow-x-auto bg-[#020202] px-3 py-3 text-[#f3d9ae]">
+        <div className="mx-auto min-h-[calc(100vh-1.5rem)] w-full max-w-[1450px] border border-[#5d3214]/80 bg-[#030303] shadow-[0_0_80px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(255,154,58,0.06)]">
+          {children}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen overflow-x-auto bg-[#020202] px-3 py-3 text-[#f3d9ae]">
+      <div className="mx-auto grid min-h-[calc(100vh-1.5rem)] w-full max-w-[1450px] grid-cols-1 border border-[#5d3214]/80 bg-[#030303] shadow-[0_0_80px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(255,154,58,0.06)] xl:grid-cols-[185px_minmax(0,1fr)_220px]">
+        <div className="hidden xl:block">
+          <ChernobogSidebar />
+        </div>
+        <div className="min-w-0 border-x border-[#2d1a0c]/80 bg-[#050403]">
+          <ChernobogTopBar currentArea={currentArea} />
+          <div className="p-3">{children}</div>
+        </div>
+        <ChernobogContextPanel />
+      </div>
+    </div>
+  );
+}

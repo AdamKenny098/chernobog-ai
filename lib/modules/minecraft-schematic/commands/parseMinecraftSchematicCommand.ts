@@ -14,6 +14,8 @@ import type {
   TowerVariant,
 } from "../types";
 
+import { parseSchematicLibraryCommand } from "../library/parseSchematicLibraryCommand";
+
 type UnifiedParseResult = ReturnType<ModuleCommandParser>;
 type UnifiedCommandLike = NonNullable<UnifiedParseResult>;
 
@@ -696,6 +698,27 @@ function getArgsForParsedCommand(command: MinecraftSchematicParsedCommand): stri
 
 export function parseMinecraftSchematicCommand(input: string): MinecraftSchematicParsedCommand {
   const normalized = normalize(input);
+
+  const libraryCommand = parseSchematicLibraryCommand(input);
+
+  if (libraryCommand.matched) {
+    if (libraryCommand.error || !libraryCommand.command) {
+      return {
+        kind: "schematic-library-error",
+        raw: input,
+        reason:
+          libraryCommand.error ??
+          "Schematic library command matched but no command was produced.",
+      } as unknown as MinecraftSchematicParsedCommand;
+    }
+
+    return {
+      ...libraryCommand.command,
+      kind: "schematic-library",
+      action: libraryCommand.command.kind,
+      raw: input,
+    } as unknown as MinecraftSchematicParsedCommand;
+  }
 
   const milestone6FinalizationCommand = parseMilestone6FinalizationCommand(input);
   if (milestone6FinalizationCommand) {

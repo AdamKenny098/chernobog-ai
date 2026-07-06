@@ -34,7 +34,12 @@ export type SchematicGeneratorName =
 
 export type SchematicVariant = TowerVariant | string;
 
-export type BlockRegistryProfileId = "vanilla" | "siriocraft-create";
+export type BlockRegistryProfileId =
+  | "vanilla"
+  | "siriocraft-create"
+  | "latest"
+  | `vanilla-${number}-${number}`
+  | `vanilla-${number}-${number}-${number}`;
 
 export type BlockRegistryProfile = {
   id: BlockRegistryProfileId;
@@ -45,6 +50,9 @@ export type BlockRegistryProfile = {
   allowModdedBlocksDefault: boolean;
   fallbackToVanillaDefault: boolean;
   fallbackBlocks: Partial<Record<MinecraftBlockName, MinecraftBlockName>>;
+  aliases?: string[];
+  minecraftVersion?: string;
+  targetMinecraftVersion?: string;
 };
 
 export type BlockRegistryReplacementRecord = {
@@ -183,6 +191,7 @@ export type GeneratedSchematicBuild = {
   prompt: string;
   command: string;
   minecraftVersion: string;
+  targetMinecraftVersion?: string;
   generatedAt: string;
   size: SchematicSize;
   palette: MinecraftBlockName[];
@@ -224,6 +233,7 @@ export type SchematicMetadata = {
   prompt: string;
   command: string;
   minecraftVersion: string;
+  targetMinecraftVersion?: string;
   size: SchematicSize;
   palette: MinecraftBlockName[];
   blockCount: number;
@@ -270,6 +280,10 @@ export type MinecraftSchematicParsedCommand =
       kind: "generate-tower";
       variant: TowerVariant;
       presetId?: string;
+      targetMinecraftVersion?: string;
+      profile?: BlockRegistryProfileId | string;
+      allowModdedBlocks?: boolean;
+      fallbackToVanilla?: boolean;
       raw: string;
     }
   | {
@@ -278,6 +292,10 @@ export type MinecraftSchematicParsedCommand =
       variant: SchematicVariant;
       presetId?: string;
       prompt: string;
+      targetMinecraftVersion?: string;
+      profile?: BlockRegistryProfileId | string;
+      allowModdedBlocks?: boolean;
+      fallbackToVanilla?: boolean;
       raw: string;
     }
   | {
@@ -291,6 +309,7 @@ export type MinecraftSchematicParsedCommand =
     }
   | {
       kind: "validate-latest";
+      targetMinecraftVersion?: string;
       raw: string;
     }
   | {
@@ -330,6 +349,10 @@ export type MinecraftSchematicParsedCommand =
   | {
       kind: "generate-preset";
       presetId: string;
+      targetMinecraftVersion?: string;
+      profile?: BlockRegistryProfileId | string;
+      allowModdedBlocks?: boolean;
+      fallbackToVanilla?: boolean;
       raw: string;
     }
   | {
@@ -345,6 +368,22 @@ export type MinecraftSchematicParsedCommand =
   | {
       kind: "review-build";
       buildId: string;
+      raw: string;
+    }
+  | {
+      kind: "validate-build-version";
+      buildId: string;
+      targetMinecraftVersion: string;
+      raw: string;
+    }
+  | {
+      kind: "convert-build-version";
+      buildId: string;
+      targetMinecraftVersion: string;
+      raw: string;
+    }
+  | {
+      kind: "version-parser-self-test";
       raw: string;
     }
   | {

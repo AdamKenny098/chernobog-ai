@@ -25,16 +25,10 @@ function getFailedStep(task: ExecutionTask) {
 }
 
 function getReadableResult(task: ExecutionTask) {
-  const summary = stringifyReadableValue(task.context.summary);
+  const directReply = stringifyReadableValue(task.context.reply);
 
-  if (summary) {
-    return summary;
-  }
-
-  const lastReadText = stringifyReadableValue(task.context.lastReadText);
-
-  if (lastReadText) {
-    return lastReadText;
+  if (directReply) {
+    return directReply;
   }
 
   const lastOutput = stringifyReadableValue(task.context.lastOutput);
@@ -43,27 +37,77 @@ function getReadableResult(task: ExecutionTask) {
     return lastOutput;
   }
 
+  const moduleResult = stringifyReadableValue(task.context.moduleResult);
+
+  if (moduleResult) {
+    return moduleResult;
+  }
+
+  const modulePayload = stringifyReadableValue(task.context.modulePayload);
+
+  if (modulePayload) {
+    return modulePayload;
+  }
+
+  const lastReadText = stringifyReadableValue(task.context.lastReadText);
+
+  if (lastReadText) {
+    return lastReadText;
+  }
+
+  const summary = stringifyReadableValue(task.context.summary);
+
+  if (summary) {
+    return summary;
+  }
+
   return null;
 }
 
-function stringifyReadableValue(value: unknown): string | null {
+function stringifyReadableValue(value: unknown, depth = 0): string | null {
   if (typeof value === "string" && value.trim().length > 0) {
     return value;
   }
 
-  if (!value || typeof value !== "object") {
+  if (!value || typeof value !== "object" || depth > 3) {
     return null;
   }
 
-  const possibleKeys = ["text", "content", "contents", "body", "data"];
+  const record = value as Record<string, unknown>;
+
+  const possibleKeys = [
+    "reply",
+    "message",
+    "summary",
+    "text",
+    "content",
+    "contents",
+    "body",
+    "data",
+  ];
 
   for (const key of possibleKeys) {
-    if (
-      key in value &&
-      typeof value[key as keyof typeof value] === "string" &&
-      (value[key as keyof typeof value] as string).trim().length > 0
-    ) {
-      return value[key as keyof typeof value] as string;
+    const candidate = record[key];
+
+    if (typeof candidate === "string" && candidate.trim().length > 0) {
+      return candidate;
+    }
+  }
+
+  const nestedKeys = [
+    "result",
+    "modulePayload",
+    "moduleResult",
+    "lastOutput",
+    "output",
+    "response",
+  ];
+
+  for (const key of nestedKeys) {
+    const nested = stringifyReadableValue(record[key], depth + 1);
+
+    if (nested) {
+      return nested;
     }
   }
 

@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "96cfb9ef8797f5a6",
+        "id": "c6caa90cc70e428e",
         "type": "tabs",
         "children": [
           {
-            "id": "7efdb49abc9e5142",
+            "id": "b01cabbae269be63",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-32-52-961-bd555d95/summary.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "summary"
+              "title": "New tab"
             }
           }
         ]
@@ -94,7 +90,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "checklists/v4-8-closure-checklist.md",
+                "file": "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-32-52-961-bd555d95/summary.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +100,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for v4-8-closure-checklist"
+              "title": "Backlinks for summary"
             }
           },
           {
@@ -183,8 +179,14 @@
       "bases:Create new base": false
     }
   },
-  "active": "7efdb49abc9e5142",
+  "active": "b01cabbae269be63",
   "lastOpenFiles": [
+    "Minecraft/Schematics/siriocraft_gatehouse-2026-07-05T23-55-46-414Z.md",
+    "Untitled.base",
+    "2026-07-05.md",
+    "Untitled.canvas",
+    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-32-52-961-bd555d95/summary.md",
+    "02_Projects/intelligence layer.md",
     "content-watch/sessions/watch-session-20260623T105155-e45e00d7.json",
     "content-watch/sessions/_index.json",
     "content-watch/sessions/watch-session-20260623T105052-2cdd6f61.json",
@@ -197,10 +199,7 @@
     "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-42-13-474-950270a7/run.json",
     "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-42-13-474-950270a7",
     "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-41-55-266-8cce8d8c/summary.md",
-    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-41-55-266-8cce8d8c/run.json",
-    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-41-55-266-8cce8d8c",
     "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-41-54-855-844814b4/summary.md",
-    "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-32-52-961-bd555d95/summary.md",
     "content-ingest/runs/tiktok-archive-scan-2026-06-23_00-29-28-662-211b629d/summary.md",
     "research/saved-content/scr-2026-06-22_11-16-52-370-10edaf42.md",
     "research/saved-content/scr-2026-06-22_11-09-52-756-7ca25d3b.md",
@@ -208,7 +207,6 @@
     "command-language.md",
     "architecture.md",
     "checklists/v4-8-closure-checklist.md",
-    "02_Projects/intelligence layer.md",
     "vault-module.md",
     "refactor-targets.md",
     "pipeline-map.md",
@@ -219,7 +217,6 @@
     "decisions/ADR-0002-obsidian-vault-as-project-knowledge-layer.md",
     "decisions/ADR-0001-modular-architecture.md",
     "checklists/v4-9-modularization-checklist.md",
-    "known-failures.md",
-    "roadmap.md"
+    "known-failures.md"
   ]
 }

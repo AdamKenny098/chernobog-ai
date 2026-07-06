@@ -1,0 +1,39 @@
+{
+  "id": "siriocraft-gatehouse-1783295746511-bbe50deb",
+  "name": "SirioCraft Gatehouse",
+  "category": "gatehouse",
+  "theme": "gatehouse",
+  "targetMinecraftVersion": "1.8.8",
+  "requiredMods": [
+    "minecraft"
+  ],
+  "size": {
+    "width": 31,
+    "height": 19,
+    "length": 13
+  },
+  "blockCount": 2131,
+  "tags": [
+    "generated",
+    "milestone-7",
+    "gatehouse",
+    "vanilla",
+    "two_towers",
+    "less_boxy_tower_mass",
+    "deep_gate_tunnel",
+    "wider_gate_opening",
+    "wall_segments",
+    "battlements",
+    "inset_portcullis_bars",
+    "walkway",
+    "arrow_slits",
+    "tower_cap_rings",
+    "buttresses",
+    "face_trim",
+    "sign_metadata"
+  ],
+  "generatorSource": "minecraft-schematic:gatehouse",
+  "createdAt": "2026-07-05T23:55:46.511Z",
+  "updatedAt": "2026-07-05T23:55:46.511Z",
+  "notes": "Registered automatically from generated build siriocraft_gatehouse-2026-07-05T23-55-46-414Z.\nGenerated title: Minecraft schematic.\nProfile: vanilla."
+}

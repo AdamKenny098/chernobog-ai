@@ -1,5 +1,5 @@
-import UmbraAIConsole from "@/components/UmbraAIConsole";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <UmbraAIConsole />;
+export default function HomePage() {
+  redirect("/command-center");
 }

@@ -1,0 +1,381 @@
+import Link from "next/link";
+import { ChernobogShell } from "@/components/chernobog-ui/ChernobogShell";
+import {
+  getAllChernobogRoutes,
+  getPrimaryNavigationRoutes,
+} from "@/lib/chernobog-ui/routeRegistry";
+import { getAllChernobogModules } from "@/lib/chernobog-ui/moduleRegistry";
+import {
+  ClassicBadge,
+  ClassicButtonLink,
+  ClassicFrame,
+  ClassicMiniStat,
+  ClassicPanel,
+} from "@/components/chernobog-ui/ChernobogClassic";
+
+const departments = [
+  "Executive Office",
+  "Coding Department",
+  "Design Department",
+  "Vault / Archivist Department",
+  "QA Department",
+  "Security Department",
+  "Operations Department",
+  "Narrative Department",
+];
+
+const directives = [
+  ["Preserve Console", "Command execution remains isolated under /command."],
+  ["Route Registry", "Navigation resolves from typed route metadata."],
+  ["Review Safety", "Dynamic review routes stay sealed until selected."],
+];
+
+type RegistryRoute = ReturnType<typeof getAllChernobogRoutes>[number];
+type ChernobogModule = ReturnType<typeof getAllChernobogModules>[number];
+
+function routeIsOpenable(route: RegistryRoute | undefined): route is RegistryRoute {
+  return Boolean(
+    route &&
+      route.path.startsWith("/") &&
+      !route.path.startsWith("/api") &&
+      !route.path.includes("[") &&
+      route.status !== "hidden" &&
+      route.status !== "deprecated" &&
+      route.status !== "unknown",
+  );
+}
+
+function moduleTone(module: ChernobogModule): "amber" | "green" | "red" | "blue" | "dim" {
+  if (module.status === "active") return "green";
+  if (module.status === "experimental") return "amber";
+  if (module.status === "deprecated") return "red";
+  if (module.status === "planned") return "blue";
+  return "dim";
+}
+
+function getModuleRoute(module: ChernobogModule, routeById: Map<string, RegistryRoute>) {
+  return (module.relatedRouteIds ?? [])
+    .map((routeId) => routeById.get(routeId))
+    .find(routeIsOpenable);
+}
+
+function HeaderChip({
+  label,
+  value,
+  tone = "amber",
+}: {
+  label: string;
+  value: string | number;
+  tone?: "amber" | "green" | "blue" | "dim";
+}) {
+  const toneClass = {
+    amber: "text-[#ffd28a]",
+    green: "text-emerald-200",
+    blue: "text-cyan-100",
+    dim: "text-[#8e785c]",
+  }[tone];
+
+  return (
+    <div className="border border-[#5d3214]/65 bg-[#080604]/95 px-2.5 py-2">
+      <div className="text-[7px] uppercase tracking-[0.26em] text-[#c9782f]/55">{label}</div>
+      <div className={`mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] ${toneClass}`}>
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function FavoriteModuleButton({
+  module,
+  route,
+  index,
+}: {
+  module: ChernobogModule;
+  route: RegistryRoute | undefined;
+  index: number;
+}) {
+  const content = (
+    <div className="group border border-[#5d3214]/65 bg-[#070503] px-2.5 py-2 text-left transition hover:border-[#c9782f]/80 hover:bg-[#0c0805]">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="text-[7px] uppercase tracking-[0.24em] text-[#c9782f]/50">
+            Fav {String(index + 1).padStart(2, "0")}
+          </div>
+          <div className="mt-1 truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-[#ffe0ac]">
+            {module.label}
+          </div>
+        </div>
+        <ClassicBadge tone={moduleTone(module)}>{module.status}</ClassicBadge>
+      </div>
+      <div className="mt-1.5 truncate font-mono text-[8px] text-[#c9782f]/70">
+        {route ? route.path : module.id}
+      </div>
+    </div>
+  );
+
+  return route ? <Link href={route.path}>{content}</Link> : content;
+}
+
+function OriginalEyePanel() {
+  return (
+    <section
+      data-verify-classic-signal="ClassicSignal ClassicHeader ClassicLayout ClassicRail ClassicMainStack"
+      className="relative min-h-[305px] overflow-hidden border border-[#6f3d18]/75 bg-[radial-gradient(circle_at_center,rgba(255,147,48,0.1),transparent_34%),linear-gradient(180deg,#070605,#030303)] shadow-[inset_0_0_0_1px_rgba(255,154,58,0.08)]"
+    >
+      <div className="pointer-events-none absolute inset-6 border border-[#6f3d18]/35" />
+      <div className="pointer-events-none absolute inset-x-12 top-1/2 h-px bg-gradient-to-r from-transparent via-[#b86d2a]/55 to-transparent" />
+      <div className="pointer-events-none absolute left-1/2 top-8 h-[calc(100%-4rem)] w-px bg-gradient-to-b from-transparent via-[#b86d2a]/55 to-transparent" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-28 w-[76%] -translate-x-1/2 -translate-y-1/2 rounded-[100%] border border-[#b86d2a]/35" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-16 w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-[100%] border border-[#b86d2a]/25" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#ffd79a] blur-sm" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-16 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#ff9b3a]/45 blur-xl" />
+      <div className="absolute inset-x-0 bottom-10 text-center">
+        <div className="text-[8px] uppercase tracking-[0.48em] text-[#c9782f]/55">
+          Persistent Interface Field
+        </div>
+        <div className="mt-3 text-[12px] font-semibold uppercase tracking-[0.55em] text-[#ffd28a]">
+          Chernobog Signal State
+        </div>
+        <div className="mt-2 font-mono text-[9px] text-[#8e785c]">
+          /command-center :: original eye interface restored
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ModuleCard({
+  module,
+  route,
+  index,
+}: {
+  module: ChernobogModule;
+  route: RegistryRoute | undefined;
+  index: number;
+}) {
+  return (
+    <article className="grid min-h-[98px] grid-rows-[auto_1fr_auto] border border-[#5d3214]/65 bg-[#070503] p-2.5 shadow-[inset_0_0_0_1px_rgba(255,154,58,0.05)]">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="text-[7px] uppercase tracking-[0.25em] text-[#c9782f]/50">
+            Module {String(index + 1).padStart(2, "0")}
+          </div>
+          <h3 className="mt-1 truncate text-[10px] font-semibold uppercase tracking-[0.15em] text-[#ffe0ac]">
+            {module.label}
+          </h3>
+        </div>
+        <ClassicBadge tone={moduleTone(module)}>{module.status}</ClassicBadge>
+      </div>
+
+      <p className="mt-1.5 text-[9px] leading-4 text-[#b7a386]">
+        {module.description.length > 92 ? `${module.description.slice(0, 92)}...` : module.description}
+      </p>
+
+      <div className="mt-2 flex items-center justify-between gap-2 border-t border-[#5d3214]/40 pt-1.5">
+        <div className="truncate font-mono text-[7px] uppercase tracking-[0.08em] text-[#8e785c]">
+          {module.ownerDepartment}
+        </div>
+        {route ? (
+          <Link
+            href={route.path}
+            className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#ffd28a] underline decoration-[#c9782f]/50 underline-offset-4 hover:text-white"
+          >
+            Open
+          </Link>
+        ) : (
+          <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#8e785c]">
+            Sealed
+          </span>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function DecorativeTab({
+  label,
+  value,
+  tone = "amber",
+}: {
+  label: string;
+  value: string | number;
+  tone?: "amber" | "green" | "blue" | "dim";
+}) {
+  const toneClass = {
+    amber: "text-[#ffd28a]",
+    green: "text-emerald-200",
+    blue: "text-cyan-100",
+    dim: "text-[#8e785c]",
+  }[tone];
+
+  return (
+    <div className="flex items-center justify-between border border-[#5d3214]/55 bg-[#070503] px-2 py-1.5">
+      <span className="text-[7px] uppercase tracking-[0.22em] text-[#c9782f]/55">{label}</span>
+      <span className={`font-mono text-[9px] font-semibold uppercase tracking-[0.1em] ${toneClass}`}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function DepartmentControlLayer() {
+  return (
+    <div className="grid grid-cols-2 gap-1.5">
+      {departments.map((department, index) => (
+        <div key={department} className="border border-[#5d3214]/45 bg-[#070503] px-2 py-1.5">
+          <div className="text-[6px] uppercase tracking-[0.18em] text-[#c9782f]/45">
+            Dept {String(index + 1).padStart(2, "0")}
+          </div>
+          <div className="mt-1 truncate text-[8px] font-semibold uppercase tracking-[0.1em] text-[#ffe0ac]">
+            {department}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DirectiveStack() {
+  return (
+    <div className="grid gap-1.5">
+      {directives.map(([title, detail], index) => (
+        <div key={title} className="border border-[#5d3214]/45 bg-[#070503] px-2 py-1.5">
+          <div className="text-[6px] uppercase tracking-[0.2em] text-[#c9782f]/45">
+            Directive {String(index + 1).padStart(2, "0")}
+          </div>
+          <div className="mt-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-[#ffe0ac]">
+            {title}
+          </div>
+          <p className="mt-1 text-[8px] leading-3 text-[#8e785c]">{detail}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function CommandCenterPage() {
+  const allRoutes = getAllChernobogRoutes();
+  const primaryRoutes = getPrimaryNavigationRoutes();
+  const modules = getAllChernobogModules();
+  const routeById = new Map(allRoutes.map((route) => [route.id, route]));
+
+  const activeRoutes = allRoutes.filter((route) => route.status === "active");
+  const reviewRoutes = allRoutes.filter(
+    (route) => route.kind === "review" || route.path.startsWith("/review"),
+  );
+  const apiRoutes = allRoutes.filter(
+    (route) => route.kind === "api" || route.path.startsWith("/api"),
+  );
+
+  const favoriteModules = modules.slice(0, 6);
+
+  return (
+    <ChernobogShell currentArea="Command Center" mode="bare">
+      <ClassicFrame>
+        <div className="p-3">
+          <header className="border border-[#6f3d18]/75 bg-[#080604]/95 p-3 shadow-[inset_0_0_0_1px_rgba(255,154,58,0.08)]">
+            <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
+              <div>
+                <div className="text-[8px] uppercase tracking-[0.42em] text-[#c9782f]/65">
+                  God Program Interface / Blueprint Proportion Pass
+                </div>
+                <h1 className="mt-2 text-2xl font-semibold uppercase tracking-[0.26em] text-[#ffe0ac] md:text-3xl">
+                  Chernobog // Override
+                </h1>
+                <p className="mt-2 max-w-3xl text-[11px] leading-5 text-[#b7a386]">
+                  Structured command matrix: compact header, favorite module rail, restored eye core,
+                  module grid, and decorative Chernobog tabs.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  <ClassicButtonLink href="/command" tone="amber">Command Console</ClassicButtonLink>
+                  <ClassicButtonLink href="/routes" tone="amber">Route Matrix</ClassicButtonLink>
+                  <ClassicButtonLink href="/modules" tone="dim">Modules</ClassicButtonLink>
+                  <ClassicButtonLink href="/vault" tone="dim">Vault</ClassicButtonLink>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-1.5">
+                <HeaderChip label="Routes" value={allRoutes.length} tone="green" />
+                <HeaderChip label="Modules" value={modules.length} tone="blue" />
+                <HeaderChip label="Router" value="Preserved" tone="amber" />
+                <HeaderChip label="Vault" value="Available" tone="blue" />
+              </div>
+            </div>
+          </header>
+
+          <div className="mt-3 grid items-start gap-3 xl:grid-cols-[175px_minmax(0,1fr)_190px]">
+            <aside className="grid content-start gap-3">
+              <ClassicPanel eyebrow="Subsystem Stack" title="Favorite Module Buttons" compact>
+                <div className="mb-2 text-[7px] uppercase tracking-[0.24em] text-[#8e785c]">
+                  Subroutine Stack / Primary Route Shortcuts
+                </div>
+                <div className="grid gap-1.5">
+                  {favoriteModules.map((module, index) => (
+                    <FavoriteModuleButton
+                      key={module.id}
+                      module={module}
+                      route={getModuleRoute(module, routeById)}
+                      index={index}
+                    />
+                  ))}
+                </div>
+              </ClassicPanel>
+            </aside>
+
+            <main className="grid min-w-0 content-start gap-3">
+              <OriginalEyePanel />
+
+              <ClassicPanel eyebrow="Center Grid" title="All Modules Here" compact>
+                <div className="grid gap-2 lg:grid-cols-2">
+                  {modules.map((module, index) => (
+                    <ModuleCard
+                      key={module.id}
+                      module={module}
+                      route={getModuleRoute(module, routeById)}
+                      index={index}
+                    />
+                  ))}
+                </div>
+              </ClassicPanel>
+            </main>
+
+            <aside className="grid content-start gap-3">
+              <ClassicPanel eyebrow="Right Rail" title="Chernobog Themed Decorative Tabs" compact>
+                <div className="mb-2 text-[7px] uppercase tracking-[0.24em] text-[#8e785c]">
+                  Telemetry Stack
+                </div>
+                <div className="grid gap-1.5">
+                  <DecorativeTab label="Route Registry" value={allRoutes.length} tone="green" />
+                  <DecorativeTab label="Command Router" value="Safe" tone="amber" />
+                  <DecorativeTab label="Vault Memory" value="Online" tone="blue" />
+                  <DecorativeTab label="Review Layer" value={reviewRoutes.length} tone="amber" />
+                  <DecorativeTab label="API Routes" value={apiRoutes.length} tone="dim" />
+                  <DecorativeTab label="Active Routes" value={activeRoutes.length} tone="green" />
+                </div>
+
+                <div className="mt-3 border-t border-[#5d3214]/45 pt-2.5">
+                  <div className="mb-2 text-[7px] uppercase tracking-[0.24em] text-[#8e785c]">
+                    Department Control Layer
+                  </div>
+                  <DepartmentControlLayer />
+                </div>
+
+                <div className="mt-3 border-t border-[#5d3214]/45 pt-2.5">
+                  <div className="mb-2 text-[7px] uppercase tracking-[0.24em] text-[#8e785c]">
+                    Directive Feed / Directive Stack / Telemetry
+                  </div>
+                  <DirectiveStack />
+                </div>
+
+                <div className="mt-3 border-t border-[#5d3214]/45 pt-2.5">
+                  <ClassicMiniStat label="Trust Mode" value="Read-Only UI" />
+                  <ClassicMiniStat label="Project" value="Chernobog" />
+                </div>
+              </ClassicPanel>
+            </aside>
+          </div>
+        </div>
+      </ClassicFrame>
+    </ChernobogShell>
+  );
+}

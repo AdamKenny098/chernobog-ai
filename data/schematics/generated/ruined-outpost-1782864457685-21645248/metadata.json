@@ -1,0 +1,35 @@
+{
+  "id": "ruined-outpost-1782864457685-21645248",
+  "name": "Ruined Outpost",
+  "category": "outpost",
+  "theme": "ruined_outpost",
+  "targetMinecraftVersion": "1.21.1",
+  "requiredMods": [
+    "minecraft"
+  ],
+  "size": {
+    "width": 23,
+    "height": 10,
+    "length": 23
+  },
+  "blockCount": 822,
+  "tags": [
+    "generated",
+    "milestone-7",
+    "outpost",
+    "ruined_outpost",
+    "vanilla",
+    "broken_perimeter_walls",
+    "gate_gap",
+    "corner_lookout_ruin",
+    "ruined_hut",
+    "camp_area",
+    "storage_placeholders",
+    "sign_metadata",
+    "fallen_debris"
+  ],
+  "generatorSource": "minecraft-schematic:outpost",
+  "createdAt": "2026-07-01T00:07:37.685Z",
+  "updatedAt": "2026-07-01T00:07:37.685Z",
+  "notes": "Registered automatically from generated build ruined_outpost-2026-07-01T00-07-37-316Z.\nGenerated title: Minecraft schematic.\nPreset: ruined_outpost.\nProfile: vanilla."
+}

@@ -1,0 +1,28 @@
+{
+  "id": "test-7c-factory-copy-1782816168973-63df4d71",
+  "name": "Test 7C Factory Copy",
+  "category": "factory",
+  "theme": "industrial",
+  "targetMinecraftVersion": "1.21.1",
+  "requiredMods": [
+    "minecraft"
+  ],
+  "size": {
+    "width": 12,
+    "height": 8,
+    "length": 14
+  },
+  "blockCount": 1344,
+  "tags": [
+    "test",
+    "factory",
+    "executor",
+    "milestone-7"
+  ],
+  "generatorSource": "test-schematic-library-7C",
+  "createdAt": "2026-06-30T10:42:48.972Z",
+  "updatedAt": "2026-06-30T10:42:48.972Z",
+  "parentId": "test-7c-library",
+  "revision": 2,
+  "notes": "Temporary test asset for Milestone 7C."
+}
