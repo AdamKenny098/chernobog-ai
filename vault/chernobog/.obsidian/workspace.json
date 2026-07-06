@@ -181,6 +181,8 @@
   },
   "active": "b01cabbae269be63",
   "lastOpenFiles": [
+    "Minecraft/Schematics/siriocraft_gatehouse-2026-07-06T00-52-38-058Z.md",
+    "Minecraft/Schematics/siriocraft_gatehouse-2026-07-06T00-08-22-433Z.md",
     "Minecraft/Schematics/siriocraft_gatehouse-2026-07-05T23-55-46-414Z.md",
     "Untitled.base",
     "2026-07-05.md",
@@ -215,8 +217,6 @@
     "decisions/ADR-0004-modules-own-domain-logic.md",
     "decisions/ADR-0003-domain-handlers-over-pipeline-bloat.md",
     "decisions/ADR-0002-obsidian-vault-as-project-knowledge-layer.md",
-    "decisions/ADR-0001-modular-architecture.md",
-    "checklists/v4-9-modularization-checklist.md",
-    "known-failures.md"
+    "decisions/ADR-0001-modular-architecture.md"
   ]
 }

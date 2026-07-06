@@ -43,3 +43,21 @@ export {
 export {
   runMinecraftBlockRegistrySelfTest,
 } from "./blockRegistry.selftest";
+export { applyVersionSafePaletteIntentToBuild, createVersionSafePaletteIntentReport } from "./applyVersionSafePaletteIntentToBuild";
+export type { VersionSafePaletteIntentReport, VersionSafePaletteReplacementRecord, VersionSafePaletteUnresolvedRecord } from "./applyVersionSafePaletteIntentToBuild";
+
+export {
+  applyBlockVersionValidationToBuild,
+  createBlockVersionValidationReport,
+  formatBlockVersionValidationReport,
+  runBlockVersionValidatorSelfTest,
+} from "./blockVersionValidator";
+
+export type {
+  BlockVersionValidationCoordinate,
+  BlockVersionValidationIssue,
+  BlockVersionValidationReport,
+  BlockVersionValidationStatus,
+} from "./blockVersionValidator";
+
+export * from "./blockVersionFinalizer9F";

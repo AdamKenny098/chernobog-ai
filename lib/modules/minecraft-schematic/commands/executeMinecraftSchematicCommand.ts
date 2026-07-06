@@ -11,7 +11,8 @@ import {
   getBlockRegistryProfile,
   normalizeBlockRegistryProfileId,
 } from "../block-registry/blockRegistry";
-import { createBlockVersionLimitReport } from "../block-registry";
+import { applyBlockVersionValidationToBuild } from "../block-registry";
+import { applyVersionSafePaletteIntentToBuild, createBlockVersionLimitReport } from "../block-registry";
 import { exportDebugJson } from "../exporters/exportDebugJson";
 import { exportSchem, validateSchemFile } from "../exporters/exportSchem";
 import { generateStructure } from "../generators/structures/generateStructure";
@@ -72,6 +73,10 @@ import {
 } from "../library/executeSchematicLibraryCommand";
 
 import { registerGeneratedSchematic } from "../library/registerGeneratedSchematic";
+
+import { executeConvertBuildVersion9E } from "./executeConvertBuildVersion9E";
+
+import { applyMilestone9FFinalVersionHardeningToBuild } from "../block-registry/blockVersionFinalizer9F";
 
 const execFileAsync = promisify(execFile);
 
@@ -323,9 +328,12 @@ async function persistGeneratedBuild(
   generatedTitle: string,
 ): Promise<MinecraftSchematicCommandResult> {
   const repairedBuild = repairGeneratedBuildVersionVariantLeak(build);
-  const registryBuild = applyBlockRegistryToBuild(repairedBuild);
-  const normalized = normalizeBlockEntitiesForBuild(registryBuild);
-  const exportBuild = normalized.build;
+  const versionSafeBuild = applyVersionSafePaletteIntentToBuild(repairedBuild); 
+  const registryBuild = applyBlockRegistryToBuild(versionSafeBuild);
+  const milestone9FinalBuild = applyMilestone9FFinalVersionHardeningToBuild(registryBuild);
+  const normalized = normalizeBlockEntitiesForBuild(milestone9FinalBuild);
+  const versionValidatedBuild = applyBlockVersionValidationToBuild(normalized.build);
+  const exportBuild = versionValidatedBuild;
   const validation = validateGeneratedBuild(exportBuild);
   const shapeValid = exportBuild.shapeValidation?.valid ?? true;
 
@@ -780,54 +788,7 @@ async function executeValidateBuildVersion(
 async function executeConvertBuildVersion(
   command: Extract<MinecraftSchematicParsedCommand, { kind: "convert-build-version" }>,
 ): Promise<MinecraftSchematicCommandResult> {
-  const safeId = safeBuildId(command.buildId);
-
-  if (!safeId) {
-    return {
-      ok: false,
-      title: "Invalid schematic build id",
-      message: "Build ids may only contain letters, numbers, underscores, hyphens, and periods.",
-    };
-  }
-
-  const metadata = await readMetadataByBuildId(safeId);
-
-  if (!metadata) {
-    return {
-      ok: false,
-      title: "Schematic metadata not found",
-      message: [
-        `Build ID: ${safeId}`,
-        "Could not prepare version conversion because metadata was not found.",
-        "Run schematic list to see available generated builds.",
-      ].join("\n"),
-    };
-  }
-
-  const report = createBlockVersionLimitReport({
-    blockIds: metadata.palette,
-    targetMinecraftVersion: command.targetMinecraftVersion,
-  });
-
-  return {
-    ok: true,
-    title: "Schematic version conversion parsed",
-    message: [
-      `Build ID: ${metadata.buildId}`,
-      `Requested Target Minecraft Version: ${command.targetMinecraftVersion}`,
-      `Palette entries checked: ${report.checkedBlockCount}`,
-      `Potential substitutions: ${report.substitutedBlocks.length}`,
-      `Potential omissions: ${report.omittedBlocks.length}`,
-      `Potential incompatibilities: ${report.incompatibleBlocks.length}`,
-      "",
-      "Milestone 9B note: this command now parses and reports conversion intent. Actual converted schematic writing lands in 9F.",
-    ].join("\n"),
-    data: {
-      metadata,
-      report,
-      targetMinecraftVersion: command.targetMinecraftVersion,
-    },
-  };
+  return executeConvertBuildVersion9E(command);
 }
 
 function executeVersionParserSelfTest(): MinecraftSchematicCommandResult {

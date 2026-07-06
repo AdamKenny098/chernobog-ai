@@ -108,7 +108,8 @@
     "chernobog:v6.2:blueprint:verify": "tsx scripts/verify-chernobog-v6-2-blueprint-layout.ts",
     "chernobog:v6.2:proportion:apply": "node scripts/apply-v6-2-proportion-pass.mjs",
     "chernobog:v6.2:proportion:verify": "tsx scripts/verify-chernobog-v6-2-proportion-pass.ts",
-    "chernobog:v6.2:real-routes:verify": "tsx scripts/verify-chernobog-v6-2-real-routes.ts"
+    "chernobog:v6.2:real-routes:verify": "tsx scripts/verify-chernobog-v6-2-real-routes.ts",
+    "chernobog:schematic:9d:verify": "node scripts/verify-schematic-9d-block-version-validator.mjs"
   },
   "dependencies": {
     "@types/three": "^0.185.0",
