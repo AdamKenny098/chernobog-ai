@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "medieval-1.8.8",
+  "displayName": "Medieval 1.8.8 Palette",
+  "description": "Reusable stone-and-wood castle palette for towers, keeps, walls, roads, and fortified towns.",
+  "tags": [
+    "medieval",
+    "castle",
+    "stone",
+    "vanilla"
+  ],
+  "minecraftVersion": "1.8.8",
+  "targetMinecraftVersion": "1.8.8",
+  "profile": "vanilla",
+  "fallbackToVanilla": true,
+  "roles": {
+    "wallPrimary": "minecraft:stone_bricks",
+    "wallSecondary": "minecraft:cobblestone",
+    "trim": "minecraft:oak_log",
+    "roof": "minecraft:spruce_planks",
+    "floor": "minecraft:oak_planks",
+    "window": "minecraft:glass_pane",
+    "accent": "minecraft:oak_fence",
+    "light": "minecraft:torch",
+    "path": "minecraft:gravel",
+    "foundation": "minecraft:stone"
+  },
+  "textures": {
+    "wallTexture": [
+      {
+        "block": "minecraft:stone_bricks",
+        "weight": 70
+      },
+      {
+        "block": "minecraft:cracked_stone_bricks",
+        "weight": 15
+      },
+      {
+        "block": "minecraft:cobblestone",
+        "weight": 15
+      }
+    ],
+    "floorTexture": [
+      {
+        "block": "minecraft:oak_planks",
+        "weight": 75
+      },
+      {
+        "block": "minecraft:spruce_planks",
+        "weight": 25
+      }
+    ],
+    "pathTexture": [
+      {
+        "block": "minecraft:gravel",
+        "weight": 70
+      },
+      {
+        "block": "minecraft:cobblestone",
+        "weight": 30
+      }
+    ],
+    "foundationTexture": [
+      {
+        "block": "minecraft:stone",
+        "weight": 65
+      },
+      {
+        "block": "minecraft:cobblestone",
+        "weight": 35
+      }
+    ]
+  },
+  "aliases": [
+    "medieval",
+    "castle",
+    "medieval-castle"
+  ],
+  "generated": {
+    "prompt": "medieval castle",
+    "generatedAt": "2026-07-06T12:10:40.100Z"
+  }
+}

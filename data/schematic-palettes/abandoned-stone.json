@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "abandoned-stone",
+  "displayName": "Abandoned Stone Palette",
+  "description": "Weathered stone palette for abandoned factories, ruins, old towers, and broken roads.",
+  "tags": ["abandoned", "stone", "ruins", "weathered"],
+  "profile": "vanilla",
+  "fallbackToVanilla": true,
+  "roles": {
+    "wallPrimary": "minecraft:stone_bricks",
+    "wallSecondary": "minecraft:cobblestone",
+    "trim": "minecraft:mossy_cobblestone",
+    "roof": "minecraft:dark_oak_planks",
+    "floor": "minecraft:stone",
+    "window": "minecraft:iron_bars",
+    "accent": "minecraft:vine",
+    "light": "minecraft:torch",
+    "path": "minecraft:gravel",
+    "foundation": "minecraft:cobblestone"
+  },
+  "textures": {
+    "wallTexture": [
+      { "block": "minecraft:stone_bricks", "weight": 55 },
+      { "block": "minecraft:cracked_stone_bricks", "weight": 20 },
+      { "block": "minecraft:cobblestone", "weight": 15 },
+      { "block": "minecraft:mossy_cobblestone", "weight": 10 }
+    ],
+    "floorTexture": [
+      { "block": "minecraft:stone", "weight": 55 },
+      { "block": "minecraft:cobblestone", "weight": 25 },
+      { "block": "minecraft:gravel", "weight": 20 }
+    ],
+    "foundationTexture": [
+      { "block": "minecraft:cobblestone", "weight": 70 },
+      { "block": "minecraft:mossy_cobblestone", "weight": 30 }
+    ]
+  },
+  "aliases": ["abandoned", "ruins", "weathered-stone"]
+}

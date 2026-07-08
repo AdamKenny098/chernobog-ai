@@ -30,6 +30,7 @@ export async function writeSchematicMetadata(
     prompt: build.prompt,
     command: build.command,
     minecraftVersion: build.minecraftVersion,
+    targetMinecraftVersion: build.targetMinecraftVersion,
     size: build.size,
     palette: build.palette,
     blockCount: build.blockCount,
@@ -43,6 +44,9 @@ export async function writeSchematicMetadata(
     placementWarnings: build.placementWarnings,
     unsupportedBlockWarnings: build.unsupportedBlockWarnings,
     blockRegistryReport: build.blockRegistryReport,
+    paletteId: build.paletteId,
+    paletteMetadata: build.paletteMetadata,
+    paletteCompatibility: build.paletteCompatibility,
   };
 
   metadata.buildReport = createSchematicBuildReport(metadata);

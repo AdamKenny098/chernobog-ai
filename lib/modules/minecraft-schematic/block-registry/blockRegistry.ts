@@ -384,6 +384,15 @@ export const MINECRAFT_BLOCK_REGISTRY: readonly MinecraftBlockRegistryEntry[] = 
     substitutions: ["minecraft:oak_planks"],
   },
   {
+    id: "minecraft:dark_oak_slab",
+    introducedIn: "1.7.2",
+    tags: ["wood", "floor", "roof", "trim", "medieval", "factory"],
+    vanilla: true,
+    solid: true,
+    transparent: true,
+    substitutions: ["minecraft:oak_slab", "minecraft:dark_oak_planks", "minecraft:oak_planks"],
+  },
+  {
     id: "minecraft:stone_slab",
     introducedIn: "1.3.1",
     tags: ["stone", "floor", "roof", "trim"],
@@ -425,6 +434,15 @@ export const MINECRAFT_BLOCK_REGISTRY: readonly MinecraftBlockRegistryEntry[] = 
     solid: false,
     transparent: true,
     substitutions: ["minecraft:glass"],
+  },
+  {
+    id: "minecraft:cobweb",
+    introducedIn: "1.0",
+    tags: ["decorative", "abandoned", "ruins", "weathered", "factory"],
+    vanilla: true,
+    solid: false,
+    transparent: true,
+    substitutions: ["minecraft:iron_bars", "minecraft:glass_pane"],
   },
   {
     id: "minecraft:iron_bars",
@@ -669,6 +687,15 @@ export const MINECRAFT_BLOCK_REGISTRY: readonly MinecraftBlockRegistryEntry[] = 
     solid: true,
     transparent: false,
     substitutions: ["minecraft:stone_bricks", "minecraft:cobblestone"],
+  },
+  {
+    id: "minecraft:deepslate_brick_wall",
+    introducedIn: "1.17",
+    tags: ["stone", "wall", "modern", "factory", "decorative"],
+    vanilla: true,
+    solid: false,
+    transparent: true,
+    substitutions: ["minecraft:stone_brick_wall", "minecraft:cobblestone_wall", "minecraft:deepslate_bricks"],
   },
   {
     id: "minecraft:polished_deepslate",

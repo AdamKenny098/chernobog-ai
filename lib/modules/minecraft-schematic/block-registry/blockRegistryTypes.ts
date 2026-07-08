@@ -18,7 +18,11 @@ export type MinecraftBlockTag =
   | "utility"
   | "nether"
   | "modern"
-  | "legacy-safe";
+  | "legacy-safe"
+  | "abandoned"
+  | "ruins"
+  | "weathered";
+
 
 export interface MinecraftBlockRegistryEntry {
   id: string;

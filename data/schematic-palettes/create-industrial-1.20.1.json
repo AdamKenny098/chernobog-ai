@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "create-industrial-1.20.1",
+  "displayName": "Create Industrial 1.20.1 Palette",
+  "description": "Industrial factory palette using Create accents with vanilla fallbacks handled by the Milestone 9 registry.",
+  "tags": ["factory", "industrial", "create", "1.20.1"],
+  "minecraftVersion": "1.20.1",
+  "targetMinecraftVersion": "1.20.1",
+  "profile": "siriocraft-create",
+  "allowModdedBlocks": true,
+  "fallbackToVanilla": true,
+  "roles": {
+    "wallPrimary": "minecraft:bricks",
+    "wallSecondary": "minecraft:stone_bricks",
+    "trim": "minecraft:iron_bars",
+    "roof": "minecraft:dark_oak_planks",
+    "floor": "minecraft:stone",
+    "window": "minecraft:glass_pane",
+    "accent": "create:andesite_casing",
+    "light": "minecraft:torch",
+    "path": "minecraft:gravel",
+    "foundation": "minecraft:cobblestone"
+  },
+  "textures": {
+    "wallTexture": [
+      { "block": "minecraft:bricks", "weight": 65 },
+      { "block": "minecraft:stone_bricks", "weight": 25 },
+      { "block": "minecraft:cobblestone", "weight": 10 }
+    ],
+    "floorTexture": [
+      { "block": "minecraft:stone", "weight": 70 },
+      { "block": "minecraft:cobblestone", "weight": 20 },
+      { "block": "minecraft:gravel", "weight": 10 }
+    ],
+    "accentTexture": [
+      { "block": "create:andesite_casing", "weight": 60 },
+      { "block": "minecraft:iron_bars", "weight": 40 }
+    ]
+  },
+  "aliases": ["factory", "industrial", "create-industrial"]
+}

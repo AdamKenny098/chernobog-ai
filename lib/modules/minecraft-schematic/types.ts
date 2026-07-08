@@ -205,6 +205,17 @@ export type GeneratedSchematicBuild = {
   placementWarnings?: string[];
   unsupportedBlockWarnings?: string[];
   blockRegistryReport?: BlockRegistryReport;
+  paletteId?: string;
+  paletteMetadata?: {
+    paletteId: string;
+    paletteDisplayName: string;
+    paletteTargetMinecraftVersion?: string;
+    paletteProfile?: string;
+    paletteChangedBlocks?: number;
+    paletteFallbackBlocks?: number;
+    paletteUnsupportedBlocks?: number;
+  };
+  paletteCompatibility?: unknown;
 };
 
 export type SchematicValidationResult = {
@@ -247,6 +258,17 @@ export type SchematicMetadata = {
   placementWarnings?: string[];
   unsupportedBlockWarnings?: string[];
   blockRegistryReport?: BlockRegistryReport;
+  paletteId?: string;
+  paletteMetadata?: {
+    paletteId: string;
+    paletteDisplayName: string;
+    paletteTargetMinecraftVersion?: string;
+    paletteProfile?: string;
+    paletteChangedBlocks?: number;
+    paletteFallbackBlocks?: number;
+    paletteUnsupportedBlocks?: number;
+  };
+  paletteCompatibility?: unknown;
   buildReport?: SchematicBuildReport;
 };
 
@@ -276,10 +298,11 @@ export type MinecraftSchematicParsedCommand =
       kind: "test-plan";
       raw: string;
     }
-  | {
+    | {
       kind: "generate-tower";
       variant: TowerVariant;
       presetId?: string;
+      paletteId?: string;
       targetMinecraftVersion?: string;
       profile?: BlockRegistryProfileId | string;
       allowModdedBlocks?: boolean;
@@ -297,6 +320,7 @@ export type MinecraftSchematicParsedCommand =
       allowModdedBlocks?: boolean;
       fallbackToVanilla?: boolean;
       raw: string;
+      paletteId?: string;
     }
   | {
       kind: "show-latest";
@@ -386,6 +410,37 @@ export type MinecraftSchematicParsedCommand =
       kind: "version-parser-self-test";
       raw: string;
     }
+    | {
+      kind: "palette-list";
+      raw: string;
+      }
+     | {
+      kind: "palette-show";
+      paletteId: string;
+      raw: string;
+      }
+     | {
+      kind: "palette-validate";
+      paletteId: string;
+      targetMinecraftVersion?: string;
+      profile?: string;
+      raw: string;
+      }
+     | {
+      kind: "palette-generate";
+      prompt: string;
+      targetMinecraftVersion?: string;
+      profile?: string;
+      raw: string;
+      }
+     | {
+      kind: "palette-apply";
+      paletteId: string;
+      buildId: string;
+      targetMinecraftVersion?: string;
+      profile?: string;
+      raw: string;
+      }
   | {
       kind: "unknown";
       raw: string;

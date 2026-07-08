@@ -12,6 +12,8 @@ import type {
 
 import { parseSchematicLibraryCommand } from "../library/parseSchematicLibraryCommand";
 
+import { parsePaletteCommand10 } from "./parsePaletteCommand10";
+
 type UnifiedParseResult = ReturnType<ModuleCommandParser>;
 type UnifiedCommandLike = NonNullable<UnifiedParseResult>;
 
@@ -162,6 +164,12 @@ function isMinecraftSchematicInput(normalized: string): boolean {
     normalized.startsWith("scene pack") ||
     normalized.startsWith("generate minecraft schematic") ||
     normalized.startsWith("generate create") ||
+    normalized.startsWith("generate palette") ||
+    normalized.startsWith("list palettes") ||
+    normalized.startsWith("show palette") ||
+    normalized.startsWith("validate palette") ||
+    normalized.startsWith("apply palette") ||
+    (normalized.startsWith("generate ") && normalized.includes(" using palette ")) ||
     normalized.startsWith("create ") ||
     normalized.includes("factory yard") ||
     normalized.includes("train platform") ||
@@ -172,6 +180,7 @@ function isMinecraftSchematicInput(normalized: string): boolean {
     normalized.includes("build pack")
   );
 }
+
 function includesAny(text: string, terms: string[]): boolean {
   return terms.some((term) => text.includes(term));
 }
@@ -433,6 +442,17 @@ function getBuildIdFromReviewCommand(input: string): string | null {
   return match[1];
 }
 
+function getPaletteIdFromShowPaletteCommand(input: string): string | null {
+  const trimmed = input.trim();
+  const match = trimmed.match(/^(?:schematic\s+)?show\s+palette\s+([a-zA-Z0-9_.:-]+)$/i);
+
+  if (!match?.[1]) {
+    return null;
+  }
+
+  return match[1].trim();
+}
+
 function getBuildIdFromShowCommand(input: string): string | null {
   const trimmed = input.trim();
   const match = trimmed.match(/^schematic\s+show\s+([a-zA-Z0-9_.-]+)$/i);
@@ -496,6 +516,19 @@ function getTargetForParsedCommand(command: MinecraftSchematicParsedCommand): st
   }
 
   switch (command.kind) {
+    case "palette-list":
+      return "palettes";
+
+    case "palette-show":
+    case "palette-validate":
+      return command.paletteId;
+
+    case "palette-generate":
+      return "palette";
+
+    case "palette-apply":
+      return command.buildId;
+
     case "generate-tower":
       return "tower";
 
@@ -658,6 +691,22 @@ function getArgsForParsedCommand(command: MinecraftSchematicParsedCommand): stri
     return [milestone6CreatePreset];
   }
 
+  if (command.kind === "palette-list") {
+    return [];
+  }
+
+  if (command.kind === "palette-show" || command.kind === "palette-validate") {
+    return [command.paletteId];
+  }
+
+  if (command.kind === "palette-generate") {
+    return [command.prompt];
+  }
+
+  if (command.kind === "palette-apply") {
+    return [command.paletteId, command.buildId];
+  }
+
   if (command.kind === "generate-tower") {
     return [command.variant, ...(command.presetId ? [command.presetId] : [])];
   }
@@ -695,6 +744,11 @@ function getArgsForParsedCommand(command: MinecraftSchematicParsedCommand): stri
 
 export function parseMinecraftSchematicCommand(input: string): MinecraftSchematicParsedCommand {
   const normalized = normalize(input);
+
+  const paletteCommand = parsePaletteCommand10(input);
+  if (paletteCommand) {
+    return paletteCommand as MinecraftSchematicParsedCommand;
+  }
 
   const libraryCommand = parseSchematicLibraryCommand(input);
 
@@ -780,6 +834,11 @@ export function parseMinecraftSchematicCommand(input: string): MinecraftSchemati
   const showProfileId = getProfileIdFromShowProfileCommand(input);
   if (showProfileId) {
     return { kind: "show-profile", profileId: showProfileId, raw: input };
+  }
+
+  const showPaletteId = getPaletteIdFromShowPaletteCommand(input);
+  if (showPaletteId) {
+    return { kind: "palette-show", paletteId: showPaletteId, raw: input };
   }
 
   if (normalized === "schematic list presets" || normalized === "schematic list presets siriocraft") {

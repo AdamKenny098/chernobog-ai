@@ -1,0 +1,50 @@
+{
+  "id": "create-style-starter-factory-1783340332030-9edd236a",
+  "name": "Create-Style Starter Factory",
+  "category": "factory",
+  "theme": "create_starter_factory",
+  "targetMinecraftVersion": "1.20.1",
+  "requiredMods": [
+    "minecraft",
+    "create"
+  ],
+  "size": {
+    "width": 43,
+    "height": 27,
+    "length": 35
+  },
+  "blockCount": 7952,
+  "tags": [
+    "generated",
+    "milestone-7",
+    "factory",
+    "create_starter_factory",
+    "siriocraft-create",
+    "large_industrial_hall",
+    "sawtooth_roof",
+    "side_annex",
+    "loading_bay",
+    "yard_foundation",
+    "chimney_stack",
+    "roof_vents",
+    "industrial_window_bands",
+    "catwalks",
+    "pipe_runs",
+    "machine_wall_placeholders",
+    "vanilla_cogwheel_motifs",
+    "gantry_crane_placeholder",
+    "labelled_storage_placeholders",
+    "sign_text_metadata",
+    "vanilla_industrial_palette",
+    "version_safe_palette_9c",
+    "version_registry_hardening_9f",
+    "version_registry_hardening_clean",
+    "minecraft_version_block_limits_complete",
+    "version_block_validator_9d",
+    "version_block_validation_passed"
+  ],
+  "generatorSource": "minecraft-schematic:factory",
+  "createdAt": "2026-07-06T12:18:52.030Z",
+  "updatedAt": "2026-07-06T12:18:52.030Z",
+  "notes": "Registered automatically from generated build create_starter_factory-2026-07-06T12-18-51-832Z.\nGenerated title: Minecraft schematic.\nPreset: create_starter_factory.\nProfile: siriocraft-create."
+}

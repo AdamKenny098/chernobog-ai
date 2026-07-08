@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "snowy-frontier-vanilla",
+  "displayName": "Snowy Frontier Vanilla Palette",
+  "description": "Cold frontier palette for watchtowers, outposts, and survival settlements.",
+  "tags": ["snow", "frontier", "outpost", "vanilla"],
+  "profile": "vanilla",
+  "fallbackToVanilla": true,
+  "roles": {
+    "wallPrimary": "minecraft:spruce_planks",
+    "wallSecondary": "minecraft:cobblestone",
+    "trim": "minecraft:spruce_log",
+    "roof": "minecraft:spruce_planks",
+    "floor": "minecraft:spruce_planks",
+    "window": "minecraft:glass_pane",
+    "accent": "minecraft:snow",
+    "light": "minecraft:torch",
+    "path": "minecraft:gravel",
+    "foundation": "minecraft:stone"
+  },
+  "textures": {
+    "wallTexture": [
+      { "block": "minecraft:spruce_planks", "weight": 70 },
+      { "block": "minecraft:cobblestone", "weight": 20 },
+      { "block": "minecraft:spruce_log", "weight": 10 }
+    ],
+    "roofTexture": [
+      { "block": "minecraft:spruce_planks", "weight": 80 },
+      { "block": "minecraft:snow", "weight": 20 }
+    ],
+    "pathTexture": [
+      { "block": "minecraft:gravel", "weight": 60 },
+      { "block": "minecraft:snow", "weight": 40 }
+    ]
+  },
+  "aliases": ["snowy", "frontier", "snowy-frontier"]
+}

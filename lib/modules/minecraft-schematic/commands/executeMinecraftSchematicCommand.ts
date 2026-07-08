@@ -84,6 +84,10 @@ import { executeConvertBuildVersion9E } from "./executeConvertBuildVersion9E";
 
 import { applyMilestone9FFinalVersionHardeningToBuild } from "../block-registry/blockVersionFinalizer9F";
 
+import { applyPaletteToBuild, loadPalette } from "../palettes";
+import { executePaletteCommand10 } from "./executePaletteCommand10";
+import { isPaletteManagementCommand10 } from "./parsePaletteCommand10";
+
 const execFileAsync = promisify(execFile);
 
 function helpMessage(): string {
@@ -250,7 +254,13 @@ function isSchematicInput(raw: string): boolean {
 
   return (
     normalized.startsWith("schematic") ||
-    normalized.startsWith("generate minecraft schematic")
+    normalized.startsWith("generate minecraft schematic") ||
+    normalized.startsWith("generate palette") ||
+    normalized.startsWith("list palettes") ||
+    normalized.startsWith("show palette") ||
+    normalized.startsWith("validate palette") ||
+    normalized.startsWith("apply palette") ||
+    (normalized.startsWith("generate ") && normalized.includes(" using palette "))
   );
 }
 
@@ -513,10 +523,45 @@ async function persistGeneratedBuild(
   };
 }
 
+function getPaletteIdFromCommand(command: unknown): string | undefined {
+  if (!command || typeof command !== "object") {
+    return undefined;
+  }
+
+  const paletteId = (command as { paletteId?: unknown }).paletteId;
+
+  return typeof paletteId === "string" && paletteId.trim().length > 0
+    ? paletteId.trim()
+    : undefined;
+}
+
+async function applyPaletteFromCommandToBuild(
+  build: GeneratedSchematicBuild,
+  command: MinecraftSchematicParsedCommand,
+): Promise<GeneratedSchematicBuild> {
+  const paletteId = getPaletteIdFromCommand(command);
+
+  if (!paletteId) {
+    return build;
+  }
+
+  const palette = await loadPalette(paletteId);
+
+  return applyPaletteToBuild(build, palette, {
+    targetMinecraftVersion:
+      "targetMinecraftVersion" in command ? command.targetMinecraftVersion : undefined,
+    profile: "profile" in command ? command.profile : undefined,
+    allowModdedBlocks:
+      "allowModdedBlocks" in command ? command.allowModdedBlocks : undefined,
+    fallbackToVanilla:
+      "fallbackToVanilla" in command ? command.fallbackToVanilla : undefined,
+  });
+}
+
 async function executeGenerateTower(
   command: Extract<MinecraftSchematicParsedCommand, { kind: "generate-tower" }>,
 ): Promise<MinecraftSchematicCommandResult> {
-  const build = applyVersionOptionsToGeneratedBuild(
+  const baseBuild = applyVersionOptionsToGeneratedBuild(
     generateTower({
       variant: command.variant,
       prompt: command.raw,
@@ -525,23 +570,25 @@ async function executeGenerateTower(
     command,
   );
 
-  return persistGeneratedBuild(
+  const build = await applyPaletteFromCommandToBuild(
     {
-      ...build,
-      presetId: command.presetId ?? build.presetId,
-      profile: build.profile ?? "vanilla",
-      allowModdedBlocks: build.allowModdedBlocks ?? false,
-      fallbackToVanilla: build.fallbackToVanilla ?? true,
-      features: build.features ?? ["tower_shell", "battlements", "windows", "theme_variation"],
+      ...baseBuild,
+      presetId: command.presetId ?? baseBuild.presetId,
+      profile: baseBuild.profile ?? "vanilla",
+      allowModdedBlocks: baseBuild.allowModdedBlocks ?? false,
+      fallbackToVanilla: baseBuild.fallbackToVanilla ?? true,
+      features: baseBuild.features ?? ["tower_shell", "battlements", "windows", "theme_variation"],
     },
-    "Minecraft tower schematic",
+    command,
   );
+
+  return persistGeneratedBuild(build, "Minecraft tower schematic");
 }
 
 async function executeGenerateStructure(
   command: Extract<MinecraftSchematicParsedCommand, { kind: "generate-structure" }>,
 ): Promise<MinecraftSchematicCommandResult> {
-  const build = applyVersionOptionsToGeneratedBuild(
+  const baseBuild = applyVersionOptionsToGeneratedBuild(
     generateStructure({
       generator: command.generator,
       variant: command.variant,
@@ -551,6 +598,8 @@ async function executeGenerateStructure(
     }),
     command,
   );
+
+  const build = await applyPaletteFromCommandToBuild(baseBuild, command);
 
   return persistGeneratedBuild(build, "Minecraft schematic");
 }
@@ -1852,6 +1901,7 @@ function coerceMinecraftSchematicCommand(input: unknown): MinecraftSchematicPars
       profile: typeof input.profile === "string" ? input.profile : undefined,
       allowModdedBlocks: typeof input.allowModdedBlocks === "boolean" ? input.allowModdedBlocks : undefined,
       fallbackToVanilla: typeof input.fallbackToVanilla === "boolean" ? input.fallbackToVanilla : undefined,
+      paletteId: typeof input.paletteId === "string" ? input.paletteId : undefined,
       raw,
     };
   }
@@ -1872,6 +1922,7 @@ function coerceMinecraftSchematicCommand(input: unknown): MinecraftSchematicPars
       profile: typeof input.profile === "string" ? input.profile : undefined,
       allowModdedBlocks: typeof input.allowModdedBlocks === "boolean" ? input.allowModdedBlocks : undefined,
       fallbackToVanilla: typeof input.fallbackToVanilla === "boolean" ? input.fallbackToVanilla : undefined,
+      paletteId: typeof input.paletteId === "string" ? input.paletteId : undefined,
       raw,
     };
   }
@@ -1988,6 +2039,10 @@ export async function executeMinecraftSchematicCommand(
     coerceMinecraftSchematicCommand(inputOrCommand),
     inputOrCommand,
   );
+
+  if (isPaletteManagementCommand10(command)) {
+    return executePaletteCommand10(command);
+  }
 
   const parsedCommandKind = getParsedCommandKind(command);
 
