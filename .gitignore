@@ -56,9 +56,5 @@ repo-tree.txt
 repo-files.txt
 repo-files-clean.txt
 
-#Hide the forbidden module
-/lib/modules/itch-discovery
-/app/api/discovery/itch
-/components/discovery/games
-/lib/modules/game-radar
-/scripts
+
+/data/character-forge/

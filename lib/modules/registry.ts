@@ -11,11 +11,14 @@ import type {
   ModuleRegistrySnapshot,
 } from "@/lib/modules/types";
 
+import { characterGeneratorModule } from "@/lib/modules/character-generator";
+
 const registeredModules: ChernobogModule[] = [
   obsidianVaultModule,
   fileWorkflowModule,
   discordIngestModule,
   minecraftSchematicModule,
+  characterGeneratorModule,
 ];
 
 const activeModuleBySession = new Map<string, string>();

@@ -10,7 +10,8 @@ export type CommandDomain =
   | "guardian"
   | "vault"
   | "discord"
-  | "schematic";
+  | "schematic"
+  | "character";
 
 export type CommandAction =
   | "none"
@@ -59,7 +60,8 @@ export type CommandTarget =
   | "discord"
   | "discord_channel"
   | "status"
-  | "schematic";
+  | "schematic"
+  | "character_project";
 
 export type CommandReference =
   | "none"

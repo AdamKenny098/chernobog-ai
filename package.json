@@ -112,7 +112,6 @@
     "chernobog:schematic:9d:verify": "node scripts/verify-schematic-9d-block-version-validator.mjs"
   },
   "dependencies": {
-    "@types/three": "^0.185.0",
     "better-sqlite3": "^12.11.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
@@ -131,6 +130,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.185.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",

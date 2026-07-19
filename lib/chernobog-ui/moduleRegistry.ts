@@ -171,6 +171,38 @@ export const CHERNOBOG_MODULES: ChernobogModule[] = [
     ownerDepartment: "Security Department",
     category: "Development",
   },
+  {
+    id: "character-generator",
+    label: "Character Forge",
+    status: "experimental",
+    description:
+      "Prompt-to-character project workflow for concept approval, model generation, rigging, and Unity export.",
+      relatedRouteIds: [
+        "character-forge",
+        "character-forge-new",
+        "character-forge-project",
+        "api-character-forge-projects",
+        "api-character-forge-project",
+        "api-character-forge-brief",
+        "api-character-forge-concepts",
+        "api-character-forge-concept-image",
+        "api-character-forge-reference-sheet",
+        "api-character-forge-reference-image",
+        "api-character-forge-identity-anchor",
+        "api-character-forge-identity-anchor-image",
+        "api-character-forge-canonical-pose",
+        "api-character-forge-canonical-pose-image",
+        "api-character-forge-model",
+        "api-character-forge-model-file",
+      ],
+    relatedCommands: [
+      "character forge status",
+      "create character project: <prompt>",
+      "show character projects",
+    ],
+    ownerDepartment: "Design Department",
+    category: "Creative Tools",
+  },
 ];
 
 export function getAllChernobogModules(): ChernobogModule[] {
