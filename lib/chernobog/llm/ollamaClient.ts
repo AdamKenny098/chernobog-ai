@@ -1,5 +1,4 @@
-// lib/chernobog/llm/ollamaClient.ts
-
+import { getOllamaGenerateUrl } from "../runtimeConfig";
 import { ModelRole, resolveModel } from "./modelRouter";
 
 export type GenerateWithOllamaOptions = {
@@ -51,11 +50,13 @@ export async function generateWithOllama({
   timeoutMs = 300_000,
 }: GenerateWithOllamaOptions): Promise<GenerateWithOllamaResult> {
   const resolved = resolveModel(role);
+  const ollamaUrl = getOllamaGenerateUrl();
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch("http://127.0.0.1:11434/api/generate", {
+    const response = await fetch(ollamaUrl, {
       method: "POST",
       signal: controller.signal,
       headers: {

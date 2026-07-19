@@ -1,12 +1,21 @@
 import Database from "better-sqlite3";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
-const dataDir = path.join(process.cwd(), "data");
-fs.mkdirSync(dataDir, { recursive: true });
+import { getChernobogDataDirectory } from "./runtimeConfig";
 
-const dbPath = path.join(dataDir, "chernobog.db");
-export const db = new Database(dbPath);
+const dataDirectory = getChernobogDataDirectory();
+
+fs.mkdirSync(dataDirectory, {
+  recursive: true,
+});
+
+export const chernobogDatabasePath = path.join(
+  dataDirectory,
+  "chernobog.db",
+);
+
+export const db = new Database(chernobogDatabasePath);
 
 db.pragma("journal_mode = WAL");
 
@@ -48,8 +57,13 @@ type LogToolCallInput = {
   success: boolean;
 };
 
-const insertToolCallStmt = db.prepare(`
-  INSERT INTO tool_calls (tool_name, input_json, output_json, success)
+const insertToolCallStatement = db.prepare(`
+  INSERT INTO tool_calls (
+    tool_name,
+    input_json,
+    output_json,
+    success
+  )
   VALUES (?, ?, ?, ?)
 `);
 
@@ -58,12 +72,12 @@ export function logToolCall({
   input,
   output,
   success,
-}: LogToolCallInput) {
-  insertToolCallStmt.run(
+}: LogToolCallInput): void {
+  insertToolCallStatement.run(
     toolName,
     JSON.stringify(input ?? null),
     JSON.stringify(output ?? null),
-    success ? 1 : 0
+    success ? 1 : 0,
   );
 }
 
@@ -76,15 +90,21 @@ type ToolCallRow = {
   created_at: string;
 };
 
-const getRecentToolCallsStmt = db.prepare(`
-  SELECT id, tool_name, input_json, output_json, success, created_at
+const getRecentToolCallsStatement = db.prepare(`
+  SELECT
+    id,
+    tool_name,
+    input_json,
+    output_json,
+    success,
+    created_at
   FROM tool_calls
   ORDER BY id DESC
   LIMIT ?
 `);
 
 export function getRecentToolCalls(limit = 20): ToolCallRow[] {
-  return getRecentToolCallsStmt.all(limit) as ToolCallRow[];
+  return getRecentToolCallsStatement.all(limit) as ToolCallRow[];
 }
 
 export default db;
