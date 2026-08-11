@@ -29,6 +29,27 @@ export const CHERNOBOG_MODULES: ChernobogModule[] = [
     category: "Core",
   },
   {
+    id: "project-operations",
+    label: "Project Operations",
+    status: "active",
+    description:
+      "Persistent project command center for focus, next actions, boards, tasks, notes, blockers, links, and activity.",
+    relatedRouteIds: [
+      "project-operations",
+      "project-operations-workspace",
+      "project-operations-notes",
+      "project-operations-activity",
+    ],
+    relatedCommands: [
+      "project operations status",
+      "show projects",
+      "add task to <project>: <title>",
+      "complete task <task-id>",
+    ],
+    ownerDepartment: "Operations Department",
+    category: "Organization",
+  },
+  {
     id: "vault-brain",
     label: "Vault Brain",
     status: "active",

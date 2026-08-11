@@ -12,6 +12,7 @@ import type {
 } from "@/lib/modules/types";
 
 import { characterGeneratorModule } from "@/lib/modules/character-generator";
+import { projectOperationsModule } from "@/lib/modules/project-operations";
 
 const registeredModules: ChernobogModule[] = [
   obsidianVaultModule,
@@ -19,6 +20,7 @@ const registeredModules: ChernobogModule[] = [
   discordIngestModule,
   minecraftSchematicModule,
   characterGeneratorModule,
+  projectOperationsModule,
 ];
 
 const activeModuleBySession = new Map<string, string>();
