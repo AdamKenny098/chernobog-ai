@@ -1,3 +1,4 @@
+import { publishChernobogEventSafely } from "../events/publishers";
 import { getOllamaGenerateUrl } from "../runtimeConfig";
 import { ModelRole, resolveModel } from "./modelRouter";
 
@@ -43,6 +44,55 @@ function extractOllamaText(value: unknown): string | null {
   return null;
 }
 
+async function publishModelResult(
+  result: GenerateWithOllamaResult,
+  startedAt: number
+): Promise<void> {
+  await publishChernobogEventSafely({
+    type: result.ok
+      ? "model.completed"
+      : "model.failed",
+
+    source: {
+      subsystem: "llm",
+      nodeId: "ollama",
+    },
+
+    severity: result.ok
+      ? "info"
+      : "warning",
+
+    subject: result.model,
+
+    payload: {
+      provider: "ollama",
+      model: result.model,
+      role: result.role,
+      durationMs: Date.now() - startedAt,
+
+      ...(result.ok
+        ? {
+            outputChars: result.text?.length ?? 0,
+          }
+        : {
+            error: result.error ?? "Unknown model failure.",
+          }),
+    },
+
+    metadata: {
+      tags: [
+        "model",
+        "ollama",
+        result.ok ? "success" : "failure",
+      ],
+
+      sensitive: result.ok
+        ? undefined
+        : true,
+    },
+  });
+}
+
 export async function generateWithOllama({
   role = "default",
   prompt,
@@ -52,67 +102,149 @@ export async function generateWithOllama({
   const resolved = resolveModel(role);
   const ollamaUrl = getOllamaGenerateUrl();
 
+  const startedAt = Date.now();
+
+  await publishChernobogEventSafely({
+    type: "model.requested",
+
+    source: {
+      subsystem: "llm",
+      nodeId: "ollama",
+    },
+
+    severity: "debug",
+
+    subject: resolved.model,
+
+    payload: {
+      provider: "ollama",
+      model: resolved.model,
+      role: resolved.role,
+
+      /*
+       * Record the size of the request,
+       * never the prompt itself.
+       */
+      promptChars: prompt.length,
+
+      temperature,
+      timeoutMs,
+    },
+
+    metadata: {
+      tags: [
+        "model",
+        "ollama",
+      ],
+    },
+  });
+
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  const timeout = setTimeout(
+    () => controller.abort(),
+    timeoutMs
+  );
 
   try {
-    const response = await fetch(ollamaUrl, {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: resolved.model,
-        prompt,
-        stream: false,
-        options: {
-          temperature,
+    const response = await fetch(
+      ollamaUrl,
+      {
+        method: "POST",
+
+        signal: controller.signal,
+
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    });
+
+        body: JSON.stringify({
+          model: resolved.model,
+          prompt,
+          stream: false,
+
+          options: {
+            temperature,
+          },
+        }),
+      }
+    );
 
     if (!response.ok) {
-      return {
+      const result: GenerateWithOllamaResult = {
         ok: false,
         model: resolved.model,
         role: resolved.role,
-        error: `Ollama request failed with status ${response.status}.`,
+        error:
+          `Ollama request failed with status ${response.status}.`,
       };
+
+      await publishModelResult(
+        result,
+        startedAt
+      );
+
+      return result;
     }
 
-    const data: unknown = await response.json();
-    const text = extractOllamaText(data);
+    const data: unknown =
+      await response.json();
+
+    const text =
+      extractOllamaText(data);
 
     if (!text) {
-      return {
+      const result: GenerateWithOllamaResult = {
         ok: false,
         model: resolved.model,
         role: resolved.role,
-        error: "Ollama returned no usable text.",
+        error:
+          "Ollama returned no usable text.",
       };
+
+      await publishModelResult(
+        result,
+        startedAt
+      );
+
+      return result;
     }
 
-    return {
+    const result: GenerateWithOllamaResult = {
       ok: true,
       text,
       model: resolved.model,
       role: resolved.role,
     };
+
+    await publishModelResult(
+      result,
+      startedAt
+    );
+
+    return result;
   } catch (error) {
     const message =
-      error instanceof DOMException && error.name === "AbortError"
+      error instanceof DOMException &&
+      error.name === "AbortError"
         ? `Ollama request timed out after ${timeoutMs}ms.`
         : error instanceof Error
           ? error.message
           : "Ollama request failed.";
 
-    return {
+    const result: GenerateWithOllamaResult = {
       ok: false,
       model: resolved.model,
       role: resolved.role,
       error: message,
     };
+
+    await publishModelResult(
+      result,
+      startedAt
+    );
+
+    return result;
   } finally {
     clearTimeout(timeout);
   }
