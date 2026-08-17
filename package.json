@@ -66,6 +66,7 @@
     "game-radar:stage-p": "tsx scripts/game-radar-stage-p.ts",
     "game-radar:stage-p:verify": "tsx scripts/verify-itch-discovery-stage-p.ts",
     "typecheck": "tsc --noEmit",
+    "chernobog:phase11:11f-a:verify": "tsx scripts/verify-chernobog-phase11-11f-a-event-spine.ts",
     "chernobog:v5.6.1:verify": "tsx scripts/verify-chernobog-v5-6-1.ts",
     "chernobog:v5.6.2:verify": "tsx scripts/verify-chernobog-v5-6-2.ts",
     "chernobog:v5.6.3:verify": "tsx scripts/verify-chernobog-v5-6-3.ts",
