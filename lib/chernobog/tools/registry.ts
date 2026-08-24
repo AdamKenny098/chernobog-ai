@@ -21,6 +21,7 @@ import { runProjectCommandTool } from "./builtins/run-project-command";
 import { readProjectNoteTool } from "./builtins/read-project-note";
 import { searchProjectNotesTool } from "./builtins/search-project-notes";
 import { buildModuleToolRegistry } from "@/lib/modules/registry";
+import { getProjectGitStateTool } from "./builtins/get-project-git-state";
 
 export const toolRegistry = {
   get_time: getTimeTool,
@@ -43,6 +44,7 @@ export const toolRegistry = {
   run_project_command:runProjectCommandTool,
   read_project_note:readProjectNoteTool,
   search_project_notes:searchProjectNotesTool,
+  get_project_git_state:getProjectGitStateTool,
   ...buildModuleToolRegistry(),
 };
 

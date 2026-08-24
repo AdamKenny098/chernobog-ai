@@ -1,5 +1,7 @@
 import path from "node:path";
 import { promises as fs } from "node:fs";
+
+import { publishChernobogEventSafely } from "../../chernobog/events/publishers";
 import { normalizeProjectId, normalizeVersion } from "./projectScope";
 
 export const PROJECT_MEMORY_PROFILE_STATUSES = [
@@ -352,6 +354,43 @@ export class ProjectMemoryProfileStore {
       note: `Project memory profile upserted for ${projectId}.`,
     });
 
+    await publishChernobogEventSafely({
+      type:
+        existing
+          ? "project.profile_updated"
+          : "project.profile_created",
+    
+      source: {
+        subsystem: "vault-brain",
+      },
+    
+      severity: "info",
+    
+      subject: projectId,
+    
+      scope: `project:${projectId}`,
+    
+      payload: {
+        projectId: next.projectId,
+        status: next.status,
+        currentVersion: next.currentVersion,
+        latestCompletedVersion:
+          next.latestCompletedVersion,
+        nextRecommendedVersion:
+          next.nextRecommendedVersion,
+      },
+    
+      metadata: {
+        tags: [
+          "project",
+          "profile",
+          existing
+            ? "updated"
+            : "created",
+        ],
+      },
+    });
+    
     return next;
   }
 
@@ -421,6 +460,44 @@ export class ProjectMemoryProfileStore {
       note: `Version memory profile upserted for ${projectId} ${version}.`,
     });
 
+    await publishChernobogEventSafely({
+      type:
+        existing
+          ? "project.version_updated"
+          : "project.version_created",
+    
+      source: {
+        subsystem: "vault-brain",
+      },
+    
+      severity: "info",
+    
+      subject: next.id,
+    
+      scope: `project:${projectId}`,
+    
+      payload: {
+        versionProfileId: next.id,
+        projectId: next.projectId,
+        version: next.version,
+        status: next.status,
+        previousVersion:
+          next.previousVersion,
+        nextVersion:
+          next.nextVersion,
+      },
+    
+      metadata: {
+        tags: [
+          "project",
+          "version",
+          existing
+            ? "updated"
+            : "created",
+        ],
+      },
+    });
+    
     return next;
   }
 
@@ -446,6 +523,43 @@ export class ProjectMemoryProfileStore {
       action: "active-project-set",
       projectId: profile.projectId,
       note: note ?? `Active project set to ${profile.projectId}.`,
+    });
+
+    await publishChernobogEventSafely({
+      type: "project.activated",
+    
+      source: {
+        subsystem: "vault-brain",
+      },
+    
+      severity: "info",
+    
+      subject: profile.projectId,
+    
+      scope: `project:${profile.projectId}`,
+    
+      payload: {
+        projectId: profile.projectId,
+    
+        previousProjectId:
+          current.activeProjectId,
+    
+        activeVersion:
+          state.activeVersion,
+    
+        latestCompletedVersion:
+          state.latestCompletedVersion,
+    
+        nextRecommendedVersion:
+          state.nextRecommendedVersion,
+      },
+    
+      metadata: {
+        tags: [
+          "project",
+          "activated",
+        ],
+      },
     });
 
     return state;
@@ -475,6 +589,36 @@ export class ProjectMemoryProfileStore {
       projectId,
       version,
       note: `Active version set to ${projectId} ${version}.`,
+    });
+
+    await publishChernobogEventSafely({
+      type: "project.version_activated",
+    
+      source: {
+        subsystem: "vault-brain",
+      },
+    
+      severity: "info",
+    
+      subject: `${projectId}:${version}`,
+    
+      scope: `project:${projectId}`,
+    
+      payload: {
+        projectId,
+        version,
+    
+        previousVersion:
+          current.activeVersion,
+      },
+    
+      metadata: {
+        tags: [
+          "project",
+          "version",
+          "activated",
+        ],
+      },
     });
 
     return state;
@@ -511,6 +655,36 @@ export class ProjectMemoryProfileStore {
       note: `Latest completed version set to ${projectId} ${version}.`,
     });
 
+    await publishChernobogEventSafely({
+      type: "project.version_completed",
+    
+      source: {
+        subsystem: "vault-brain",
+      },
+    
+      severity: "info",
+    
+      subject: `${projectId}:${version}`,
+    
+      scope: `project:${projectId}`,
+    
+      payload: {
+        projectId,
+        version,
+    
+        previousLatestCompletedVersion:
+          current.latestCompletedVersion,
+      },
+    
+      metadata: {
+        tags: [
+          "project",
+          "version",
+          "completed",
+        ],
+      },
+    });
+
     return state;
   }
 
@@ -538,6 +712,35 @@ export class ProjectMemoryProfileStore {
       projectId,
       version,
       note: `Next recommended version set to ${projectId} ${version}.`,
+    });
+
+    await publishChernobogEventSafely({
+      type: "project.next_recommended_changed",
+    
+      source: {
+        subsystem: "vault-brain",
+      },
+    
+      severity: "info",
+    
+      subject: `${projectId}:${version}`,
+    
+      scope: `project:${projectId}`,
+    
+      payload: {
+        projectId,
+        version,
+    
+        previousNextRecommendedVersion:
+          current.nextRecommendedVersion,
+      },
+    
+      metadata: {
+        tags: [
+          "project",
+          "next-recommended",
+        ],
+      },
     });
 
     return state;

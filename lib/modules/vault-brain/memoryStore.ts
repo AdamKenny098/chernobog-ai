@@ -5,6 +5,7 @@ import { buildVaultMemoryManifest, type VaultMemoryManifest } from "./memoryMani
 import type { VaultMemoryStatus } from "./memoryStatus";
 import { assertVaultMemoryStatusTransition } from "./memoryStatus";
 import type { VaultMemoryType } from "./memoryTypes";
+import { publishChernobogEventSafely } from "../../chernobog/events/publishers";
 
 export type VaultMemoryAuditEvent = {
   id: string;
@@ -278,6 +279,47 @@ export class VaultMemoryStore {
     }
 
     await this.saveEntries(entries);
+
+    const eventType =
+      existingIndex >= 0
+        ? "memory.updated"
+        : "memory.created";
+
+    await publishChernobogEventSafely({
+      type: eventType,
+
+      source: {
+        subsystem: "vault-brain",
+      },
+
+      severity: "info",
+
+      subject: next.id,
+
+      scope: next.projectId
+        ? `project:${next.projectId}`
+        : "memory",
+
+      payload: {
+        memoryEntryId: next.id,
+        memoryType: next.memoryType,
+        status: next.status,
+        projectId: next.projectId,
+        version: next.version,
+        confidence: next.confidence,
+      },
+
+      metadata: {
+        tags: [
+          "memory",
+          next.memoryType,
+          existingIndex >= 0
+            ? "updated"
+            : "created",
+        ],
+      },
+    });
+
     return next;
   }
 
@@ -357,7 +399,71 @@ export class VaultMemoryStore {
       actor: update.actor,
     });
 
-    return next;
+    const eventType =
+  update.status === "reviewed"
+    ? "memory.reviewed"
+    : update.status === "approved"
+      ? "memory.approved"
+      : update.status === "rejected"
+        ? "memory.rejected"
+        : update.status === "stale"
+          ? "memory.stale"
+          : update.status === "superseded"
+            ? "memory.superseded"
+            : "memory.status_changed";
+
+await publishChernobogEventSafely({
+  type: eventType,
+
+  source: {
+    subsystem: "vault-brain",
+  },
+
+  severity:
+    update.status === "rejected" ||
+    update.status === "stale"
+      ? "notice"
+      : "info",
+
+  subject: next.id,
+
+  scope: next.projectId
+    ? `project:${next.projectId}`
+    : "memory",
+
+  payload: {
+    memoryEntryId: next.id,
+    memoryType: next.memoryType,
+
+    previousStatus:
+      current.status,
+
+    nextStatus:
+      next.status,
+
+    projectId:
+      next.projectId,
+
+    version:
+      next.version,
+
+    confidence:
+      next.confidence,
+
+    supersededBy:
+      next.supersededBy,
+  },
+
+  metadata: {
+    tags: [
+      "memory",
+      "status-change",
+      next.status,
+    ],
+  },
+});
+
+return next;
   }
 }
 

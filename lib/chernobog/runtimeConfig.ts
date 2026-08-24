@@ -80,3 +80,60 @@ export function getOllamaGenerateUrl(): string {
 
   return "http://127.0.0.1:11434/api/generate";
 }
+
+export function getOllamaTagsUrl(): string {
+  const baseUrl =
+    readEnvironmentValue(
+      "OLLAMA_BASE_URL"
+    );
+
+  if (baseUrl) {
+    return `${
+      baseUrl.replace(
+        /\/+$/,
+        ""
+      )
+    }/api/tags`;
+  }
+
+  const explicitUrl =
+    readEnvironmentValue(
+      "OLLAMA_URL"
+    );
+
+  if (explicitUrl) {
+    try {
+      const parsed =
+        new URL(explicitUrl);
+
+      if (
+        parsed.pathname
+          .replace(/\/+$/, "")
+          .endsWith("/api/generate")
+      ) {
+        parsed.pathname =
+          parsed.pathname.replace(
+            /\/api\/generate\/?$/,
+            "/api/tags"
+          );
+
+        parsed.search = "";
+        parsed.hash = "";
+
+        return parsed.toString();
+      }
+
+      return new URL(
+        "/api/tags",
+        parsed.origin
+      ).toString();
+    } catch {
+      /*
+       * Preserve the historical localhost
+       * fallback if OLLAMA_URL is malformed.
+       */
+    }
+  }
+
+  return "http://127.0.0.1:11434/api/tags";
+}

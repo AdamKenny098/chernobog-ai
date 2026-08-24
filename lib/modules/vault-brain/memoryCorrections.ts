@@ -1,5 +1,8 @@
 import path from "node:path";
 import { promises as fs } from "node:fs";
+
+import { publishChernobogEventSafely } from "../../chernobog/events/publishers";
+
 import {
   createVaultMemoryStore,
   type VaultMemoryStoreOptions,
@@ -423,5 +426,50 @@ export async function applyMemoryCorrection(
     actor: request.actor,
   });
 
+  await publishChernobogEventSafely({
+    type: "memory.corrected",
+  
+    source: {
+      subsystem: "vault-brain",
+    },
+  
+    severity: "info",
+  
+    subject: next.id,
+  
+    scope: next.projectId
+      ? `project:${next.projectId}`
+      : "memory",
+  
+    payload: {
+      memoryEntryId: next.id,
+      correctionId: correction.id,
+      fieldChanged: correction.fieldChanged,
+  
+      memoryType: next.memoryType,
+      status: next.status,
+  
+      projectId: next.projectId,
+      version: next.version,
+  
+      confidence: next.confidence,
+    },
+  
+    metadata: {
+      tags: [
+        "memory",
+        "corrected",
+        correction.fieldChanged,
+      ],
+  
+      sensitive:
+        correction.fieldChanged === "body" ||
+        correction.fieldChanged === "title" ||
+        correction.fieldChanged === "reviewNotes"
+          ? true
+          : undefined,
+    },
+  });
+  
   return { entry: next, correction };
 }

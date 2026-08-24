@@ -1,6 +1,7 @@
 import { ChernobogEventBus } from "./eventBus";
 import { JsonlChernobogEventStore } from "./store";
 
+
 const eventGlobals = globalThis as typeof globalThis & {
   __chernobogEventBus?: ChernobogEventBus;
 };
@@ -21,3 +22,6 @@ export * from "./store";
 export * from "./types";
 export * from "./eventContext";
 export * from "./publishers";
+export * from "./retention";
+export * from "./replay";
+export * from "./diagnostics";

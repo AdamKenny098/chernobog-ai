@@ -9,6 +9,27 @@ import {
   ChernobogEventSubscriptionFilter,
 } from "./types";
 
+import type {
+  ChernobogEventRetentionPolicy,
+  ChernobogEventRetentionResult,
+} from "./retention";
+
+import {
+  describeReplayError,
+  type ChernobogEventReplayHandler,
+  type ChernobogEventReplayOptions,
+  type ChernobogEventReplayResult,
+} from "./replay";
+
+import {
+  buildChernobogEventDiagnostics,
+  type ChernobogEventDiagnostics,
+} from "./diagnostics";
+
+import type {
+  ChernobogEventCorruptionRecoveryResult,
+} from "./store";
+
 interface Subscription {
   id: number;
   filter: ChernobogEventSubscriptionFilter;
@@ -127,6 +148,138 @@ export class ChernobogEventBus {
       deduplicated: false,
       delivered,
       handlerErrors,
+    };
+  }
+
+  async getDiagnostics(
+    now?: Date
+  ): Promise<ChernobogEventDiagnostics> {
+    const events =
+      await this.store.readAll();
+  
+    return buildChernobogEventDiagnostics(
+      events,
+      now ?? this.clock()
+    );
+  }
+
+  compactHistory(
+    policy?: ChernobogEventRetentionPolicy,
+    now?: Date
+  ): Promise<ChernobogEventRetentionResult> {
+    return this.store.compact(
+      policy,
+      now
+    );
+  }
+
+  recoverHistoryCorruption():
+  Promise<ChernobogEventCorruptionRecoveryResult> {
+  return this.store
+    .recoverCorruption();
+}
+
+  async replay(
+    handler: ChernobogEventReplayHandler,
+    options:
+      ChernobogEventReplayOptions = {}
+  ): Promise<ChernobogEventReplayResult> {
+    const startedAt =
+      this.clock();
+  
+    /*
+     * readAll() deliberately returns the
+     * complete matching retained history in
+     * canonical oldest → newest order.
+     *
+     * Replay must never use normal query(),
+     * because query() is intentionally capped.
+     */
+    const events =
+      await this.store.readAll(
+        options.query
+      );
+  
+    const errors:
+      ChernobogEventReplayResult["errors"] =
+        [];
+  
+    let replayedEvents =
+      0;
+  
+    for (
+      let index = 0;
+      index < events.length;
+      index += 1
+    ) {
+      const event =
+        events[index];
+  
+      try {
+        await handler(
+          event,
+          {
+            index,
+  
+            total:
+              events.length,
+  
+            replayedAt:
+              this.clock()
+                .toISOString(),
+          }
+        );
+  
+        replayedEvents += 1;
+      } catch (error) {
+        errors.push({
+          eventId:
+            event.id,
+  
+          eventType:
+            event.type,
+  
+          index,
+  
+          message:
+            describeReplayError(
+              error
+            ),
+        });
+  
+        /*
+         * Strict replay is the default.
+         *
+         * Once reconstruction encounters a
+         * failed reducer/consumer, later state
+         * can no longer be assumed correct.
+         */
+        if (
+          options.continueOnError !==
+          true
+        ) {
+          break;
+        }
+      }
+    }
+  
+    return {
+      totalEvents:
+        events.length,
+  
+      replayedEvents,
+  
+      failedEvents:
+        errors.length,
+  
+      startedAt:
+        startedAt.toISOString(),
+  
+      completedAt:
+        this.clock()
+          .toISOString(),
+  
+      errors,
     };
   }
 
