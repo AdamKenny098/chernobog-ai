@@ -1,6 +1,6 @@
-﻿import {
-  generateWithReliableOllama as generateWithOllama,
-} from "./llm/reliableOllama";
+import {
+  generateWithOllama,
+} from "./llm/ollamaClient";
 import type {
   OllamaChatMessage,
 } from "./llm/ollamaClient";
@@ -203,4 +203,3 @@ export async function respondForRoute(
     },
   );
 }
-

@@ -1,7 +1,7 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 import {
-  generateWithReliableOllama as generateWithOllama,
-} from "../llm/reliableOllama";
+  generateWithOllama,
+} from "../llm/ollamaClient";
 
 const toolIntentSchema = z.discriminatedUnion("tool", [
   z.object({
@@ -123,4 +123,3 @@ export async function classifyToolIntent(message: string): Promise<ToolIntent> {
     return { tool: "none", input: {} };
   }
 }
-

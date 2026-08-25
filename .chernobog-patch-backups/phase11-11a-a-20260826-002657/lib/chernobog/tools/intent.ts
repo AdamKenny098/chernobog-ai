@@ -1,7 +1,7 @@
-﻿import { z } from "zod";
-import {
-  generateWithReliableOllama as generateWithOllama,
-} from "../llm/reliableOllama";
+import { z } from "zod";
+
+const OLLAMA_URL = process.env.OLLAMA_URL ?? "http://127.0.0.1:11434/api/generate";
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "gemma3";
 
 const toolIntentSchema = z.discriminatedUnion("tool", [
   z.object({
@@ -98,19 +98,26 @@ export async function classifyToolIntent(message: string): Promise<ToolIntent> {
     `Message: ${JSON.stringify(message)}`,
   ].join("\n");
 
-  const result = await generateWithOllama({
-    role: "default",
-    prompt,
-    temperature: 0,
-    timeoutMs: 30_000,
-    format: "json",
+  const response = await fetch(OLLAMA_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: OLLAMA_MODEL,
+      prompt,
+      stream: false,
+      format: "json",
+    }),
   });
 
-  if (!result.ok || !result.text) {
+  if (!response.ok) {
     return { tool: "none", input: {} };
   }
 
-  const extracted = extractJsonObject(result.text);
+  const data = (await response.json()) as { response?: string };
+  const raw = data.response ?? "";
+  const extracted = extractJsonObject(raw);
 
   if (!extracted) {
     return { tool: "none", input: {} };
@@ -123,4 +130,3 @@ export async function classifyToolIntent(message: string): Promise<ToolIntent> {
     return { tool: "none", input: {} };
   }
 }
-

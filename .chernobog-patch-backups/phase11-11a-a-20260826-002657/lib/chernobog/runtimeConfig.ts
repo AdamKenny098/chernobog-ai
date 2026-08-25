@@ -17,41 +17,13 @@ function resolveConfiguredPath(
 ): string {
   for (const environmentName of environmentNames) {
     const configuredValue = readEnvironmentValue(environmentName);
+
     if (configuredValue) {
       return path.resolve(configuredValue);
     }
   }
 
   return path.resolve(fallback());
-}
-
-function rewriteKnownOllamaEndpoint(
-  explicitUrl: string,
-  endpoint: "generate" | "chat" | "tags",
-): string | undefined {
-  try {
-    const parsed = new URL(explicitUrl);
-    const normalizedPath = parsed.pathname.replace(/\/+$/, "");
-
-    if (
-      normalizedPath.endsWith("/api/generate") ||
-      normalizedPath.endsWith("/api/chat") ||
-      normalizedPath.endsWith("/api/tags")
-    ) {
-      parsed.pathname = parsed.pathname.replace(
-        /\/api\/(?:generate|chat|tags)\/?$/,
-        `/api/${endpoint}`,
-      );
-      parsed.search = "";
-      parsed.hash = "";
-
-      return parsed.toString();
-    }
-
-    return undefined;
-  } catch {
-    return undefined;
-  }
 }
 
 export function getChernobogDataDirectory(): string {
@@ -97,10 +69,7 @@ export function getOllamaGenerateUrl(): string {
   const explicitUrl = readEnvironmentValue("OLLAMA_URL");
 
   if (explicitUrl) {
-    return (
-      rewriteKnownOllamaEndpoint(explicitUrl, "generate") ??
-      explicitUrl
-    );
+    return explicitUrl;
   }
 
   const baseUrl = readEnvironmentValue("OLLAMA_BASE_URL");
@@ -110,35 +79,6 @@ export function getOllamaGenerateUrl(): string {
   }
 
   return "http://127.0.0.1:11434/api/generate";
-}
-
-export function getOllamaChatUrl(): string {
-  const explicitUrl = readEnvironmentValue("OLLAMA_URL");
-
-  if (explicitUrl) {
-    const rewritten = rewriteKnownOllamaEndpoint(explicitUrl, "chat");
-
-    if (rewritten) {
-      return rewritten;
-    }
-
-    try {
-      const parsed = new URL(explicitUrl);
-      return new URL("/api/chat", parsed.origin).toString();
-    } catch {
-      /*
-       * Fall through to the configured base URL or localhost.
-       */
-    }
-  }
-
-  const baseUrl = readEnvironmentValue("OLLAMA_BASE_URL");
-
-  if (baseUrl) {
-    return `${baseUrl.replace(/\/+$/, "")}/api/chat`;
-  }
-
-  return "http://127.0.0.1:11434/api/chat";
 }
 
 export function getOllamaTagsUrl(): string {
@@ -162,19 +102,26 @@ export function getOllamaTagsUrl(): string {
     );
 
   if (explicitUrl) {
-    const rewritten =
-      rewriteKnownOllamaEndpoint(
-        explicitUrl,
-        "tags",
-      );
-
-    if (rewritten) {
-      return rewritten;
-    }
-
     try {
       const parsed =
         new URL(explicitUrl);
+
+      if (
+        parsed.pathname
+          .replace(/\/+$/, "")
+          .endsWith("/api/generate")
+      ) {
+        parsed.pathname =
+          parsed.pathname.replace(
+            /\/api\/generate\/?$/,
+            "/api/tags"
+          );
+
+        parsed.search = "";
+        parsed.hash = "";
+
+        return parsed.toString();
+      }
 
       return new URL(
         "/api/tags",

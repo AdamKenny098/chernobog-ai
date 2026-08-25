@@ -1,22 +1,18 @@
-﻿import {
-  generateWithReliableOllama as generateWithOllama,
-} from "./llm/reliableOllama";
-import type {
-  OllamaChatMessage,
-} from "./llm/ollamaClient";
-import type {
-  ModelRole,
-} from "./llm/modelRouter";
-
 export type RouteName = "chat" | "planner" | "memory" | "tools" | "guardian";
 
-export type OllamaMessage = OllamaChatMessage;
+export type OllamaMessage = {
+  role: "system" | "user" | "assistant";
+  content: string;
+};
 
 type ResponseContext = {
   memories?: string[];
   recentMessages?: OllamaMessage[];
   sessionSummary?: string;
 };
+
+const OLLAMA_URL = process.env.OLLAMA_URL ?? "http://localhost:11434/api/chat";
+const MODEL_NAME = process.env.OLLAMA_MODEL ?? "gemma3";
 
 const BASE_IDENTITY = `
 You are the core intelligence of a fictional personal AI system named Chernobog.
@@ -30,6 +26,7 @@ const ROUTER_PROMPT = `
 You are the internal routing layer for Chernobog.
 
 Classify the user's message into exactly one route:
+
 chat
 - general conversation
 - questions
@@ -105,36 +102,50 @@ Do not over-refuse harmless software questions.
 `.trim(),
 };
 
-function roleForRoute(route: RouteName): ModelRole {
-  return route === "planner"
-    ? "planner"
-    : "default";
-}
+async function callOllama(messages: OllamaMessage[]): Promise<string> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30_000);
 
-async function callOllama(
-  messages: OllamaMessage[],
-  options: {
-    role?: ModelRole;
-    temperature?: number;
-    numPredict?: number;
-  } = {},
-): Promise<string> {
-  const result = await generateWithOllama({
-    role: options.role ?? "default",
-    messages,
-    temperature: options.temperature ?? 0.4,
-    timeoutMs: 30_000,
-    numPredict: options.numPredict ?? 500,
-  });
+  try {
+    const response = await fetch(OLLAMA_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: MODEL_NAME,
+        stream: false,
+        messages,
+        options: {
+          num_predict: 500,
+          temperature: 0.4,
+        },
+      }),
+    });
 
-  if (!result.ok || !result.text) {
-    throw new Error(
-      result.error ??
-        "No response returned from the local model.",
-    );
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Ollama request failed: ${errorText}`);
+    }
+
+    const data = await response.json();
+    const content = String(data?.message?.content ?? "").trim();
+
+    if (!content) {
+      return "No response returned from the local model.";
+    }
+
+    return content;
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error("Ollama request timed out after 30 seconds.");
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  return result.text;
 }
 
 function normalizeRoute(raw: string): RouteName {
@@ -143,15 +154,10 @@ function normalizeRoute(raw: string): RouteName {
 }
 
 export async function routeMessage(userMessage: string): Promise<RouteName> {
-  const rawRoute = await callOllama(
-    [
-      { role: "system", content: ROUTER_PROMPT },
-      { role: "user", content: userMessage },
-    ],
-    {
-      role: "default",
-    },
-  );
+  const rawRoute = await callOllama([
+    { role: "system", content: ROUTER_PROMPT },
+    { role: "user", content: userMessage },
+  ]);
 
   return normalizeRoute(rawRoute);
 }
@@ -196,11 +202,5 @@ export async function respondForRoute(
     content: userMessage,
   });
 
-  return callOllama(
-    messages,
-    {
-      role: roleForRoute(route),
-    },
-  );
+  return callOllama(messages);
 }
-

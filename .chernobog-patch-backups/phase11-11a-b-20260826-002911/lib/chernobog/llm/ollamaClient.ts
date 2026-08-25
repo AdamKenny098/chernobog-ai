@@ -10,14 +10,6 @@ export type OllamaChatMessage = {
   content: string;
 };
 
-export type OllamaFailureKind =
-  | "invalid-request"
-  | "cancelled"
-  | "timeout"
-  | "http-error"
-  | "invalid-response"
-  | "transport-error";
-
 export type GenerateWithOllamaOptions = {
   role?: ModelRole;
   prompt?: string;
@@ -27,14 +19,6 @@ export type GenerateWithOllamaOptions = {
   timeoutMs?: number;
   numPredict?: number;
   signal?: AbortSignal;
-
-  /*
-   * Internal exact-model execution hook.
-   *
-   * Higher-level routing is responsible for choosing this model.
-   * The low-level transport does not invent or validate fallback policy.
-   */
-  modelOverride?: string;
 };
 
 export type GenerateWithOllamaResult = {
@@ -43,11 +27,6 @@ export type GenerateWithOllamaResult = {
   model: string;
   role: ModelRole;
   error?: string;
-  failureKind?: OllamaFailureKind;
-  httpStatus?: number;
-  endpoint?: string;
-  transport?: "generate" | "chat";
-  durationMs?: number;
 };
 
 export type OllamaRequestPlan = {
@@ -177,21 +156,9 @@ export function buildOllamaRequestPlan(
   };
 }
 
-function completeResult(
-  result: GenerateWithOllamaResult,
-  plan: OllamaRequestPlan | undefined,
-  startedAt: number,
-): GenerateWithOllamaResult {
-  return {
-    ...result,
-    endpoint: plan?.url,
-    transport: plan?.mode,
-    durationMs: Date.now() - startedAt,
-  };
-}
-
 async function publishModelResult(
   result: GenerateWithOllamaResult,
+  startedAt: number
 ): Promise<void> {
   await publishChernobogEventSafely({
     type: result.ok
@@ -212,13 +179,7 @@ async function publishModelResult(
       provider: "ollama",
       model: result.model,
       role: result.role,
-      durationMs: result.durationMs ?? 0,
-
-      ...(result.transport
-        ? {
-            transport: result.transport,
-          }
-        : {}),
+      durationMs: Date.now() - startedAt,
 
       ...(result.ok
         ? {
@@ -226,12 +187,6 @@ async function publishModelResult(
           }
         : {
             error: result.error ?? "Unknown model failure.",
-            failureKind: result.failureKind ?? "transport-error",
-            ...(result.httpStatus !== undefined
-              ? {
-                  httpStatus: result.httpStatus,
-                }
-              : {}),
           }),
     },
     metadata: {
@@ -239,11 +194,6 @@ async function publishModelResult(
         "model",
         "ollama",
         result.ok ? "success" : "failure",
-        ...(
-          result.failureKind
-            ? [result.failureKind]
-            : []
-        ),
       ],
 
       sensitive: result.ok
@@ -251,59 +201,6 @@ async function publishModelResult(
         : true,
     },
   });
-}
-
-function failure(
-  options: {
-    model: string;
-    role: ModelRole;
-    kind: OllamaFailureKind;
-    error: string;
-    plan?: OllamaRequestPlan;
-    startedAt: number;
-    httpStatus?: number;
-  },
-): GenerateWithOllamaResult {
-  return completeResult(
-    {
-      ok: false,
-      model: options.model,
-      role: options.role,
-      error: options.error,
-      failureKind: options.kind,
-      httpStatus: options.httpStatus,
-    },
-    options.plan,
-    options.startedAt,
-  );
-}
-
-export function isRetryableOllamaFailure(
-  result: GenerateWithOllamaResult,
-): boolean {
-  if (result.ok) {
-    return false;
-  }
-
-  if (
-    result.failureKind === "timeout" ||
-    result.failureKind === "transport-error"
-  ) {
-    return true;
-  }
-
-  if (
-    result.failureKind === "http-error" &&
-    result.httpStatus !== undefined
-  ) {
-    return (
-      result.httpStatus === 408 ||
-      result.httpStatus === 429 ||
-      result.httpStatus >= 500
-    );
-  }
-
-  return false;
 }
 
 export async function generateWithOllama(
@@ -318,65 +215,25 @@ export async function generateWithOllama(
   const resolved = resolveModel(role);
   const startedAt = Date.now();
 
-  const modelOverride =
-    options.modelOverride?.trim();
-
-  if (
-    options.modelOverride !== undefined &&
-    !modelOverride
-  ) {
-    const result = failure({
-      model: resolved.model,
-      role: resolved.role,
-      kind: "invalid-request",
-      error: "Ollama modelOverride must not be empty.",
-      startedAt,
-    });
-
-    await publishModelResult(result);
-    return result;
-  }
-
-  const executionModel =
-    modelOverride ??
-    resolved.model;
-
-  if (
-    !Number.isFinite(timeoutMs) ||
-    timeoutMs <= 0
-  ) {
-    const result = failure({
-      model: executionModel,
-      role: resolved.role,
-      kind: "invalid-request",
-      error: "Ollama timeoutMs must be greater than zero.",
-      startedAt,
-    });
-
-    await publishModelResult(result);
-    return result;
-  }
-
   let plan: OllamaRequestPlan;
 
   try {
     plan = buildOllamaRequestPlan(
       options,
-      executionModel,
+      resolved.model,
     );
   } catch (error) {
-    const result = failure({
-      model: executionModel,
+    const result: GenerateWithOllamaResult = {
+      ok: false,
+      model: resolved.model,
       role: resolved.role,
-      kind: "invalid-request",
       error:
         error instanceof Error
           ? error.message
           : "Invalid Ollama request.",
-      startedAt,
-    });
+    };
 
-    await publishModelResult(result);
+    await publishModelResult(result, startedAt);
     return result;
   }
 
@@ -390,14 +247,20 @@ export async function generateWithOllama(
 
     severity: "debug",
 
-    subject: executionModel,
+    subject: resolved.model,
 
     payload: {
       provider: "ollama",
-      model: executionModel,
+      model: resolved.model,
       role: resolved.role,
+
+      /*
+       * Record only request size and transport shape,
+       * never the prompt or messages themselves.
+       */
       promptChars: plan.inputChars,
       transport: plan.mode,
+
       temperature: options.temperature ?? 0.35,
       timeoutMs,
       ...(options.numPredict !== undefined
@@ -410,11 +273,6 @@ export async function generateWithOllama(
             format: options.format,
           }
         : {}),
-      ...(modelOverride
-        ? {
-            modelOverride: true,
-          }
-        : {}),
     },
     metadata: {
       tags: [
@@ -424,20 +282,6 @@ export async function generateWithOllama(
     },
   });
 
-  if (signal?.aborted) {
-    const result = failure({
-      model: executionModel,
-      role: resolved.role,
-      kind: "cancelled",
-      error: "Ollama request was cancelled before execution.",
-      plan,
-      startedAt,
-    });
-
-    await publishModelResult(result);
-    return result;
-  }
-
   const controller = new AbortController();
   let timedOut = false;
 
@@ -445,13 +289,17 @@ export async function generateWithOllama(
     controller.abort();
   };
 
-  signal?.addEventListener(
-    "abort",
-    abortFromCaller,
-    {
-      once: true,
-    },
-  );
+  if (signal?.aborted) {
+    controller.abort();
+  } else {
+    signal?.addEventListener(
+      "abort",
+      abortFromCaller,
+      {
+        once: true,
+      },
+    );
+  }
 
   const timeout = setTimeout(
     () => {
@@ -477,100 +325,77 @@ export async function generateWithOllama(
     );
 
     if (!response.ok) {
-      const result = failure({
-        model: executionModel,
+      const result: GenerateWithOllamaResult = {
+        ok: false,
+        model: resolved.model,
         role: resolved.role,
-        kind: "http-error",
         error:
           `Ollama request failed with status ${response.status}.`,
-        plan,
-        startedAt,
-        httpStatus: response.status,
-      });
+      };
 
-      await publishModelResult(result);
+      await publishModelResult(
+        result,
+        startedAt
+      );
+
       return result;
     }
 
-    let data: unknown;
-
-    try {
-      data = await response.json();
-    } catch (error) {
-      const result = failure({
-        model: executionModel,
-        role: resolved.role,
-        kind: "invalid-response",
-        error:
-          error instanceof Error
-            ? `Ollama returned invalid JSON: ${error.message}`
-            : "Ollama returned invalid JSON.",
-        plan,
-        startedAt,
-      });
-
-      await publishModelResult(result);
-      return result;
-    }
+    const data: unknown =
+      await response.json();
 
     const text =
       extractOllamaText(data);
 
     if (!text) {
-      const result = failure({
-        model: executionModel,
+      const result: GenerateWithOllamaResult = {
+        ok: false,
+        model: resolved.model,
         role: resolved.role,
-        kind: "invalid-response",
         error:
           "Ollama returned no usable text.",
-        plan,
-        startedAt,
-      });
+      };
 
-      await publishModelResult(result);
+      await publishModelResult(
+        result,
+        startedAt
+      );
       return result;
     }
 
-    const result = completeResult(
-      {
-        ok: true,
-        text,
-        model: executionModel,
-        role: resolved.role,
-      },
-      plan,
-      startedAt,
-    );
+    const result: GenerateWithOllamaResult = {
+      ok: true,
+      text,
+      model: resolved.model,
+      role: resolved.role,
+    };
 
-    await publishModelResult(result);
+    await publishModelResult(
+      result,
+      startedAt
+    );
     return result;
   } catch (error) {
-    const kind: OllamaFailureKind =
+    const message =
       controller.signal.aborted
         ? timedOut
-          ? "timeout"
-          : "cancelled"
-        : "transport-error";
+          ? `Ollama request timed out after ${timeoutMs}ms.`
+          : "Ollama request was cancelled."
+        : error instanceof Error
+          ? error.message
+          : "Ollama request failed.";
 
-    const message =
-      kind === "timeout"
-        ? `Ollama request timed out after ${timeoutMs}ms.`
-        : kind === "cancelled"
-          ? "Ollama request was cancelled."
-          : error instanceof Error
-            ? error.message
-            : "Ollama request failed.";
-
-    const result = failure({
-      model: executionModel,
+    const result: GenerateWithOllamaResult = {
+      ok: false,
+      model: resolved.model,
       role: resolved.role,
-      kind,
       error: message,
-      plan,
-      startedAt,
-    });
+    };
 
-    await publishModelResult(result);
+    await publishModelResult(
+      result,
+      startedAt
+    );
     return result;
   } finally {
     clearTimeout(timeout);

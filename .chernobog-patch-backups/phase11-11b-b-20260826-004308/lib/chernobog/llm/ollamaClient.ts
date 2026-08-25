@@ -27,14 +27,6 @@ export type GenerateWithOllamaOptions = {
   timeoutMs?: number;
   numPredict?: number;
   signal?: AbortSignal;
-
-  /*
-   * Internal exact-model execution hook.
-   *
-   * Higher-level routing is responsible for choosing this model.
-   * The low-level transport does not invent or validate fallback policy.
-   */
-  modelOverride?: string;
 };
 
 export type GenerateWithOllamaResult = {
@@ -318,35 +310,12 @@ export async function generateWithOllama(
   const resolved = resolveModel(role);
   const startedAt = Date.now();
 
-  const modelOverride =
-    options.modelOverride?.trim();
-
-  if (
-    options.modelOverride !== undefined &&
-    !modelOverride
-  ) {
-    const result = failure({
-      model: resolved.model,
-      role: resolved.role,
-      kind: "invalid-request",
-      error: "Ollama modelOverride must not be empty.",
-      startedAt,
-    });
-
-    await publishModelResult(result);
-    return result;
-  }
-
-  const executionModel =
-    modelOverride ??
-    resolved.model;
-
   if (
     !Number.isFinite(timeoutMs) ||
     timeoutMs <= 0
   ) {
     const result = failure({
-      model: executionModel,
+      model: resolved.model,
       role: resolved.role,
       kind: "invalid-request",
       error: "Ollama timeoutMs must be greater than zero.",
@@ -362,11 +331,11 @@ export async function generateWithOllama(
   try {
     plan = buildOllamaRequestPlan(
       options,
-      executionModel,
+      resolved.model,
     );
   } catch (error) {
     const result = failure({
-      model: executionModel,
+      model: resolved.model,
       role: resolved.role,
       kind: "invalid-request",
       error:
@@ -390,11 +359,11 @@ export async function generateWithOllama(
 
     severity: "debug",
 
-    subject: executionModel,
+    subject: resolved.model,
 
     payload: {
       provider: "ollama",
-      model: executionModel,
+      model: resolved.model,
       role: resolved.role,
       promptChars: plan.inputChars,
       transport: plan.mode,
@@ -410,11 +379,6 @@ export async function generateWithOllama(
             format: options.format,
           }
         : {}),
-      ...(modelOverride
-        ? {
-            modelOverride: true,
-          }
-        : {}),
     },
     metadata: {
       tags: [
@@ -426,7 +390,7 @@ export async function generateWithOllama(
 
   if (signal?.aborted) {
     const result = failure({
-      model: executionModel,
+      model: resolved.model,
       role: resolved.role,
       kind: "cancelled",
       error: "Ollama request was cancelled before execution.",
@@ -478,7 +442,7 @@ export async function generateWithOllama(
 
     if (!response.ok) {
       const result = failure({
-        model: executionModel,
+        model: resolved.model,
         role: resolved.role,
         kind: "http-error",
         error:
@@ -498,7 +462,7 @@ export async function generateWithOllama(
       data = await response.json();
     } catch (error) {
       const result = failure({
-        model: executionModel,
+        model: resolved.model,
         role: resolved.role,
         kind: "invalid-response",
         error:
@@ -518,7 +482,7 @@ export async function generateWithOllama(
 
     if (!text) {
       const result = failure({
-        model: executionModel,
+        model: resolved.model,
         role: resolved.role,
         kind: "invalid-response",
         error:
@@ -535,7 +499,7 @@ export async function generateWithOllama(
       {
         ok: true,
         text,
-        model: executionModel,
+        model: resolved.model,
         role: resolved.role,
       },
       plan,
@@ -562,7 +526,7 @@ export async function generateWithOllama(
             : "Ollama request failed.";
 
     const result = failure({
-      model: executionModel,
+      model: resolved.model,
       role: resolved.role,
       kind,
       error: message,
