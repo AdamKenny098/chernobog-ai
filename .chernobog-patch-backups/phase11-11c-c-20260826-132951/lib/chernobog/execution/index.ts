@@ -15,7 +15,3 @@ export * from "./internalExecutionHandlers";
 export * from "./diagnostics";
 export * from "./toolGateway";
 
-export * from "./toolCapabilities";
-
-export * from "./toolExecutionStatus";
-

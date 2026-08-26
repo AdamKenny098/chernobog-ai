@@ -1,11 +1,11 @@
-﻿import { logToolCall } from "@/lib/chernobog/db";
+import { logToolCall } from "@/lib/chernobog/db";
 import {
   clearPendingDisambiguation,
   getSessionContext,
   saveSessionContext,
 } from "@/lib/chernobog/session/store";
 import { setSelectedFileFromPath, updateSessionFromToolResult } from "@/lib/chernobog/session/update";
-import { executePipelineTool as executeTool } from "@/lib/chernobog/execution/toolGateway";
+import { executeTool } from "@/lib/chernobog/tools/executor";
 
 type FindFilesResultData = {
   root: string;
@@ -87,7 +87,7 @@ export function formatToolReply(
 
       const preview = data.matches
         .slice(0, 5)
-        .map((match, index) => `${index + 1}. ${match.name} â€” ${match.path}`)
+        .map((match, index) => `${index + 1}. ${match.name} — ${match.path}`)
         .join("\n");
 
       const extraCount = data.matches.length - 5;
@@ -235,7 +235,7 @@ export async function tryFileSearchFallback(
 
   const preview = data.matches
     .slice(0, 5)
-    .map((match, index) => `${index + 1}. ${match.name} â€” ${match.path}`)
+    .map((match, index) => `${index + 1}. ${match.name} — ${match.path}`)
     .join("\n");
 
   return `I found multiple files matching "${query}". Tell me which one you want:\n${preview}`;
@@ -252,4 +252,3 @@ export function looksLikeVagueFileRequest(message: string): boolean {
     /\b(file|document|doc|notes|note)\b/.test(lower)
   );
 }
-

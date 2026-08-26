@@ -1,4 +1,4 @@
-﻿export * from "./approval";
+export * from "./approval";
 export * from "./approvalCommands";
 export * from "./buildExecutionTask";
 export * from "./createExecutionTask";
@@ -13,9 +13,3 @@ export * from "./toolExecutionHandlers";
 export * from "./types";
 export * from "./internalExecutionHandlers";
 export * from "./diagnostics";
-export * from "./toolGateway";
-
-export * from "./toolCapabilities";
-
-export * from "./toolExecutionStatus";
-

@@ -1,6 +1,6 @@
-﻿import path from "node:path";
+import path from "node:path";
 
-import { executeOrchestrationTool as executeTool } from "@/lib/chernobog/execution/toolGateway";
+import { executeTool } from "@/lib/chernobog/tools/executor";
 import { logToolCall } from "@/lib/chernobog/db";
 import type { SessionContext } from "@/lib/chernobog/session/types";
 import { updateSessionFromToolResult } from "@/lib/chernobog/session/update";
@@ -57,7 +57,7 @@ function formatSearchReply(data: FindFilesData) {
 
   const preview = data.matches
     .slice(0, 8)
-    .map((match, index) => `${index + 1}. ${match.name} â€” ${match.path}`)
+    .map((match, index) => `${index + 1}. ${match.name} — ${match.path}`)
     .join("\n");
 
   const extraCount = data.matches.length - 8;

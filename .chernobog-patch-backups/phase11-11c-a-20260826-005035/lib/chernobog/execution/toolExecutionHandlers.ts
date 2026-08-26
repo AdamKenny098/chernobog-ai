@@ -1,6 +1,6 @@
-﻿// lib/chernobog/execution/toolExecutionHandlers.ts
+// lib/chernobog/execution/toolExecutionHandlers.ts
 
-import { executeExecutionTaskTool as executeTool } from "./toolGateway";
+import { executeTool } from "../tools/executor";
 import { ExecutionActionHandler } from "./runExecutionTask";
 
 type ToolHandlerMapOptions = {
@@ -836,7 +836,7 @@ export function createToolExecutionHandlers(
                       ? match.line
                       : "";
       
-                  return `${index + 1}. ${noteName}:${lineNumber} â€” ${line}`;
+                  return `${index + 1}. ${noteName}:${lineNumber} — ${line}`;
                 }),
               ].join("\n");
       
