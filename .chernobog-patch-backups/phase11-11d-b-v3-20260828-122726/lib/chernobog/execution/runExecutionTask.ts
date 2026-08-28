@@ -24,17 +24,6 @@ import {
 
 import { getRiskPolicyForStep } from "./riskPolicy";
 
-import {
-  evaluateStepRuntimeGovernance,
-  evaluateTaskRuntimeGovernance,
-  getGovernanceDecisionMessage,
-} from "../governance/runtimeGovernance";
-
-import type {
-  ExecutionGovernanceContext,
-  ResolveExecutionStepGovernance,
-} from "../governance/runtimeGovernance";
-
 export interface ExecutionActionResult {
   success: boolean;
   output?: unknown;
@@ -54,18 +43,6 @@ export interface RunExecutionTaskOptions {
    * Safety limit so a bad task cannot loop forever.
    */
   maxSteps?: number;
-
-
-  /**
-   * Optional 11D cognitive governance context.
-   * Omission preserves legacy execution behavior.
-   */
-  governance?: ExecutionGovernanceContext;
-
-  /**
-   * Optional step-specific governance override.
-   */
-  resolveStepGovernance?: ResolveExecutionStepGovernance;
 }
 
 type ExecutionLifecycleEventType =
@@ -181,61 +158,23 @@ export async function runExecutionTask(
     "execution.started",
     task
   );
-  const taskGovernance =
-    evaluateTaskRuntimeGovernance(
-      task,
-      options.governance,
-    );
 
-  if (taskGovernance.disposition === "deny") {
+  if (task.risk === "blocked") {
     task = failExecutionTask(
       task,
-      getGovernanceDecisionMessage(
-        taskGovernance,
-        "Task is denied by unified governance.",
-      ),
+      "Task is blocked by the risk gate."
     );
 
     return finishExecution(
       "execution.failed",
-      task,
+      task
     );
   }
 
-  const taskNeedsUnifiedConfirmation =
-    Boolean(
-      options.governance &&
-      taskGovernance.disposition === "confirm" &&
-      task.approval.approved !== true,
-    );
-
-  if (
-    shouldPauseForApproval(task) ||
-    taskNeedsUnifiedConfirmation
-  ) {
-    const approvalReason =
-      taskNeedsUnifiedConfirmation
-        ? getGovernanceDecisionMessage(
-            taskGovernance,
-            "Task requires confirmation before execution.",
-          )
-        : task.approval.reason;
-
-    task = {
-      ...updateExecutionTask(task, {
-        status: "waiting_for_approval",
-        ...(approvalReason
-          ? { error: approvalReason }
-          : {}),
-      }),
-      approval: {
-        ...task.approval,
-        required: true,
-        ...(approvalReason
-          ? { reason: approvalReason }
-          : {}),
-      },
-    };
+  if (shouldPauseForApproval(task)) {
+    task = updateExecutionTask(task, {
+      status: "waiting_for_approval",
+    });
 
     return finishExecution(
       "execution.waiting_for_approval",
@@ -271,22 +210,8 @@ export async function runExecutionTask(
     const riskPolicy =
       getRiskPolicyForStep(step);
 
-    
-    const stepGovernanceContext =
-      options.resolveStepGovernance?.(
-        step,
-        task,
-      ) ??
-      options.governance;
-
-    const stepGovernance =
-      evaluateStepRuntimeGovernance(
-        step,
-        stepGovernanceContext,
-      );
-if (
-      stepGovernance.disposition ===
-      "deny"
+    if (
+      riskPolicy.mode === "blocked"
     ) {
       task = setStepStatus(
         task,
@@ -294,21 +219,15 @@ if (
         "blocked",
         {
           error:
-            getGovernanceDecisionMessage(
-              stepGovernance,
-              riskPolicy.reason ??
-                "Step is denied by unified governance.",
-            ),
+            riskPolicy.reason ??
+            "Step is blocked by the risk gate.",
         }
       );
 
       task = failExecutionTask(
         task,
-        getGovernanceDecisionMessage(
-          stepGovernance,
-          riskPolicy.reason ??
-            "Execution stopped because a step was denied.",
-        )
+        riskPolicy.reason ??
+          "Execution stopped because a step is blocked."
       );
 
       return finishExecution(
@@ -318,8 +237,7 @@ if (
     }
 
     if (
-      stepGovernance.disposition ===
-        "confirm" &&
+      riskPolicy.mode === "approval" &&
       task.approval.approved !== true
     ) {
       task = setStepStatus(
@@ -328,35 +246,19 @@ if (
         "blocked",
         {
           error:
-            getGovernanceDecisionMessage(
-              stepGovernance,
-              riskPolicy.reason ??
-                "Step requires approval before execution.",
-            ),
+            riskPolicy.reason ??
+            "Step requires approval before execution.",
         }
       );
 
-      const approvalReason =
-        getGovernanceDecisionMessage(
-          stepGovernance,
-          riskPolicy.reason ??
-            "Execution paused for approval.",
-        );
+      task = updateExecutionTask(task, {
+        status:
+          "waiting_for_approval",
 
-      task = {
-        ...updateExecutionTask(task, {
-          status:
-            "waiting_for_approval",
-          error:
-            approvalReason,
-        }),
-        approval: {
-          ...task.approval,
-          required: true,
-          reason:
-            approvalReason,
-        },
-      };
+        error:
+          riskPolicy.reason ??
+          "Execution paused for approval.",
+      });
 
       return finishExecution(
         "execution.waiting_for_approval",
