@@ -1,0 +1,62 @@
+{
+  "phase": "11",
+  "name": "Cognitive Architecture",
+  "status": "passed",
+  "startedAt": "2026-08-29T22:59:21.096Z",
+  "completedAt": "2026-08-29T23:02:40.492Z",
+  "selectedVerifiers": [
+    {
+      "phase": "11A",
+      "verifier": "verify-chernobog-phase11-11a-d-full-acceptance.ts",
+      "discovered": 4
+    },
+    {
+      "phase": "11B",
+      "verifier": "verify-chernobog-phase11-11b-d-full-acceptance.ts",
+      "discovered": 4
+    },
+    {
+      "phase": "11C",
+      "verifier": "verify-chernobog-phase11-11c-d-full-acceptance.ts",
+      "discovered": 4
+    },
+    {
+      "phase": "11D",
+      "verifier": "verify-chernobog-phase11-11d-d-full-acceptance.ts",
+      "discovered": 4
+    },
+    {
+      "phase": "11E",
+      "verifier": "verify-chernobog-phase11-11e-e-full-acceptance.ts",
+      "discovered": 5
+    },
+    {
+      "phase": "11F",
+      "verifier": "verify-chernobog-phase11-11f-final-bridge.ts",
+      "discovered": 1
+    },
+    {
+      "phase": "11G",
+      "verifier": "verify-chernobog-phase11-11g-f-full-integration.ts",
+      "discovered": 6
+    },
+    {
+      "phase": "11H",
+      "verifier": "verify-chernobog-phase11-11h-f-full-integration.ts",
+      "discovered": 6
+    },
+    {
+      "phase": "11I",
+      "verifier": "verify-chernobog-phase11-11i-f-full-integration.ts",
+      "discovered": 6
+    },
+    {
+      "phase": "11J",
+      "verifier": "verify-chernobog-phase11-11j-f-full-integration.ts",
+      "discovered": 6
+    }
+  ],
+  "crossPhaseVerifier": "scripts/verify-chernobog-phase11-full-system-acceptance.ts",
+  "typecheck": "passed",
+  "productionBuild": "passed"
+}
