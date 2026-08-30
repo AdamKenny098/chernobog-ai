@@ -45,12 +45,7 @@ export async function writeConversationMemory(
   saveMessage(
     request.role,
     content,
-    undefined,
-    (
-      request as {
-        sessionId?: string;
-      }
-    ).sessionId,
+    request.route,
   );
 
   return {

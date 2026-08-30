@@ -1,4 +1,4 @@
-import {
+﻿import {
   generateWithReliableOllama as generateWithOllama,
 } from "./llm/reliableOllama";
 import type {
@@ -123,6 +123,7 @@ async function callOllama(
     role: options.role ?? "default",
     messages,
     temperature: options.temperature ?? 0.4,
+    timeoutMs: 30_000,
     numPredict: options.numPredict ?? 500,
   });
 

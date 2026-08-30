@@ -58,22 +58,6 @@ function matchesScope(
 ): boolean {
   if (
     query.sessionId &&
-    record.scope === "session" &&
-    (!record.sessionId || record.sessionId !== query.sessionId)
-  ) {
-    return false;
-  }
-
-  if (
-    query.projectId &&
-    record.scope === "project" &&
-    (!record.projectId || record.projectId !== query.projectId)
-  ) {
-    return false;
-  }
-
-  if (
-    query.sessionId &&
     record.sessionId &&
     record.sessionId !== query.sessionId
   ) {

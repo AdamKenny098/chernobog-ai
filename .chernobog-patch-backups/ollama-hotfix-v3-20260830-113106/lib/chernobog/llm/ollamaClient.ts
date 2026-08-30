@@ -25,7 +25,6 @@ export type GenerateWithOllamaOptions = {
   format?: "json";
   temperature?: number;
   timeoutMs?: number;
-  keepAlive?: string;
   numPredict?: number;
   signal?: AbortSignal;
 
@@ -158,7 +157,6 @@ export function buildOllamaRequestPlan(
         model,
         messages,
         stream: false,
-        keep_alive: options.keepAlive?.trim() || process.env.CHERNOBOG_OLLAMA_KEEP_ALIVE?.trim() || "30m",
         ...(options.format ? { format: options.format } : {}),
         options: requestOptions,
       },
@@ -173,7 +171,6 @@ export function buildOllamaRequestPlan(
       model,
       prompt,
       stream: false,
-      keep_alive: options.keepAlive?.trim() || process.env.CHERNOBOG_OLLAMA_KEEP_ALIVE?.trim() || "30m",
       ...(options.format ? { format: options.format } : {}),
       options: requestOptions,
     },

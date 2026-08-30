@@ -123,7 +123,7 @@ export function finalizePipelinePayload(
   saveTrustTrace(trace);
   printTraceInDev(trace);
 
-  saveMessage("assistant", reply, route, sessionId);
+  saveMessage("assistant", reply, route);
 
   return {
     payload: buildUiPayload(sessionId, route, reply, trace),

@@ -109,14 +109,7 @@ export function createDefaultUnifiedMemoryReaders():
           ),
         );
 
-        if (!query.sessionId) {
-          return [];
-        }
-
-        return getRecentMessages(
-          query.sessionId,
-          limit,
-        ).map(
+        return getRecentMessages(limit).map(
           (message, index) =>
             cloneRecord({
               id:

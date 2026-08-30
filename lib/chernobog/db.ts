@@ -24,7 +24,8 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     role TEXT NOT NULL,
     content TEXT NOT NULL,
-    route TEXT,
+    route TEXT,
+    session_id TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -48,6 +49,29 @@ db.exec(`
     state_json TEXT NOT NULL,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
+`);
+
+type MessageColumnInfo = {
+  name: string;
+};
+
+const messageColumns = db
+  .prepare("PRAGMA table_info(messages)")
+  .all() as MessageColumnInfo[];
+
+if (
+  !messageColumns.some(
+    (column) => column.name === "session_id",
+  )
+) {
+  db.exec(
+    "ALTER TABLE messages ADD COLUMN session_id TEXT",
+  );
+}
+
+db.exec(`
+  CREATE INDEX IF NOT EXISTS idx_messages_session_id_id
+  ON messages(session_id, id);
 `);
 
 type LogToolCallInput = {

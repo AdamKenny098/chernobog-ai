@@ -128,17 +128,6 @@ export async function buildUnifiedMemoryContext(
 ): Promise<BuiltUnifiedMemoryContext> {
   const legacy =
     buildMemoryContext(input);
-  const legacyCoreSystemText = [
-    "Chernobog memory context is layered.",
-    "Use short-term memory for recent conversation flow.",
-    "Use working memory for the active session, files, workflows, and plans.",
-    "Long-term memory is supplied only by the unified retrieval path below.",
-    "Never invent memories that are not present in these blocks.",
-    "",
-    blockToText("Short-term memory", legacy.shortTerm.lines),
-    "",
-    blockToText("Working memory", legacy.working.lines),
-  ].join("\\n");
 
   const retrievalLimit =
     normalizeLimit(
@@ -355,7 +344,7 @@ export async function buildUnifiedMemoryContext(
     );
 
   const systemText = [
-    legacyCoreSystemText,
+    legacy.systemText,
     "",
     "Additional unified memory rules:",
     "Use retrieved approved/project memory only when relevant to the current request.",

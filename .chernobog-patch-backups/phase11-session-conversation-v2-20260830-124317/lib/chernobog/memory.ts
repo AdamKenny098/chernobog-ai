@@ -9,85 +9,19 @@ function normalizeText(value: string): string {
   return value.replace(/\s+/g, " ").trim();
 }
 
-export function saveMessage(
-  role: string,
-  content: string,
-  route?: string,
-  sessionId?: string,
-) {
+export function saveMessage(role: string, content: string, route?: string) {
   const clean = normalizeText(content);
   if (!clean) return;
 
-  const cleanSessionId =
-    sessionId?.trim() || null;
-
   db.prepare(
     `
-    INSERT INTO messages (
-      role,
-      content,
-      route,
-      session_id
-    )
-    VALUES (?, ?, ?, ?)
-    `,
-  ).run(
-    role,
-    clean,
-    route ?? null,
-    cleanSessionId,
-  );
+    INSERT INTO messages (role, content, route)
+    VALUES (?, ?, ?)
+    `
+  ).run(role, clean, route ?? null);
 }
 
-export function getRecentMessages(
-  sessionId: string,
-  limit?: number,
-): ChatHistoryMessage[];
-export function getRecentMessages(
-  limit?: number,
-): ChatHistoryMessage[];
-export function getRecentMessages(
-  sessionIdOrLimit: string | number = 8,
-  maybeLimit = 8,
-): ChatHistoryMessage[] {
-  if (typeof sessionIdOrLimit === "string") {
-    const sessionId = sessionIdOrLimit.trim();
-    if (!sessionId) {
-      return [];
-    }
-
-    const limit = Math.max(
-      1,
-      Math.min(100, Math.trunc(maybeLimit)),
-    );
-
-    const rows = db
-      .prepare(
-        `
-        SELECT role, content
-        FROM messages
-        WHERE role IN ('user', 'assistant')
-          AND session_id = ?
-        ORDER BY id DESC
-        LIMIT ?
-        `,
-      )
-      .all(
-        sessionId,
-        limit,
-      ) as ChatHistoryMessage[];
-
-    return rows.reverse();
-  }
-
-  const limit = Math.max(
-    1,
-    Math.min(
-      100,
-      Math.trunc(sessionIdOrLimit),
-    ),
-  );
-
+export function getRecentMessages(limit = 8): ChatHistoryMessage[] {
   const rows = db
     .prepare(
       `
@@ -96,7 +30,7 @@ export function getRecentMessages(
       WHERE role IN ('user', 'assistant')
       ORDER BY id DESC
       LIMIT ?
-      `,
+      `
     )
     .all(limit) as ChatHistoryMessage[];
 

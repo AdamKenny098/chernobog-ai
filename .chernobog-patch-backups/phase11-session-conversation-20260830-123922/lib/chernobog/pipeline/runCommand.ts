@@ -172,7 +172,7 @@ export async function runCommandPipeline(
       { userMessage }
     );
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const vaultBrainResult = await executeVaultBrainCommand(userMessage);
 
@@ -197,7 +197,7 @@ export async function runCommandPipeline(
       { userMessage }
     );
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const contentReviewResult = await executeContentReviewCommand(userMessage);
 
@@ -222,7 +222,7 @@ export async function runCommandPipeline(
       { userMessage }
     );
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const contentIngestResult = await executeContentIngestCommand(userMessage);
 
@@ -247,7 +247,7 @@ export async function runCommandPipeline(
       { userMessage }
     );
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const youtubeIngestResult = await executeYouTubeIngestCommand(userMessage);
 
@@ -272,7 +272,7 @@ export async function runCommandPipeline(
       { userMessage }
     );
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const reliabilityResult =
       await executeSavedContentReliabilityCommand(userMessage);
@@ -300,7 +300,7 @@ export async function runCommandPipeline(
       }
     );
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const youtubeOAuthResult = await executeYouTubeOAuthCommand(userMessage);
 
@@ -327,7 +327,7 @@ export async function runCommandPipeline(
       }
     );
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const savedContentResult = await executeSavedContentCommand(userMessage);
 
@@ -348,7 +348,7 @@ export async function runCommandPipeline(
 
     addTraceStep(trace, "memory_route", "Memory wipe request detected");
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const deletedCount = clearAllMemories();
 
@@ -362,7 +362,7 @@ export async function runCommandPipeline(
 
     addTraceStep(trace, "memory_route", "Memory forget request detected");
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const fact = extractForgetFact(userMessage);
 
@@ -377,7 +377,7 @@ export async function runCommandPipeline(
 
     addTraceStep(trace, "memory_route", "Memory remember request detected");
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const fact = extractMemoryFact(userMessage);
 
@@ -396,7 +396,7 @@ export async function runCommandPipeline(
 
     addTraceStep(trace, "memory_route", "Memory recall request detected");
 
-    saveMessage("user", userMessage, route, sessionId);
+    saveMessage("user", userMessage, route);
 
     const memories = getMemories(50);
 
@@ -422,7 +422,7 @@ export async function runCommandPipeline(
         continuityQuery
       );
 
-      saveMessage("user", userMessage, route, sessionId);
+      saveMessage("user", userMessage, route);
 
       reply = buildContinuityReply(continuityQuery, session);
 
@@ -445,7 +445,7 @@ export async function runCommandPipeline(
         unifiedCommand
       );
     
-      saveMessage("user", userMessage, route, sessionId);
+      saveMessage("user", userMessage, route);
     
       reply = formatCommandLanguageHelp();
     
@@ -471,7 +471,7 @@ export async function runCommandPipeline(
     
       route = moduleFollowUp.route;
       setTraceRoute(trace, route);
-      saveMessage("user", userMessage, route, sessionId);
+      saveMessage("user", userMessage, route);
       reply = moduleFollowUp.reply;
     
       return finalizePipelinePayload(sessionId, route, reply, trace);
@@ -502,7 +502,7 @@ export async function runCommandPipeline(
     
       route = moduleResult.route;
       setTraceRoute(trace, route);
-      saveMessage("user", userMessage, route, sessionId);
+      saveMessage("user", userMessage, route);
       reply = moduleResult.reply;
     
       addTraceStep(
@@ -533,7 +533,7 @@ if (unifiedMemoryAction) {
     unifiedMemoryAction
   );
 
-  saveMessage("user", userMessage, route, sessionId);
+  saveMessage("user", userMessage, route);
 
   if (unifiedMemoryAction.kind === "wipe") {
     const deletedCount = clearAllMemories();
@@ -595,7 +595,7 @@ if (unifiedMemoryAction) {
       );
 
       const storedMemories = getMemories(50);
-      const recentMessages = getRecentMessages(sessionId, 12);
+      const recentMessages = getRecentMessages(12);
 
       const memoryReply = runMemoryArchitectureCommand(memoryArchitectureCommand, {
         session,
@@ -604,7 +604,7 @@ if (unifiedMemoryAction) {
         userMessage,
       });
 
-      saveMessage("user", userMessage, route, sessionId);
+      saveMessage("user", userMessage, route);
 
       reply = memoryReply ?? "No memory architecture response was produced.";
 
@@ -627,7 +627,7 @@ if (unifiedMemoryAction) {
         plannerCommand
       );
 
-      saveMessage("user", userMessage, route, sessionId);
+      saveMessage("user", userMessage, route);
       saveSessionContext(session);
 
       reply = plannerReply;
@@ -682,7 +682,7 @@ if (unifiedMemoryAction) {
         }
       );
 
-      saveMessage("user", userMessage, route, sessionId);
+      saveMessage("user", userMessage, route);
 
       reply = execution.response;
 
@@ -713,7 +713,7 @@ if (unifiedMemoryAction) {
         }
       );
 
-      saveMessage("user", userMessage, route, sessionId);
+      saveMessage("user", userMessage, route);
 
       const normalizedToolCall = normalizeToolCall(unifiedToolCall);
 
@@ -800,7 +800,7 @@ if (unifiedMemoryAction) {
           orchestration.reply
         );
 
-        saveMessage("user", userMessage, route, sessionId);
+        saveMessage("user", userMessage, route);
 
         reply = orchestration.reply;
         saveSessionContext(session);
@@ -826,7 +826,7 @@ if (unifiedMemoryAction) {
             parsedToolCommand.input
           );
 
-          saveMessage("user", userMessage, route, sessionId);
+          saveMessage("user", userMessage, route);
 
           const normalizedToolCall = normalizeToolCall(parsedToolCommand);
 
@@ -910,7 +910,7 @@ if (unifiedMemoryAction) {
             setTraceRoute(trace, route);
             setTraceTool(trace, toolIntent.tool);
 
-            saveMessage("user", userMessage, route, sessionId);
+            saveMessage("user", userMessage, route);
 
             const normalizedToolCall = normalizeToolCall(toolIntent);
 
@@ -989,7 +989,7 @@ if (unifiedMemoryAction) {
               userMessage
             );
 
-            saveMessage("user", userMessage, route, sessionId);
+            saveMessage("user", userMessage, route);
 
             const fallbackReply = await tryFileSearchFallback(
               userMessage,
@@ -1011,11 +1011,11 @@ if (unifiedMemoryAction) {
               route
             );
 
-            saveMessage("user", userMessage, route, sessionId);
+            saveMessage("user", userMessage, route);
 
             const activeSession = getSessionContext(sessionId);
             const storedMemories = getMemories(12);
-            const recentMessages = getRecentMessages(sessionId, 8);
+            const recentMessages = getRecentMessages(8);
 
             const memoryContext = await buildUnifiedMemoryContext({
               session: activeSession,

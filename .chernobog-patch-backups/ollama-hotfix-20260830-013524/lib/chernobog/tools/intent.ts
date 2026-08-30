@@ -1,4 +1,4 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 import {
   generateWithReliableOllama as generateWithOllama,
 } from "../llm/reliableOllama";
@@ -102,6 +102,7 @@ export async function classifyToolIntent(message: string): Promise<ToolIntent> {
     role: "default",
     prompt,
     temperature: 0,
+    timeoutMs: 30_000,
     format: "json",
   });
 
