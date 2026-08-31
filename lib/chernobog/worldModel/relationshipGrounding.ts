@@ -270,53 +270,140 @@ function repositoryProjection(
   };
 }
 
+// CHERNOBOG_MODEL_ASSIGNMENT_DEPENDENCY_GROUNDING_V1
+function recordObject(
+  value: unknown,
+): Record<string, unknown> | undefined {
+  if (
+    !value ||
+    typeof value !== "object" ||
+    Array.isArray(value)
+  ) {
+    return undefined;
+  }
+  return value as Record<string, unknown>;
+}
+
+function nonEmptyString(
+  value: unknown,
+): string | undefined {
+  if (typeof value !== "string") {
+    return undefined;
+  }
+  const trimmed = value.trim();
+  return trimmed || undefined;
+}
+
+function canonicalModelEntityId(
+  value: unknown,
+): string | undefined {
+  const text = nonEmptyString(value);
+  if (!text) return undefined;
+  const candidate = `model:${text.toLowerCase()}`;
+  return /^[a-z0-9][a-z0-9._:-]*$/.test(candidate)
+    ? candidate
+    : undefined;
+}
+
+function canonicalRoleEntityId(
+  value: unknown,
+): string | undefined {
+  const text = nonEmptyString(value);
+  if (!text) return undefined;
+  const candidate = `model-role:${text.toLowerCase()}`;
+  return /^[a-z0-9][a-z0-9._:-]*$/.test(candidate)
+    ? candidate
+    : undefined;
+}
+
 function modelProjection(
   record: WorldStateRecord,
   parts: string[],
 ): WorldModelProjection {
-  const modelName =
-    parts[1];
+  const modelName = parts[1];
 
   if (!modelName) {
     return {
       sourceKey: record.key,
-      entities: [
-        worldModelEntityFromWorldState(
-          record,
-        ),
-      ],
+      entities: [worldModelEntityFromWorldState(record)],
       relationships: [],
     };
   }
 
-  const modelId =
-    `model:${modelName}`;
+  const modelId = `model:${modelName}`;
+  const factId = `world-state:${record.key}`;
 
-  const factId =
-    `world-state:${record.key}`;
+  const entities: WorldModelEntityInput[] = [
+    canonicalEntity(modelId, "model", modelName, record),
+    worldModelEntityFromWorldState(record),
+  ];
 
-  return {
-    sourceKey: record.key,
-    entities: [
+  const relationships: WorldModelRelationshipInput[] = [
+    relationship("has-state", modelId, factId, record),
+  ];
+
+  const isRoleAssignment =
+    modelName === "role" &&
+    parts.length >= 4 &&
+    parts[3] === "assignment";
+
+  if (!isRoleAssignment) {
+    return { sourceKey: record.key, entities, relationships };
+  }
+
+  const assignment = recordObject(record.value);
+  if (!assignment) {
+    return { sourceKey: record.key, entities, relationships };
+  }
+
+  const roleName =
+    nonEmptyString(assignment.role) ??
+    nonEmptyString(parts[2]);
+  const roleId = canonicalRoleEntityId(roleName);
+
+  const concreteModelName =
+    nonEmptyString(assignment.matchedInstalledModel) ??
+    nonEmptyString(assignment.configuredModel);
+  const concreteModelId = canonicalModelEntityId(concreteModelName);
+
+  const providerName = nonEmptyString(assignment.providerId);
+  const providerId = canonicalModelEntityId(providerName);
+
+  if (roleId && roleName) {
+    entities.push(
+      canonicalEntity(roleId, "model", `${roleName} role`, record),
+    );
+    relationships.push(
+      relationship("has-role", modelId, roleId, record),
+      relationship("has-state", roleId, factId, record),
+    );
+  }
+
+  if (roleId && concreteModelId && concreteModelName) {
+    entities.push(
       canonicalEntity(
-        modelId,
+        concreteModelId,
         "model",
-        modelName,
+        concreteModelName,
         record,
       ),
-      worldModelEntityFromWorldState(
-        record,
-      ),
-    ],
-    relationships: [
-      relationship(
-        "has-state",
-        modelId,
-        factId,
-        record,
-      ),
-    ],
-  };
+    );
+    relationships.push(
+      relationship("requires-model", roleId, concreteModelId, record),
+    );
+  }
+
+  if (
+    concreteModelId &&
+    providerId &&
+    concreteModelId !== providerId
+  ) {
+    relationships.push(
+      relationship("served-by", concreteModelId, providerId, record),
+    );
+  }
+
+  return { sourceKey: record.key, entities, relationships };
 }
 
 function infrastructureProjection(

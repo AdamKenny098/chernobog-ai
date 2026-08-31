@@ -1,5 +1,9 @@
 import { respondForRoute, routeMessage } from "@/lib/chernobog/router";
 import {
+  associateExplicitLearningCorrection,
+  captureLiveLearningIngress,
+} from "@/lib/chernobog/pipeline/liveLearningIngress";
+import {
   clearAllMemories,
   deleteMemory,
   extractForgetFact,
@@ -48,6 +52,8 @@ import {
   setTraceTool,
 } from "@/lib/chernobog/trust/trace";
 
+import { buildChernobogWorldStateContext } from "@/lib/chernobog/pipeline/worldStateContext";
+import { buildChernobogWorldModelContext } from "@/lib/chernobog/pipeline/worldModelContext";
 import { buildWorkflowSnapshot } from "@/lib/chernobog/trust/sessionSnapshot";
 import {
   buildContinuityReply,
@@ -57,6 +63,10 @@ import {
 import { parsePlannerCommand } from "@/lib/chernobog/planner/parser";
 import { runPlannerCommand } from "@/lib/chernobog/planner/coordinator";
 import { buildUnifiedMemoryContext } from "@/lib/chernobog/memory-architecture";
+import {
+  buildProjectGroundedSystemText,
+  resolveActiveProjectContext,
+} from "@/lib/chernobog/project/activeProjectContext";
 import {
   buildExecutionDiagnostics,
   executeFromMessage,
@@ -122,6 +132,35 @@ type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {
   executionState?: ExecutionState;
 };
 
+function shouldUseAuthoritativeAssessmentContext(
+  userMessage: string,
+  projectId?: string | null
+): boolean {
+  if (!projectId) {
+    return false;
+  }
+
+  const normalized = userMessage
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const asksForAssessment =
+    /\b(assess|assessment|evaluate|evaluation|status|state|health|healthy|attention|facts?|inferences?|predictions?|unknowns?|recommend(?:ed|ation)?s?|actions?)\b/i.test(
+      normalized
+    );
+
+  const asksForCurrentAuthority =
+    /\b(current|active|project|workspace|runtime|world state|evidence|known|scope|scoped)\b/i.test(
+      normalized
+    );
+
+  return (
+    asksForAssessment &&
+    asksForCurrentAuthority
+  );
+}
+
 export async function runCommandPipeline(
   userMessage: string,
   sessionId: string
@@ -132,6 +171,20 @@ export async function runCommandPipeline(
 
   const startingSession = getSessionContext(sessionId);
 
+
+  const activeProjectResolution = resolveActiveProjectContext({
+    userMessage,
+    sessionProjectId: startingSession.activeProjectId,
+  });
+
+  if (
+    startingSession.activeProjectId !==
+    activeProjectResolution.projectId
+  ) {
+    startingSession.activeProjectId =
+      activeProjectResolution.projectId;
+    saveSessionContext(startingSession);
+  }
   addTraceStep(
     trace,
     "workflow_update",
@@ -1017,12 +1070,37 @@ if (unifiedMemoryAction) {
             const storedMemories = getMemories(12);
             const recentMessages = getRecentMessages(sessionId, 8);
 
+            const worldStateContext =
+              await buildChernobogWorldStateContext({
+                projectId:
+                  activeSession.activeProjectId ??
+                  undefined,
+              });
+
+            const worldModelContext =
+              await buildChernobogWorldModelContext();
+
+            const authoritativeAssessment =
+              shouldUseAuthoritativeAssessmentContext(
+                userMessage,
+                activeSession.activeProjectId
+              );
+
+            const modelRecentMessages =
+              authoritativeAssessment
+                ? recentMessages.filter(
+                    (message) =>
+                      message.role !== "assistant"
+                  )
+                : recentMessages;
+
             const memoryContext = await buildUnifiedMemoryContext({
               session: activeSession,
               persistedMemories: storedMemories,
-              recentMessages,
+              recentMessages: modelRecentMessages,
               userMessage,
-            });
+            projectId: activeSession.activeProjectId ?? undefined,
+  });
 
             addTraceStep(
               trace,
@@ -1036,10 +1114,28 @@ if (unifiedMemoryAction) {
               }
             );
 
+            await associateExplicitLearningCorrection({
+              userMessage,
+              sessionId,
+              projectId:
+                activeSession.activeProjectId ??
+                undefined,
+            });
+
             reply = await respondForRoute(route, userMessage, {
               memories: storedMemories,
-              recentMessages,
-              sessionSummary: memoryContext.systemText,
+              recentMessages: modelRecentMessages,
+              sessionSummary: buildProjectGroundedSystemText(
+      [
+                  [memoryContext.systemText, worldStateContext.systemText]
+                    .filter(Boolean)
+                    .join("\n\n"),
+                  worldModelContext.systemText,
+                ]
+                  .filter(Boolean)
+                  .join("\n\n"),
+      activeSession.activeProjectId,
+    ),
             });
 
             updateSessionAfterRoute(activeSession, route);
@@ -1049,6 +1145,15 @@ if (unifiedMemoryAction) {
       }
     
   }
+
+  await captureLiveLearningIngress({
+    sessionId,
+    projectId:
+      getSessionContext(
+        sessionId,
+      ).activeProjectId ??
+      undefined,
+  });
 
   return finalizePipelinePayload(sessionId, route, reply, trace);
 }

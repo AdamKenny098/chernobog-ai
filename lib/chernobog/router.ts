@@ -8,6 +8,14 @@ import type {
   ModelRole,
 } from "./llm/modelRouter";
 
+import {
+  buildWorldModelRepairPrompt,
+  shouldValidateWorldModelResponse,
+  validateWorldModelResponse,
+} from "./worldModel/responseValidation";
+
+const ROUTED_RESPONSE_NUM_PREDICT = 2048;
+
 export type RouteName = "chat" | "planner" | "memory" | "tools" | "guardian";
 
 export type OllamaMessage = OllamaChatMessage;
@@ -17,6 +25,66 @@ type ResponseContext = {
   recentMessages?: OllamaMessage[];
   sessionSummary?: string;
 };
+
+
+const WORLD_MODEL_CRITICAL_START =
+  "WORLD MODEL CRITICAL DEPENDENCY BACKBONE";
+
+const WORLD_MODEL_VERBOSE_START =
+  "World Model entities (current evidence first; historical tail explicitly labelled):";
+
+function extractCriticalWorldModelReinforcement(
+  sessionSummary?: string,
+): string | null {
+  if (!sessionSummary) {
+    return null;
+  }
+
+  const start =
+    sessionSummary.indexOf(
+      WORLD_MODEL_CRITICAL_START,
+    );
+
+  if (start < 0) {
+    return null;
+  }
+
+  const verboseStart =
+    sessionSummary.indexOf(
+      WORLD_MODEL_VERBOSE_START,
+      start,
+    );
+
+  const criticalEvidence =
+    sessionSummary
+      .slice(
+        start,
+        verboseStart >= 0
+          ? verboseStart
+          : undefined,
+      )
+      .trim();
+
+  if (!criticalEvidence) {
+    return null;
+  }
+
+  return [
+    "FINAL AUTHORITATIVE WORLD MODEL EVIDENCE:",
+    "The following block is a verbatim reinforcement of the canonical 11J critical evidence already present earlier in the system context.",
+    "Use this block as the highest-priority source for World Model relationships, dependencies, consequences, prediction status, and missing-model claims.",
+    "",
+    criticalEvidence,
+    "",
+    "FINAL WORLD MODEL ANSWER CONTRACT:",
+    "- DEPENDENCIES: only explicit dependency relationships such as requires-model and served-by are dependencies. has-state and has-role are not dependency edges.",
+    "- CONSEQUENCES: use the precomputed impactSource assessments. If model:ollama has listed direct or transitive dependents, do not say that no Ollama dependency path exists.",
+    "- PROVIDERS: preserve every explicit served-by edge and every complete DEPENDENCY_CHAIN.",
+    "- PREDICTIONS: if SUPPORTED_PREDICTION_STATUS=none, answer exactly: No supported predictions.",
+    "- MISSING MODEL: never claim an entity, relationship, provider edge, or dependency chain is missing when it appears in the reinforced evidence.",
+    "- CONCLUSION: if RELATIONAL_STATUS=substantive, do not emit any conclusion that the World Model lacks substantive relational evidence.",
+  ].join("\n");
+}
 
 const BASE_IDENTITY = `
 You are the core intelligence of a fictional personal AI system named Chernobog.
@@ -190,16 +258,122 @@ export async function respondForRoute(
     messages.push(...context.recentMessages);
   }
 
+  if (
+    context.sessionSummary &&
+    context.recentMessages &&
+    context.recentMessages.length > 0
+  ) {
+    messages.push({
+      role: "system",
+      content: [
+        "Authoritative context precedence:",
+        "The current runtime/session context supplied above is newer and more authoritative than earlier assistant statements in conversation history.",
+        "If an earlier assistant response conflicts with current runtime state, project state, scoped memory, or current user instructions, disregard the stale assistant response.",
+        "Do not repeat an earlier claim that information is missing when the current authoritative context now supplies that information.",
+      ].join("\n"),
+    });
+  }
+
+
+
+  const worldModelReinforcement =
+    extractCriticalWorldModelReinforcement(
+      context.sessionSummary,
+    );
+
+  if (worldModelReinforcement) {
+    messages.push({
+      role: "system",
+      content: worldModelReinforcement,
+    });
+  }
+
+
   messages.push({
     role: "user",
     content: userMessage,
   });
 
-  return callOllama(
-    messages,
-    {
-      role: roleForRoute(route),
-    },
-  );
+  const initialReply =
+    await callOllama(
+      messages,
+      {
+        role:
+          roleForRoute(route),
+        numPredict:
+          ROUTED_RESPONSE_NUM_PREDICT,
+      },
+    );
+
+  if (
+    !shouldValidateWorldModelResponse(
+      userMessage,
+      context.sessionSummary,
+    )
+  ) {
+    return initialReply;
+  }
+
+  const validation =
+    await validateWorldModelResponse(
+      userMessage,
+      initialReply,
+    );
+
+  if (validation.valid) {
+    return initialReply;
+  }
+
+  try {
+    const repairedReply =
+      await callOllama(
+        [
+          {
+            role: "system",
+            content: [
+              "You are the Chernobog grounded World Model response repair pass.",
+              "Repair only semantic grounding errors identified by the validator.",
+              "Canonical 11J evidence below is authoritative.",
+              "Do not execute tools or claim that any tool was executed.",
+            ].join("\n"),
+          },
+          {
+            role: "system",
+            content:
+              validation.canonicalEvidenceText,
+          },
+          {
+            role: "user",
+            content:
+              buildWorldModelRepairPrompt(
+                userMessage,
+                initialReply,
+                validation,
+              ),
+          },
+        ],
+        {
+          role:
+            roleForRoute(route),
+          temperature: 0.1,
+          numPredict:
+            ROUTED_RESPONSE_NUM_PREDICT,
+        },
+      );
+
+    const repairedValidation =
+      await validateWorldModelResponse(
+        userMessage,
+        repairedReply,
+      );
+
+    if (repairedValidation.valid) {
+      return repairedReply;
+    }
+
+    return repairedValidation.fallbackText;
+  } catch {
+    return validation.fallbackText;
+  }
 }
 

@@ -57,6 +57,7 @@ function createEmptySession(sessionId: string): SessionContext {
     pendingDisambiguation: null,
     workflow: createDefaultWorkflow(),
     activePlan: null,
+    activeProjectId: null,
   };
 }
 

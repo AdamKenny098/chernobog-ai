@@ -1,4 +1,4 @@
-import type { LearningPatternCandidate } from "./patternTypes";
+import type { LearningPatternCandidate, LearningPatternScope } from "./patternTypes";
 export type LearningPromotionDecision = "promote" | "hold" | "reject";
 export type LearningLessonStatus = "active" | "revoked";
 export type LearningGovernanceAuthority = "system-policy" | "user-approved" | "operator-approved";
@@ -7,4 +7,4 @@ export interface LearningPromotionContext { authority:LearningGovernanceAuthorit
 export type LearningPromotionReasonCode = "support-sufficient"|"support-insufficient"|"confidence-sufficient"|"confidence-insufficient"|"contradiction-acceptable"|"contradiction-excessive"|"approval-required"|"approval-present"|"eligible-for-promotion";
 export interface LearningPromotionReason { code:LearningPromotionReasonCode; detail:string; }
 export interface LearningPromotionAssessment { patternKey:string; decision:LearningPromotionDecision; reasons:LearningPromotionReason[]; }
-export interface LearnedLesson { id:string; key:string; kind:LearningPatternCandidate["kind"]; statement:string; status:LearningLessonStatus; confidence:number; supportCount:number; contradictionCount:number; promotedAt:string; revokedAt?:string; revocationReason?:string; governance:{authority:LearningGovernanceAuthority;approved:boolean;approvedBy?:string;approvedAt?:string}; evidence:LearningPatternCandidate["evidence"]; sourcePattern:LearningPatternCandidate; }
+export interface LearnedLesson { id:string; key:string; kind:LearningPatternCandidate["kind"]; statement:string; status:LearningLessonStatus; scope?:LearningPatternScope; projectId?:string; confidence:number; supportCount:number; contradictionCount:number; promotedAt:string; revokedAt?:string; revocationReason?:string; governance:{authority:LearningGovernanceAuthority;approved:boolean;approvedBy?:string;approvedAt?:string}; evidence:LearningPatternCandidate["evidence"]; sourcePattern:LearningPatternCandidate; }

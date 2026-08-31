@@ -50,6 +50,78 @@ import type {
   LearningRuntimeSnapshot,
 } from "./runtimeTypes";
 
+function projectIdFromEvaluatedExperience(
+  value: EvaluatedLearningExperience,
+): string | undefined {
+  const candidate =
+    value.experience.context.projectId;
+
+  if (typeof candidate !== "string") {
+    return undefined;
+  }
+
+  const normalized =
+    candidate.trim();
+
+  return normalized || undefined;
+}
+
+function scopedPatternCandidate(
+  candidate: ReturnType<
+    typeof extractLearningPatterns
+  >["candidates"][number],
+  projectId?: string,
+) {
+  if (!projectId) {
+    return {
+      ...candidate,
+      scope:
+        "global" as const,
+      projectId:
+        undefined,
+    };
+  }
+
+  const scopedKey =
+    `project:${projectId}:${candidate.key}`;
+
+  return {
+    ...candidate,
+    id:
+      `pattern:${scopedKey}`,
+    key:
+      scopedKey,
+    scope:
+      "project" as const,
+    projectId,
+  };
+}
+
+function lessonMatchesProjectScope(
+  lesson: {
+    scope?: "global" | "project";
+    projectId?: string;
+  },
+  projectId?: string,
+): boolean {
+  if (lesson.scope === "global") {
+    return true;
+  }
+
+  if (lesson.scope !== "project") {
+    return false;
+  }
+
+  const normalizedProjectId =
+    projectId?.trim();
+
+  return Boolean(
+    normalizedProjectId &&
+    lesson.projectId ===
+      normalizedProjectId,
+  );
+}
+
 export class ChernobogLearningRuntime {
   readonly experiences =
     new ChernobogLearningExperienceStore();
@@ -105,11 +177,15 @@ export class ChernobogLearningRuntime {
 
   captureCognitiveCycle(
     cycle: CognitiveRuntimeCycle,
+    scope: {
+      projectId?: string;
+    } = {},
   ) {
     const experience =
       learningExperienceFromCognitiveCycle(
         cycle,
         this.clock(),
+        scope,
       );
 
     this.experiences.upsert(
@@ -181,20 +257,74 @@ export class ChernobogLearningRuntime {
             Boolean(value),
         );
 
-    const result =
-      extractLearningPatterns(
-        evaluated,
-      );
+    const partitions =
+      new Map<
+        string,
+        {
+          projectId?: string;
+          evaluations:
+            EvaluatedLearningExperience[];
+        }
+      >();
+
+    for (
+      const value
+      of evaluated
+    ) {
+      const projectId =
+        projectIdFromEvaluatedExperience(
+          value,
+        );
+
+      const partitionKey =
+        projectId
+          ? `project:${projectId}`
+          : "global";
+
+      const existing =
+        partitions.get(
+          partitionKey,
+        );
+
+      if (existing) {
+        existing.evaluations.push(
+          value,
+        );
+      } else {
+        partitions.set(
+          partitionKey,
+          {
+            projectId,
+            evaluations: [
+              value,
+            ],
+          },
+        );
+      }
+    }
 
     this.patterns.clear();
 
     for (
-      const candidate
-      of result.candidates
+      const partition
+      of partitions.values()
     ) {
-      this.patterns.upsert(
-        candidate,
-      );
+      const result =
+        extractLearningPatterns(
+          partition.evaluations,
+        );
+
+      for (
+        const candidate
+        of result.candidates
+      ) {
+        this.patterns.upsert(
+          scopedPatternCandidate(
+            candidate,
+            partition.projectId,
+          ),
+        );
+      }
     }
   }
 
@@ -268,23 +398,46 @@ export class ChernobogLearningRuntime {
     );
   }
 
+  private activeLessonsForScope(
+    projectId?: string,
+  ) {
+    return this.lessons
+      .list({
+        activeOnly: true,
+      })
+      .filter(
+        (lesson) =>
+          lessonMatchesProjectScope(
+            lesson,
+            projectId,
+          ),
+      );
+  }
+
   adaptSignal(
     signal:
       CognitiveAttentionSignal,
+    scope: {
+      projectId?: string;
+    } = {},
   ) {
     return adaptAttentionWithLessons(
       signal,
-      this.lessons.list({
-        activeOnly: true,
-      }),
+      this.activeLessonsForScope(
+        scope.projectId,
+      ),
     );
   }
 
-  guidance(): string[] {
+  guidance(
+    scope: {
+      projectId?: string;
+    } = {},
+  ): string[] {
     return activeLessonGuidance(
-      this.lessons.list({
-        activeOnly: true,
-      }),
+      this.activeLessonsForScope(
+        scope.projectId,
+      ),
     );
   }
 

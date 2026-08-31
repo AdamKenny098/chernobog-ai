@@ -1,0 +1,601 @@
+﻿CHERNOBOG PHASE 11 CONTEXT INTEGRATION SOURCE DIAGNOSTIC
+Generated: 2026-08-31T23:32:08.6125154+01:00
+
+============================================================
+.\lib\chernobog\pipeline\runCommand.ts lines 1040-1145
+============================================================
+ 1040:               "vague_file_fallback",
+ 1041:               "Vague file request fallback triggered",
+ 1042:               userMessage
+ 1043:             );
+ 1044: 
+ 1045:             saveMessage("user", userMessage, route, sessionId);
+ 1046: 
+ 1047:             const fallbackReply = await tryFileSearchFallback(
+ 1048:               userMessage,
+ 1049:               sessionId,
+ 1050:               /\bopen\b/i.test(userMessage) ? "open_file" : "read_text_file"
+ 1051:             );
+ 1052: 
+ 1053:             reply =
+ 1054:               fallbackReply ??
+ 1055:               "I could not confidently resolve that to a real file. Give me the filename, a clearer query, or ask me to search for it first.";
+ 1056:           } else {
+ 1057:             route = await routeMessage(userMessage);
+ 1058:             setTraceRoute(trace, route);
+ 1059: 
+ 1060:             addTraceStep(
+ 1061:               trace,
+ 1062:               "router",
+ 1063:               "Falling back to normal message router",
+ 1064:               route
+ 1065:             );
+ 1066: 
+ 1067:             saveMessage("user", userMessage, route, sessionId);
+ 1068: 
+ 1069:             const activeSession = getSessionContext(sessionId);
+ 1070:             const storedMemories = getMemories(12);
+ 1071:             const recentMessages = getRecentMessages(sessionId, 8);
+ 1072: 
+ 1073:             const worldStateContext =
+ 1074:               await buildChernobogWorldStateContext({
+ 1075:                 projectId:
+ 1076:                   activeSession.activeProjectId ??
+ 1077:                   undefined,
+ 1078:               });
+ 1079: 
+ 1080:             const worldModelContext =
+ 1081:               await buildChernobogWorldModelContext();
+ 1082: 
+ 1083:             const authoritativeAssessment =
+ 1084:               shouldUseAuthoritativeAssessmentContext(
+ 1085:                 userMessage,
+ 1086:                 activeSession.activeProjectId
+ 1087:               );
+ 1088: 
+ 1089:             const modelRecentMessages =
+ 1090:               authoritativeAssessment
+ 1091:                 ? recentMessages.filter(
+ 1092:                     (message) =>
+ 1093:                       message.role !== "assistant"
+ 1094:                   )
+ 1095:                 : recentMessages;
+ 1096: 
+ 1097:             const memoryContext = await buildUnifiedMemoryContext({
+ 1098:               session: activeSession,
+ 1099:               persistedMemories: storedMemories,
+ 1100:               recentMessages: modelRecentMessages,
+ 1101:               userMessage,
+ 1102:             projectId: activeSession.activeProjectId ?? undefined,
+ 1103:   });
+ 1104: 
+ 1105:             addTraceStep(
+ 1106:               trace,
+ 1107:               "workflow_update",
+ 1108:               "Layered memory context built for routed response",
+ 1109:               undefined,
+ 1110:               {
+ 1111:                 shortTermEntries: memoryContext.shortTerm.lines.length,
+ 1112:                 workingEntries: memoryContext.working.lines.length,
+ 1113:                 longTermEntries: memoryContext.longTerm.lines.length,
+ 1114:               }
+ 1115:             );
+ 1116: 
+ 1117:             await associateExplicitLearningCorrection({
+ 1118:               userMessage,
+ 1119:               sessionId,
+ 1120:               projectId:
+ 1121:                 activeSession.activeProjectId ??
+ 1122:                 undefined,
+ 1123:             });
+ 1124: 
+ 1125:             reply = await respondForRoute(route, userMessage, {
+ 1126:               memories: storedMemories,
+ 1127:               recentMessages: modelRecentMessages,
+ 1128:               sessionSummary: buildProjectGroundedSystemText(
+ 1129:       [
+ 1130:                   [memoryContext.systemText, worldStateContext.systemText]
+ 1131:                     .filter(Boolean)
+ 1132:                     .join("\n\n"),
+ 1133:                   worldModelContext.systemText,
+ 1134:                 ]
+ 1135:                   .filter(Boolean)
+ 1136:                   .join("\n\n"),
+ 1137:       activeSession.activeProjectId,
+ 1138:     ),
+ 1139:             });
+ 1140: 
+ 1141:             updateSessionAfterRoute(activeSession, route);
+ 1142:             saveSessionContext(activeSession);
+ 1143:           }
+ 1144:         }
+ 1145:       }
+
+============================================================
+.\lib\chernobog\router.ts lines 1-90
+============================================================
+    1: import {
+    2:   generateWithReliableOllama as generateWithOllama,
+    3: } from "./llm/reliableOllama";
+    4: import type {
+    5:   OllamaChatMessage,
+    6: } from "./llm/ollamaClient";
+    7: import type {
+    8:   ModelRole,
+    9: } from "./llm/modelRouter";
+   10: 
+   11: import {
+   12:   buildWorldModelRepairPrompt,
+   13:   shouldValidateWorldModelResponse,
+   14:   validateWorldModelResponse,
+   15: } from "./worldModel/responseValidation";
+   16: 
+   17: const ROUTED_RESPONSE_NUM_PREDICT = 2048;
+   18: 
+   19: export type RouteName = "chat" | "planner" | "memory" | "tools" | "guardian";
+   20: 
+   21: export type OllamaMessage = OllamaChatMessage;
+   22: 
+   23: type ResponseContext = {
+   24:   memories?: string[];
+   25:   recentMessages?: OllamaMessage[];
+   26:   sessionSummary?: string;
+   27: };
+   28: 
+   29: 
+   30: const WORLD_MODEL_CRITICAL_START =
+   31:   "WORLD MODEL CRITICAL DEPENDENCY BACKBONE";
+   32: 
+   33: const WORLD_MODEL_VERBOSE_START =
+   34:   "World Model entities (current evidence first; historical tail explicitly labelled):";
+   35: 
+   36: function extractCriticalWorldModelReinforcement(
+   37:   sessionSummary?: string,
+   38: ): string | null {
+   39:   if (!sessionSummary) {
+   40:     return null;
+   41:   }
+   42: 
+   43:   const start =
+   44:     sessionSummary.indexOf(
+   45:       WORLD_MODEL_CRITICAL_START,
+   46:     );
+   47: 
+   48:   if (start < 0) {
+   49:     return null;
+   50:   }
+   51: 
+   52:   const verboseStart =
+   53:     sessionSummary.indexOf(
+   54:       WORLD_MODEL_VERBOSE_START,
+   55:       start,
+   56:     );
+   57: 
+   58:   const criticalEvidence =
+   59:     sessionSummary
+   60:       .slice(
+   61:         start,
+   62:         verboseStart >= 0
+   63:           ? verboseStart
+   64:           : undefined,
+   65:       )
+   66:       .trim();
+   67: 
+   68:   if (!criticalEvidence) {
+   69:     return null;
+   70:   }
+   71: 
+   72:   return [
+   73:     "FINAL AUTHORITATIVE WORLD MODEL EVIDENCE:",
+   74:     "The following block is a verbatim reinforcement of the canonical 11J critical evidence already present earlier in the system context.",
+   75:     "Use this block as the highest-priority source for World Model relationships, dependencies, consequences, prediction status, and missing-model claims.",
+   76:     "",
+   77:     criticalEvidence,
+   78:     "",
+   79:     "FINAL WORLD MODEL ANSWER CONTRACT:",
+   80:     "- DEPENDENCIES: only explicit dependency relationships such as requires-model and served-by are dependencies. has-state and has-role are not dependency edges.",
+   81:     "- CONSEQUENCES: use the precomputed impactSource assessments. If model:ollama has listed direct or transitive dependents, do not say that no Ollama dependency path exists.",
+   82:     "- PROVIDERS: preserve every explicit served-by edge and every complete DEPENDENCY_CHAIN.",
+   83:     "- PREDICTIONS: if SUPPORTED_PREDICTION_STATUS=none, answer exactly: No supported predictions.",
+   84:     "- MISSING MODEL: never claim an entity, relationship, provider edge, or dependency chain is missing when it appears in the reinforced evidence.",
+   85:     "- CONCLUSION: if RELATIONAL_STATUS=substantive, do not emit any conclusion that the World Model lacks substantive relational evidence.",
+   86:   ].join("\n");
+   87: }
+   88: 
+   89: const BASE_IDENTITY = `
+   90: You are the core intelligence of a fictional personal AI system named Chernobog.
+
+============================================================
+.\lib\chernobog\router.ts lines 226-325
+============================================================
+  226: export async function respondForRoute(
+  227:   route: RouteName,
+  228:   userMessage: string,
+  229:   context: ResponseContext = {}
+  230: ): Promise<string> {
+  231:   const messages: OllamaMessage[] = [
+  232:     {
+  233:       role: "system",
+  234:       content: ROUTE_PROMPTS[route],
+  235:     },
+  236:   ];
+  237: 
+  238:   if (context.memories && context.memories.length > 0) {
+  239:     messages.push({
+  240:       role: "system",
+  241:       content: [
+  242:         "Persisted user memories:",
+  243:         ...context.memories.map((memory) => `- ${memory}`),
+  244:         "Use these only when relevant.",
+  245:         "Never invent additional memories.",
+  246:       ].join("\n"),
+  247:     });
+  248:   }
+  249: 
+  250:   if (context.sessionSummary) {
+  251:     messages.push({
+  252:       role: "system",
+  253:       content: `Active short-term session context:\n${context.sessionSummary}`,
+  254:     });
+  255:   }
+  256: 
+  257:   if (context.recentMessages && context.recentMessages.length > 0) {
+  258:     messages.push(...context.recentMessages);
+  259:   }
+  260: 
+  261:   if (
+  262:     context.sessionSummary &&
+  263:     context.recentMessages &&
+  264:     context.recentMessages.length > 0
+  265:   ) {
+  266:     messages.push({
+  267:       role: "system",
+  268:       content: [
+  269:         "Authoritative context precedence:",
+  270:         "The current runtime/session context supplied above is newer and more authoritative than earlier assistant statements in conversation history.",
+  271:         "If an earlier assistant response conflicts with current runtime state, project state, scoped memory, or current user instructions, disregard the stale assistant response.",
+  272:         "Do not repeat an earlier claim that information is missing when the current authoritative context now supplies that information.",
+  273:       ].join("\n"),
+  274:     });
+  275:   }
+  276: 
+  277: 
+  278: 
+  279:   const worldModelReinforcement =
+  280:     extractCriticalWorldModelReinforcement(
+  281:       context.sessionSummary,
+  282:     );
+  283: 
+  284:   if (worldModelReinforcement) {
+  285:     messages.push({
+  286:       role: "system",
+  287:       content: worldModelReinforcement,
+  288:     });
+  289:   }
+  290: 
+  291: 
+  292:   messages.push({
+  293:     role: "user",
+  294:     content: userMessage,
+  295:   });
+  296: 
+  297:   const initialReply =
+  298:     await callOllama(
+  299:       messages,
+  300:       {
+  301:         role:
+  302:           roleForRoute(route),
+  303:         numPredict:
+  304:           ROUTED_RESPONSE_NUM_PREDICT,
+  305:       },
+  306:     );
+  307: 
+  308:   if (
+  309:     !shouldValidateWorldModelResponse(
+  310:       userMessage,
+  311:       context.sessionSummary,
+  312:     )
+  313:   ) {
+  314:     return initialReply;
+  315:   }
+  316: 
+  317:   const validation =
+  318:     await validateWorldModelResponse(
+  319:       userMessage,
+  320:       initialReply,
+  321:     );
+  322: 
+  323:   if (validation.valid) {
+  324:     return initialReply;
+  325:   }
+
+============================================================
+.\lib\chernobog\memory.ts lines 1-110
+============================================================
+    1: import db from "@/lib/chernobog/db";
+    2: 
+    3: export type ChatHistoryMessage = {
+    4:   role: "user" | "assistant";
+    5:   content: string;
+    6: };
+    7: 
+    8: function normalizeText(value: string): string {
+    9:   return value.replace(/\s+/g, " ").trim();
+   10: }
+   11: 
+   12: export function saveMessage(
+   13:   role: string,
+   14:   content: string,
+   15:   route?: string,
+   16:   sessionId?: string,
+   17: ) {
+   18:   const clean = normalizeText(content);
+   19:   if (!clean) return;
+   20: 
+   21:   const cleanSessionId =
+   22:     sessionId?.trim() || null;
+   23: 
+   24:   db.prepare(
+   25:     `
+   26:     INSERT INTO messages (
+   27:       role,
+   28:       content,
+   29:       route,
+   30:       session_id
+   31:     )
+   32:     VALUES (?, ?, ?, ?)
+   33:     `,
+   34:   ).run(
+   35:     role,
+   36:     clean,
+   37:     route ?? null,
+   38:     cleanSessionId,
+   39:   );
+   40: }
+   41: 
+   42: export function getRecentMessages(
+   43:   sessionId: string,
+   44:   limit?: number,
+   45: ): ChatHistoryMessage[];
+   46: export function getRecentMessages(
+   47:   limit?: number,
+   48: ): ChatHistoryMessage[];
+   49: export function getRecentMessages(
+   50:   sessionIdOrLimit: string | number = 8,
+   51:   maybeLimit = 8,
+   52: ): ChatHistoryMessage[] {
+   53:   if (typeof sessionIdOrLimit === "string") {
+   54:     const sessionId = sessionIdOrLimit.trim();
+   55:     if (!sessionId) {
+   56:       return [];
+   57:     }
+   58: 
+   59:     const limit = Math.max(
+   60:       1,
+   61:       Math.min(100, Math.trunc(maybeLimit)),
+   62:     );
+   63: 
+   64:     const rows = db
+   65:       .prepare(
+   66:         `
+   67:         SELECT role, content
+   68:         FROM messages
+   69:         WHERE role IN ('user', 'assistant')
+   70:           AND session_id = ?
+   71:         ORDER BY id DESC
+   72:         LIMIT ?
+   73:         `,
+   74:       )
+   75:       .all(
+   76:         sessionId,
+   77:         limit,
+   78:       ) as ChatHistoryMessage[];
+   79: 
+   80:     return rows.reverse();
+   81:   }
+   82: 
+   83:   const limit = Math.max(
+   84:     1,
+   85:     Math.min(
+   86:       100,
+   87:       Math.trunc(sessionIdOrLimit),
+   88:     ),
+   89:   );
+   90: 
+   91:   const rows = db
+   92:     .prepare(
+   93:       `
+   94:       SELECT role, content
+   95:       FROM messages
+   96:       WHERE role IN ('user', 'assistant')
+   97:       ORDER BY id DESC
+   98:       LIMIT ?
+   99:       `,
+  100:     )
+  101:     .all(limit) as ChatHistoryMessage[];
+  102: 
+  103:   return rows.reverse();
+  104: }
+  105: 
+  106: export function saveMemory(fact: string): { saved: boolean; fact: string } {
+  107:   const clean = normalizeText(fact);
+  108:   if (!clean) {
+  109:     return { saved: false, fact: "" };
+  110:   }
+
+WARNING: buildProjectGroundedSystemText not found.
+
+============================================================
+.\lib\chernobog\pipeline\worldModelContext.ts lines 850-1020
+============================================================
+  850:       };
+  851:     }
+  852: 
+  853:     const sections: string[] = [
+  854:       "Canonical World Model (11J, derived/read-only evidence):",
+  855:       `- generatedAt: ${snapshot.generatedAt}`,
+  856:       `- entities: ${snapshot.graph.entities.length}`,
+  857:       `- relationships: ${snapshot.graph.relationships.length}`,
+  858:       `- predictions stored: ${snapshot.predictions.length}`,
+  859:       `- supported predictions exposed: ${supportedPredictions.length}`,
+  860:       `- insufficient predictions stored: ${insufficientPredictionCount}`,
+  861:       `- RELATIONAL_STATUS: ${explicitDependencyRelationships.length > 0 ? "substantive" : "none"}`,
+  862:       `- explicit dependency relationships exposed: ${explicitDependencyRelationships.length}`,
+  863:       `- complete dependency chains exposed: ${dependencyChains.length}`,
+  864:       `- explicit has-role relationships exposed: ${explicitRoleRelationships.length}`,
+  865:       `- impact assessments exposed: ${impactAssessments.length}`,
+  866:       `- SUPPORTED_PREDICTION_STATUS: ${supportedPredictions.length > 0 ? "supported" : "none"}`,
+  867:       `- causal hypotheses: ${snapshot.causalHypotheses.length}`,
+  868:       `- unsupported/stale predictions suppressed from current evidence: ${suppressedPredictionCount}`,
+  869:       "- Source of truth remains 11G World State. World Model entities and relationships are derived representations, not permissions or executable actions.",
+  870:       "- sourceFreshness is derived from the canonical 11G evidence keys supporting each 11J item.",
+  871:       "- fresh evidence may support current-state claims; aging evidence must be qualified; mixed evidence spans current and historical support.",
+  872:       "- stale and unknown evidence is historical/uncertain only. Never describe its state value as current, pending now, waiting now, failed now, or completed now.",
+  873:       "- Predictions and causal hypotheses are not facts. Preserve their status, confidence, samples, and evidence when reasoning.",
+  874:       "- Predictions with status=insufficient, confidence=0, or stale-only support are not presented as supported predictions.",
+  875:       "- Only relationships explicitly listed below may be attributed to the World Model. Plausible but absent relationships must be labelled as inference.",
+  876:       "- Explicit dependency relationships are selected before low-information state attachments so dependency chains remain intact in the bounded packet.",
+  877:       "- Use explicit dependency relationships for consequence reasoning. A has-state relationship alone is not a dependency path.",
+  878:       "- If at least one explicit dependency relationship is listed, substantive relational evidence is present. Do not state that the World Model lacks substantive relational evidence.",
+  879:       "- DEPENDENCY CONTRACT: only relationships in the explicit dependency relationship section are dependencies. Never classify has-state as a dependency.",
+  880:       "- PREDICTION CONTRACT: when supported predictions exposed=0, say exactly 'No supported predictions.' Do not invent a placeholder prediction, confidence, sample count, or candidate.",
+  881:       "- CONSEQUENCE CONTRACT: prefer the precomputed World Model impact assessments below. Do not replace a non-empty impact assessment with 'no dependency path'.",
+  882:       "- RELATIONAL EVIDENCE CONTRACT: when explicit dependency relationships exposed>0, do not output the no-substantive-relational-evidence sentinel.", 
+  883:       "- DEPENDENCY BACKBONE CONTRACT: the compact dependency backbone below is the highest-priority 11J relationship evidence. Preserve every listed requires-model and served-by edge.",
+  884:       "- CHAIN CONTRACT: when a DEPENDENCY_CHAIN includes --served-by--> model:ollama, do not claim that the Ollama relationship is missing.",
+  885:       "- IMPACT CONTRACT: when an impact assessment for model:ollama is non-empty, report those downstream dependents instead of saying no dependency path exists.",
+  886:       "- CONCLUSION CONTRACT: RELATIONAL_STATUS=substantive means the World Model is providing substantive relational evidence. The fallback sentence is forbidden.",
+  887:       "- MISSING-MODEL CONTRACT: do not list an explicit edge, entity, provider relationship, or dependency chain as missing when it appears in the dependency backbone.", 
+  888:     ];
+  889: 
+  890:     sections.push(
+  891:       "",
+  892:       "WORLD MODEL CRITICAL DEPENDENCY BACKBONE (highest-priority canonical 11J evidence):",
+  893:       `RELATIONAL_STATUS=${explicitDependencyRelationships.length > 0 ? "substantive" : "none"}`,
+  894:       `SUPPORTED_PREDICTION_STATUS=${supportedPredictions.length > 0 ? "supported" : "none"}`,
+  895:       `DEPENDENCY_EDGE_COUNT=${explicitDependencyRelationships.length}`,
+  896:       `DEPENDENCY_CHAIN_COUNT=${dependencyChains.length}`,
+  897:       ...explicitDependencyRelationships.map(
+  898:         formatCompactDependencyRelationship,
+  899:       ),
+  900:       ...dependencyChains,
+  901:     );
+  902: 
+  903:     if (impactAssessments.length > 0) {
+  904:       sections.push(
+  905:         "",
+  906:         "WORLD MODEL CRITICAL IMPACT BACKBONE (precomputed by canonical 11J impact engine):",
+  907:         ...impactAssessments.map(
+  908:           formatImpactAssessment,
+  909:         ),
+  910:       );
+  911:     } else {
+  912:       sections.push(
+  913:         "",
+  914:         "WORLD MODEL CRITICAL IMPACT BACKBONE (precomputed by canonical 11J impact engine):",
+  915:         "- none.",
+  916:       );
+  917:     }
+  918: 
+  919:     sections.push(
+  920:       "",
+  921:       "WORLD MODEL CRITICAL PREDICTION STATUS:",
+  922:       supportedPredictions.length > 0
+  923:         ? `- supported predictions: ${supportedPredictions.length}`
+  924:         : "- No supported predictions.",
+  925:       `- stored predictions: ${snapshot.predictions.length}`,
+  926:       `- insufficient predictions: ${insufficientPredictionCount}`,
+  927:     );
+  928: 
+  929:     if (entities.length > 0) {
+  930:       sections.push(
+  931:         "",
+  932:         "World Model entities (current evidence first; historical tail explicitly labelled):",
+  933:         ...entities.map(formatEntity),
+  934:       );
+  935:     }
+  936: 
+  937:     sections.push(
+  938:       "",
+  939:       "World Model explicit dependency relationships:",
+  940:       `- count: ${explicitDependencyRelationships.length}`,
+  941:       "- ONLY the relationships in this section are dependency edges.",
+  942:     );
+  943: 
+  944:     if (explicitDependencyRelationships.length > 0) {
+  945:       sections.push(
+  946:         ...explicitDependencyRelationships.map(
+  947:           formatRelationship,
+  948:         ),
+  949:       );
+  950:     } else {
+  951:       sections.push(
+  952:         "- none explicitly represented.",
+  953:       );
+  954:     }
+  955: 
+  956:     sections.push(
+  957:       "",
+  958:       "World Model other relationships (role/state/structural evidence; not dependency edges):",
+  959:       `- explicit has-role count: ${explicitRoleRelationships.length}`,
+  960:       `- state attachment count: ${stateRelationships.length}`,
+  961:     );
+  962: 
+  963:     sections.push(
+  964:       "",
+  965:       `World Model explicit role relationships (count=${explicitRoleRelationships.length}; structural, not dependency edges):`,
+  966:     );
+  967: 
+  968:     if (explicitRoleRelationships.length > 0) {
+  969:       sections.push(
+  970:         ...explicitRoleRelationships.map(
+  971:           formatRelationship,
+  972:         ),
+  973:       );
+  974:     } else {
+  975:       sections.push(
+  976:         "- none explicitly represented.",
+  977:       );
+  978:     }
+  979: 
+  980:     if (stateRelationships.length > 0) {
+  981:       sections.push(
+  982:         "",
+  983:         `World Model state attachments (count=${stateRelationships.length}; NOT dependency edges):`,
+  984:         ...stateRelationships.map(
+  985:           formatRelationship,
+  986:         ),
+  987:       );
+  988:     }
+  989: 
+  990:     sections.push(
+  991:       "",
+  992:       "World Model precomputed downstream impact assessments:",
+  993:       "- See WORLD MODEL CRITICAL IMPACT BACKBONE above; it is authoritative for consequence reasoning.",
+  994:     );
+  995: 
+  996:     if (supportedPredictions.length > 0) {
+  997:       sections.push(
+  998:         "",
+  999:         "World Model supported predictions:",
+ 1000:         ...supportedPredictions.map((entry) =>
+ 1001:           formatPrediction(
+ 1002:             entry.prediction,
+ 1003:             entry.sourceFreshness,
+ 1004:           ),
+ 1005:         ),
+ 1006:       );
+ 1007:     } else {
+ 1008:       sections.push(
+ 1009:         "",
+ 1010:         "World Model supported predictions:",
+ 1011:         "- No supported predictions.",
+ 1012:         "- Canonical stored predictions may exist internally, but none satisfy the support/currentness contract.",
+ 1013:       );
+ 1014:     }
+ 1015: 
+ 1016:     if (causalHypotheses.length > 0) {
+ 1017:       sections.push(
+ 1018:         "",
+ 1019:         "World Model causal hypotheses:",
+ 1020:         ...causalHypotheses.map((entry) =>

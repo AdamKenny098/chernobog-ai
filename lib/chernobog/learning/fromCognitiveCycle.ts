@@ -8,9 +8,21 @@ import type {
   LearningExperience,
 } from "./types";
 
+export interface LearningCognitiveCaptureScope {
+  projectId?: string;
+}
+
+function normalizeProjectId(
+  value?: string,
+): string | undefined {
+  const normalized = value?.trim();
+  return normalized || undefined;
+}
+
 export function learningExperienceFromCognitiveCycle(
   cycle: CognitiveRuntimeCycle,
   recordedAt = new Date(cycle.generatedAt),
+  scope: LearningCognitiveCaptureScope = {},
 ): LearningExperience {
   const focusKey = cycle.focus.currentKey;
 
@@ -43,6 +55,16 @@ export function learningExperienceFromCognitiveCycle(
         ],
       },
       context: {
+        ...(normalizeProjectId(
+          scope.projectId,
+        )
+          ? {
+              projectId:
+                normalizeProjectId(
+                  scope.projectId,
+                ),
+            }
+          : {}),
         cycle: cycle.cycle,
         focusKey,
         responseMode: cycle.action.mode,

@@ -76,6 +76,7 @@ export type SessionContext = {
   fileContext?: FileContext | null;
   workflow: WorkflowState;
   activePlan?: ActivePlan | null;
+  activeProjectId?: string | null;
 };
 
 export type FollowUpResolution =

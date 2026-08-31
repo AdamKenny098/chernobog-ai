@@ -89,6 +89,15 @@ type ChatApiResponse = {
   error?: string;
 };
 
+type SessionHistoryApiResponse = {
+  sessionId?: string;
+  messages?: Array<{
+    role?: string;
+    content?: string;
+  }>;
+  error?: string;
+};
+
 type ActivePlanSnapshot = {
   id: string;
   title: string;
@@ -315,7 +324,31 @@ export default function UmbraAIConsole() {
 
         const data: ChatApiResponse = await response.json();
 
-        if (cancelled) {
+        
+        let historyData: SessionHistoryApiResponse = {
+          messages: [],
+        };
+
+        try {
+          const historyResponse = await fetch(
+            `/api/session/history?sessionId=${encodeURIComponent(activeSessionId)}&limit=50`,
+            {
+              method: "GET",
+              cache: "no-store",
+            }
+          );
+
+          if (historyResponse.ok) {
+            historyData =
+              (await historyResponse.json()) as SessionHistoryApiResponse;
+          }
+        } catch {
+          historyData = {
+            messages: [],
+          };
+        }
+
+if (cancelled) {
           return;
         }
 
@@ -348,10 +381,38 @@ export default function UmbraAIConsole() {
             executionState:
             "executionState" in data ? data.executionState ?? null : prev.executionState,
         }));
+        const restoredConversationLogs: LogEntry[] = [];
+
+        for (const message of historyData.messages ?? []) {
+          const content = normalizeText(
+            message.content,
+            ""
+          );
+
+          if (!content) {
+            continue;
+          }
+
+          if (message.role === "user") {
+            restoredConversationLogs.push(
+              makeLog("USER", content)
+            );
+          } else if (message.role === "assistant") {
+            restoredConversationLogs.push(
+              makeLog("CHERNOBOG", content)
+            );
+          }
+        }
 
         setLogs((prev) => [
           ...prev,
-          makeLog("SYSTEM", "Previous session context restored."),
+          makeLog(
+            "SYSTEM",
+            restoredConversationLogs.length > 0
+              ? `Previous session conversation restored (${restoredConversationLogs.length} messages).`
+              : "Previous session context restored."
+          ),
+          ...restoredConversationLogs,
         ]);
       } catch {
         if (!cancelled) {

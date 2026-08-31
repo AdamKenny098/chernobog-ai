@@ -65,15 +65,34 @@ async function readLessons():
     .list({
       activeOnly: true,
     })
-    .map((lesson) =>
-      cloneRecord({
-        id: `lesson:${lesson.id}`,
+    .filter(
+      (lesson) =>
+        lesson.scope === "global" ||
+        (
+          lesson.scope === "project" &&
+          Boolean(
+            lesson.projectId?.trim(),
+          )
+        ),
+    )
+    .map((lesson) => {
+      const projectId =
+        lesson.scope === "project"
+          ? lesson.projectId?.trim()
+          : undefined;
+
+      return cloneRecord({
+        id:
+          `lesson:${lesson.id}`,
         source:
           "learned-lessons",
         layer:
           "learned",
         scope:
-          "system",
+          projectId
+            ? "project"
+            : "system",
+        projectId,
         key:
           lesson.key,
         content:
@@ -85,6 +104,8 @@ async function readLessons():
         metadata: {
           kind:
             lesson.kind,
+          lessonScope:
+            lesson.scope,
           supportCount:
             lesson.supportCount,
           contradictionCount:
@@ -92,8 +113,8 @@ async function readLessons():
           governance:
             lesson.governance,
         },
-      }),
-    );
+      });
+    });
 }
 
 export function createDefaultUnifiedMemoryReaders():

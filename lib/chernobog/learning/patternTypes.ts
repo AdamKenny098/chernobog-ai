@@ -1,5 +1,9 @@
 import type { EvaluatedLearningExperience } from "./evaluationTypes";
 
+export type LearningPatternScope =
+  | "global"
+  | "project";
+
 export type LearningPatternKind =
   | "preference"
   | "success-pattern"
@@ -18,6 +22,8 @@ export interface LearningPatternCandidate {
   key: string;
   kind: LearningPatternKind;
   statement: string;
+  scope?: LearningPatternScope;
+  projectId?: string;
   supportCount: number;
   contradictionCount: number;
   confidence: number;

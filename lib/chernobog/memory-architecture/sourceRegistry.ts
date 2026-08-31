@@ -102,7 +102,6 @@ const SOURCES: readonly UnifiedMemorySourceDescriptor[] = [
     layer: "learned",
     durability: "persistent",
     scopes: [
-      "user",
       "project",
       "system",
     ],
