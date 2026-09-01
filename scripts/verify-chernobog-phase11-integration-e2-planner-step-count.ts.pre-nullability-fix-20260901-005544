@@ -1,0 +1,95 @@
+import assert from "node:assert/strict";
+
+import {
+  parsePlannerCommand,
+} from "../lib/chernobog/planner/parser";
+import {
+  runPlannerCommand,
+} from "../lib/chernobog/planner/coordinator";
+
+function pass(message: string): void {
+  console.log(`PASS ${message}`);
+}
+
+const three =
+  parsePlannerCommand(
+    "Plan three steps for testing Chernobog Phase 11.",
+  );
+
+assert.equal(three.kind, "create_plan");
+assert.equal(three.requestedStepCount, 3);
+pass("word-form three-step request is parsed as 3");
+
+const five =
+  parsePlannerCommand(
+    "Create a detailed five-step plan for testing Phase 11.",
+  );
+
+assert.equal(five.kind, "create_plan");
+assert.equal(five.requestedStepCount, 5);
+pass("hyphenated five-step request is parsed as 5");
+
+const numeric =
+  parsePlannerCommand(
+    "Create a 7 step plan for this task.",
+  );
+
+assert.equal(numeric.requestedStepCount, 7);
+pass("numeric step-count request is parsed");
+
+const noCount =
+  parsePlannerCommand(
+    "Create a plan for testing Phase 11.",
+  );
+
+assert.equal(noCount.requestedStepCount, undefined);
+pass("ordinary plan request keeps the default step count");
+
+const makeSession = () =>
+  ({
+    activePlan: null,
+  }) as unknown as Parameters<typeof runPlannerCommand>[1];
+
+const threeSession = makeSession();
+
+const threeReply =
+  runPlannerCommand(
+    three,
+    threeSession,
+  );
+
+assert.ok(threeReply);
+assert.equal(
+  threeSession.activePlan.steps.length,
+  3,
+);
+pass("planner creates exactly 3 requested steps");
+
+const fiveSession = makeSession();
+
+runPlannerCommand(
+  five,
+  fiveSession,
+);
+
+assert.equal(
+  fiveSession.activePlan.steps.length,
+  5,
+);
+pass("planner creates exactly 5 requested steps");
+
+assert.equal(
+  fiveSession.activePlan.steps.some(
+    (step: { title: string }) =>
+      /success criteria/i.test(
+        step.title,
+      ),
+  ),
+  true,
+);
+pass("generated plan includes an explicit success-criteria step");
+
+console.log("");
+console.log(
+  "PASS Phase 11 Integration E2 - Planner Step Count Semantics",
+);

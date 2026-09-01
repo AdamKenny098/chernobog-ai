@@ -103,6 +103,38 @@ export function getRecentMessages(
   return rows.reverse();
 }
 
+export function getLastUserRoute(
+  sessionId: string,
+): string | null {
+  const cleanSessionId =
+    sessionId.trim();
+
+  if (!cleanSessionId) {
+    return null;
+  }
+
+  const row = db
+    .prepare(
+      `
+        SELECT route
+        FROM messages
+        WHERE role = 'user'
+          AND session_id = ?
+          AND route IS NOT NULL
+        ORDER BY id DESC
+        LIMIT 1
+      `,
+    )
+    .get(cleanSessionId) as
+      | { route: string | null }
+      | undefined;
+
+  const route =
+    row?.route?.trim();
+
+  return route || null;
+}
+
 export function saveMemory(fact: string): { saved: boolean; fact: string } {
   const clean = normalizeText(fact);
   if (!clean) {

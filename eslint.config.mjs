@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    ".chernobog/**",
+    ".chernobog-patch-backups/**",
     "tools/stable-fast-3d/**",
   ]),
 ]);

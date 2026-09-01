@@ -82,7 +82,7 @@ async function main(): Promise<void> {
 
   assert.match(
     runCommand,
-    /sessionSummary:\s*buildProjectGroundedSystemText\([\s\S]*?memoryContext\.systemText,[\s\S]*?activeSession\.activeProjectId/,
+    /sessionSummary:\s*buildProjectGroundedSystemText\([\s\S]*?budgetedResponseContext\.systemText,[\s\S]*?activeSession\.activeProjectId/,
   );
   pass(
     "model-facing session summary includes canonical active project runtime state",

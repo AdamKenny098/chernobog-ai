@@ -8,24 +8,53 @@ import {
 } from "./state";
 import type { ParsedPlannerCommand } from "./types";
 
-function splitGoalIntoStarterSteps(goal: string): string[] {
+function splitGoalIntoStarterSteps(
+  goal: string,
+  requestedStepCount?: number,
+): string[] {
   const cleaned = goal.trim();
 
-  if (!cleaned) {
-    return [
-      "Clarify the goal",
-      "Break the work into concrete steps",
-      "Start with the first small action",
-    ];
-  }
+  const count =
+    Math.max(
+      1,
+      Math.min(
+        12,
+        requestedStepCount ??
+          (cleaned ? 5 : 3),
+      ),
+    );
 
-  return [
-    `Clarify the outcome for: ${cleaned}`,
-    "Identify the required resources or files",
-    "Break the work into implementation steps",
-    "Execute the first concrete task",
-    "Review progress and adjust the plan",
-  ];
+  const templates = cleaned
+    ? [
+        `Clarify the outcome for: ${cleaned}`,
+        "Define success criteria and constraints",
+        "Identify the required resources, files, and evidence",
+        "Break the work into concrete implementation tasks",
+        "Execute the first concrete task",
+        "Validate the result against the success criteria",
+        "Address failures, gaps, or regressions",
+        "Run end-to-end acceptance testing",
+        "Document the verified result",
+        "Review remaining risks and follow-up work",
+        "Finalize the implementation state",
+        "Close the plan with a final verification",
+      ]
+    : [
+        "Clarify the goal",
+        "Define success criteria",
+        "Break the work into concrete steps",
+        "Identify required resources",
+        "Execute the first action",
+        "Validate the result",
+        "Address remaining gaps",
+        "Run acceptance testing",
+        "Document the result",
+        "Review remaining risks",
+        "Finalize the work",
+        "Close with final verification",
+      ];
+
+  return templates.slice(0, count);
 }
 
 function extractRevisionSteps(revision: string): string[] {
@@ -51,7 +80,13 @@ export function runPlannerCommand(
 
   if (command.kind === "create_plan") {
     const goal = command.goal?.trim() || "Untitled planning goal";
-    const plan = createPlan(goal, splitGoalIntoStarterSteps(goal));
+    const plan = createPlan(
+      goal,
+      splitGoalIntoStarterSteps(
+        goal,
+        command.requestedStepCount,
+      ),
+    );
 
     session.activePlan = plan;
 

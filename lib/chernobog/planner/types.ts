@@ -35,5 +35,6 @@ export type ParsedPlannerCommand = {
   kind: PlannerCommandKind;
   goal?: string;
   stepIndex?: number;
+  requestedStepCount?: number;
   revision?: string;
 };

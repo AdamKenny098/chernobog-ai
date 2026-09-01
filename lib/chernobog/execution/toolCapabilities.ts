@@ -43,22 +43,22 @@ function buildModuleOwnerMap():
     new Map<string, string>();
 
   for (
-    const module
+    const registeredModule
     of getRegisteredModules()
   ) {
-    if (!module.tools) {
+    if (!registeredModule.tools) {
       continue;
     }
 
     for (
       const toolName
       of Object.keys(
-        module.tools,
+        registeredModule.tools,
       )
     ) {
       owners.set(
         toolName,
-        module.id,
+        registeredModule.id,
       );
     }
   }

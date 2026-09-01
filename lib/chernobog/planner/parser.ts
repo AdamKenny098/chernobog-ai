@@ -13,6 +13,58 @@ function stripPlanVerb(message: string) {
     .trim();
 }
 
+function extractRequestedStepCount(
+  message: string,
+): number | undefined {
+  const normalized = message
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const numeric =
+    normalized.match(
+      /\b(\d{1,2})(?:\s*-\s*|\s+)steps?\b/i,
+    );
+
+  if (numeric) {
+    const count = Number.parseInt(
+      numeric[1],
+      10,
+    );
+
+    if (
+      Number.isFinite(count) &&
+      count >= 1 &&
+      count <= 12
+    ) {
+      return count;
+    }
+  }
+
+  const words: Record<string, number> = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+    ten: 10,
+    eleven: 11,
+    twelve: 12,
+  };
+
+  const wordMatch =
+    normalized.match(
+      /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)(?:\s*-\s*|\s+)steps?\b/i,
+    );
+
+  return wordMatch
+    ? words[wordMatch[1]]
+    : undefined;
+}
 function extractStepIndex(message: string): number | undefined {
   const direct = message.match(/\b(?:step\s*)?(\d{1,2})\b/);
   if (!direct) return undefined;
@@ -77,6 +129,10 @@ export function parsePlannerCommand(message: string): ParsedPlannerCommand {
     return {
       kind: "create_plan",
       goal: stripPlanVerb(message),
+      requestedStepCount:
+        extractRequestedStepCount(
+          message,
+        ),
     };
   }
 

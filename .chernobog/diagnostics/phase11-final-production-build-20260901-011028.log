@@ -1,0 +1,1360 @@
+
+> chernobog-ai-ui@0.1.0 build
+> next build
+
+▲ Next.js 16.2.4 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+Turbopack build encountered 48 warnings:
+./lib/modules/itch-discovery/maintenance/backup.ts:237:53
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic> | '/ROOT/data/backups/game-radar' | '/ROOTdata/backups/game-radar') matches 153180 files in [project]/
+  [90m235 |[0m ...ory(value?: string): string {
+  [90m236 |[0m ...? process.env.[33mCHERNOBOG_GAME_RADAR_BACKUP_DIR[0m ?? [33mDEFAULT_BACKUP_RELATIVE_DIR[0m;
+[31m[1m>[0m [90m237 |[0m ...figured) ? configured : path.resolve(process.cwd(), configured);
+  [90m    |[0m                            [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m238 |[0m ...
+  [90m239 |[0m ...
+  [90m240 |[0m ...Path: string): [33mItchDatabaseBackupInfo[0m {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/itch-discovery/maintenance/backup.ts
+    ./app/api/discovery/itch/maintenance/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/itch-discovery/maintenance/backup.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./lib/modules/itch-discovery/database/config.ts:19:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic> | '/ROOT/data/chernobog-game-radar.sqlite' | '/ROOTdata/chernobog-game-radar.sqlite') matches 153180 files in [project]/
+  [90m17 |[0m   [36mreturn[0m path.isAbsolute(configuredPath)
+  [90m18 |[0m     ? configuredPath
+[31m[1m>[0m [90m19 |[0m     : path.resolve(process.cwd(), configuredPath);
+  [90m   |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m20 |[0m }
+  [90m21 |[0m
+  [90m22 |[0m [36mexport[0m [36mfunction[0m ensureItchDiscoveryDatabaseDirectory(
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/itch-discovery/database/config.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/itch-discovery/database/config.ts
+    ./lib/modules/itch-discovery/maintenance/diagnostics.ts
+    ./app/api/discovery/itch/maintenance/route.ts
+
+
+./lib/chernobog/events/store.ts:78:9
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m76 |[0m     )
+  [90m77 |[0m       ? configured
+[31m[1m>[0m [90m78 |[0m       : join(
+  [90m   |[0m         [31m[1m^^^^[0m
+[31m[1m>[0m [90m79 |[0m           process.cwd(),
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m80 |[0m           configured
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m81 |[0m         );
+  [90m   |[0m [31m[1m^^^^^^^^^[0m
+  [90m82 |[0m   }
+  [90m83 |[0m
+  [90m84 |[0m   [36mreturn[0m join(
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/events/store.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/events/store.ts
+    ./lib/chernobog/events/index.ts
+    ./app/api/events/route.ts
+
+  #3 [Server Component]:
+    ./lib/chernobog/events/store.ts
+    ./lib/chernobog/events/index.ts
+    ./lib/chernobog/events/publishers.ts
+    ./lib/chernobog/llm/ollamaClient.ts
+    ./lib/modules/character-generator/brief/characterBriefGenerator.ts
+    ./lib/modules/character-generator/index.ts
+    ./app/modules/character-forge/[projectId]/page.tsx
+
+
+./lib/chernobog/execution/internalExecutionHandlers.ts:430:20
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m428 |[0m [36mfunction[0m resolveProjectRelativePath(relativePath: string) {
+  [90m429 |[0m   [36mconst[0m projectRoot = process.cwd();
+[31m[1m>[0m [90m430 |[0m   [36mconst[0m resolved = path.resolve(projectRoot, relativePath);
+  [90m    |[0m                    [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m431 |[0m
+  [90m432 |[0m   [36mif[0m (!resolved.startsWith(projectRoot)) {
+  [90m433 |[0m     [36mthrow[0m [36mnew[0m [33mError[0m([32m`Refusing to inspect path outside project root: [0m${relativePath[32m}`[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/execution/internalExecutionHandlers.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/execution/internalExecutionHandlers.ts
+    ./lib/chernobog/execution/index.ts
+    ./app/api/tool-execution/route.ts
+
+
+./lib/chernobog/tools/builtins/write-project-file.ts:25:20
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m23 |[0m [36mfunction[0m resolveProjectPath(relativePath: string) {
+  [90m24 |[0m   [36mconst[0m projectRoot = process.cwd();
+[31m[1m>[0m [90m25 |[0m   [36mconst[0m resolved = path.resolve(projectRoot, relativePath);
+  [90m   |[0m                    [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m26 |[0m
+  [90m27 |[0m   [36mif[0m (!resolved.startsWith(projectRoot)) {
+  [90m28 |[0m     [36mthrow[0m [36mnew[0m [33mError[0m([32m"Refusing to write outside project root."[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/tools/builtins/write-project-file.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/tools/builtins/write-project-file.ts
+    ./lib/chernobog/tools/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/modules/character-generator/projects/characterProjectStore.ts:118:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m116 |[0m   [36mreturn[0m path.isAbsolute(configuredPath)
+  [90m117 |[0m     ? configuredPath
+[31m[1m>[0m [90m118 |[0m     : path.join(process.cwd(), configuredPath);
+  [90m    |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m119 |[0m }
+  [90m120 |[0m
+  [90m121 |[0m [36mexport[0m [36mfunction[0m getCharacterProjectManifestPath(): string {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/model/file/route.ts
+
+  #2 [Server Component]:
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/modules/character-forge/page.tsx
+
+  #3 [App Route]:
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./lib/modules/content-ingest-ui/thumbnailStore.ts:16:9
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m14 |[0m     [36mreturn[0m path.isAbsolute(configuredPath)
+  [90m15 |[0m       ? configuredPath
+[31m[1m>[0m [90m16 |[0m       : path.join(process.cwd(), configuredPath);
+  [90m   |[0m         [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m17 |[0m   }
+  [90m18 |[0m
+  [90m19 |[0m   [36mreturn[0m path.join(process.cwd(), [32m"vault"[0m, [32m"chernobog"[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/content-ingest-ui/thumbnailStore.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/content-ingest-ui/thumbnailStore.ts
+    ./lib/modules/content-ingest-ui/dashboardData.ts
+    ./app/api/content-ingest/dashboard/route.ts
+
+
+./lib/modules/content-ingest/archiveScanner.ts:37:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m35 |[0m   [36mreturn[0m path.isAbsolute(cleaned)
+  [90m36 |[0m     ? cleaned
+[31m[1m>[0m [90m37 |[0m     : path.join(process.cwd(), cleaned);
+  [90m   |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m38 |[0m }
+  [90m39 |[0m
+  [90m40 |[0m [36mexport[0m [36masync[0m [36mfunction[0m listArchiveFiles(inputPath: string): [33mPromise[0m<string[]> {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/content-ingest/archiveScanner.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/content-ingest/archiveScanner.ts
+    ./lib/modules/content-ingest/index.ts
+    ./lib/modules/content-ingest-ui/dashboardData.ts
+    ./app/api/content-ingest/dashboard/route.ts
+
+
+./lib/modules/content-ingest/runStore.ts:17:9
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m15 |[0m     [36mreturn[0m path.isAbsolute(configuredPath)
+  [90m16 |[0m       ? configuredPath
+[31m[1m>[0m [90m17 |[0m       : path.join(process.cwd(), configuredPath);
+  [90m   |[0m         [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m   }
+  [90m19 |[0m
+  [90m20 |[0m   [36mreturn[0m path.join(process.cwd(), [32m"vault"[0m, [32m"chernobog"[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/content-ingest/runStore.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/content-ingest/runStore.ts
+    ./lib/modules/content-ingest/commands.ts
+    ./lib/modules/content-ingest-ui/dashboardActions.ts
+    ./app/api/content-ingest/dashboard-action/route.ts
+
+
+./lib/modules/content-review/store.ts:21:9
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m19 |[0m     [36mreturn[0m path.isAbsolute(configuredPath)
+  [90m20 |[0m       ? configuredPath
+[31m[1m>[0m [90m21 |[0m       : path.join(process.cwd(), configuredPath);
+  [90m   |[0m         [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m   }
+  [90m23 |[0m
+  [90m24 |[0m   [36mreturn[0m path.join(process.cwd(), [32m"vault"[0m, [32m"chernobog"[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/content-review/store.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/content-review/store.ts
+    ./lib/modules/content-ingest-ui/dashboardData.ts
+    ./app/api/content-ingest/dashboard/route.ts
+
+
+./lib/modules/content-watch/watchSessionStore.ts:18:9
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m16 |[0m     [36mreturn[0m path.isAbsolute(configuredPath)
+  [90m17 |[0m       ? configuredPath
+[31m[1m>[0m [90m18 |[0m       : path.join(process.cwd(), configuredPath);
+  [90m   |[0m         [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m19 |[0m   }
+  [90m20 |[0m
+  [90m21 |[0m   [36mreturn[0m path.join(process.cwd(), [32m"vault"[0m, [32m"chernobog"[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/content-watch/watchSessionStore.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/content-watch/watchSessionStore.ts
+    ./lib/modules/content-watch/watchSessionService.ts
+    ./app/api/content-watch/session/route.ts
+
+
+./lib/modules/minecraft-schematic/packs/exportCompiledScenePlanPack.ts:34:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m32 |[0m   [36mreturn[0m path.isAbsolute(relativeOrAbsolute)
+  [90m33 |[0m     ? relativeOrAbsolute
+[31m[1m>[0m [90m34 |[0m     : path.join(process.cwd(), relativeOrAbsolute);
+  [90m   |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m35 |[0m }
+  [90m36 |[0m
+  [90m37 |[0m [36mfunction[0m toRel(absolutePath: string): string {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/exportCompiledScenePlanPack.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/exportCompiledScenePlanPack.ts
+    ./lib/modules/minecraft-schematic/commands/executeMilestone6CompatibilityCommands.ts
+    ./lib/modules/minecraft-schematic/commands/executeMinecraftSchematicCommand.ts
+    ./lib/modules/minecraft-schematic/module.ts
+    ./lib/modules/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/modules/minecraft-schematic/packs/exportScenePlanPack.ts:14:10
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m12 |[0m
+  [90m13 |[0m [36mfunction[0m toProjectPath(...segments: string[]): string {
+[31m[1m>[0m [90m14 |[0m   [36mreturn[0m path.join(process.cwd(), ...segments);
+  [90m   |[0m          [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m15 |[0m }
+  [90m16 |[0m
+  [90m17 |[0m [36mfunction[0m toRelativePath(absolutePath: string): string {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/exportScenePlanPack.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/exportScenePlanPack.ts
+    ./lib/modules/minecraft-schematic/packs/exportCompiledScenePlanPack.ts
+    ./lib/modules/minecraft-schematic/commands/executeMilestone6CompatibilityCommands.ts
+    ./lib/modules/minecraft-schematic/commands/executeMinecraftSchematicCommand.ts
+    ./lib/modules/minecraft-schematic/module.ts
+    ./lib/modules/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/modules/minecraft-schematic/packs/exportVanillaPreviewPack.ts:51:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m49 |[0m   [36mreturn[0m path.isAbsolute(relativeOrAbsolute)
+  [90m50 |[0m     ? relativeOrAbsolute
+[31m[1m>[0m [90m51 |[0m     : path.join(process.cwd(), relativeOrAbsolute);
+  [90m   |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m52 |[0m }
+  [90m53 |[0m
+  [90m54 |[0m [36mfunction[0m toRel(absolutePath: string): string {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/exportVanillaPreviewPack.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/exportVanillaPreviewPack.ts
+    ./lib/modules/minecraft-schematic/commands/executeMilestone6CompatibilityCommands.ts
+    ./lib/modules/minecraft-schematic/commands/executeMinecraftSchematicCommand.ts
+    ./lib/modules/minecraft-schematic/module.ts
+    ./lib/modules/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/modules/minecraft-schematic/packs/repairScenePack.ts:19:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m17 |[0m   [36mreturn[0m path.isAbsolute(relativeOrAbsolute)
+  [90m18 |[0m     ? relativeOrAbsolute
+[31m[1m>[0m [90m19 |[0m     : path.join(process.cwd(), relativeOrAbsolute);
+  [90m   |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m20 |[0m }
+  [90m21 |[0m
+  [90m22 |[0m [36masync[0m [36mfunction[0m writeJson(filePath: string, value: unknown): [33mPromise[0m<[36mvoid[0m> {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/repairScenePack.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/repairScenePack.ts
+    ./lib/modules/minecraft-schematic/commands/executeMilestone6CompatibilityCommands.ts
+    ./lib/modules/minecraft-schematic/commands/executeMinecraftSchematicCommand.ts
+    ./lib/modules/minecraft-schematic/module.ts
+    ./lib/modules/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/modules/minecraft-schematic/packs/reviewScenePack.ts:73:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m71 |[0m   [36mreturn[0m path.isAbsolute(relativeOrAbsolute)
+  [90m72 |[0m     ? relativeOrAbsolute
+[31m[1m>[0m [90m73 |[0m     : path.join(process.cwd(), relativeOrAbsolute);
+  [90m   |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m74 |[0m }
+  [90m75 |[0m
+  [90m76 |[0m [36masync[0m [36mfunction[0m pathExists(filePath: string): [33mPromise[0m<boolean> {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/reviewScenePack.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/minecraft-schematic/packs/reviewScenePack.ts
+    ./lib/modules/minecraft-schematic/commands/executeMilestone6CompatibilityCommands.ts
+    ./lib/modules/minecraft-schematic/commands/executeMinecraftSchematicCommand.ts
+    ./lib/modules/minecraft-schematic/module.ts
+    ./lib/modules/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/modules/minecraft-schematic/visual-library/readVisualSchematicLibrary.ts:182:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m180 |[0m     ...(envOverride ? [resolveLibraryDir(envOverride)] : []),
+  [90m181 |[0m     ...[33mDEFAULT_LIBRARY_DIRS[0m.map((segments) =>
+[31m[1m>[0m [90m182 |[0m       path.join(process.cwd(), ...segments),
+  [90m    |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m183 |[0m     ),
+  [90m184 |[0m   ];
+  [90m185 |[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/minecraft-schematic/visual-library/readVisualSchematicLibrary.ts
+    ./app/api/minecraft-schematic/library/[id]/route.ts
+
+  #2 [Server Component]:
+    ./lib/modules/minecraft-schematic/visual-library/readVisualSchematicLibrary.ts
+    ./app/schematics/[id]/page.tsx
+
+  #3 [App Route]:
+    ./lib/modules/minecraft-schematic/visual-library/readVisualSchematicLibrary.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./lib/modules/minecraft-schematic/visual-library/readVisualSchematicLibrary.ts:202:10
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m200 |[0m   }
+  [90m201 |[0m
+[31m[1m>[0m [90m202 |[0m   [36mreturn[0m path.join(process.cwd(), input);
+  [90m    |[0m          [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m203 |[0m }
+  [90m204 |[0m
+  [90m205 |[0m [36masync[0m [36mfunction[0m isDirectory(targetPath: string): [33mPromise[0m<boolean> {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/minecraft-schematic/visual-library/readVisualSchematicLibrary.ts
+    ./app/api/minecraft-schematic/library/[id]/route.ts
+
+  #2 [Server Component]:
+    ./lib/modules/minecraft-schematic/visual-library/readVisualSchematicLibrary.ts
+    ./app/schematics/[id]/page.tsx
+
+  #3 [App Route]:
+    ./lib/modules/minecraft-schematic/visual-library/readVisualSchematicLibrary.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./lib/modules/saved-content-reliability/manualTranscriptImport.ts:15:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m13 |[0m   [36mreturn[0m path.isAbsolute(cleaned)
+  [90m14 |[0m     ? cleaned
+[31m[1m>[0m [90m15 |[0m     : path.join(process.cwd(), cleaned);
+  [90m   |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m16 |[0m }
+  [90m17 |[0m
+  [90m18 |[0m [36mfunction[0m parseTimestampToSeconds(value: string) {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/saved-content-reliability/manualTranscriptImport.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/saved-content-reliability/manualTranscriptImport.ts
+    ./lib/modules/saved-content-reliability/commands.ts
+    ./lib/modules/content-ingest-ui/actionRunner.ts
+    ./app/api/content-ingest/action/route.ts
+
+
+./lib/modules/saved-content/diagnostics.ts:59:13
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m57 |[0m         path.isAbsolute(configuredVaultPath)
+  [90m58 |[0m           ? configuredVaultPath
+[31m[1m>[0m [90m59 |[0m           : path.join(process.cwd(), configuredVaultPath),
+  [90m   |[0m             [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m60 |[0m         [32m"inbox"[0m,
+  [90m61 |[0m         [32m"tiktok"[0m,
+  [90m62 |[0m         [32m"_latest-import.json"[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/saved-content/diagnostics.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/saved-content/diagnostics.ts
+    ./lib/modules/saved-content/commands/executeSavedContentCommand.ts
+    ./lib/modules/content-ingest-ui/dashboardActions.ts
+    ./app/api/content-ingest/dashboard-action/route.ts
+
+
+./lib/modules/saved-content/store.ts:23:9
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m21 |[0m     [36mreturn[0m path.isAbsolute(configuredPath)
+  [90m22 |[0m       ? configuredPath
+[31m[1m>[0m [90m23 |[0m       : path.join(process.cwd(), configuredPath);
+  [90m   |[0m         [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m24 |[0m   }
+  [90m25 |[0m
+  [90m26 |[0m   [36mreturn[0m path.join(process.cwd(), [32m"vault"[0m, [32m"chernobog"[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/saved-content/store.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/saved-content/store.ts
+    ./lib/modules/content-ingest-ui/dashboardData.ts
+    ./app/api/content-ingest/dashboard/route.ts
+
+
+./lib/modules/tiktok-archive-ingest/importTikTokArchive.ts:75:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m73 |[0m   [36mconst[0m absolutePath = path.isAbsolute(archivePath)
+  [90m74 |[0m     ? archivePath
+[31m[1m>[0m [90m75 |[0m     : path.join(process.cwd(), archivePath);
+  [90m   |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m76 |[0m
+  [90m77 |[0m   [36mconst[0m importedAt = [36mnew[0m [33mDate[0m().toISOString();
+  [90m78 |[0m   [36mconst[0m importId = [32m`[0m${slugTimestamp()[32m}_[0m${hashPath(absolutePath)[32m}`[0m;
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/tiktok-archive-ingest/importTikTokArchive.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/tiktok-archive-ingest/importTikTokArchive.ts
+    ./lib/modules/tiktok-archive-ingest/index.ts
+    ./lib/modules/saved-content/commands/executeSavedContentCommand.ts
+    ./lib/modules/content-ingest-ui/dashboardActions.ts
+    ./app/api/content-ingest/dashboard-action/route.ts
+
+
+./lib/modules/vault-brain/store.ts:18:9
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m16 |[0m     [36mreturn[0m path.isAbsolute(configuredPath)
+  [90m17 |[0m       ? configuredPath
+[31m[1m>[0m [90m18 |[0m       : path.join(process.cwd(), configuredPath);
+  [90m   |[0m         [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m19 |[0m   }
+  [90m20 |[0m
+  [90m21 |[0m   [36mreturn[0m path.join(process.cwd(), [32m"vault"[0m, [32m"chernobog"[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/vault-brain/store.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/vault-brain/store.ts
+    ./lib/modules/vault-brain/index.ts
+    ./app/api/chernobog-inc/readiness/route.ts
+
+
+./lib/modules/youtube-archive-ingest/importYouTubeSavedArchive.ts:186:7
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m184 |[0m   [36mconst[0m absolutePath = path.isAbsolute(archivePath)
+  [90m185 |[0m     ? archivePath
+[31m[1m>[0m [90m186 |[0m     : path.join(process.cwd(), archivePath);
+  [90m    |[0m       [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m187 |[0m
+  [90m188 |[0m   [36mconst[0m importedAt = [36mnew[0m [33mDate[0m().toISOString();
+  [90m189 |[0m   [36mconst[0m importId = [32m`[0m${slugTimestamp()[32m}_[0m${hashPath(absolutePath)[32m}`[0m;
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/youtube-archive-ingest/importYouTubeSavedArchive.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/youtube-archive-ingest/importYouTubeSavedArchive.ts
+    ./lib/modules/youtube-archive-ingest/index.ts
+    ./lib/modules/saved-content-reliability/commands.ts
+    ./lib/modules/content-ingest-ui/actionRunner.ts
+    ./app/api/content-ingest/action/route.ts
+
+
+./lib/modules/youtube-ingest/vaultWriter.ts:41:9
+The file pattern ('/ROOT/' <dynamic> | '/ROOT' <dynamic>) matches 153180 files in [project]/
+  [90m39 |[0m     [36mreturn[0m path.isAbsolute(configuredPath)
+  [90m40 |[0m       ? configuredPath
+[31m[1m>[0m [90m41 |[0m       : path.join(process.cwd(), configuredPath);
+  [90m   |[0m         [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m42 |[0m   }
+  [90m43 |[0m
+  [90m44 |[0m   [36mreturn[0m path.join(process.cwd(), [32m"vault"[0m, [32m"chernobog"[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/youtube-ingest/vaultWriter.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/youtube-ingest/vaultWriter.ts
+    ./lib/modules/youtube-ingest/ingestYouTubePlaylist.ts
+    ./lib/modules/youtube-ingest/commands/executeYouTubeIngestCommand.ts
+    ./app/api/youtube/command/route.ts
+
+
+./lib/chernobog/tools/builtins/read-project-note.ts:56:27
+The file pattern ('/ROOT/vault/chernobog/' <dynamic> '.md' | '/ROOT/vault/chernobog' <dynamic> '.md' | <dynamic>) matches 76733 files in [project]/
+  [90m54 |[0m   execute: [36masync[0m (input) => {
+  [90m55 |[0m     [36mconst[0m resolved = resolveVaultNotePath(input.noteName);
+[31m[1m>[0m [90m56 |[0m     [36mconst[0m content = [36mawait[0m fs.readFile(resolved.resolved, [32m"utf8"[0m);
+  [90m   |[0m                           [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m57 |[0m
+  [90m58 |[0m     [36mreturn[0m {
+  [90m59 |[0m       noteName: resolved.safeName,
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/tools/builtins/read-project-note.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/tools/builtins/read-project-note.ts
+    ./lib/chernobog/tools/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/chernobog/tools/builtins/run-project-command.ts:96:23
+The file pattern ('npx' | <dynamic>) matches 76590 files in [project]/
+  [90m 94 |[0m     [36mreturn[0m [36mnew[0m [33mPromise[0m(
+  [90m 95 |[0m       (resolve, reject) => {
+[31m[1m>[0m [90m 96 |[0m         [36mconst[0m child = spawn(
+  [90m    |[0m                       [31m[1m^^^^^[0m
+[31m[1m>[0m [90m 97 |[0m           resolved.executable,
+  [90m    |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 98 |[0m           resolved.args,
+  [90m    |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 99 |[0m           {
+  [90m    |[0m [31m[1m^^^^^^^^^^^[0m
+[31m[1m>[0m [90m100 |[0m             cwd:
+  [90m    |[0m [31m[1m^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m101 |[0m               process.cwd(),
+  [90m    |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m102 |[0m
+  [90m    |[0m [31m[1m^[0m
+[31m[1m>[0m [90m103 |[0m             shell:
+  [90m    |[0m [31m[1m^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m104 |[0m               process.platform ===
+  [90m    |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m105 |[0m               [32m"win32"[0m,
+  [90m    |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m106 |[0m           }
+  [90m    |[0m [31m[1m^^^^^^^^^^^[0m
+[31m[1m>[0m [90m107 |[0m         );
+  [90m    |[0m [31m[1m^^^^^^^^^[0m
+  [90m108 |[0m
+  [90m109 |[0m         [36mlet[0m output = [32m""[0m;
+  [90m110 |[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/tools/builtins/run-project-command.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/tools/builtins/run-project-command.ts
+    ./lib/chernobog/tools/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./app/review/schematic/[buildId]/page.tsx:229:24
+The file pattern ('null' | <dynamic> '/' <dynamic> | <dynamic>) matches 76590 files in [project]/
+  [90m227 |[0m
+  [90m228 |[0m   [36mtry[0m {
+[31m[1m>[0m [90m229 |[0m     [36mconst[0m stat = [36mawait[0m fs.stat(absolutePath);
+  [90m    |[0m                        [31m[1m^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m230 |[0m
+  [90m231 |[0m     [36mreturn[0m {
+  [90m232 |[0m       kind,
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import trace:
+  App Route:
+    ./app/review/schematic/[buildId]/page.tsx
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./lib/chernobog/tools/builtins/list-directory.ts:66:25
+The file pattern ('undefined' | <dynamic> '/Desktop' | <dynamic> 'Desktop' | <dynamic> '/Downloads' | <dynamic> 'Downloads' | <dynamic> '/Documents' | <dynamic> 'Documents' | <dynamic>) matches 76590 files in [project]/
+  [90m64 |[0m   execute: [36masync[0m (input) => {
+  [90m65 |[0m     [36mconst[0m directoryPath = resolveDirectoryPath(input);
+[31m[1m>[0m [90m66 |[0m     [36mconst[0m stats = [36mawait[0m fs.stat(directoryPath);
+  [90m   |[0m                         [31m[1m^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m67 |[0m
+  [90m68 |[0m     [36mif[0m (!stats.isDirectory()) {
+  [90m69 |[0m       [36mthrow[0m [36mnew[0m [33mError[0m([32m"Target path is not a directory."[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/tools/builtins/list-directory.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/tools/builtins/list-directory.ts
+    ./lib/chernobog/tools/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/chernobog/runtimeConfig.ts:21:14
+The file pattern ('undefined' | <dynamic>) matches 76590 files in [project]/
+  [90m19 |[0m     [36mconst[0m configuredValue = readEnvironmentValue(environmentName);
+  [90m20 |[0m     [36mif[0m (configuredValue) {
+[31m[1m>[0m [90m21 |[0m       [36mreturn[0m path.resolve(configuredValue);
+  [90m   |[0m              [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m     }
+  [90m23 |[0m   }
+  [90m24 |[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/runtimeConfig.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/runtimeConfig.ts
+    ./lib/chernobog/llm/ollamaClient.ts
+    ./lib/chernobog/llm/index.ts
+    ./app/api/ai-runtime/route.ts
+
+  #3 [Server Component]:
+    ./lib/chernobog/runtimeConfig.ts
+    ./lib/chernobog/db.ts
+    ./lib/modules/project-operations/repository.ts
+    ./lib/modules/project-operations/service.ts
+    ./app/projects/page.tsx
+
+
+./lib/chernobog/tools/builtins/list-directory.ts:78:25
+The file pattern ('undefined/' <dynamic> | <dynamic> '/' <dynamic> | 'undefined' <dynamic> | <dynamic>) matches 153167 files in [project]/
+  [90m76 |[0m
+  [90m77 |[0m     [36mconst[0m mappedEntries = entries.slice([35m0[0m, maxResults).map((entry) => {
+[31m[1m>[0m [90m78 |[0m       [36mconst[0m entryPath = path.join(directoryPath, entry.name);
+  [90m   |[0m                         [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m79 |[0m
+  [90m80 |[0m       [36mreturn[0m {
+  [90m81 |[0m         name: entry.name,
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/tools/builtins/list-directory.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/tools/builtins/list-directory.ts
+    ./lib/chernobog/tools/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/modules/vault-brain/codeSummaryScanner.ts:325:26
+The file pattern (<dynamic> '/' <dynamic> | '/ROOT//' <dynamic> | <dynamic> | '/ROOT/' <dynamic>) matches 153180 files in [project]/
+  [90m323 |[0m
+  [90m324 |[0m     [36mtry[0m {
+[31m[1m>[0m [90m325 |[0m       [36mconst[0m stat = [36mawait[0m fs.stat(absolutePath);
+  [90m    |[0m                          [31m[1m^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m326 |[0m       [36mif[0m (stat.isDirectory()) {
+  [90m327 |[0m         [36mawait[0m collectFilesFromDir({
+  [90m328 |[0m           rootDir,
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/vault-brain/codeSummaryScanner.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/vault-brain/codeSummaryScanner.ts
+    ./lib/modules/vault-brain/index.ts
+    ./app/api/vault/recall/route.ts
+
+
+./lib/modules/saved-content/store.ts:42:10
+The file pattern (<dynamic> '/' <dynamic> | '/ROOT/vault/chernobog/' <dynamic> | <dynamic> | '/ROOT/vault/chernobog' <dynamic>) matches 153927 files in [project]/
+  [90m40 |[0m
+  [90m41 |[0m [36mexport[0m [36mfunction[0m resolveVaultPath(vaultRelativePath: string) {
+[31m[1m>[0m [90m42 |[0m   [36mreturn[0m path.join(getVaultRoot(), vaultRelativePath);
+  [90m   |[0m          [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m43 |[0m }
+  [90m44 |[0m
+  [90m45 |[0m [36masync[0m [36mfunction[0m fileExists(absolutePath: string) {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/saved-content/store.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/saved-content/store.ts
+    ./lib/modules/content-ingest-ui/dashboardData.ts
+    ./app/api/content-ingest/dashboard/route.ts
+
+
+./lib/modules/vault-brain/store.ts:49:10
+The file pattern (<dynamic> '/' <dynamic> | '/ROOT/vault/chernobog/' <dynamic> | <dynamic> | '/ROOT/vault/chernobog' <dynamic>) matches 153927 files in [project]/
+  [90m47 |[0m
+  [90m48 |[0m [36mexport[0m [36mfunction[0m absoluteFromVault(relativePath: string) {
+[31m[1m>[0m [90m49 |[0m   [36mreturn[0m path.join(getVaultRoot(), relativePath);
+  [90m   |[0m          [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m50 |[0m }
+  [90m51 |[0m
+  [90m52 |[0m [36masync[0m [36mfunction[0m pathExists(absolutePath: string) {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/vault-brain/store.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/vault-brain/store.ts
+    ./lib/modules/vault-brain/index.ts
+    ./app/api/chernobog-inc/readiness/route.ts
+
+
+./lib/modules/youtube-ingest/vaultWriter.ts:83:10
+The file pattern (<dynamic> '/' <dynamic> | '/ROOT/vault/chernobog/' <dynamic> | <dynamic> | '/ROOT/vault/chernobog' <dynamic>) matches 153927 files in [project]/
+  [90m81 |[0m
+  [90m82 |[0m [36mfunction[0m resolveVaultRelativePath(vaultRelativePath: string) {
+[31m[1m>[0m [90m83 |[0m   [36mreturn[0m path.join(getVaultRoot(), vaultRelativePath);
+  [90m   |[0m          [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m84 |[0m }
+  [90m85 |[0m
+  [90m86 |[0m [36masync[0m [36mfunction[0m fileExists(absolutePath: string) {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/youtube-ingest/vaultWriter.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/youtube-ingest/vaultWriter.ts
+    ./lib/modules/youtube-ingest/ingestYouTubePlaylist.ts
+    ./lib/modules/youtube-ingest/commands/executeYouTubeIngestCommand.ts
+    ./app/api/youtube/command/route.ts
+
+
+./lib/modules/discord-ingest/approval/buildVaultPullRequest.ts:101:12
+The file pattern (<dynamic> '/' <dynamic> | '/ROOT/vault/chernobog/' <dynamic> | <dynamic> | '/ROOT/vault/chernobog' <dynamic>) matches 76780 files in [project]/
+  [90m 99 |[0m [36mfunction[0m safePathExists(relativePath: string): boolean {
+  [90m100 |[0m   [36mtry[0m {
+[31m[1m>[0m [90m101 |[0m     [36mreturn[0m fs.existsSync(resolveVaultPath(relativePath));
+  [90m    |[0m            [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m102 |[0m   } [36mcatch[0m {
+  [90m103 |[0m     [36mreturn[0m [36mfalse[0m;
+  [90m104 |[0m   }
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/discord-ingest/approval/buildVaultPullRequest.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/discord-ingest/approval/buildVaultPullRequest.ts
+    ./lib/modules/discord-ingest/commands/executeDiscordCommand.ts
+    ./lib/modules/discord-ingest/index.ts
+    ./lib/modules/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/chernobog/tools/builtins/move-path.ts:70:21
+The file pattern (<dynamic> '/' <dynamic> | 'undefined/' <dynamic> | <dynamic> | 'undefined' <dynamic>) matches 153167 files in [project]/
+  [90m68 |[0m     [36mconst[0m kind = [36mawait[0m getPathKind(sourcePath);
+  [90m69 |[0m     [36mconst[0m destinationDir = resolveKnownBaseLocation(input.baseLocation);
+[31m[1m>[0m [90m70 |[0m     [36mconst[0m newPath = path.join(destinationDir, path.basename(sourcePath));
+  [90m   |[0m                     [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m71 |[0m
+  [90m72 |[0m     [36mif[0m (sourcePath === newPath) {
+  [90m73 |[0m       [36mthrow[0m [36mnew[0m [33mError[0m([32m"Source and destination are the same."[0m);
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/tools/builtins/move-path.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/tools/builtins/move-path.ts
+    ./lib/chernobog/tools/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./lib/chernobog/tools/fs-policy.ts:53:19
+The file pattern (<dynamic> '/Desktop' | <dynamic> 'Desktop' | <dynamic> '/Documents' | <dynamic> 'Documents' | <dynamic> '/Downloads' | <dynamic> 'Downloads' | '/ROOT/' | <dynamic>) matches 153180 files in [project]/
+  [90m51 |[0m     path.join(home, [32m"Downloads"[0m),
+  [90m52 |[0m     process.cwd(),
+[31m[1m>[0m [90m53 |[0m   ].map((root) => path.resolve(root));
+  [90m   |[0m                   [31m[1m^^^^^^^^^^^^^^^^^^[0m
+  [90m54 |[0m }
+  [90m55 |[0m
+  [90m56 |[0m [36mexport[0m [36mfunction[0m getDefaultSearchRoot(): string {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/chernobog/tools/fs-policy.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/chernobog/tools/fs-policy.ts
+    ./lib/chernobog/tools/builtins/search.ts
+    ./lib/modules/file-workflow/index.ts
+    ./lib/modules/registry.ts
+    ./lib/chernobog/command-language/moduleParsers.ts
+    ./lib/chernobog/command-language/parser.ts
+    ./app/api/debug/command-language/route.ts
+
+
+./lib/modules/vault-brain/codeSummaryScanner.ts:307:19
+The file pattern (<dynamic> | '/ROOT/') matches 153180 files in [project]/
+  [90m305 |[0m   options: [33mCodeSummaryScanOptions[0m = {}
+  [90m306 |[0m ): [33mPromise[0m<[33mCodeSummaryFileCandidate[0m[]> {
+[31m[1m>[0m [90m307 |[0m   [36mconst[0m rootDir = path.resolve(options.rootDir ?? process.cwd());
+  [90m    |[0m                   [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m308 |[0m   [36mconst[0m includePaths = options.includePaths && options.includePaths.length > [35m0[0m
+  [90m309 |[0m     ? options.includePaths
+  [90m310 |[0m     : [[32m"lib"[0m, [32m"app"[0m, [32m"scripts"[0m, [32m"next.config.ts"[0m, [32m"eslint.config.mjs"[0m];
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/vault-brain/codeSummaryScanner.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/vault-brain/codeSummaryScanner.ts
+    ./lib/modules/vault-brain/index.ts
+    ./app/api/vault/recall/route.ts
+
+
+./lib/modules/vault-brain/v6ReadinessReport.ts:100:10
+The file pattern (<dynamic> | '/ROOT/') matches 153180 files in [project]/
+  [90m 98 |[0m
+  [90m 99 |[0m [36mfunction[0m resolveRoot(rootDir: string | [36mundefined[0m): string {
+[31m[1m>[0m [90m100 |[0m   [36mreturn[0m path.resolve(rootDir ?? process.cwd());
+  [90m    |[0m          [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m101 |[0m }
+  [90m102 |[0m
+  [90m103 |[0m [36mfunction[0m readText(rootDir: string, relativePath: string): string | [36mundefined[0m {
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/vault-brain/v6ReadinessReport.ts
+    ./app/api/chernobog-inc/readiness/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/vault-brain/v6ReadinessReport.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./lib/modules/discord-ingest/approval/applyVaultPullRequest.ts:26:21
+The file pattern (<dynamic> | '/ROOT/vault/chernobog') matches 76780 files in [project]/
+  [90m24 |[0m
+  [90m25 |[0m [36mfunction[0m resolveVaultPath(relativePath: string): string {
+[31m[1m>[0m [90m26 |[0m   [36mconst[0m vaultRoot = path.resolve(getVaultRoot());
+  [90m   |[0m                     [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m27 |[0m   [36mconst[0m normalizedRelativePath = normalizeRelativePath(relativePath);
+  [90m28 |[0m   [36mconst[0m resolvedPath = path.resolve(vaultRoot, normalizedRelativePath);
+  [90m29 |[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/discord-ingest/approval/applyVaultPullRequest.ts
+    ./app/api/discord/vault-pr/[prId]/apply/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/discord-ingest/approval/applyVaultPullRequest.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./lib/modules/discord-ingest/approval/buildVaultPullRequest.ts:83:21
+The file pattern (<dynamic> | '/ROOT/vault/chernobog') matches 76780 files in [project]/
+  [90m81 |[0m
+  [90m82 |[0m [36mfunction[0m resolveVaultPath(relativePath: string): string {
+[31m[1m>[0m [90m83 |[0m   [36mconst[0m vaultRoot = path.resolve(getVaultRoot());
+  [90m   |[0m                     [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m84 |[0m   [36mconst[0m normalizedRelativePath = normalizeRelativePath(relativePath);
+  [90m85 |[0m   [36mconst[0m resolvedPath = path.resolve(vaultRoot, normalizedRelativePath);
+  [90m86 |[0m
+
+Overly broad patterns can lead to build performance issues and over bundling.
+
+Import traces:
+  #1 [App Route]:
+    ./lib/modules/discord-ingest/approval/buildVaultPullRequest.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+  #2 [App Route]:
+    ./lib/modules/discord-ingest/approval/buildVaultPullRequest.ts
+    ./lib/modules/discord-ingest/commands/executeDiscordCommand.ts
+    ./lib/modules/discord-ingest/index.ts
+    ./lib/modules/registry.ts
+    ./lib/chernobog/execution/toolCapabilities.ts
+    ./app/api/tool-catalog/route.ts
+
+
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Import trace:
+  App Route:
+    ./next.config.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Output asset trace:
+  [output]/.next/server/app/api/content-ingest/dashboard-action/route.js
+  [output]/.next/server/chunks/[root-of-the-server]__0on8lzj._.js
+
+Import trace:
+  App Route:
+    ./next.config.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Output asset trace:
+  [output]/.next/server/app/api/content-ingest/dashboard/route.js
+  [output]/.next/server/chunks/[root-of-the-server]__0t79smm._.js
+
+Import trace:
+  App Route:
+    ./next.config.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Output asset trace:
+  [output]/.next/server/app/api/content-watch/session/route.js
+  [output]/.next/server/chunks/[root-of-the-server]__0uf.s6g._.js
+
+Import trace:
+  App Route:
+    ./next.config.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Output asset trace:
+  [output]/.next/server/app/api/youtube/command/route.js
+  [output]/.next/server/chunks/[root-of-the-server]__0aoj~zu._.js
+
+Import trace:
+  App Route:
+    ./next.config.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Output asset trace:
+  [output]/.next/server/app/api/youtube/oauth/callback/route.js
+  [output]/.next/server/chunks/[root-of-the-server]__10bmu6.._.js
+
+Import trace:
+  App Route:
+    ./next.config.ts
+    ./lib/modules/character-generator/projects/characterProjectStore.ts
+    ./app/api/character-generator/projects/[projectId]/canonical-pose/route.ts
+
+
+✓ Compiled successfully in 3.0min
+  Running TypeScript ...
+  Finished TypeScript in 20.7s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/54) ...
+  Generating static pages using 7 workers (13/54) 
+  Generating static pages using 7 workers (26/54) 
+  Generating static pages using 7 workers (40/54) 
+✓ Generating static pages using 7 workers (54/54) in 830ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/ai-runtime
+├ ƒ /api/character-generator/projects
+├ ƒ /api/character-generator/projects/[projectId]
+├ ƒ /api/character-generator/projects/[projectId]/brief
+├ ƒ /api/character-generator/projects/[projectId]/canonical-pose
+├ ƒ /api/character-generator/projects/[projectId]/canonical-pose/image
+├ ƒ /api/character-generator/projects/[projectId]/concepts
+├ ƒ /api/character-generator/projects/[projectId]/concepts/[conceptId]/image
+├ ƒ /api/character-generator/projects/[projectId]/identity-anchor
+├ ƒ /api/character-generator/projects/[projectId]/identity-anchor/image
+├ ƒ /api/character-generator/projects/[projectId]/model
+├ ƒ /api/character-generator/projects/[projectId]/model/file
+├ ƒ /api/character-generator/projects/[projectId]/reference-sheet
+├ ƒ /api/character-generator/projects/[projectId]/reference-sheet/[viewId]/image
+├ ƒ /api/chat
+├ ƒ /api/chernobog-inc/execution/checkpoint
+├ ƒ /api/chernobog-inc/execution/dry-run
+├ ƒ /api/chernobog-inc/execution/plans
+├ ƒ /api/chernobog-inc/missions
+├ ƒ /api/chernobog-inc/missions/checkpoint
+├ ƒ /api/chernobog-inc/missions/status
+├ ƒ /api/chernobog-inc/personal-intelligence
+├ ƒ /api/chernobog-inc/proposals
+├ ƒ /api/chernobog-inc/readiness
+├ ƒ /api/chernobog-inc/structure
+├ ƒ /api/cognition
+├ ƒ /api/content-ingest/action
+├ ƒ /api/content-ingest/dashboard
+├ ƒ /api/content-ingest/dashboard-action
+├ ƒ /api/content-watch/action
+├ ƒ /api/content-watch/session
+├ ƒ /api/debug/command-language
+├ ƒ /api/debug/memory
+├ ƒ /api/debug/state
+├ ƒ /api/debug/traces
+├ ƒ /api/discord/vault-pr/[prId]
+├ ƒ /api/discord/vault-pr/[prId]/apply
+├ ƒ /api/discord/vault-pr/[prId]/bulk
+├ ƒ /api/discord/vault-pr/[prId]/changes/[changeId]
+├ ƒ /api/discovery/itch/adult-preferences
+├ ƒ /api/discovery/itch/adult-settings
+├ ƒ /api/discovery/itch/catalogue
+├ ƒ /api/discovery/itch/command
+├ ƒ /api/discovery/itch/feed
+├ ƒ /api/discovery/itch/feedback
+├ ƒ /api/discovery/itch/filters
+├ ƒ /api/discovery/itch/maintenance
+├ ƒ /api/discovery/itch/notifications
+├ ƒ /api/discovery/itch/recommendations
+├ ƒ /api/discovery/itch/refresh
+├ ƒ /api/discovery/itch/scheduler
+├ ƒ /api/discovery/itch/settings
+├ ƒ /api/discovery/itch/status
+├ ƒ /api/discovery/itch/taxonomy
+├ ƒ /api/discovery/itch/watches
+├ ƒ /api/events
+├ ƒ /api/events/diagnostics
+├ ƒ /api/governance
+├ ƒ /api/governance/trust/evaluate
+├ ƒ /api/learning
+├ ƒ /api/memory-sources
+├ ƒ /api/minecraft-schematic/file/[buildId]/[kind]
+├ ƒ /api/minecraft-schematic/library
+├ ƒ /api/minecraft-schematic/library/[id]
+├ ƒ /api/minecraft-schematic/library/open
+├ ƒ /api/minecraft-schematic/open-folder/[buildId]
+├ ƒ /api/minecraft-schematic/textures/diagnostics
+├ ƒ /api/minecraft-schematic/textures/explain
+├ ƒ /api/model-router
+├ ƒ /api/session
+├ ƒ /api/session/history
+├ ƒ /api/session/reset
+├ ƒ /api/tool-catalog
+├ ƒ /api/tool-execution
+├ ƒ /api/unified-memory
+├ ƒ /api/vault/answer
+├ ƒ /api/vault/briefing
+├ ƒ /api/vault/recall
+├ ƒ /api/world-model
+├ ƒ /api/world-state
+├ ƒ /api/youtube/command
+├ ƒ /api/youtube/oauth/callback
+├ ƒ /api/youtube/oauth/start
+├ ƒ /api/youtube/playlist-ingest
+├ ○ /command
+├ ○ /command-center
+├ ƒ /discover/games
+├ ○ /modules
+├ ƒ /modules/character-forge
+├ ƒ /modules/character-forge/[projectId]
+├ ○ /modules/character-forge/new
+├ ○ /presence
+├ ƒ /projects
+├ ƒ /projects/[slug]
+├ ƒ /projects/activity
+├ ƒ /projects/notes
+├ ○ /review/saved-content
+├ ○ /review/saved-content/watch
+├ ƒ /review/schematic/[buildId]
+├ ƒ /review/vault-pr/[prId]
+├ ƒ /routes
+├ ƒ /schematics
+└ ƒ /schematics/[id]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

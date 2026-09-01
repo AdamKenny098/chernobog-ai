@@ -8,6 +8,7 @@ import {
   deleteMemory,
   extractForgetFact,
   extractMemoryFact,
+  getLastUserRoute,
   getMemories,
   getRecentMessages,
   isForgetRequest,
@@ -59,10 +60,20 @@ import {
   buildContinuityReply,
   detectContinuityQuery,
 } from "@/lib/chernobog/session/continuity";
+import {
+  resolveConversationalFollowUpRoute,
+} from "./followUpRouting";
 
 import { parsePlannerCommand } from "@/lib/chernobog/planner/parser";
 import { runPlannerCommand } from "@/lib/chernobog/planner/coordinator";
 import { buildUnifiedMemoryContext } from "@/lib/chernobog/memory-architecture";
+import {
+  excludeCurrentUserMessageFromHistory,
+  selectResponseContext,
+} from "./contextSelection";
+import {
+  buildBudgetedResponseContext,
+} from "./contextBudget";
 import {
   buildProjectGroundedSystemText,
   resolveActiveProjectContext,
@@ -462,6 +473,13 @@ export async function runCommandPipeline(
           ].join("\n");
   } else {
     const session = getSessionContext(sessionId);
+    const previousUserRoute =
+      getLastUserRoute(sessionId);
+    const inheritedFollowUpRoute =
+      resolveConversationalFollowUpRoute(
+        userMessage,
+        previousUserRoute,
+      );
     const continuityQuery = detectContinuityQuery(userMessage);
 
     if (continuityQuery !== "none") {
@@ -503,6 +521,44 @@ export async function runCommandPipeline(
       reply = formatCommandLanguageHelp();
     
       return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    const explicitPlannerCommand =
+      parsePlannerCommand(userMessage);
+    const explicitPlannerReply =
+      runPlannerCommand(
+        explicitPlannerCommand,
+        session,
+      );
+
+    if (explicitPlannerReply) {
+      route = "planner";
+      setTraceRoute(trace, route);
+
+      addTraceStep(
+        trace,
+        "router",
+        "Explicit planner language handled before module routing",
+        explicitPlannerCommand.kind,
+        explicitPlannerCommand
+      );
+
+      saveMessage(
+        "user",
+        userMessage,
+        route,
+        sessionId,
+      );
+      saveSessionContext(session);
+
+      reply = explicitPlannerReply;
+
+      return finalizePipelinePayload(
+        sessionId,
+        route,
+        reply,
+        trace,
+      );
     }
 
     const moduleFollowUp = await tryHandleModuleFollowUp({
@@ -665,7 +721,8 @@ if (unifiedMemoryAction) {
     }
 
     const plannerCommand =
-  unifiedToPlannerCommand(unifiedCommand) ?? parsePlannerCommand(userMessage);
+      unifiedToPlannerCommand(unifiedCommand) ??
+      explicitPlannerCommand;
     const plannerReply = runPlannerCommand(plannerCommand, session);
 
     if (plannerReply) {
@@ -1054,14 +1111,23 @@ if (unifiedMemoryAction) {
               fallbackReply ??
               "I could not confidently resolve that to a real file. Give me the filename, a clearer query, or ask me to search for it first.";
           } else {
-            route = await routeMessage(userMessage);
+            route =
+              inheritedFollowUpRoute ??
+              (await routeMessage(userMessage));
             setTraceRoute(trace, route);
 
             addTraceStep(
               trace,
               "router",
-              "Falling back to normal message router",
-              route
+              inheritedFollowUpRoute
+                ? "Conversational follow-up inherited previous route"
+                : "Falling back to normal message router",
+              route,
+              inheritedFollowUpRoute
+                ? {
+                    previousUserRoute,
+                  }
+                : undefined
             );
 
             saveMessage("user", userMessage, route, sessionId);
@@ -1070,15 +1136,43 @@ if (unifiedMemoryAction) {
             const storedMemories = getMemories(12);
             const recentMessages = getRecentMessages(sessionId, 8);
 
-            const worldStateContext =
-              await buildChernobogWorldStateContext({
-                projectId:
-                  activeSession.activeProjectId ??
-                  undefined,
-              });
+            const responseContextSelection =
+              selectResponseContext(
+                userMessage,
+              );
 
-            const worldModelContext =
-              await buildChernobogWorldModelContext();
+            addTraceStep(
+              trace,
+              "workflow_update",
+              "Phase 11 response context selected",
+              undefined,
+              {
+                includeWorldState:
+                  responseContextSelection.includeWorldState,
+                includeWorldModel:
+                  responseContextSelection.includeWorldModel,
+                reasons:
+                  responseContextSelection.reasons,
+              }
+            );
+
+            const worldStateSystemText =
+              responseContextSelection.includeWorldState
+                ? (
+                    await buildChernobogWorldStateContext({
+                      projectId:
+                        activeSession.activeProjectId ??
+                        undefined,
+                    })
+                  ).systemText
+                : "";
+
+            const worldModelSystemText =
+              responseContextSelection.includeWorldModel
+                ? (
+                    await buildChernobogWorldModelContext()
+                  ).systemText
+                : "";
 
             const authoritativeAssessment =
               shouldUseAuthoritativeAssessmentContext(
@@ -1086,32 +1180,61 @@ if (unifiedMemoryAction) {
                 activeSession.activeProjectId
               );
 
+            const historyRecentMessages =
+              excludeCurrentUserMessageFromHistory(
+                recentMessages,
+                userMessage,
+              );
+
             const modelRecentMessages =
               authoritativeAssessment
-                ? recentMessages.filter(
+                ? historyRecentMessages.filter(
                     (message) =>
                       message.role !== "assistant"
                   )
-                : recentMessages;
+                : historyRecentMessages;
 
             const memoryContext = await buildUnifiedMemoryContext({
               session: activeSession,
               persistedMemories: storedMemories,
-              recentMessages: modelRecentMessages,
+
+              // Conversation continuity is already supplied to the model as
+              // structured Ollama chat messages below. Do not copy that same
+              // transcript into the memory system prompt as well.
+              recentMessages: [],
+
               userMessage,
-            projectId: activeSession.activeProjectId ?? undefined,
-  });
+              projectId:
+                activeSession.activeProjectId ??
+                undefined,
+            });
 
             addTraceStep(
               trace,
               "workflow_update",
-              "Layered memory context built for routed response",
+              "Working/retrieved memory context built for routed response",
               undefined,
               {
                 shortTermEntries: memoryContext.shortTerm.lines.length,
                 workingEntries: memoryContext.working.lines.length,
                 longTermEntries: memoryContext.longTerm.lines.length,
               }
+            );
+
+            const budgetedResponseContext =
+              buildBudgetedResponseContext({
+                memorySystemText:
+                  memoryContext.systemText,
+                worldStateSystemText,
+                worldModelSystemText,
+              });
+
+            addTraceStep(
+              trace,
+              "workflow_update",
+              "Phase 11 response context budget applied",
+              undefined,
+              budgetedResponseContext.metrics
             );
 
             await associateExplicitLearningCorrection({
@@ -1126,16 +1249,9 @@ if (unifiedMemoryAction) {
               memories: storedMemories,
               recentMessages: modelRecentMessages,
               sessionSummary: buildProjectGroundedSystemText(
-      [
-                  [memoryContext.systemText, worldStateContext.systemText]
-                    .filter(Boolean)
-                    .join("\n\n"),
-                  worldModelContext.systemText,
-                ]
-                  .filter(Boolean)
-                  .join("\n\n"),
-      activeSession.activeProjectId,
-    ),
+                budgetedResponseContext.systemText,
+                activeSession.activeProjectId,
+              ),
             });
 
             updateSessionAfterRoute(activeSession, route);

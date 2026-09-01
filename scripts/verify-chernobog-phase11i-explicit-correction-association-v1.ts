@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- partial runtime mocks in acceptance verifier */
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";

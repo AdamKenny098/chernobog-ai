@@ -286,7 +286,7 @@ export async function associateExplicitLearningCorrection(
             1,
           detail:
             correction,
-        } as any,
+        },
       );
 
     learning.addFeedback(
