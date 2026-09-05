@@ -7,15 +7,23 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "rea
 import * as THREE from "three";
 import type { CommandHierarchyNode } from "./commandHierarchy";
 import {
+  publishChernobogCoreState,
   readChernobogCoreState,
   subscribeChernobogCoreState,
   type ChernobogCoreState,
 } from "@/lib/chernobog/ui/coreStateBridge";
 import {
   CHERNOBOG_ROUTING_VISUAL_TTL_MS,
+  publishChernobogRoutingSignal,
   subscribeChernobogRoutingSignal,
   type ChernobogRoutingSignal,
 } from "@/lib/chernobog/ui/coreRoutingBridge";
+import {
+  subscribeChernobogRuntimeActivity,
+  type ObservedRuntimeApproval,
+  type ObservedRuntimeExecutionStep,
+  type ObservedRuntimeToolActivity,
+} from "@/lib/chernobog/ui/runtimeActivityObserver";
 
 export type HierarchyTransition = {
   serial: number;
@@ -1469,7 +1477,102 @@ export function CommandCenterScene3D({
 }) {
   const [routingSignal, setRoutingSignal] =
     useState<ChernobogRoutingSignal | null>(null);
+  const [toolActivity, setToolActivity] =
+    useState<ObservedRuntimeToolActivity | null>(
+      null,
+    );
+  const [executionActivity, setExecutionActivity] =
+    useState<ObservedRuntimeExecutionStep | null>(
+      null,
+    );
+  const [approvalActivity, setApprovalActivity] =
+    useState<ObservedRuntimeApproval | null>(
+      null,
+    );
 
+
+  useEffect(() => {
+    return subscribeChernobogRuntimeActivity({
+      onRoute: (event) => {
+        publishChernobogRoutingSignal(event.route);
+        publishChernobogCoreState("routing");
+      },
+      onTool: (activity) => {
+        setToolActivity(activity);
+        publishChernobogRoutingSignal("tools");
+      },
+      onExecutionStep: (activity) => {
+        setExecutionActivity(activity);
+
+        if (activity.status === "running") {
+          publishChernobogCoreState("routing");
+        } else if (
+          activity.status === "blocked"
+        ) {
+          publishChernobogCoreState("waiting");
+        } else if (
+          activity.status === "failed"
+        ) {
+          publishChernobogCoreState("failure");
+        }
+      },
+      onApproval: (activity) => {
+        setApprovalActivity(activity);
+        publishChernobogCoreState("waiting");
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!toolActivity) {
+      return;
+    }
+
+    const timeoutMs =
+      toolActivity.status === "running"
+        ? 15_000
+        : toolActivity.status === "failed"
+          ? 2_600
+          : 1_800;
+
+    const timer = window.setTimeout(() => {
+      setToolActivity(null);
+    }, timeoutMs);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [toolActivity]);
+  useEffect(() => {
+    return subscribeChernobogCoreState(
+      (state) => {
+        if (state === "thinking") {
+          setApprovalActivity(null);
+        }
+      },
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!executionActivity) {
+      return;
+    }
+
+    const timeoutMs =
+      executionActivity.status === "running"
+        ? 15_000
+        : executionActivity.status === "completed"
+          ? 1_800
+          : 3_000;
+
+    const timer = window.setTimeout(() => {
+      setExecutionActivity(null);
+    }, timeoutMs);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [executionActivity]);
   useEffect(() => {
     return subscribeChernobogRoutingSignal(
       setRoutingSignal,
@@ -1503,8 +1606,27 @@ export function CommandCenterScene3D({
       ? routingSignal?.executiveId ?? null
       : null;
 
+  const approvalNodeId =
+    current.kind === "core" && approvalActivity
+      ? "operations"
+      : null;
+
+  const executionNodeId =
+    current.kind === "core" && executionActivity
+      ? "operations"
+      : null;
+
+  const toolNodeId =
+    current.kind === "core" && toolActivity
+      ? "engineering"
+      : null;
+
   const effectiveActiveNodeId =
-    hoveredNodeId ?? routedNodeId;
+    hoveredNodeId ??
+    toolNodeId ??
+    approvalNodeId ??
+    executionNodeId ??
+    routedNodeId;
 
   return (
     <div
@@ -1535,6 +1657,96 @@ export function CommandCenterScene3D({
           transition={transition}
         />
       </Canvas>
+      {approvalActivity ? (
+        <div
+          className="absolute bottom-20 left-1/2 z-20 max-w-[72%] -translate-x-1/2 border border-amber-500/30 bg-black/65 px-5 py-3 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-amber-200/75 backdrop-blur-sm"
+        >
+          <div>
+            <span className="text-amber-500/65">
+              EXECUTION GATE
+            </span>
+            <span className="mx-2 text-amber-500/25">
+              /
+            </span>
+            <span className="text-amber-100/95">
+              APPROVAL REQUIRED
+            </span>
+          </div>
+
+          <div className="mt-1 tracking-[0.12em] text-amber-100/70">
+            {approvalActivity.stepLabel ??
+              approvalActivity.category}
+            {approvalActivity.action
+              ? ` / ${approvalActivity.action}`
+              : ""}
+          </div>
+
+          <div className="mt-1 normal-case tracking-normal text-amber-200/45">
+            {approvalActivity.reason}
+          </div>
+        </div>
+      ) : null}
+
+      {executionActivity && !approvalActivity ? (
+        <div
+          className="absolute bottom-20 left-1/2 z-20 -translate-x-1/2 border border-amber-500/20 bg-black/55 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-amber-200/70 backdrop-blur-sm"
+        >
+          <span className="text-amber-500/55">
+            EXECUTION
+          </span>
+          <span className="mx-2 text-amber-500/25">
+            /
+          </span>
+          <span>
+            STEP {executionActivity.stepIndex + 1}/
+            {executionActivity.stepCount}
+          </span>
+          <span className="mx-2 text-amber-500/25">
+            /
+          </span>
+          <span>
+            {executionActivity.status.toUpperCase()}
+          </span>
+          <span className="mx-2 text-amber-500/25">
+            /
+          </span>
+          <span className="text-amber-100/90">
+            {executionActivity.stepLabel}
+          </span>
+          <span className="mx-2 text-amber-500/25">
+            /
+          </span>
+          <span className="text-amber-500/60">
+            {executionActivity.action}
+          </span>
+        </div>
+      ) : null}
+
+      {toolActivity ? (
+        <div
+          className="absolute bottom-10 left-1/2 z-20 -translate-x-1/2 border border-amber-500/20 bg-black/55 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-amber-200/70 backdrop-blur-sm"
+        >
+          <span className="text-amber-500/55">
+            TOOL GATEWAY
+          </span>
+          <span className="mx-2 text-amber-500/25">
+            /
+          </span>
+          <span>
+            {toolActivity.status === "running"
+              ? "EXECUTING"
+              : toolActivity.status === "failed"
+                ? "FAILED"
+                : "COMPLETE"}
+          </span>
+          <span className="mx-2 text-amber-500/25">
+            /
+          </span>
+          <span className="text-amber-100/90">
+            {toolActivity.toolName}
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }

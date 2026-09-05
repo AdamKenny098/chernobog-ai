@@ -755,6 +755,7 @@ if (unifiedMemoryAction) {
 
     const execution = await executeFromMessage(userMessage, {
       previousState: sessionWithExecution.executionState,
+      sessionId,
     });
 
     if (execution.handled) {

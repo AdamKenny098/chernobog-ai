@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export type ToolExecutionContext = {
   platform?: NodeJS.Platform;
+  sessionId?: string;
 };
 
 export type ToolSuccess<T = unknown> = {

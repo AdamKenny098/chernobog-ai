@@ -15,6 +15,7 @@ import { createInternalExecutionHandlers } from "./internalExecutionHandlers";
 
 export interface ExecuteFromMessageOptions {
   previousState?: ExecutionState;
+  sessionId?: string;
 }
 
 export interface ExecuteFromMessageResult {
@@ -66,6 +67,7 @@ if (approvalCommand.kind !== "none") {
   }
 
   const completedTask = await runExecutionTask(task, {
+    sessionId: options.sessionId,
     handlers: {
         ...createDefaultExecutionHandlers(),
         ...createInternalExecutionHandlers({

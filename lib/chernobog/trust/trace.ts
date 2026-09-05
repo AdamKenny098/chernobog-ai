@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import type { RouteName } from "@/lib/chernobog/session/types";
+import { publishChernobogEventSafely } from "@/lib/chernobog/events/publishers";
 import type {
   TrustFailureCategory,
   TrustTrace,
@@ -55,6 +56,27 @@ export function setTraceRoute(trace: TrustTrace, route: RouteName): void {
   trace.route = route;
 
   addTraceStep(trace, "router", "Route selected", route);
+
+  void publishChernobogEventSafely({
+    type: "runtime.route.selected",
+    source: {
+      subsystem: "command-pipeline",
+      nodeId: "router",
+    },
+    severity: "info",
+    subject: trace.sessionId,
+    scope: "command",
+    correlationId: trace.id,
+    dedupeKey: `runtime.route.selected:${trace.id}:${route}`,
+    payload: {
+      sessionId: trace.sessionId,
+      traceId: trace.id,
+      route,
+    },
+    metadata: {
+      tags: ["runtime", "routing", "command-center"],
+    },
+  });
 }
 
 export function setTraceTool(trace: TrustTrace, tool: string, detail?: string): void {

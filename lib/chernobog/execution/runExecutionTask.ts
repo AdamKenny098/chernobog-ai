@@ -52,9 +52,12 @@ export interface RunExecutionTaskOptions {
 
   /**
    * Safety limit so a bad task cannot loop forever.
-   */
-  maxSteps?: number;
+   */  maxSteps?: number;
 
+  /**
+   * Browser/session correlation for truthful runtime observation.
+   */
+  sessionId?: string;
 
   /**
    * Optional 11D cognitive governance context.
@@ -73,6 +76,12 @@ type ExecutionLifecycleEventType =
   | "execution.completed"
   | "execution.failed"
   | "execution.waiting_for_approval";
+
+type ExecutionStepLifecycleEventType =
+  | "execution.step.started"
+  | "execution.step.completed"
+  | "execution.step.failed"
+  | "execution.step.blocked";
 
 function getHandlerKey(step: ExecutionStep) {
   return step.action ?? step.kind;
@@ -136,6 +145,164 @@ async function publishExecutionLifecycleEvent(
         type === "execution.failed"
           ? true
           : undefined,
+    },
+  });
+}
+
+async function publishExecutionStepLifecycleEvent(
+  type: ExecutionStepLifecycleEventType,
+  task: ExecutionTask,
+  stepId: string,
+  sessionId?: string,
+  actionOverride?: string
+): Promise<void> {
+  const step =
+    task.steps.find(
+      (candidate) => candidate.id === stepId
+    );
+
+  if (!step) {
+    return;
+  }
+
+  const stepIndex =
+    task.steps.findIndex(
+      (candidate) => candidate.id === stepId
+    );
+
+  const severity =
+    type === "execution.step.failed" ||
+    type === "execution.step.blocked"
+      ? "warning"
+      : "info";
+
+  await publishChernobogEventSafely({
+    type,
+
+    source: {
+      subsystem: "execution",
+      nodeId: "step-runner",
+    },
+
+    severity,
+
+    subject: task.id,
+    scope: `execution:${task.category}`,
+    correlationId: task.id,
+    causationId: step.id,
+
+    payload: {
+      ...(sessionId
+        ? {
+            sessionId,
+          }
+        : {}),
+
+      taskId: task.id,
+      category: task.category,
+      taskStatus: task.status,
+
+      stepId: step.id,
+      stepIndex,
+      stepCount: task.steps.length,
+      stepKind: step.kind,
+      stepLabel: step.label,
+
+      action:
+        actionOverride ??
+        step.action ??
+        step.kind,
+
+      risk: step.risk,
+      status: step.status,
+
+      ...(step.error
+        ? {
+            error: step.error,
+          }
+        : {}),
+    },
+
+    metadata: {
+      tags: [
+        "execution",
+        "execution-step",
+        step.kind,
+        step.status,
+      ],
+
+      sensitive:
+        type === "execution.step.failed"
+          ? true
+          : undefined,
+    },
+  });
+}
+
+async function publishExecutionApprovalRequiredEvent(
+  task: ExecutionTask,
+  sessionId?: string
+): Promise<void> {
+  const currentStep =
+    task.currentStepId
+      ? task.steps.find(
+          (step) =>
+            step.id === task.currentStepId
+        )
+      : undefined;
+
+  await publishChernobogEventSafely({
+    type: "execution.approval.required",
+
+    source: {
+      subsystem: "execution",
+      nodeId: "approval-gate",
+    },
+
+    severity: "notice",
+
+    subject: task.id,
+    scope: `execution:${task.category}`,
+    correlationId: task.id,
+    causationId: currentStep?.id,
+
+    payload: {
+      ...(sessionId
+        ? {
+            sessionId,
+          }
+        : {}),
+
+      taskId: task.id,
+      category: task.category,
+      risk: task.risk,
+      status: task.status,
+
+      reason:
+        task.approval.reason ??
+        task.error ??
+        "Execution requires user approval.",
+
+      ...(currentStep
+        ? {
+            stepId: currentStep.id,
+            stepKind: currentStep.kind,
+            stepLabel: currentStep.label,
+            action:
+              currentStep.action ??
+              currentStep.kind,
+            stepRisk: currentStep.risk,
+            stepStatus: currentStep.status,
+          }
+        : {}),
+    },
+
+    metadata: {
+      tags: [
+        "execution",
+        "approval",
+        "waiting",
+      ],
     },
   });
 }
@@ -237,6 +404,11 @@ export async function runExecutionTask(
       },
     };
 
+    await publishExecutionApprovalRequiredEvent(
+      task,
+      options.sessionId
+    );
+
     return finishExecution(
       "execution.waiting_for_approval",
       task
@@ -302,6 +474,14 @@ if (
         }
       );
 
+      await publishExecutionStepLifecycleEvent(
+        "execution.step.blocked",
+        task,
+        step.id,
+        options.sessionId,
+        getHandlerKey(step)
+      );
+
       task = failExecutionTask(
         task,
         getGovernanceDecisionMessage(
@@ -336,6 +516,14 @@ if (
         }
       );
 
+      await publishExecutionStepLifecycleEvent(
+        "execution.step.blocked",
+        task,
+        step.id,
+        options.sessionId,
+        getHandlerKey(step)
+      );
+
       const approvalReason =
         getGovernanceDecisionMessage(
           stepGovernance,
@@ -357,6 +545,11 @@ if (
             approvalReason,
         },
       };
+
+      await publishExecutionApprovalRequiredEvent(
+        task,
+        options.sessionId
+      );
 
       return finishExecution(
         "execution.waiting_for_approval",
@@ -381,6 +574,14 @@ if (
         }
       );
 
+      await publishExecutionStepLifecycleEvent(
+        "execution.step.failed",
+        task,
+        step.id,
+        options.sessionId,
+        handlerKey
+      );
+
       task = failExecutionTask(
         task,
         `No execution handler found for "${handlerKey}".`
@@ -396,6 +597,14 @@ if (
       task,
       step.id,
       "running"
+    );
+
+    await publishExecutionStepLifecycleEvent(
+      "execution.step.started",
+      task,
+      step.id,
+      options.sessionId,
+      handlerKey
     );
 
     try {
@@ -449,6 +658,14 @@ if (
           }
         );
 
+        await publishExecutionStepLifecycleEvent(
+          "execution.step.failed",
+          task,
+          step.id,
+          options.sessionId,
+          handlerKey
+        );
+
         task = failExecutionTask(
           task,
           result.error ??
@@ -469,6 +686,14 @@ if (
           output:
             result.output,
         }
+      );
+
+      await publishExecutionStepLifecycleEvent(
+        "execution.step.completed",
+        task,
+        step.id,
+        options.sessionId,
+        handlerKey
       );
 
       task = updateExecutionTask(
@@ -515,6 +740,14 @@ if (
         {
           error: message,
         }
+      );
+
+      await publishExecutionStepLifecycleEvent(
+        "execution.step.failed",
+        task,
+        step.id,
+        options.sessionId,
+        handlerKey
       );
 
       task = failExecutionTask(

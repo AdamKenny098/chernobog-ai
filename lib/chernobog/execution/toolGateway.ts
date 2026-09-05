@@ -29,6 +29,7 @@ export interface UnifiedToolInvocationSummary {
   origin:
     UnifiedToolInvocationOrigin;
   platform: NodeJS.Platform;
+  sessionId?: string;
 }
 
 export interface UnifiedToolInvocationResult {
@@ -52,6 +53,8 @@ export function summarizeUnifiedToolInvocation(
     platform:
       invocation.context?.platform ??
       process.platform,
+    sessionId:
+      invocation.context?.sessionId,
   };
 }
 
@@ -98,6 +101,12 @@ export async function invokeToolDetailed(
         summary.origin,
       platform:
         summary.platform,
+      ...(summary.sessionId
+        ? {
+            sessionId:
+              summary.sessionId,
+          }
+        : {}),
     },
     metadata: {
       tags: [
@@ -144,6 +153,12 @@ export async function invokeToolDetailed(
         summary.origin,
       ok:
         result.ok,
+      ...(summary.sessionId
+        ? {
+            sessionId:
+              summary.sessionId,
+          }
+        : {}),
       ...(failureKind
         ? {
             failureKind,

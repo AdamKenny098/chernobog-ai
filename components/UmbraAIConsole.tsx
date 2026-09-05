@@ -10,10 +10,7 @@ import type {
 
 import RightDashboardRail from "./chernobog/RightDashboardRail";
 import { publishChernobogCoreState } from "@/lib/chernobog/ui/coreStateBridge";
-import {
-  clearChernobogRoutingSignal,
-  publishChernobogRoutingSignal,
-} from "@/lib/chernobog/ui/coreRoutingBridge";
+import { clearChernobogRoutingSignal } from "@/lib/chernobog/ui/coreRoutingBridge";
 
 export type LogSource = "USER" | "SYSTEM" | "ROUTER" | "CHERNOBOG";
 
@@ -602,6 +599,10 @@ if (cancelled) {
     if (!value || isBusy || !sessionId) return;
     const activeSessionId = sessionId;
     clearChernobogRoutingSignal();
+    setSession((prev) => ({
+      ...prev,
+      activeRoute: "none",
+    }));
 
     setInput("");
     setIsBusy(true);
@@ -656,10 +657,6 @@ if (cancelled) {
       if (data.debugTrace) {
         setDebugTrace(data.debugTrace);
       }
-
-      publishChernobogRoutingSignal(
-        normalizeText(data.route, "unknown"),
-      );
       const route = normalizeText(data.route, "unknown").toUpperCase();
       const reply = normalizeText(data.reply, "No response returned.");
 

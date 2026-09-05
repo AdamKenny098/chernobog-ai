@@ -1,4 +1,4 @@
-﻿import { logToolCall } from "@/lib/chernobog/db";
+import { logToolCall } from "@/lib/chernobog/db";
 import {
   clearPendingDisambiguation,
   getSessionContext,
@@ -136,6 +136,7 @@ export async function executeAndTrackTool(
 
   const result = await executeTool(toolName, input, {
     platform: process.platform,
+    sessionId,
   });
 
   try {
