@@ -58,3 +58,13 @@ repo-files-clean.txt
 
 
 /data/character-forge/
+
+# Chernobog generated/local state
+/.chernobog-patch-backups/
+/.chernobog/diagnostics/
+/.chernobog/runtime/
+/tmp/
+/imports/
+/exports/
+/*.patch
+*.blend1

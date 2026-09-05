@@ -1,7 +1,0 @@
-﻿Saved YouTube test fixture
-First Fixture Video
-https://www.youtube.com/watch?v=dQw4w9WgXcQ
-Second Fixture Video
-https://youtu.be/jNQXAC9IVRw
-Third Fixture Short
-https://www.youtube.com/shorts/aqz-KE-bpKQ
