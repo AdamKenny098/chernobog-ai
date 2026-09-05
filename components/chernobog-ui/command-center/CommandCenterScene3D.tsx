@@ -11,6 +11,11 @@ import {
   subscribeChernobogCoreState,
   type ChernobogCoreState,
 } from "@/lib/chernobog/ui/coreStateBridge";
+import {
+  CHERNOBOG_ROUTING_VISUAL_TTL_MS,
+  subscribeChernobogRoutingSignal,
+  type ChernobogRoutingSignal,
+} from "@/lib/chernobog/ui/coreRoutingBridge";
 
 export type HierarchyTransition = {
   serial: number;
@@ -1189,6 +1194,145 @@ function HierarchyNode3D({
   );
 }
 
+function HierarchyConnection3D({
+  index,
+  active,
+  transition,
+}: {
+  index: number;
+  active: boolean;
+  transition: HierarchyTransition;
+}) {
+  const reduceMotion = useReducedMotion();
+  const viewport = useThree((state) => state.viewport);
+  const pulseRef = useRef<THREE.Group>(null);
+  const pulseCycleRef = useRef(0);
+  const endpoint = getRingWorldPosition(viewport, index);
+
+  const positions = useMemo(
+    () =>
+      new Float32Array([
+        0,
+        0,
+        -0.16,
+        endpoint.x,
+        endpoint.y,
+        -0.16,
+      ]),
+    [endpoint.x, endpoint.y],
+  );
+
+  useFrame((_, delta) => {
+    const pulse = pulseRef.current;
+    if (!pulse) {
+      return;
+    }
+
+    if (!active || reduceMotion) {
+      pulse.visible = false;
+      pulseCycleRef.current = 0;
+      return;
+    }
+
+    /*
+     * One restrained electrical impulse followed by a short dead-space gap.
+     * The same active signal will later be driven by the real routing bridge.
+     */
+    pulseCycleRef.current =
+      (pulseCycleRef.current + delta * 0.82) % 1.28;
+
+    const phase = pulseCycleRef.current;
+    if (phase > 1) {
+      pulse.visible = false;
+      return;
+    }
+
+    pulse.visible = true;
+
+    const progress = THREE.MathUtils.smootherstep(phase, 0, 1);
+    pulse.position.set(
+      endpoint.x * progress,
+      endpoint.y * progress,
+      -0.08,
+    );
+
+    const envelope = Math.sin(progress * Math.PI);
+    pulse.scale.setScalar(0.78 + envelope * 0.48);
+  });
+
+  return (
+    <group key={transition.serial}>
+      <lineSegments>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[positions, 3]}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial
+          color={active ? "#ffad63" : "#7d4927"}
+          transparent
+          opacity={active ? 0.4 : 0.12}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          depthTest={false}
+          toneMapped={false}
+        />
+      </lineSegments>
+
+      <group ref={pulseRef} visible={false}>
+        <mesh>
+          <sphereGeometry args={[0.045, 16, 16]} />
+          <meshBasicMaterial
+            color="#ffd29a"
+            transparent
+            opacity={0.96}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+            depthTest={false}
+            toneMapped={false}
+          />
+        </mesh>
+
+        <mesh scale={2.65}>
+          <sphereGeometry args={[0.045, 14, 14]} />
+          <meshBasicMaterial
+            color="#ff8c32"
+            transparent
+            opacity={0.16}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+            depthTest={false}
+            toneMapped={false}
+          />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+function HierarchyConnections3D({
+  nodes,
+  hoveredNodeId,
+  transition,
+}: {
+  nodes: CommandHierarchyNode[];
+  hoveredNodeId: string | null;
+  transition: HierarchyTransition;
+}) {
+  return (
+    <group>
+      {nodes.slice(0, 8).map((node, index) => (
+        <HierarchyConnection3D
+          key={`nerve-${node.id}-${transition.serial}`}
+          index={index}
+          active={hoveredNodeId === node.id}
+          transition={transition}
+        />
+      ))}
+    </group>
+  );
+}
+
 function CameraFocus({ depth }: { depth: number }) {
   const reduceMotion = useReducedMotion();
 
@@ -1276,6 +1420,12 @@ function OrbitalScaffold({
         </mesh>
       </group>
 
+      <HierarchyConnections3D
+        nodes={nodes}
+        hoveredNodeId={hoveredNodeId}
+        transition={transition}
+      />
+
       <Suspense
         fallback={<ProceduralCore active={current.kind === "core"} />}
       >
@@ -1317,6 +1467,45 @@ export function CommandCenterScene3D({
   hoveredNodeId: string | null;
   transition: HierarchyTransition;
 }) {
+  const [routingSignal, setRoutingSignal] =
+    useState<ChernobogRoutingSignal | null>(null);
+
+  useEffect(() => {
+    return subscribeChernobogRoutingSignal(
+      setRoutingSignal,
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!routingSignal) {
+      return;
+    }
+
+    const elapsed =
+      Date.now() - routingSignal.changedAt;
+
+    const remaining = Math.max(
+      0,
+      CHERNOBOG_ROUTING_VISUAL_TTL_MS - elapsed,
+    );
+
+    const timer = window.setTimeout(() => {
+      setRoutingSignal(null);
+    }, remaining);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [routingSignal]);
+
+  const routedNodeId =
+    current.kind === "core"
+      ? routingSignal?.executiveId ?? null
+      : null;
+
+  const effectiveActiveNodeId =
+    hoveredNodeId ?? routedNodeId;
+
   return (
     <div
       aria-hidden="true"
@@ -1342,7 +1531,7 @@ export function CommandCenterScene3D({
         <OrbitalScaffold
           current={current}
           nodes={nodes}
-          hoveredNodeId={hoveredNodeId}
+          hoveredNodeId={effectiveActiveNodeId}
           transition={transition}
         />
       </Canvas>

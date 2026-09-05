@@ -323,20 +323,7 @@ export function RecursiveCommandHierarchy() {
             strokeWidth="0.1"
             strokeDasharray="1.1 1.8"
           />
-          {nodes.slice(0, 8).map((node, index) => {
-            const position = ringPositions[index];
-            return (
-              <line
-                key={`line-${node.id}`}
-                x1="50"
-                y1="48"
-                x2={position.x}
-                y2={position.y}
-                stroke="rgba(255,157,46,0.085)"
-                strokeWidth="0.1"
-              />
-            );
-          })}
+
         </svg>
 
         <AnimatePresence mode="wait" initial={false}>
