@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-08-31T23:37:44.769Z",
+  "createdAt": "2026-09-05T17:49:34.633Z",
   "recordCount": 31,
-  "recordsSha256": "ba765421d30b1192de260d1e9a1c59aa65dc90062e0a29a9103d27682b81cc7d",
+  "recordsSha256": "efd7c1b206e49531f4fd49ceb8ed0368a1ac72ebd4e5f228627ae2fa784efdb7",
   "records": [
     {
       "schemaVersion": 1,
@@ -31,7 +31,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.149Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "7ef41c3e-69ab-445c-baeb-9922b0af058b",
@@ -74,7 +74,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.144Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "ebf34300-8a66-43ae-bffc-4c12186ad14f",
@@ -118,7 +118,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.153Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "f1989947-6498-4980-9073-12a5b5612e2e",
@@ -161,7 +161,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.151Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "804713db-6dca-480f-8f94-5233bd075bb8",
@@ -204,7 +204,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.154Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "d3bf9ed0-049b-4673-b040-5fb4cb2c671d",
@@ -248,7 +248,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.155Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "794f75f8-6836-4c71-835d-8e1ba52b72c0",
@@ -291,7 +291,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.158Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "2d8b8599-dd75-4f59-879f-c02cd4528812",
@@ -334,7 +334,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.156Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "26c48cb0-51b7-4cbc-9ec6-a6f88ef46428",
@@ -378,7 +378,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.160Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "d016dcb7-b841-4d35-b315-04aba9475f89",
@@ -421,7 +421,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.159Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "9c36a83b-f932-4ad7-a050-f5636ebe792a",
@@ -465,7 +465,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.163Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "c0f3939d-9e57-4892-8d55-94be908ade2f",
@@ -508,7 +508,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.162Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "4ba9fef3-662b-46ac-856e-31f7a075792e",
@@ -551,7 +551,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.164Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "7d794782-07eb-4776-aab1-d21b01342bd0",
@@ -595,7 +595,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.166Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "171b18d1-f969-4c47-b017-379e8663c5b2",
@@ -638,7 +638,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.167Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "a6c4b9fe-91bb-4718-899b-d914fcd81442",
@@ -682,7 +682,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.168Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "51eb77a3-ca59-47a0-bda3-761a6627af0f",
@@ -725,7 +725,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.821Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "757c328b-2de1-4e85-88f0-68e63197a02f",
@@ -768,7 +768,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.817Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "4677d1b2-e820-4641-9b4c-f26ec2fccff6",
@@ -812,7 +812,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.825Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "1024437e-7f3a-4271-b97a-f5edfc6a2386",
@@ -855,7 +855,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.823Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
         "eventId": "74f3ce54-2522-4178-8e42-950ed9d785d0",
@@ -876,22 +876,22 @@
       "key": "model.ollama.available",
       "namespace": "model",
       "value": true,
-      "observedAt": "2026-08-31T22:16:53.706Z",
-      "updatedAt": "2026-08-31T22:16:53.709Z",
+      "observedAt": "2026-08-31T23:38:17.410Z",
+      "updatedAt": "2026-09-02T11:43:36.760Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.706Z",
+        "expiresAt": "2026-08-31T23:43:17.410Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "fe346f59-2710-418f-ae97-ce36adb9775e",
+        "eventId": "61604656-2a5d-4a42-ab8e-6bc8accbdd9c",
         "eventType": "runtime.model_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.706Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.706Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.410Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.410Z",
         "projectorId": "domain-model-provider-availability",
         "subject": "ollama",
         "source": {
@@ -904,22 +904,22 @@
       "key": "model.ollama.health",
       "namespace": "model",
       "value": "healthy",
-      "observedAt": "2026-08-31T22:16:53.681Z",
-      "updatedAt": "2026-08-31T22:16:53.684Z",
+      "observedAt": "2026-08-31T23:38:17.405Z",
+      "updatedAt": "2026-09-02T11:43:36.759Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.681Z",
+        "expiresAt": "2026-08-31T23:43:17.405Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "db348db7-6a63-4869-bc4a-1e9544db546a",
+        "eventId": "40a11659-b0f5-4a5b-84c4-f4ed0ee1eea6",
         "eventType": "runtime.health_observed",
-        "eventOccurredAt": "2026-08-31T22:16:53.681Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.681Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.405Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.405Z",
         "projectorId": "domain-runtime-health-observation",
         "subject": "ollama",
         "scope": "runtime",
@@ -936,31 +936,30 @@
         "id": "ollama",
         "kind": "model-provider",
         "status": "healthy",
-        "nodeId": null,
         "platform": "win32",
-        "latencyMs": 7,
+        "latencyMs": 10,
         "capabilities": [
           "generate",
           "model-discovery"
         ],
-        "observedAt": "2026-08-31T22:16:53.681Z"
+        "observedAt": "2026-08-31T23:38:17.405Z"
       },
-      "observedAt": "2026-08-31T22:16:53.706Z",
-      "updatedAt": "2026-08-31T22:16:53.709Z",
+      "observedAt": "2026-08-31T23:38:17.410Z",
+      "updatedAt": "2026-09-02T11:43:36.760Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.706Z",
+        "expiresAt": "2026-08-31T23:43:17.410Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "fe346f59-2710-418f-ae97-ce36adb9775e",
+        "eventId": "61604656-2a5d-4a42-ab8e-6bc8accbdd9c",
         "eventType": "runtime.model_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.706Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.706Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.410Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.410Z",
         "projectorId": "domain-model-provider-availability",
         "subject": "ollama",
         "source": {
@@ -980,22 +979,22 @@
         "available": true,
         "matchedInstalledModel": "deepseek-coder-v2:16b"
       },
-      "observedAt": "2026-08-31T22:16:53.758Z",
-      "updatedAt": "2026-08-31T22:16:53.761Z",
+      "observedAt": "2026-08-31T23:38:17.415Z",
+      "updatedAt": "2026-09-02T11:43:36.760Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.758Z",
+        "expiresAt": "2026-08-31T23:43:17.415Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "ad129761-2e49-43ea-a6d8-2e48d20b3a5c",
+        "eventId": "aa2ee815-6342-4b93-8dfd-65611393d651",
         "eventType": "runtime.model_role_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.758Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.758Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.415Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.415Z",
         "projectorId": "domain-model-role-assignment",
         "subject": "code",
         "scope": "model-role:code",
@@ -1009,22 +1008,22 @@
       "key": "model.role.code.available",
       "namespace": "model",
       "value": true,
-      "observedAt": "2026-08-31T22:16:53.758Z",
-      "updatedAt": "2026-08-31T22:16:53.761Z",
+      "observedAt": "2026-08-31T23:38:17.415Z",
+      "updatedAt": "2026-09-02T11:43:36.760Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.758Z",
+        "expiresAt": "2026-08-31T23:43:17.415Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "ad129761-2e49-43ea-a6d8-2e48d20b3a5c",
+        "eventId": "aa2ee815-6342-4b93-8dfd-65611393d651",
         "eventType": "runtime.model_role_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.758Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.758Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.415Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.415Z",
         "projectorId": "domain-model-role-assignment",
         "subject": "code",
         "scope": "model-role:code",
@@ -1045,22 +1044,22 @@
         "available": true,
         "matchedInstalledModel": "gemma3:latest"
       },
-      "observedAt": "2026-08-31T22:16:53.731Z",
-      "updatedAt": "2026-08-31T22:16:53.733Z",
+      "observedAt": "2026-08-31T23:38:17.413Z",
+      "updatedAt": "2026-09-02T11:43:36.760Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.731Z",
+        "expiresAt": "2026-08-31T23:43:17.413Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "c33e212e-a0ad-48af-b052-4a62d2151f33",
+        "eventId": "50492790-d43d-4829-bf26-ede258fd6f8d",
         "eventType": "runtime.model_role_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.731Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.731Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.413Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.413Z",
         "projectorId": "domain-model-role-assignment",
         "subject": "default",
         "scope": "model-role:default",
@@ -1074,22 +1073,22 @@
       "key": "model.role.default.available",
       "namespace": "model",
       "value": true,
-      "observedAt": "2026-08-31T22:16:53.731Z",
-      "updatedAt": "2026-08-31T22:16:53.733Z",
+      "observedAt": "2026-08-31T23:38:17.413Z",
+      "updatedAt": "2026-09-02T11:43:36.760Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.731Z",
+        "expiresAt": "2026-08-31T23:43:17.413Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "c33e212e-a0ad-48af-b052-4a62d2151f33",
+        "eventId": "50492790-d43d-4829-bf26-ede258fd6f8d",
         "eventType": "runtime.model_role_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.731Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.731Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.413Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.413Z",
         "projectorId": "domain-model-role-assignment",
         "subject": "default",
         "scope": "model-role:default",
@@ -1110,22 +1109,22 @@
         "available": true,
         "matchedInstalledModel": "deepseek-coder-v2:16b"
       },
-      "observedAt": "2026-08-31T22:16:53.782Z",
-      "updatedAt": "2026-08-31T22:16:53.784Z",
+      "observedAt": "2026-08-31T23:38:17.417Z",
+      "updatedAt": "2026-09-02T11:43:36.760Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.782Z",
+        "expiresAt": "2026-08-31T23:43:17.417Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "591deda6-a47d-416a-8e84-71ed215d6cb0",
+        "eventId": "39431362-54eb-4a53-8127-db4e23900178",
         "eventType": "runtime.model_role_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.782Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.782Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.417Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.417Z",
         "projectorId": "domain-model-role-assignment",
         "subject": "planner",
         "scope": "model-role:planner",
@@ -1139,22 +1138,22 @@
       "key": "model.role.planner.available",
       "namespace": "model",
       "value": true,
-      "observedAt": "2026-08-31T22:16:53.782Z",
-      "updatedAt": "2026-08-31T22:16:53.785Z",
+      "observedAt": "2026-08-31T23:38:17.417Z",
+      "updatedAt": "2026-09-02T11:43:36.760Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.782Z",
+        "expiresAt": "2026-08-31T23:43:17.417Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "591deda6-a47d-416a-8e84-71ed215d6cb0",
+        "eventId": "39431362-54eb-4a53-8127-db4e23900178",
         "eventType": "runtime.model_role_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.782Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.782Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.417Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.417Z",
         "projectorId": "domain-model-role-assignment",
         "subject": "planner",
         "scope": "model-role:planner",
@@ -1175,22 +1174,22 @@
         "available": true,
         "matchedInstalledModel": "deepseek-coder-v2:16b"
       },
-      "observedAt": "2026-08-31T22:16:53.810Z",
-      "updatedAt": "2026-08-31T22:16:53.813Z",
+      "observedAt": "2026-08-31T23:38:17.418Z",
+      "updatedAt": "2026-09-02T11:43:36.761Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.810Z",
+        "expiresAt": "2026-08-31T23:43:17.418Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "efaa343f-a270-4fb3-a683-e8eb282b54b8",
+        "eventId": "3c9894d2-40b3-46bc-9c45-d30f73ef55f1",
         "eventType": "runtime.model_role_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.810Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.810Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.418Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.418Z",
         "projectorId": "domain-model-role-assignment",
         "subject": "repair",
         "scope": "model-role:repair",
@@ -1204,22 +1203,22 @@
       "key": "model.role.repair.available",
       "namespace": "model",
       "value": true,
-      "observedAt": "2026-08-31T22:16:53.810Z",
-      "updatedAt": "2026-08-31T22:16:53.813Z",
+      "observedAt": "2026-08-31T23:38:17.418Z",
+      "updatedAt": "2026-09-02T11:43:36.761Z",
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
         "status": "stale",
         "basis": "ttl",
-        "expiresAt": "2026-08-31T22:21:53.810Z",
+        "expiresAt": "2026-08-31T23:43:17.418Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-08-31T23:37:44.768Z"
+        "evaluatedAt": "2026-09-05T17:49:34.633Z"
       },
       "provenance": {
-        "eventId": "efaa343f-a270-4fb3-a683-e8eb282b54b8",
+        "eventId": "3c9894d2-40b3-46bc-9c45-d30f73ef55f1",
         "eventType": "runtime.model_role_available",
-        "eventOccurredAt": "2026-08-31T22:16:53.810Z",
-        "eventReceivedAt": "2026-08-31T22:16:53.810Z",
+        "eventOccurredAt": "2026-08-31T23:38:17.418Z",
+        "eventReceivedAt": "2026-08-31T23:38:17.418Z",
         "projectorId": "domain-model-role-assignment",
         "subject": "repair",
         "scope": "model-role:repair",

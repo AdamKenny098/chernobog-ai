@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 type CoreEyeProps = {
   title?: string;
@@ -106,7 +106,7 @@ function CornerFrame() {
     );
   }
 
-export function CoreEyeSigil({ className = "h-full w-full" }: { className?: string }) {
+function CoreEyeSvg() {
   const radialTicks = Array.from({ length: 48 }).map((_, i) => {
     const angle = (i * 360) / 48;
     const r1 = i % 4 === 0 ? 82 : 86;
@@ -158,7 +158,7 @@ export function CoreEyeSigil({ className = "h-full w-full" }: { className?: stri
   return (
     <svg
       viewBox="0 0 1000 520"
-      className={className}
+      className="h-full w-full"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -534,7 +534,7 @@ export default function CoreEye({
           <TriDots positionClass="top-[16%]" />
 
           <div className="absolute inset-0">
-            <CoreEyeSigil />
+            <CoreEyeSvg />
           </div>
 
           <div className="absolute left-1/2 bottom-[13.6%] z-20 h-16 w-20 -translate-x-1/2">

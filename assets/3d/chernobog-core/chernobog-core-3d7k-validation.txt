@@ -1,0 +1,45 @@
+CHERNOBOG 3D-7K - VERIFIED 7J FINALIZATION
+==========================================
+
+SOURCE VALIDATION
+- Exact animation count: 24
+- Exact target-object membership: PASS
+- Full sampled TRS per animated object: PASS
+- Exact 30 FPS sampled durations: PASS
+
+DURATIONS
+- Failure_Enter: 0.633333s (expected 0.633333s)
+- Failure_Exit: 0.566667s (expected 0.566667s)
+- Failure_Loop: 3.966667s (expected 3.966667s)
+- Idle_Enter: 0.633333s (expected 0.633333s)
+- Idle_Exit: 0.566667s (expected 0.566667s)
+- Idle_Loop: 5.966667s (expected 5.966667s)
+- Listening_Enter: 0.633333s (expected 0.633333s)
+- Listening_Exit: 0.566667s (expected 0.566667s)
+- Listening_Loop: 3.966667s (expected 3.966667s)
+- Routing_Enter: 0.633333s (expected 0.633333s)
+- Routing_Exit: 0.566667s (expected 0.566667s)
+- Routing_Loop: 2.966667s (expected 2.966667s)
+- Speaking_Enter: 0.633333s (expected 0.633333s)
+- Speaking_Exit: 0.566667s (expected 0.566667s)
+- Speaking_Loop: 1.966667s (expected 1.966667s)
+- Success_Enter: 0.633333s (expected 0.633333s)
+- Success_Exit: 0.566667s (expected 0.566667s)
+- Success_Loop: 1.766667s (expected 1.766667s)
+- Thinking_Enter: 0.633333s (expected 0.633333s)
+- Thinking_Exit: 0.566667s (expected 0.566667s)
+- Thinking_Loop: 4.966667s (expected 4.966667s)
+- Waiting_Enter: 0.633333s (expected 0.633333s)
+- Waiting_Exit: 0.566667s (expected 0.566667s)
+- Waiting_Loop: 3.966667s (expected 3.966667s)
+
+IDLE CONTINUITY
+- Before: 18.334653 degrees
+- After:  0.000000 degrees
+
+REST POSE
+- Seven known 7J rest-transform losses detected: PASS
+- Clean 3D-5B node TRS restored: PASS
+- Final rest-pose comparison to 5B: PASS
+
+OUTPUT: C:\Users\adamt\Documents\chernobog-ai\assets\3d\chernobog-core\chernobog-core-3d7k-restpose-seamless.glb

@@ -1,0 +1,32 @@
+CHERNOBOG 3D-7J - BLENDER 4.4 SLOTTED ACTIONS
+================================================
+
+One shared Action per performance clip.
+One Action slot per participating object.
+Export mode: ACTIONS
+Merge mode: ACTION
+
+Idle_Enter: frames=1..20; slots=4; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_OrbitSystem, PIVOT_Pupil
+Idle_Loop: frames=1..180; slots=6; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_Armor, PIVOT_Iris, PIVOT_OrbitSystem, PIVOT_Pupil
+Idle_Exit: frames=1..18; slots=2; CHERNOBOG_CORE_ROOT, PIVOT_Pupil
+Listening_Enter: frames=1..20; slots=7; CHERNOBOG_CORE_ROOT, EnergyCore, LowerLid, PIVOT_Iris, PIVOT_OrbitSystem, PIVOT_Pupil, UpperLid
+Listening_Loop: frames=1..120; slots=5; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_Iris, PIVOT_OrbitSystem, PIVOT_Pupil
+Listening_Exit: frames=1..18; slots=5; CHERNOBOG_CORE_ROOT, LowerLid, PIVOT_Iris, PIVOT_Pupil, UpperLid
+Thinking_Enter: frames=1..20; slots=5; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_Iris, PIVOT_OrbitSystem, PIVOT_Pupil
+Thinking_Loop: frames=1..150; slots=6; CHERNOBOG_CORE_ROOT, EnergyCore, IrisRing01, IrisRing02, PIVOT_Iris, PIVOT_Pupil
+Thinking_Exit: frames=1..18; slots=5; CHERNOBOG_CORE_ROOT, EnergyCore, IrisRing01, IrisRing02, PIVOT_Pupil
+Routing_Enter: frames=1..20; slots=7; CHERNOBOG_CORE_ROOT, EnergyCore, NerveRail_L, NerveRail_R, PIVOT_Iris, PIVOT_OrbitSystem, PIVOT_Pupil
+Routing_Loop: frames=1..90; slots=4; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_OrbitSystem, PIVOT_Pupil
+Routing_Exit: frames=1..18; slots=4; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_OrbitSystem, PIVOT_Pupil
+Speaking_Enter: frames=1..20; slots=4; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_Iris, PIVOT_Pupil
+Speaking_Loop: frames=1..60; slots=4; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_Iris, PIVOT_Pupil
+Speaking_Exit: frames=1..18; slots=3; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_Pupil
+Waiting_Enter: frames=1..20; slots=7; CHERNOBOG_CORE_ROOT, EnergyCore, LowerLid, PIVOT_Iris, PIVOT_OrbitSystem, PIVOT_Pupil, UpperLid
+Waiting_Loop: frames=1..120; slots=5; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_Iris, PIVOT_OrbitSystem, PIVOT_Pupil
+Waiting_Exit: frames=1..18; slots=3; CHERNOBOG_CORE_ROOT, PIVOT_Iris, PIVOT_Pupil
+Success_Enter: frames=1..20; slots=7; CHERNOBOG_CORE_ROOT, EnergyCore, IrisRing01, IrisRing02, PIVOT_Iris, PIVOT_OrbitSystem, PIVOT_Pupil
+Success_Loop: frames=1..54; slots=3; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_OrbitSystem
+Success_Exit: frames=1..18; slots=3; CHERNOBOG_CORE_ROOT, EnergyCore, PIVOT_Iris
+Failure_Enter: frames=1..20; slots=6; CHERNOBOG_CORE_ROOT, EnergyCore, OrbitRing04, PIVOT_Armor, PIVOT_Iris, PIVOT_Pupil
+Failure_Loop: frames=1..120; slots=6; CHERNOBOG_CORE_ROOT, EnergyCore, OrbitRing04, OrbitRing05, PIVOT_Armor, PIVOT_Pupil
+Failure_Exit: frames=1..18; slots=6; CHERNOBOG_CORE_ROOT, EnergyCore, OrbitRing04, PIVOT_Armor, PIVOT_Iris, PIVOT_Pupil

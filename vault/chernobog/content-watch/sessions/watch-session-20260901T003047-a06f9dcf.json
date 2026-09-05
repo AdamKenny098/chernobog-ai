@@ -1,0 +1,318 @@
+{
+  "version": 1,
+  "id": "watch-session-20260901T003047-a06f9dcf",
+  "title": "TikTok Favourites // 50 item watch session",
+  "status": "active",
+  "platform": "tiktok",
+  "filter": "active",
+  "order": "oldest",
+  "batchSize": 50,
+  "sourceLabel": "TikTok Favourites",
+  "itemIds": [
+    "tiktok:a4fcfaa1d796fc71295fc614",
+    "tiktok:e2b422048a51c7e01ea6a075",
+    "tiktok:7654268138317417748",
+    "tiktok:7653137876506496278",
+    "tiktok:7650184424830618902",
+    "tiktok:7641712804495412513",
+    "tiktok:7652348710571085078",
+    "tiktok:7653042040686546198",
+    "tiktok:7653136810108816660",
+    "tiktok:7652107775484513566",
+    "tiktok:7652855468746116372",
+    "tiktok:7652097129950743838",
+    "tiktok:7651956410518883616",
+    "tiktok:7651714731711024398",
+    "tiktok:7651094738816257311",
+    "tiktok:7651098115008744724",
+    "tiktok:7644564331971218706",
+    "tiktok:7649659264662818070",
+    "tiktok:7644654423586786567",
+    "tiktok:7650539375910046998",
+    "tiktok:7621936700188560671",
+    "tiktok:7623909673145503006",
+    "tiktok:7640982095065582870",
+    "tiktok:7650818301316156680",
+    "tiktok:7651100452481682696",
+    "tiktok:7644193190068636960",
+    "tiktok:7632770915285077271",
+    "tiktok:7622076287015750933",
+    "tiktok:7626220727439527199",
+    "tiktok:7650277944845208852",
+    "tiktok:7650705797273406727",
+    "tiktok:7637390573044813077",
+    "tiktok:7648683952953150733",
+    "tiktok:7642055898805882126",
+    "tiktok:7624304957621112095",
+    "tiktok:7619170344846232853",
+    "tiktok:7650647833409752322",
+    "tiktok:7639571372561173780",
+    "tiktok:7648352025897471252",
+    "tiktok:7643320548323314952",
+    "tiktok:7650632192237800718",
+    "tiktok:7647061664210242846",
+    "tiktok:7644897109463797022",
+    "tiktok:7617945320390954262",
+    "tiktok:7641664322636172576",
+    "tiktok:7639796880989261089",
+    "tiktok:7643001258780953864",
+    "tiktok:7619303995579927840",
+    "tiktok:7644678662809324814",
+    "tiktok:7647804480406211860"
+  ],
+  "itemStates": [
+    {
+      "itemId": "tiktok:a4fcfaa1d796fc71295fc614",
+      "position": 0,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:e2b422048a51c7e01ea6a075",
+      "position": 1,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7654268138317417748",
+      "position": 2,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7653137876506496278",
+      "position": 3,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7650184424830618902",
+      "position": 4,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7641712804495412513",
+      "position": 5,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7652348710571085078",
+      "position": 6,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7653042040686546198",
+      "position": 7,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7653136810108816660",
+      "position": 8,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7652107775484513566",
+      "position": 9,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7652855468746116372",
+      "position": 10,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7652097129950743838",
+      "position": 11,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7651956410518883616",
+      "position": 12,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7651714731711024398",
+      "position": 13,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7651094738816257311",
+      "position": 14,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7651098115008744724",
+      "position": 15,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7644564331971218706",
+      "position": 16,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7649659264662818070",
+      "position": 17,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7644654423586786567",
+      "position": 18,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7650539375910046998",
+      "position": 19,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7621936700188560671",
+      "position": 20,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7623909673145503006",
+      "position": 21,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7640982095065582870",
+      "position": 22,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7650818301316156680",
+      "position": 23,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7651100452481682696",
+      "position": 24,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7644193190068636960",
+      "position": 25,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7632770915285077271",
+      "position": 26,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7622076287015750933",
+      "position": 27,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7626220727439527199",
+      "position": 28,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7650277944845208852",
+      "position": 29,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7650705797273406727",
+      "position": 30,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7637390573044813077",
+      "position": 31,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7648683952953150733",
+      "position": 32,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7642055898805882126",
+      "position": 33,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7624304957621112095",
+      "position": 34,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7619170344846232853",
+      "position": 35,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7650647833409752322",
+      "position": 36,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7639571372561173780",
+      "position": 37,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7648352025897471252",
+      "position": 38,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7643320548323314952",
+      "position": 39,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7650632192237800718",
+      "position": 40,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7647061664210242846",
+      "position": 41,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7644897109463797022",
+      "position": 42,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7617945320390954262",
+      "position": 43,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7641664322636172576",
+      "position": 44,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7639796880989261089",
+      "position": 45,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7643001258780953864",
+      "position": 46,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7619303995579927840",
+      "position": 47,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7644678662809324814",
+      "position": 48,
+      "decision": "pending"
+    },
+    {
+      "itemId": "tiktok:7647804480406211860",
+      "position": 49,
+      "decision": "pending"
+    }
+  ],
+  "currentIndex": 4,
+  "startedAt": "2026-09-01T00:30:47.855Z",
+  "updatedAt": "2026-09-01T00:31:12.560Z"
+}

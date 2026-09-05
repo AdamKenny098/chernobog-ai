@@ -1,7 +1,26 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-23T11:19:36.186Z",
+  "updatedAt": "2026-09-01T00:31:12.563Z",
   "sessions": [
+    {
+      "id": "watch-session-20260901T003047-a06f9dcf",
+      "title": "TikTok Favourites // 50 item watch session",
+      "status": "active",
+      "platform": "tiktok",
+      "filter": "active",
+      "order": "oldest",
+      "batchSize": 50,
+      "sourceLabel": "TikTok Favourites",
+      "itemCount": 50,
+      "currentIndex": 4,
+      "startedAt": "2026-09-01T00:30:47.855Z",
+      "updatedAt": "2026-09-01T00:31:12.560Z",
+      "pendingCount": 50,
+      "watchedCount": 0,
+      "analyzeLaterCount": 0,
+      "skippedCount": 0,
+      "dismissedCount": 0
+    },
     {
       "id": "watch-session-20260623T105155-e45e00d7",
       "title": "TikTok Favourites // 50 item watch session",

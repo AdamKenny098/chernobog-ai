@@ -9,7 +9,6 @@ import type {
 } from "@/lib/chernobog/pipeline/types";
 
 import RightDashboardRail from "./chernobog/RightDashboardRail";
-import { publishChernobogCoreState } from "@/lib/chernobog/ui/coreStateBridge";
 
 export type LogSource = "USER" | "SYSTEM" | "ROUTER" | "CHERNOBOG";
 
@@ -289,77 +288,6 @@ export default function UmbraAIConsole() {
   });
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const coreWasBusyRef = useRef(false);
-  const coreStateTimersRef = useRef<number[]>([]);
-
-  useEffect(() => {
-    for (const timer of coreStateTimersRef.current) {
-      window.clearTimeout(timer);
-    }
-    coreStateTimersRef.current = [];
-
-    const waitingForUser =
-      session.pendingState === "awaiting_file_selection" ||
-      session.pendingState === "awaiting_confirmation" ||
-      session.pendingState === "awaiting_clarification" ||
-      session.workflowStep === "awaiting_selection";
-
-    if (session.workflowStep === "failed") {
-      coreWasBusyRef.current = false;
-      publishChernobogCoreState("failure");
-      return;
-    }
-
-    if (waitingForUser) {
-      coreWasBusyRef.current = isBusy;
-      publishChernobogCoreState("waiting");
-      return;
-    }
-
-    if (isBusy) {
-      coreWasBusyRef.current = true;
-
-      const hasResolvedRoute =
-        session.activeRoute !== "idle" &&
-        session.activeRoute !== "none" &&
-        session.activeRoute.trim().length > 0;
-
-      publishChernobogCoreState(
-        hasResolvedRoute ? "routing" : "thinking",
-      );
-      return;
-    }
-
-    if (coreWasBusyRef.current) {
-      coreWasBusyRef.current = false;
-      publishChernobogCoreState("speaking");
-
-      const successTimer = window.setTimeout(() => {
-        publishChernobogCoreState("success");
-      }, 550);
-
-      const idleTimer = window.setTimeout(() => {
-        publishChernobogCoreState("idle");
-      }, 1250);
-
-      coreStateTimersRef.current = [successTimer, idleTimer];
-      return;
-    }
-
-    publishChernobogCoreState("idle");
-
-    return () => {
-      for (const timer of coreStateTimersRef.current) {
-        window.clearTimeout(timer);
-      }
-      coreStateTimersRef.current = [];
-    };
-  }, [
-    isBusy,
-    session.activeRoute,
-    session.pendingState,
-    session.workflowStep,
-  ]);
 
   useEffect(() => {
     const browserSessionId = getOrCreateBrowserSessionId();
