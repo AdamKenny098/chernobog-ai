@@ -1,4 +1,5 @@
 import { respondForRoute, routeMessage } from "@/lib/chernobog/router";
+import type { ChernobogResponseMode } from "@/lib/chernobog/personality";
 import {
   associateExplicitLearningCorrection,
   captureLiveLearningIngress,
@@ -174,7 +175,10 @@ function shouldUseAuthoritativeAssessmentContext(
 
 export async function runCommandPipeline(
   userMessage: string,
-  sessionId: string
+  sessionId: string,
+  options: {
+    responseMode?: ChernobogResponseMode;
+  } = {},
 ): Promise<CommandPipelineResult> {
   let route: RouteName = "chat";
   let reply = "";
@@ -1249,6 +1253,7 @@ if (unifiedMemoryAction) {
             reply = await respondForRoute(route, userMessage, {
               memories: storedMemories,
               recentMessages: modelRecentMessages,
+              responseMode: options.responseMode ?? "text",
               sessionSummary: buildProjectGroundedSystemText(
                 budgetedResponseContext.systemText,
                 activeSession.activeProjectId,

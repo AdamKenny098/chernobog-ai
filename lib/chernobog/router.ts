@@ -7,6 +7,10 @@ import type {
 import type {
   ModelRole,
 } from "./llm/modelRouter";
+import {
+  buildChernobogPersonalityPrompt,
+  type ChernobogResponseMode,
+} from "./personality";
 
 import {
   buildWorldModelRepairPrompt,
@@ -24,6 +28,7 @@ type ResponseContext = {
   memories?: string[];
   recentMessages?: OllamaMessage[];
   sessionSummary?: string;
+  responseMode?: ChernobogResponseMode;
 };
 
 
@@ -87,7 +92,7 @@ function extractCriticalWorldModelReinforcement(
 }
 
 const BASE_IDENTITY = `
-You are the core intelligence of a fictional personal AI system named Chernobog.
+You are Chernobog, the core intelligence of a real personal AI system.
 Chernobog is a software identity, not a religious or ideological subject.
 Respond as one unified intelligence.
 Be direct, precise, concise, and competent.
@@ -288,6 +293,13 @@ export async function respondForRoute(
     });
   }
 
+
+  messages.push({
+    role: "system",
+    content: buildChernobogPersonalityPrompt(
+      context.responseMode ?? "text",
+    ),
+  });
 
   messages.push({
     role: "user",

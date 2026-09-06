@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-09-05T21:18:26.097Z",
-  "recordCount": 31,
-  "recordsSha256": "a0279f0d43c0f69548c488d3cbfdcfa45e0a9469314c75fd49894e897c450def",
+  "createdAt": "2026-09-06T11:57:48.804Z",
+  "recordCount": 41,
+  "recordsSha256": "bb231c9f6a7e06d55366cb58dc6595921ec5aa2e039ea188f6ff2ac0f06cff1f",
   "records": [
     {
       "schemaVersion": 1,
@@ -31,7 +31,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.149Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "7ef41c3e-69ab-445c-baeb-9922b0af058b",
@@ -74,7 +74,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.144Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "ebf34300-8a66-43ae-bffc-4c12186ad14f",
@@ -118,7 +118,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.153Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "f1989947-6498-4980-9073-12a5b5612e2e",
@@ -161,7 +161,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.151Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "804713db-6dca-480f-8f94-5233bd075bb8",
@@ -204,7 +204,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.154Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "d3bf9ed0-049b-4673-b040-5fb4cb2c671d",
@@ -248,7 +248,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.155Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "794f75f8-6836-4c71-835d-8e1ba52b72c0",
@@ -291,7 +291,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.158Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "2d8b8599-dd75-4f59-879f-c02cd4528812",
@@ -334,7 +334,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.156Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "26c48cb0-51b7-4cbc-9ec6-a6f88ef46428",
@@ -378,7 +378,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.160Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "d016dcb7-b841-4d35-b315-04aba9475f89",
@@ -421,7 +421,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.159Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "9c36a83b-f932-4ad7-a050-f5636ebe792a",
@@ -465,7 +465,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.163Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "c0f3939d-9e57-4892-8d55-94be908ade2f",
@@ -508,7 +508,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.162Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "4ba9fef3-662b-46ac-856e-31f7a075792e",
@@ -551,7 +551,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.164Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "7d794782-07eb-4776-aab1-d21b01342bd0",
@@ -595,7 +595,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.166Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "171b18d1-f969-4c47-b017-379e8663c5b2",
@@ -638,7 +638,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.167Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "a6c4b9fe-91bb-4718-899b-d914fcd81442",
@@ -682,7 +682,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.168Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "51eb77a3-ca59-47a0-bda3-761a6627af0f",
@@ -725,7 +725,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.821Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "757c328b-2de1-4e85-88f0-68e63197a02f",
@@ -768,7 +768,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.817Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "4677d1b2-e820-4641-9b4c-f26ec2fccff6",
@@ -812,7 +812,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.825Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "1024437e-7f3a-4271-b97a-f5edfc6a2386",
@@ -855,7 +855,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.823Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "74f3ce54-2522-4178-8e42-950ed9d785d0",
@@ -873,6 +873,474 @@
     },
     {
       "schemaVersion": 1,
+      "key": "execution.task-1788649036247-80ucquef.completed",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.completed",
+        "severity": "info",
+        "subject": "task_1788649036247_80ucquef",
+        "scope": "execution:system_operation",
+        "payload": {
+          "taskId": "task_1788649036247_80ucquef",
+          "category": "system_operation",
+          "risk": "safe",
+          "status": "completed",
+          "stepCount": 1,
+          "currentStepId": "step_1788649036247_pwrlp9fy"
+        }
+      },
+      "observedAt": "2026-09-05T22:57:16.277Z",
+      "updatedAt": "2026-09-06T11:12:05.425Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:02:16.277Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "08fa149d-1d5a-4d8e-a4ee-04e1f0ba1f93",
+        "eventType": "execution.completed",
+        "eventOccurredAt": "2026-09-05T22:57:16.277Z",
+        "eventReceivedAt": "2026-09-05T22:57:16.277Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649036247_80ucquef",
+        "subject": "task_1788649036247_80ucquef",
+        "scope": "execution:system_operation",
+        "source": {
+          "subsystem": "execution"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "key": "execution.task-1788649036247-80ucquef.started",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.started",
+        "severity": "info",
+        "subject": "task_1788649036247_80ucquef",
+        "scope": "execution:system_operation",
+        "payload": {
+          "taskId": "task_1788649036247_80ucquef",
+          "category": "system_operation",
+          "risk": "safe",
+          "status": "pending",
+          "stepCount": 1,
+          "currentStepId": "step_1788649036247_pwrlp9fy"
+        }
+      },
+      "observedAt": "2026-09-05T22:57:16.248Z",
+      "updatedAt": "2026-09-06T11:12:05.424Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:02:16.248Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "3589ca53-abfc-4c2a-8dcc-2dd1edf61afb",
+        "eventType": "execution.started",
+        "eventOccurredAt": "2026-09-05T22:57:16.248Z",
+        "eventReceivedAt": "2026-09-05T22:57:16.248Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649036247_80ucquef",
+        "subject": "task_1788649036247_80ucquef",
+        "scope": "execution:system_operation",
+        "source": {
+          "subsystem": "execution"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "key": "execution.task-1788649036247-80ucquef.step-completed",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.step.completed",
+        "severity": "info",
+        "subject": "task_1788649036247_80ucquef",
+        "scope": "execution:system_operation",
+        "payload": {
+          "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+          "taskId": "task_1788649036247_80ucquef",
+          "category": "system_operation",
+          "taskStatus": "running",
+          "stepId": "step_1788649036247_pwrlp9fy",
+          "stepIndex": 0,
+          "stepCount": 1,
+          "stepKind": "system",
+          "stepLabel": "Read local system status",
+          "action": "system.status",
+          "risk": "safe",
+          "status": "completed"
+        }
+      },
+      "observedAt": "2026-09-05T22:57:16.271Z",
+      "updatedAt": "2026-09-06T11:12:05.425Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:02:16.271Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "7a8ebb0e-ba28-484a-bb40-30f051d366e3",
+        "eventType": "execution.step.completed",
+        "eventOccurredAt": "2026-09-05T22:57:16.271Z",
+        "eventReceivedAt": "2026-09-05T22:57:16.271Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649036247_80ucquef",
+        "causationId": "step_1788649036247_pwrlp9fy",
+        "subject": "task_1788649036247_80ucquef",
+        "scope": "execution:system_operation",
+        "source": {
+          "subsystem": "execution",
+          "nodeId": "step-runner"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "key": "execution.task-1788649036247-80ucquef.step-started",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.step.started",
+        "severity": "info",
+        "subject": "task_1788649036247_80ucquef",
+        "scope": "execution:system_operation",
+        "payload": {
+          "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+          "taskId": "task_1788649036247_80ucquef",
+          "category": "system_operation",
+          "taskStatus": "running",
+          "stepId": "step_1788649036247_pwrlp9fy",
+          "stepIndex": 0,
+          "stepCount": 1,
+          "stepKind": "system",
+          "stepLabel": "Read local system status",
+          "action": "system.status",
+          "risk": "safe",
+          "status": "running"
+        }
+      },
+      "observedAt": "2026-09-05T22:57:16.254Z",
+      "updatedAt": "2026-09-06T11:12:05.425Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:02:16.254Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "db006456-bcc1-4aab-a3a1-21d70aaac686",
+        "eventType": "execution.step.started",
+        "eventOccurredAt": "2026-09-05T22:57:16.254Z",
+        "eventReceivedAt": "2026-09-05T22:57:16.254Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649036247_80ucquef",
+        "causationId": "step_1788649036247_pwrlp9fy",
+        "subject": "task_1788649036247_80ucquef",
+        "scope": "execution:system_operation",
+        "source": {
+          "subsystem": "execution",
+          "nodeId": "step-runner"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "key": "execution.task-1788649658042-aey44woe.approval-required",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.approval.required",
+        "severity": "notice",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "payload": {
+          "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+          "taskId": "task_1788649658042_aey44woe",
+          "category": "approval_flow",
+          "risk": "approval_required",
+          "status": "waiting_for_approval",
+          "reason": "Execution requires user approval.",
+          "stepId": "step_1788649658042_4r1ny5d2",
+          "stepKind": "workflow",
+          "stepLabel": "Wait for user approval",
+          "action": "execution.approvalTest",
+          "stepRisk": "approval_required",
+          "stepStatus": "pending"
+        }
+      },
+      "observedAt": "2026-09-05T23:07:38.084Z",
+      "updatedAt": "2026-09-06T11:12:05.426Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:12:38.084Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "769e86ef-c424-45c5-94fd-39e11a12322a",
+        "eventType": "execution.approval.required",
+        "eventOccurredAt": "2026-09-05T23:07:38.084Z",
+        "eventReceivedAt": "2026-09-05T23:07:38.084Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649658042_aey44woe",
+        "causationId": "step_1788649658042_4r1ny5d2",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "source": {
+          "subsystem": "execution",
+          "nodeId": "approval-gate"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "key": "execution.task-1788649658042-aey44woe.completed",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.completed",
+        "severity": "info",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "payload": {
+          "taskId": "task_1788649658042_aey44woe",
+          "category": "approval_flow",
+          "risk": "approval_required",
+          "status": "completed",
+          "stepCount": 1,
+          "currentStepId": "step_1788649658042_4r1ny5d2"
+        }
+      },
+      "observedAt": "2026-09-05T23:07:51.438Z",
+      "updatedAt": "2026-09-06T11:12:05.427Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:12:51.438Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "ad1b3886-862e-4aba-9ea1-13961f555e6d",
+        "eventType": "execution.completed",
+        "eventOccurredAt": "2026-09-05T23:07:51.438Z",
+        "eventReceivedAt": "2026-09-05T23:07:51.438Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649658042_aey44woe",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "source": {
+          "subsystem": "execution"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "key": "execution.task-1788649658042-aey44woe.started",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.started",
+        "severity": "info",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "payload": {
+          "taskId": "task_1788649658042_aey44woe",
+          "category": "approval_flow",
+          "risk": "approval_required",
+          "status": "running",
+          "stepCount": 1,
+          "currentStepId": "step_1788649658042_4r1ny5d2"
+        }
+      },
+      "observedAt": "2026-09-05T23:07:51.433Z",
+      "updatedAt": "2026-09-06T11:12:05.426Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:12:51.433Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "c113853a-5ddc-4b62-b84f-c784cfb510e1",
+        "eventType": "execution.started",
+        "eventOccurredAt": "2026-09-05T23:07:51.433Z",
+        "eventReceivedAt": "2026-09-05T23:07:51.433Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649658042_aey44woe",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "source": {
+          "subsystem": "execution"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "key": "execution.task-1788649658042-aey44woe.step-completed",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.step.completed",
+        "severity": "info",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "payload": {
+          "taskId": "task_1788649658042_aey44woe",
+          "category": "approval_flow",
+          "taskStatus": "running",
+          "stepId": "step_1788649658042_4r1ny5d2",
+          "stepIndex": 0,
+          "stepCount": 1,
+          "stepKind": "workflow",
+          "stepLabel": "Wait for user approval",
+          "action": "execution.approvalTest",
+          "risk": "approval_required",
+          "status": "completed"
+        }
+      },
+      "observedAt": "2026-09-05T23:07:51.437Z",
+      "updatedAt": "2026-09-06T11:12:05.427Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:12:51.437Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "4afb7593-a366-4129-983b-1aa7916b34fa",
+        "eventType": "execution.step.completed",
+        "eventOccurredAt": "2026-09-05T23:07:51.437Z",
+        "eventReceivedAt": "2026-09-05T23:07:51.437Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649658042_aey44woe",
+        "causationId": "step_1788649658042_4r1ny5d2",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "source": {
+          "subsystem": "execution",
+          "nodeId": "step-runner"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "key": "execution.task-1788649658042-aey44woe.step-started",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.step.started",
+        "severity": "info",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "payload": {
+          "taskId": "task_1788649658042_aey44woe",
+          "category": "approval_flow",
+          "taskStatus": "running",
+          "stepId": "step_1788649658042_4r1ny5d2",
+          "stepIndex": 0,
+          "stepCount": 1,
+          "stepKind": "workflow",
+          "stepLabel": "Wait for user approval",
+          "action": "execution.approvalTest",
+          "risk": "approval_required",
+          "status": "running"
+        }
+      },
+      "observedAt": "2026-09-05T23:07:51.435Z",
+      "updatedAt": "2026-09-06T11:12:05.427Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:12:51.435Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "3ebd439c-cef9-4bd6-835e-f5e188d9ab38",
+        "eventType": "execution.step.started",
+        "eventOccurredAt": "2026-09-05T23:07:51.435Z",
+        "eventReceivedAt": "2026-09-05T23:07:51.435Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649658042_aey44woe",
+        "causationId": "step_1788649658042_4r1ny5d2",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "source": {
+          "subsystem": "execution",
+          "nodeId": "step-runner"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "key": "execution.task-1788649658042-aey44woe.waiting-for-approval",
+      "namespace": "execution",
+      "value": {
+        "eventType": "execution.waiting_for_approval",
+        "severity": "notice",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "payload": {
+          "taskId": "task_1788649658042_aey44woe",
+          "category": "approval_flow",
+          "risk": "approval_required",
+          "status": "waiting_for_approval",
+          "stepCount": 1,
+          "currentStepId": "step_1788649658042_4r1ny5d2"
+        }
+      },
+      "observedAt": "2026-09-05T23:07:38.088Z",
+      "updatedAt": "2026-09-06T11:12:05.426Z",
+      "confidence": 1,
+      "confidenceBasis": "default",
+      "freshness": {
+        "status": "stale",
+        "basis": "ttl",
+        "expiresAt": "2026-09-05T23:12:38.088Z",
+        "ttlMs": 300000,
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
+      },
+      "provenance": {
+        "eventId": "006653c8-14d9-4a9b-a394-2b4da286be68",
+        "eventType": "execution.waiting_for_approval",
+        "eventOccurredAt": "2026-09-05T23:07:38.088Z",
+        "eventReceivedAt": "2026-09-05T23:07:38.088Z",
+        "projectorId": "domain-generic-factual-mirror",
+        "correlationId": "task_1788649658042_aey44woe",
+        "subject": "task_1788649658042_aey44woe",
+        "scope": "execution:approval_flow",
+        "source": {
+          "subsystem": "execution"
+        }
+      }
+    },
+    {
+      "schemaVersion": 1,
       "key": "model.ollama.available",
       "namespace": "model",
       "value": true,
@@ -881,11 +1349,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:22:59.932Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "2e211980-ed5b-4d72-ac2e-b4fdcba893f0",
@@ -909,11 +1377,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:22:59.920Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "0894a56a-1f0c-41c1-95de-204a92fe27e6",
@@ -950,11 +1418,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:22:59.932Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "2e211980-ed5b-4d72-ac2e-b4fdcba893f0",
@@ -985,11 +1453,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:22:59.993Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "61e042ab-69b1-486f-b4d4-965e2bd88f0b",
@@ -1014,11 +1482,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:22:59.993Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "61e042ab-69b1-486f-b4d4-965e2bd88f0b",
@@ -1050,11 +1518,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:22:59.946Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "d95b8c5f-27f1-4935-8ca5-34be5485601f",
@@ -1079,11 +1547,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:22:59.946Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "d95b8c5f-27f1-4935-8ca5-34be5485601f",
@@ -1115,11 +1583,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:23:00.006Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "fecd85ca-4559-4794-82ec-6cfc9ed831c1",
@@ -1144,11 +1612,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:23:00.006Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "fecd85ca-4559-4794-82ec-6cfc9ed831c1",
@@ -1180,11 +1648,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:23:00.054Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "8f016278-7520-482e-9b31-ccde1bb87d35",
@@ -1209,11 +1677,11 @@
       "confidence": 1,
       "confidenceBasis": "default",
       "freshness": {
-        "status": "fresh",
+        "status": "stale",
         "basis": "ttl",
         "expiresAt": "2026-09-05T21:23:00.054Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-09-05T21:18:26.096Z"
+        "evaluatedAt": "2026-09-06T11:57:48.803Z"
       },
       "provenance": {
         "eventId": "8f016278-7520-482e-9b31-ccde1bb87d35",

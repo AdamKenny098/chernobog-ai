@@ -1,5 +1,6 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { RecursiveCommandHierarchy } from "./RecursiveCommandHierarchy";
+import { SensoryControlDeck } from "@/components/chernobog-ui/sensory/SensoryControlDeck";
 import type { CommandCenterModel } from "./commandCenterModel";
 
 function CommandHeader({ model }: { model: CommandCenterModel }) {
@@ -58,6 +59,7 @@ export function CommandCenterView({ model }: { model: CommandCenterModel }) {
         <div className="pointer-events-none absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,157,46,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(255,157,46,0.14)_1px,transparent_1px)] [background-size:58px_58px]" />
 <CommandHeader model={model} />
         <RecursiveCommandHierarchy />
+        <SensoryControlDeck />
       </div>
     </main>
   );
