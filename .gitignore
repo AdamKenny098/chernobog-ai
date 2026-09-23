@@ -68,3 +68,10 @@ repo-files-clean.txt
 /exports/
 /*.patch
 *.blend1
+# Chernobog Android companion local/build state
+/mobile/android-companion/.gradle/
+/mobile/android-companion/.idea/
+/mobile/android-companion/local.properties
+/mobile/android-companion/**/build/
+# PA-5 Google Calendar encrypted OAuth state
+data/personal-assistance/google-calendar.json

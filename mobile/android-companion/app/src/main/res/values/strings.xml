@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chernobog Companion</string>
+    <string name="notification_listener_service_name">Chernobog Notification Sensor</string>
+</resources>

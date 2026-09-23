@@ -2,6 +2,9 @@ import {
   getChernobogWorldStateRuntime,
 } from "../worldState";
 import {
+  resolvePersonalAttentionForCognition,
+} from "../personalAssistance";
+import {
   ChernobogCognitiveRuntime,
 } from "./cognitiveRuntime";
 
@@ -31,6 +34,8 @@ export function getChernobogCognitiveRuntime():
                     .engine
                     .worldState
                     .snapshot(),
+              resolveUserAttention:
+                resolvePersonalAttentionForCognition,
             }),
         )
         .catch((error) => {
