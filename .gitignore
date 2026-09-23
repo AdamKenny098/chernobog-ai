@@ -58,6 +58,7 @@ repo-files-clean.txt
 
 
 /data/character-forge/
+/data/chernobog.db
 
 # Chernobog generated/local state
 /.chernobog-patch-backups/
