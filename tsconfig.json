@@ -31,6 +31,12 @@
       ],
       "@chernobog/contracts/*": [
         "./packages/contracts/src/*"
+      ],
+      "@chernobog/events": [
+        "./packages/events/src/index.ts"
+      ],
+      "@chernobog/events/*": [
+        "./packages/events/src/*"
       ]
     }
   },

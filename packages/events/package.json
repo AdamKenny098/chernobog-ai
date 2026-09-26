@@ -1,0 +1,10 @@
+﻿{
+  "name": "@chernobog/events",
+  "private": true,
+  "version": "0.0.0-oh1b",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  }
+}
