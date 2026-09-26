@@ -13,7 +13,7 @@ export * from "./toolExecutionHandlers";
 export * from "./types";
 export * from "./internalExecutionHandlers";
 export * from "./diagnostics";
-export * from "./toolGateway";
+export * from "@chernobog/tools";
 
 export * from "./toolCapabilities";
 

@@ -37,6 +37,12 @@
       ],
       "@chernobog/events/*": [
         "./packages/events/src/*"
+      ],
+      "@chernobog/tools": [
+        "./packages/tools/src/index.ts"
+      ],
+      "@chernobog/tools/*": [
+        "./packages/tools/src/*"
       ]
     }
   },

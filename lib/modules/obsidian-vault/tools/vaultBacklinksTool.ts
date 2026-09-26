@@ -1,6 +1,6 @@
 import { z } from "zod";
-import type { ToolDefinition } from "@/lib/chernobog/tools/types";
-import { createToolFailure, createToolSuccess } from "@/lib/chernobog/tools/types";
+import type { ToolDefinition } from "@chernobog/tools/types";
+import { createToolFailure, createToolSuccess } from "@chernobog/tools/types";
 import { findBacklinks } from "../graph/backlinks";
 
 const inputSchema = z.object({

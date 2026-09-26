@@ -20,12 +20,12 @@ import {
   saveMessage,
 } from "@/lib/chernobog/memory";
 
-import { parseToolCommand } from "@/lib/chernobog/tools/parser";
-import { classifyToolIntent } from "@/lib/chernobog/tools/intent";
+import { parseToolCommand } from "@chernobog/tools/parser";
+import { classifyToolIntent } from "@chernobog/tools/intent";
 import {
   normalizeToolCall,
   openAppCallLooksLikeFileRequest,
-} from "@/lib/chernobog/tools/normalize";
+} from "@chernobog/tools/normalize";
 
 import {
   getSessionContext,

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import type { ToolDefinition } from "@/lib/chernobog/tools/types";
-import { createToolFailure, createToolSuccess } from "@/lib/chernobog/tools/types";
+import type { ToolDefinition } from "@chernobog/tools/types";
+import { createToolFailure, createToolSuccess } from "@chernobog/tools/types";
 import { readVaultNote } from "../markdown/readNote";
 
 const inputSchema = z.object({

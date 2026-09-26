@@ -5,7 +5,7 @@ import {
   saveSessionContext,
 } from "@/lib/chernobog/session/store";
 import { setSelectedFileFromPath, updateSessionFromToolResult } from "@/lib/chernobog/session/update";
-import { executePipelineTool as executeTool } from "@/lib/chernobog/execution/toolGateway";
+import { executePipelineTool as executeTool } from "@chernobog/tools";
 
 type FindFilesResultData = {
   root: string;

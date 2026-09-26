@@ -22,13 +22,13 @@ import {
   openFileTool,
   openFolderTool,
   readTextFileTool,
-} from "@/lib/chernobog/tools/builtins/files";
-import { findFilesTool } from "@/lib/chernobog/tools/builtins/search";
-import type { ToolExecutionContext, ToolResult } from "@/lib/chernobog/tools/types";
+} from "@chernobog/tools/builtins/files";
+import { findFilesTool } from "@chernobog/tools/builtins/search";
+import type { ToolExecutionContext, ToolResult } from "@chernobog/tools/types";
 import {
   createToolFailure,
   createToolSuccess,
-} from "@/lib/chernobog/tools/types";
+} from "@chernobog/tools/types";
 import type {
   ChernobogModule,
   ModuleCommandContext,

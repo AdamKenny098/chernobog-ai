@@ -1,6 +1,6 @@
 ﻿import path from "node:path";
 
-import { executeOrchestrationTool as executeTool } from "@/lib/chernobog/execution/toolGateway";
+import { executeOrchestrationTool as executeTool } from "@chernobog/tools";
 import { logToolCall } from "@/lib/chernobog/db";
 import type { SessionContext } from "@/lib/chernobog/session/types";
 import { updateSessionFromToolResult } from "@/lib/chernobog/session/update";

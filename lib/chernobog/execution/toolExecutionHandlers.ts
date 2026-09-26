@@ -1,6 +1,6 @@
 ﻿// lib/chernobog/execution/toolExecutionHandlers.ts
 
-import { executeExecutionTaskTool as executeTool } from "./toolGateway";
+import { executeExecutionTaskTool as executeTool } from "@chernobog/tools";
 import { ExecutionActionHandler } from "./runExecutionTask";
 
 type ToolHandlerMapOptions = {
