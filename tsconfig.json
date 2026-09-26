@@ -49,6 +49,12 @@
       ],
       "@chernobog/trust/*": [
         "./packages/trust/src/*"
+      ],
+      "@chernobog/models": [
+        "./packages/models/src/index.ts"
+      ],
+      "@chernobog/models/*": [
+        "./packages/models/src/*"
       ]
     }
   },

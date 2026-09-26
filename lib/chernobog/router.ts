@@ -1,12 +1,12 @@
 import {
   generateWithReliableOllama as generateWithOllama,
-} from "./llm/reliableOllama";
+} from "@chernobog/models/reliableOllama";
 import type {
   OllamaChatMessage,
-} from "./llm/ollamaClient";
+} from "@chernobog/models";
 import type {
   ModelRole,
-} from "./llm/modelRouter";
+} from "@chernobog/models/modelRouter";
 import {
   buildChernobogPersonalityPrompt,
   type ChernobogResponseMode,

@@ -1,4 +1,4 @@
-import { generateWithOllama } from "@/lib/chernobog/llm/ollamaClient";
+import { generateWithModel } from "@chernobog/models";
 
 import { parseCharacterBrief } from "./characterBriefSchema";
 import { getCharacterStyleProfile } from "../styleProfiles";
@@ -275,7 +275,7 @@ function buildBriefGenerationPrompt(project: CharacterProject): string {
 export async function generateCharacterBriefDraft(
   project: CharacterProject
 ): Promise<CharacterBriefGenerationResult> {
-  const result = await generateWithOllama({
+  const result = await generateWithModel({
     role: "default",
     prompt: buildBriefGenerationPrompt(project),
     temperature: 0.2,

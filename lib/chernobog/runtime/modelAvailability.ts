@@ -1,11 +1,11 @@
 import {
   findInstalledOllamaModelMatch,
-} from "../llm/modelMatching";
+} from "@chernobog/models/modelMatching";
 import {
   resolveModel,
   type ModelRole,
   type ResolvedModel,
-} from "../llm/modelRouter";
+} from "@chernobog/models/modelRouter";
 
 export const CHERNOBOG_MODEL_ROLES = [
   "default",

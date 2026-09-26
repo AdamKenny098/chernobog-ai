@@ -1,7 +1,7 @@
 import { z } from "zod";
 import {
   generateWithReliableOllama as generateWithOllama,
-} from "../llm/reliableOllama";
+} from "@chernobog/models/reliableOllama";
 
 const toolIntentSchema = z.discriminatedUnion("tool", [
   z.object({

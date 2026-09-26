@@ -4,7 +4,7 @@ import {
 
 import {
   getAiRuntimeStatus,
-} from "@/lib/chernobog/llm";
+} from "@chernobog/models";
 
 export const runtime = "nodejs";
 
