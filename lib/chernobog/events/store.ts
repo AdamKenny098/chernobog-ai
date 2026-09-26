@@ -17,18 +17,18 @@ import {
   scanChernobogEventLog,
   summarizeChernobogEventLogCorruption,
   type ChernobogEventLogCorruptionSummary,
-} from "./corruption";
+} from "@chernobog/events/corruption";
 
 import {
   applyChernobogEventRetention,
   type ChernobogEventRetentionPolicy,
   type ChernobogEventRetentionResult,
-} from "./retention";
+} from "@chernobog/events/retention";
 
 import type {
   ChernobogEvent,
   ChernobogEventQuery,
-} from "./types";
+} from "@chernobog/events/types";
 
 export interface ChernobogEventCorruptionRecoveryResult {
   recovered: boolean;

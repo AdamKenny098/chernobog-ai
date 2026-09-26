@@ -1,4 +1,4 @@
-export * from "./policyBridge";
-export * from "./runtimeGovernance";
+export * from "@chernobog/trust/governance/policyBridge";
+export * from "@chernobog/trust/governance/runtimeGovernance";
 export * from "./cognitiveExecution";
-export * from "./status";
+export * from "@chernobog/trust/governance/status";

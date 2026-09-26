@@ -1,5 +1,5 @@
 import type { ChernobogIncDepartment } from "./chernobogMissionTypes";
-import type { TrustActionType, TrustDecision } from "./trustActionTypes";
+import type { TrustActionType, TrustDecision } from "@chernobog/trust/vault/trustActionTypes";
 
 export const V6_OPERATING_LOOP_PHASES = [
   "ceo-direction",

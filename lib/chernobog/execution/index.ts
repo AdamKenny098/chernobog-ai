@@ -1,4 +1,4 @@
-﻿export * from "./approval";
+﻿export * from "@chernobog/trust/execution/approval";
 export * from "./approvalCommands";
 export * from "./buildExecutionTask";
 export * from "./createExecutionTask";
@@ -6,7 +6,7 @@ export * from "./defaultExecutionHandlers";
 export * from "./executeFromMessage";
 export * from "./executionState";
 export * from "./formatExecutionResponse";
-export * from "./riskPolicy";
+export * from "@chernobog/trust/execution/riskPolicy";
 export * from "./runExecutionTask";
 export * from "./taskLifecycle";
 export * from "./toolExecutionHandlers";

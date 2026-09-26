@@ -43,6 +43,12 @@
       ],
       "@chernobog/tools/*": [
         "./packages/tools/src/*"
+      ],
+      "@chernobog/trust": [
+        "./packages/trust/src/index.ts"
+      ],
+      "@chernobog/trust/*": [
+        "./packages/trust/src/*"
       ]
     }
   },

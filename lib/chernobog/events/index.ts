@@ -1,5 +1,5 @@
-import { ChernobogEventBus } from "./eventBus";
-import { JsonlChernobogEventStore } from "./store";
+import { ChernobogEventBus } from "@chernobog/events/eventBus";
+import { JsonlChernobogEventStore } from "@chernobog/events/store";
 
 
 const eventGlobals = globalThis as typeof globalThis & {
@@ -16,12 +16,12 @@ export function getChernobogEventBus(): ChernobogEventBus {
   return eventGlobals.__chernobogEventBus;
 }
 
-export * from "./eventBus";
-export * from "./schema";
-export * from "./store";
-export * from "./types";
-export * from "./eventContext";
-export * from "./publishers";
-export * from "./retention";
-export * from "./replay";
-export * from "./diagnostics";
+export * from "@chernobog/events/eventBus";
+export * from "@chernobog/events/schema";
+export * from "@chernobog/events/store";
+export * from "@chernobog/events/types";
+export * from "@chernobog/events/eventContext";
+export * from "@chernobog/events/publishers";
+export * from "@chernobog/events/retention";
+export * from "@chernobog/events/replay";
+export * from "@chernobog/events/diagnostics";

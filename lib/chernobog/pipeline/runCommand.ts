@@ -52,11 +52,11 @@ import {
   createTrustTrace,
   setTraceRoute,
   setTraceTool,
-} from "@/lib/chernobog/trust/trace";
+} from "@chernobog/trust/trust/trace";
 
 import { buildChernobogWorldStateContext } from "@/lib/chernobog/pipeline/worldStateContext";
 import { buildChernobogWorldModelContext } from "@/lib/chernobog/pipeline/worldModelContext";
-import { buildWorkflowSnapshot } from "@/lib/chernobog/trust/sessionSnapshot";
+import { buildWorkflowSnapshot } from "@chernobog/trust/trust/sessionSnapshot";
 import {
   buildContinuityReply,
   detectContinuityQuery,

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUnifiedGovernanceStatus } from "@/lib/chernobog/governance";
+import { getUnifiedGovernanceStatus } from "@chernobog/trust/governance";
 
 export const runtime = "nodejs";
 

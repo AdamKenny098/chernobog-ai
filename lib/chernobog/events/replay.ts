@@ -1,7 +1,7 @@
 import type {
     ChernobogEvent,
     ChernobogEventQuery,
-  } from "./types";
+  } from "@chernobog/events/types";
   
   export interface ChernobogEventReplayContext {
     index: number;

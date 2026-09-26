@@ -5,7 +5,7 @@ import {
   denyExecutionTask,
   markExecutionTaskApproved,
   markExecutionTaskDenied,
-} from "./approval";
+} from "@chernobog/trust/execution/approval";
 import { ExecutionState } from "./executionState";
 import { runExecutionTask } from "./runExecutionTask";
 import { ExecutionTask } from "./types";

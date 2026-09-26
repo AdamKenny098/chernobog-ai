@@ -22,18 +22,18 @@ import {
   updateExecutionTask,
 } from "./taskLifecycle";
 
-import { getRiskPolicyForStep } from "./riskPolicy";
+import { getRiskPolicyForStep } from "@chernobog/trust/execution/riskPolicy";
 
 import {
   evaluateStepRuntimeGovernance,
   evaluateTaskRuntimeGovernance,
   getGovernanceDecisionMessage,
-} from "../governance/runtimeGovernance";
+} from "@chernobog/trust/governance/runtimeGovernance";
 
 import type {
   ExecutionGovernanceContext,
   ResolveExecutionStepGovernance,
-} from "../governance/runtimeGovernance";
+} from "@chernobog/trust/governance/runtimeGovernance";
 
 export interface ExecutionActionResult {
   success: boolean;

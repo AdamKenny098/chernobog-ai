@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ToolDefinition } from "../types";
+import { ToolDefinition } from "@chernobog/tools/types";
 
 const getTimeInputSchema = z.object({}).strict();
 

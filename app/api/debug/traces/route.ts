@@ -3,7 +3,7 @@ import {
   clearTrustTraces,
   getTrustTraceById,
   getTrustTraces,
-} from "@/lib/chernobog/trust/store";
+} from "@chernobog/trust/trust/store";
 
 export const runtime = "nodejs";
 

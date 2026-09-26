@@ -1,5 +1,5 @@
 import type { ChernobogIncDepartment, ChernobogWorkerRole } from "./chernobogMissionTypes";
-import type { TrustActionType, TrustDecision } from "./trustActionTypes";
+import type { TrustActionType, TrustDecision } from "@chernobog/trust/vault/trustActionTypes";
 
 export const CONTROLLED_EXECUTION_PLAN_STATUSES = [
   "draft",

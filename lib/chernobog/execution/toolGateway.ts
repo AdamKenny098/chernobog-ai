@@ -3,12 +3,12 @@ import {
 } from "@chernobog/events/publishers";
 import {
   executeTool,
-} from "../tools/executor";
+} from "@chernobog/tools/executor";
 import type {
   ToolExecutionContext,
   ToolFailureKind,
   ToolResult,
-} from "../tools/types";
+} from "@chernobog/tools/types";
 
 export type UnifiedToolInvocationOrigin =
   | "direct"

@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { z } from "zod";
-import { ToolDefinition } from "../types";
+import { ToolDefinition } from "@chernobog/tools/types";
 import {
   ensureAllowedPath,
   getNormalizedExtension,
   isReadableTextPath,
-} from "../fs-policy";
+} from "@chernobog/tools/fs-policy";
 
 const DEFAULT_MAX_CHARS = 12000;
 const MAX_FILE_BYTES = 2 * 1024 * 1024;

@@ -1,4 +1,4 @@
-import { createTrustDecision } from "./trustDecision";
+import { createTrustDecision } from "@chernobog/trust/vault/trustDecision";
 import type { ChernobogIncDepartment, ChernobogWorkerRole } from "./chernobogMissionTypes";
 import { defaultMissionDepartments, normalizeMissionDepartment } from "./chernobogMissionTypes";
 import type {

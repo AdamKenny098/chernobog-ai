@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { z } from "zod";
-import { ToolDefinition } from "../types";
+import { ToolDefinition } from "@chernobog/tools/types";
 
 const movePathInputSchema = z.object({
   sourcePath: z.string().min(1),

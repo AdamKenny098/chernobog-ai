@@ -1,6 +1,6 @@
 import type {
     ChernobogEvent,
-  } from "./types";
+  } from "@chernobog/events/types";
   
   export interface ChernobogEventThroughput {
     lastMinute: number;
