@@ -1,6 +1,6 @@
 import {
   publishChernobogEventSafely,
-} from "../../events";
+} from "@chernobog/events";
 import type {
   PersonalAssistanceMobileDevice,
   PersonalAssistanceMobileEnrollmentChallenge,

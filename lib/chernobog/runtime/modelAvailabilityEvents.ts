@@ -1,4 +1,4 @@
-import { publishChernobogEventSafely } from "../events/publishers";
+import { publishChernobogEventSafely } from "@chernobog/events/publishers";
 
 import type {
   ModelAvailabilitySnapshot,

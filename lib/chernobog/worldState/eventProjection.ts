@@ -1,4 +1,4 @@
-import type { ChernobogEvent } from "../events/types";
+import type { ChernobogEvent } from "@chernobog/events/types";
 import { resolveWorldStateExpiry } from "./freshness";
 import type { WorldStateProjection } from "./projectorTypes";
 import type {

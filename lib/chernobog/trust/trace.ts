@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import type { RouteName } from "@/lib/chernobog/session/types";
-import { publishChernobogEventSafely } from "@/lib/chernobog/events/publishers";
+import { publishChernobogEventSafely } from "@chernobog/events/publishers";
 import type {
   TrustFailureCategory,
   TrustTrace,

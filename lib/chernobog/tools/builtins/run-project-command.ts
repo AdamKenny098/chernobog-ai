@@ -4,7 +4,7 @@ import { spawn } from "node:child_process";
 
 import { z } from "zod";
 
-import { publishChernobogEventSafely } from "../../events/publishers";
+import { publishChernobogEventSafely } from "@chernobog/events/publishers";
 import { ToolDefinition } from "../types";
 
 const runProjectCommandInputSchema = z.object({

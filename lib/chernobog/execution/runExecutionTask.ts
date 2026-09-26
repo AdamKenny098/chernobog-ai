@@ -2,11 +2,11 @@
 
 import {
   runWithChernobogEventContext,
-} from "../events/eventContext";
+} from "@chernobog/events/eventContext";
 
 import {
   publishChernobogEventSafely,
-} from "../events/publishers";
+} from "@chernobog/events/publishers";
 
 import {
   ExecutionStep,

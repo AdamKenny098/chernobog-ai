@@ -1,6 +1,6 @@
 import {
   getChernobogEventBus,
-} from "../events";
+} from "@chernobog/events";
 import {
   getChernobogWorldStateRuntime,
 } from "../worldState";

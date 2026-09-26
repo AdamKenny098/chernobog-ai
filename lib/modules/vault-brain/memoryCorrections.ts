@@ -1,7 +1,7 @@
 import path from "node:path";
 import { promises as fs } from "node:fs";
 
-import { publishChernobogEventSafely } from "../../chernobog/events/publishers";
+import { publishChernobogEventSafely } from "@chernobog/events/publishers";
 
 import {
   createVaultMemoryStore,

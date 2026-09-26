@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { z } from "zod";
 
-import { publishChernobogEventSafely } from "../../events/publishers";
+import { publishChernobogEventSafely } from "@chernobog/events/publishers";
 import { observeProjectGitState } from "../../project/gitState";
 import { ToolDefinition } from "../types";
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { publishChernobogEventSafely } from "../events/publishers";
+import { publishChernobogEventSafely } from "@chernobog/events/publishers";
 import { getTool } from "./registry";
 import {
   ToolExecutionContext,

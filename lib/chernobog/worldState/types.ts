@@ -1,4 +1,4 @@
-import type { ChernobogEventSource } from "../events/types";
+import type { ChernobogEventSource } from "@chernobog/events/types";
 
 export const CHERNOBOG_WORLD_STATE_SCHEMA_VERSION = 1 as const;
 
