@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getRecentToolCalls } from "@/lib/chernobog/db";
+import { getRecentToolCalls } from "@chernobog/core/db";
 import { getMemories, getRecentMessages } from "@/lib/chernobog/memory";
 
 export const runtime = "nodejs";

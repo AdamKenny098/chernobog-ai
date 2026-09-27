@@ -1,4 +1,4 @@
-import { db } from "@/lib/chernobog/db";
+import { db } from "@chernobog/core/db";
 
 import { createInitialProjectSeed } from "./seed";
 import type { Project } from "./types";

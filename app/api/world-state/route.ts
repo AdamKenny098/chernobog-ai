@@ -8,7 +8,7 @@ import {
   getChernobogWorldStateRuntime,
   parseWorldStateReadQuery,
   queryPersistedWorldState,
-} from "@/lib/chernobog/worldState";
+} from "@chernobog/core/worldState";
 
 export const runtime = "nodejs";
 

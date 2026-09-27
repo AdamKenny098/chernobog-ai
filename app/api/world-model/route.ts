@@ -4,7 +4,7 @@ import {
 
 import {
   getChernobogWorldModelRuntime,
-} from "@/lib/chernobog/worldModel";
+} from "@chernobog/core/worldModel";
 
 export const runtime = "nodejs";
 

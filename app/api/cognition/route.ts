@@ -4,7 +4,7 @@ import {
 
 import {
   getChernobogCognitiveRuntime,
-} from "@/lib/chernobog/cognition";
+} from "@chernobog/core/cognition";
 
 import {
   personalAttentionProvider,

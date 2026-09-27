@@ -23,6 +23,8 @@
       }
     ],
     "paths": {
+      "@chernobog/core": ["./packages/core/src/index.ts"],
+      "@chernobog/core/*": ["./packages/core/src/*"],
       "@/*": [
         "./*"
       ],

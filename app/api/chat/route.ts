@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { runCommandPipeline } from "@/lib/chernobog/pipeline/runCommand";
+import { runCommandPipeline } from "@chernobog/core/pipeline/runCommand";
 import { buildSpokenReply } from "@/lib/chernobog/personality";
 
 export const runtime = "nodejs";

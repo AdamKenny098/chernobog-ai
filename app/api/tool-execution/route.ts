@@ -4,7 +4,7 @@ import {
 
 import {
   getUnifiedToolExecutionStatus,
-} from "@/lib/chernobog/execution";
+} from "@chernobog/core/execution";
 
 export const runtime = "nodejs";
 

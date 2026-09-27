@@ -1,5 +1,5 @@
-import type { UnifiedCommand } from "@/lib/chernobog/command-language";
-import type { RouteName } from "@/lib/chernobog/session/types";
+import type { UnifiedCommand } from "@chernobog/core/command-language";
+import type { RouteName } from "@chernobog/core/session/types";
 
 export type ModuleCommandContext = {
   userMessage: string;
