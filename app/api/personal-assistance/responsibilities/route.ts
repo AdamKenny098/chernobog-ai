@@ -4,7 +4,7 @@ import {
 import {
   getResponsibilityLedger,
   parseCreateResponsibility,
-} from "@/lib/chernobog/personalAssistance/responsibilities";
+} from "@chernobog/personal-assistance/responsibilities";
 
 export const dynamic =
   "force-dynamic";

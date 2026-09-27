@@ -5,7 +5,7 @@ import {
 import {
   enrollPersonalAssistanceMobileDevice,
   publishMobileDeviceEnrolled,
-} from "@/lib/chernobog/personalAssistance";
+} from "@chernobog/personal-assistance";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

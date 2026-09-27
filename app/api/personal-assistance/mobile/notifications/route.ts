@@ -6,25 +6,25 @@ import {
   authenticatePersonalAssistanceMobileRequest,
   ingestPersonalAssistanceMobileNotificationBatch,
   publishAcceptedMobileNotification,
-} from "@/lib/chernobog/personalAssistance";
+} from "@chernobog/personal-assistance";
 import type {
   PersonalAssistanceMobileNotificationBatchInput,
-} from "@/lib/chernobog/personalAssistance";
+} from "@chernobog/personal-assistance";
 import {
   markPersonalAssistanceMobileNotificationProcessed,
   readPersonalAssistanceStoredMobileNotification,
-} from "@/lib/chernobog/personalAssistance/mobile/notificationStore";
+} from "@chernobog/personal-assistance/mobile/notificationStore";
 import {
   analyzeAndProjectStoredMobileNotification,
-} from "@/lib/chernobog/personalAssistance/notificationIntelligence/mobileBridge";
+} from "@chernobog/personal-assistance/notificationIntelligence/mobileBridge";
 import {
   observeAlkimiiScheduleNotificationSafely,
-} from "@/lib/chernobog/personalAssistance/workSchedule";
+} from "@chernobog/personal-assistance/workSchedule";
 import type {
   NotificationProjectionResult,
-} from "@/lib/chernobog/personalAssistance/notificationIntelligence";import {
+} from "@chernobog/personal-assistance/notificationIntelligence";import {
   observeCommunicationResponsibilitySafely,
-} from "@/lib/chernobog/personalAssistance/communicationResponsibility";
+} from "@chernobog/personal-assistance/communicationResponsibility";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

@@ -8,10 +8,10 @@ import {
   listPersonalAssistanceProfileAudit,
   patchPersonalAssistanceProfile,
   resetPersonalAssistanceProfile,
-} from "@/lib/chernobog/personalAssistance";
+} from "@chernobog/personal-assistance";
 import type {
   PersonalAssistanceProfilePatch,
-} from "@/lib/chernobog/personalAssistance";
+} from "@chernobog/personal-assistance";
 
 export const runtime = "nodejs";
 

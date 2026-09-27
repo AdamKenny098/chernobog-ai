@@ -61,6 +61,12 @@
       ],
       "@chernobog/vault/*": [
         "./packages/vault/src/*"
+      ],
+      "@chernobog/personal-assistance": [
+        "./packages/personal-assistance/src/index.ts"
+      ],
+      "@chernobog/personal-assistance/*": [
+        "./packages/personal-assistance/src/*"
       ]
     }
   },

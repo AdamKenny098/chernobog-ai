@@ -4,10 +4,10 @@ import {
 import {
   completeGoogleCalendarConnection,
   syncWorkScheduleToGoogleCalendarSafely,
-} from "@/lib/chernobog/personalAssistance/calendar";
+} from "@chernobog/personal-assistance/calendar";
 import {
   getWorkScheduleStatus,
-} from "@/lib/chernobog/personalAssistance/workSchedule";
+} from "@chernobog/personal-assistance/workSchedule";
 
 export const runtime =
   "nodejs";
