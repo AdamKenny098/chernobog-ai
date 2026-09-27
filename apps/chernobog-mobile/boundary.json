@@ -1,0 +1,20 @@
+{
+  "owner": "apps/chernobog-mobile",
+  "legacySourceRoot": "mobile/android-companion",
+  "applicationId": "ai.chernobog.companion",
+  "transport": "authenticated-https-api",
+  "serverImplementationDependencies": false,
+  "authoritativeServerPersistence": false,
+  "capabilities": [
+    "enrollment",
+    "authentication",
+    "bearer-credentials",
+    "heartbeat",
+    "reconnect",
+    "notification-listener",
+    "offline-spool",
+    "alkimii-accessibility-capture",
+    "personal-assistance-transport",
+    "existing-android-ui"
+  ]
+}
