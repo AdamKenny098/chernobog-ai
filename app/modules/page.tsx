@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChernobogShell } from "@/components/chernobog-ui/ChernobogShell";
-import { getAllChernobogModules } from "@/lib/chernobog-ui/moduleRegistry";
-import { getAllChernobogRoutes } from "@/lib/chernobog-ui/routeRegistry";
+import { getAllChernobogModules } from "@chernobog/ui/registry/moduleRegistry";
+import { getAllChernobogRoutes } from "@chernobog/ui/registry/routeRegistry";
 
 export default function ModulesPage() {
   const modules = getAllChernobogModules();

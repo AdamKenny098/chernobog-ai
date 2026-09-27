@@ -1,10 +1,10 @@
 import { CommandCenterView } from "@/components/chernobog-ui/command-center/CommandCenterView";
 import { buildCommandCenterModel } from "@/components/chernobog-ui/command-center/commandCenterModel";
-import { getAllChernobogModules } from "@/lib/chernobog-ui/moduleRegistry";
+import { getAllChernobogModules } from "@chernobog/ui/registry/moduleRegistry";
 import {
   getAllChernobogRoutes,
   getPrimaryNavigationRoutes,
-} from "@/lib/chernobog-ui/routeRegistry";
+} from "@chernobog/ui/registry/routeRegistry";
 
 export default function CommandCenterPage() {
   const model = buildCommandCenterModel({

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChernobogRouteCard } from "@/components/chernobog-ui/ChernobogRouteCard";
 import { ChernobogShell } from "@/components/chernobog-ui/ChernobogShell";
-import { getPrimaryNavigationRoutes } from "@/lib/chernobog-ui/routeRegistry";
+import { getPrimaryNavigationRoutes } from "@chernobog/ui/registry/routeRegistry";
 
 const statusCards = [
   ["Chernobog Version", "V6.1"],

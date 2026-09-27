@@ -11,19 +11,19 @@ import {
   readChernobogCoreState,
   subscribeChernobogCoreState,
   type ChernobogCoreState,
-} from "@/lib/chernobog/ui/coreStateBridge";
+} from "@chernobog/ui/runtime/coreStateBridge";
 import {
   CHERNOBOG_ROUTING_VISUAL_TTL_MS,
   publishChernobogRoutingSignal,
   subscribeChernobogRoutingSignal,
   type ChernobogRoutingSignal,
-} from "@/lib/chernobog/ui/coreRoutingBridge";
+} from "@chernobog/ui/runtime/coreRoutingBridge";
 import {
   subscribeChernobogRuntimeActivity,
   type ObservedRuntimeApproval,
   type ObservedRuntimeExecutionStep,
   type ObservedRuntimeToolActivity,
-} from "@/lib/chernobog/ui/runtimeActivityObserver";
+} from "@chernobog/ui/runtime/runtimeActivityObserver";
 
 export type HierarchyTransition = {
   serial: number;

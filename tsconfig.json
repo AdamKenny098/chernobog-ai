@@ -23,6 +23,8 @@
       }
     ],
     "paths": {
+      "@chernobog/ui": ["./apps/chernobog-ui/src/index.ts"],
+      "@chernobog/ui/*": ["./apps/chernobog-ui/src/*"],
       "@chernobog/core": ["./packages/core/src/index.ts"],
       "@chernobog/core/*": ["./packages/core/src/*"],
       "@/*": [

@@ -1,6 +1,6 @@
 import { ChernobogRouteCard } from "@/components/chernobog-ui/ChernobogRouteCard";
 import { ChernobogShell } from "@/components/chernobog-ui/ChernobogShell";
-import { getAllChernobogRoutes, type ChernobogRoute, type ChernobogRouteKind } from "@/lib/chernobog-ui/routeRegistry";
+import { getAllChernobogRoutes, type ChernobogRoute, type ChernobogRouteKind } from "@chernobog/ui/registry/routeRegistry";
 
 const KIND_ORDER: ChernobogRouteKind[] = ["core", "vault", "inc", "review", "module", "settings", "debug", "api", "legacy"];
 

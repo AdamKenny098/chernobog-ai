@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ChernobogRoute, ChernobogRouteStatus } from "@/lib/chernobog-ui/routeRegistry";
+import type { ChernobogRoute, ChernobogRouteStatus } from "@chernobog/ui/registry/routeRegistry";
 
 function statusStyles(status: ChernobogRouteStatus) {
   switch (status) {
