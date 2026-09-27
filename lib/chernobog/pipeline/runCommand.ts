@@ -67,7 +67,7 @@ import {
 
 import { parsePlannerCommand } from "@/lib/chernobog/planner/parser";
 import { runPlannerCommand } from "@/lib/chernobog/planner/coordinator";
-import { buildUnifiedMemoryContext } from "@/lib/chernobog/memory-architecture";
+import { buildUnifiedMemoryContext } from "@chernobog/vault/memory-architecture";
 import {
   excludeCurrentUserMessageFromHistory,
   selectResponseContext,
@@ -88,7 +88,7 @@ import {
 import {
   detectMemoryArchitectureCommand,
   runMemoryArchitectureCommand,
-} from "@/lib/chernobog/memory-architecture/commands";
+} from "@chernobog/vault/memory-architecture/commands";
 
 import {
   formatCommandLanguageHelp,
@@ -127,7 +127,7 @@ import {
 import {
   executeVaultBrainCommand,
   isVaultBrainCommand,
-} from "@/lib/modules/vault-brain";
+} from "@chernobog/vault/vault-brain";
 
 import {
   executeContentIngestCommand,

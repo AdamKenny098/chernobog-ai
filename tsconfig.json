@@ -55,6 +55,12 @@
       ],
       "@chernobog/models/*": [
         "./packages/models/src/*"
+      ],
+      "@chernobog/vault": [
+        "./packages/vault/src/index.ts"
+      ],
+      "@chernobog/vault/*": [
+        "./packages/vault/src/*"
       ]
     }
   },
