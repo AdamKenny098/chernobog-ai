@@ -714,6 +714,14 @@ async function main():
         previousDataDirectory;
     }
 
+    // OH-1L lifecycle cleanup: Personal Assistance
+    try {
+      const persistence = await import("../packages/personal-assistance/src/persistence");
+      persistence.closePersonalAssistancePersistence();
+    } catch {
+      // Best-effort verifier cleanup only.
+    }
+
     await rm(
       tempRoot,
       {

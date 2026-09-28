@@ -1,4 +1,4 @@
-import db from "@/lib/chernobog/db";
+import db from "../persistence";
 import {
   getPersonalAssistanceProfile,
 } from "../profileStore";

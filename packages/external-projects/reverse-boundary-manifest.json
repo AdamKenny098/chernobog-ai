@@ -1,12 +1,13 @@
 {
   "slice": "OH-1K2",
-  "acceptedCheckpoint": "12fd820e027ab53322b7d68223495aaf2717b586",
-  "disposition": "verification-only-closure",
+  "acceptedCheckpoint": "81bcbe16ae8ae241cb5f0a0f32fec6dd002378a9",
+  "refreshedBy": "OH-1L",
+  "disposition": "post-persistence-ownership-closure",
   "privateCoreImportCount": 0,
-  "projectCodeFileCount": 523,
-  "publicChernobogImportCount": 48,
+  "projectCodeFileCount": 524,
+  "publicChernobogImportCount": 47,
   "publicPackageCounts": {
-    "@chernobog/core": 14,
+    "@chernobog/core": 13,
     "@chernobog/events": 3,
     "@chernobog/models": 1,
     "@chernobog/tools": 15,
@@ -54,10 +55,6 @@
       "specifier": "@chernobog/core/command-language"
     },
     {
-      "consumer": "lib/modules/project-operations/repository.ts",
-      "specifier": "@chernobog/core/db"
-    },
-    {
       "consumer": "lib/modules/registry.ts",
       "specifier": "@chernobog/core/command-language"
     },
@@ -76,7 +73,8 @@
     "OH-1H Core"
   ],
   "persistenceOwnership": {
-    "projectOperationsSharedChernobogDb": "deferred-to-OH-1L",
+    "projectOperations": "domain-owned-client-established-in-OH-1L",
+    "physicalCompatibilityFile": "data/chernobog.db",
     "itchDiscoveryOwnSqlite": "preserve-external-project-ownership"
   },
   "laterHandoffs": {
