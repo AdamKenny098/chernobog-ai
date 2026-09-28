@@ -1,7 +1,11 @@
 {
-  "schemaVersion": 1,
-  "scope": "accepted-pre-oh1m-observability-signals",
-  "codeFileCount": 1342,
+  "schemaVersion": 2,
+  "scope": "accepted-oh1-final-observability-signals",
+  "codeFileCount": 1346,
+  "excludedArchitectureVerifiers": [
+    "scripts/verify-oh1-final.mjs",
+    "scripts/verify-oh1o-compatibility-cleanup.mjs"
+  ],
   "signals": {
     "trace": {
       "fileCount": 3,
