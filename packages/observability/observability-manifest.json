@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "scope": "accepted-pre-oh1m-observability-signals",
+  "codeFileCount": 1342,
+  "signals": {
+    "trace": {
+      "fileCount": 3,
+      "samples": [
+        "lib/chernobog/trust/trace.ts",
+        "lib/chernobog/ui/runtimeActivityObserver.ts",
+        "packages/trust/src/trust/trace.ts"
+      ]
+    },
+    "diagnostics": {
+      "fileCount": 61,
+      "samples": [
+        "app/api/discovery/itch/maintenance/route.ts",
+        "app/api/events/diagnostics/route.ts",
+        "app/api/minecraft-schematic/textures/diagnostics/route.ts",
+        "app/api/world-state/route.ts",
+        "app/review/saved-content/SavedContentDashboard.tsx",
+        "app/review/saved-content/components/DiagnosticsPanel.tsx",
+        "app/review/saved-content/components/DiagnosticsTab.tsx",
+        "app/review/saved-content/components/FilterRail.tsx",
+        "lib/chernobog-ui/moduleRegistry.ts",
+        "lib/chernobog-ui/routeRegistry.ts",
+        "lib/chernobog/events/corruption.ts",
+        "lib/chernobog/events/diagnostics.ts",
+        "lib/chernobog/events/eventBus.ts",
+        "lib/chernobog/events/index.ts",
+        "lib/chernobog/events/store.ts",
+        "lib/chernobog/execution/diagnostics.ts",
+        "lib/chernobog/execution/index.ts",
+        "lib/chernobog/execution/internalExecutionHandlers.ts",
+        "lib/chernobog/pipeline/runCommand.ts",
+        "lib/chernobog/worldState/queryService.ts"
+      ]
+    },
+    "health": {
+      "fileCount": 3,
+      "samples": [
+        "lib/chernobog/runtime/runtimeHealthEvents.ts",
+        "lib/chernobog/worldState/domainProjectors.ts",
+        "scripts/verify-chernobog-phase11-11g-f-full-integration.ts"
+      ]
+    },
+    "timing": {
+      "fileCount": 71,
+      "samples": [
+        "app/api/sensory/speak/route.ts",
+        "app/api/sensory/transcribe/route.ts",
+        "app/api/sensory/vision/route.ts",
+        "app/review/saved-content/SavedContentDashboard.tsx",
+        "app/review/saved-content/components/IngestRunsTab.tsx",
+        "components/chernobog-ui/command-center/CalendarStewardSurface.tsx",
+        "components/chernobog-ui/sensory/SensoryControlDeck.tsx",
+        "components/chernobog/TrustTraceHistory.tsx",
+        "components/discovery/games/types.ts",
+        "lib/chernobog/cognition/initiativeDecision.ts",
+        "lib/chernobog/events/eventBus.ts",
+        "lib/chernobog/events/replay.ts",
+        "lib/chernobog/execution/taskLifecycle.ts",
+        "lib/chernobog/execution/types.ts",
+        "lib/chernobog/llm/ollamaClient.ts",
+        "lib/chernobog/llm/runtimeDiagnostics.ts",
+        "lib/chernobog/operations/backupStorageEvents.ts",
+        "lib/chernobog/operations/backupStorageObservation.ts",
+        "lib/chernobog/operations/backupStorageReporters.ts",
+        "lib/chernobog/personalAssistance/calendar/service.ts"
+      ]
+    },
+    "error": {
+      "fileCount": 28,
+      "samples": [
+        "app/api/personal-assistance/mobile/notifications/route.ts",
+        "components/review/VaultPullRequestWorkSpace.tsx",
+        "lib/chernobog/llm/runtimeDiagnostics.ts",
+        "lib/chernobog/personalAssistance/mobile/notificationStore.ts",
+        "lib/chernobog/personalAssistance/mobile/notificationTypes.ts",
+        "lib/chernobog/personalAssistance/responsibilities/store.ts",
+        "lib/chernobog/pipeline/liveLearningIngress.ts",
+        "lib/chernobog/tools/executor.ts",
+        "lib/modules/character-generator/components/CharacterBriefWorkspace.tsx",
+        "lib/modules/character-generator/components/CharacterCanonicalPoseWorkspace.tsx",
+        "lib/modules/character-generator/components/CharacterConceptWorkspace.tsx",
+        "lib/modules/character-generator/components/CharacterIdentityAnchorWorkspace.tsx",
+        "lib/modules/character-generator/components/CharacterModelWorkspace.tsx",
+        "lib/modules/character-generator/components/CharacterProjectCreateForm.tsx",
+        "lib/modules/character-generator/components/CharacterProjectEditor.tsx",
+        "lib/modules/character-generator/components/CharacterReferenceWorkspace.tsx",
+        "lib/modules/itch-discovery/maintenance/backup.ts",
+        "lib/modules/itch-discovery/maintenance/diagnostics.ts",
+        "lib/modules/itch-discovery/maintenance/recovery.ts",
+        "lib/modules/itch-discovery/repositories/itchMaintenanceRunRepository.ts"
+      ]
+    }
+  }
+}
