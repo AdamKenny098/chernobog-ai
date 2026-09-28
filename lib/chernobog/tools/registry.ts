@@ -20,7 +20,7 @@ import { writeProjectFileTool } from "@chernobog/tools/builtins/write-project-fi
 import { runProjectCommandTool } from "@chernobog/tools/builtins/run-project-command";
 import { readProjectNoteTool } from "@chernobog/tools/builtins/read-project-note";
 import { searchProjectNotesTool } from "@chernobog/tools/builtins/search-project-notes";
-import { buildModuleToolRegistry } from "@/lib/modules/registry";
+import { buildModuleToolRegistry } from "@chernobog/external-projects/registry";
 import { getProjectGitStateTool } from "@chernobog/tools/builtins/get-project-git-state";
 
 export const toolRegistry = {

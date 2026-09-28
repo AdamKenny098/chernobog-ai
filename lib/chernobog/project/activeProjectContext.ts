@@ -3,7 +3,7 @@ import {
   getDashboardSnapshot,
   getProjectBySlug,
   type Project,
-} from "@/lib/modules/project-operations";
+} from "@chernobog/external-projects/project-operations";
 
 export type ActiveProjectResolutionSource =
   | "explicit-message"

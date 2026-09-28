@@ -1,0 +1,64 @@
+{
+  "owner": "packages/external-projects",
+  "purpose": "transitional adapters between Core orchestration and external/project implementations",
+  "adapters": [
+    {
+      "specifier": "content-ingest",
+      "legacyImplementation": "@/lib/modules/content-ingest",
+      "consumers": [
+        "lib/chernobog/pipeline/runCommand.ts"
+      ]
+    },
+    {
+      "specifier": "content-review",
+      "legacyImplementation": "@/lib/modules/content-review",
+      "consumers": [
+        "lib/chernobog/pipeline/runCommand.ts"
+      ]
+    },
+    {
+      "specifier": "project-operations",
+      "legacyImplementation": "@/lib/modules/project-operations",
+      "consumers": [
+        "lib/chernobog/project/activeProjectContext.ts"
+      ]
+    },
+    {
+      "specifier": "registry",
+      "legacyImplementation": "@/lib/modules/registry",
+      "consumers": [
+        "lib/chernobog/command-language/moduleParsers.ts",
+        "lib/chernobog/pipeline/domainHandlers.ts",
+        "lib/chernobog/tools/registry.ts"
+      ]
+    },
+    {
+      "specifier": "saved-content",
+      "legacyImplementation": "@/lib/modules/saved-content",
+      "consumers": [
+        "lib/chernobog/pipeline/runCommand.ts"
+      ]
+    },
+    {
+      "specifier": "saved-content-reliability",
+      "legacyImplementation": "@/lib/modules/saved-content-reliability",
+      "consumers": [
+        "lib/chernobog/pipeline/runCommand.ts"
+      ]
+    },
+    {
+      "specifier": "youtube-ingest",
+      "legacyImplementation": "@/lib/modules/youtube-ingest",
+      "consumers": [
+        "lib/chernobog/pipeline/runCommand.ts"
+      ]
+    },
+    {
+      "specifier": "youtube-oauth",
+      "legacyImplementation": "@/lib/modules/youtube-oauth",
+      "consumers": [
+        "lib/chernobog/pipeline/runCommand.ts"
+      ]
+    }
+  ]
+}

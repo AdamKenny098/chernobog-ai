@@ -23,6 +23,8 @@
       }
     ],
     "paths": {
+      "@chernobog/external-projects": ["./packages/external-projects/src/index.ts"],
+      "@chernobog/external-projects/*": ["./packages/external-projects/src/*"],
       "@chernobog/ui": ["./apps/chernobog-ui/src/index.ts"],
       "@chernobog/ui/*": ["./apps/chernobog-ui/src/*"],
       "@chernobog/core": ["./packages/core/src/index.ts"],

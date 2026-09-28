@@ -107,22 +107,22 @@ import {
 import {
   executeSavedContentCommand,
   isSavedContentCommand,
-} from "@/lib/modules/saved-content";
+} from "@chernobog/external-projects/saved-content";
 
 import {
   executeYouTubeOAuthCommand,
   isYouTubeOAuthCommand,
-} from "@/lib/modules/youtube-oauth";
+} from "@chernobog/external-projects/youtube-oauth";
 
 import {
   executeSavedContentReliabilityCommand,
   isSavedContentReliabilityCommand,
-} from "@/lib/modules/saved-content-reliability";
+} from "@chernobog/external-projects/saved-content-reliability";
 
 import {
   executeContentReviewCommand,
   isContentReviewCommand,
-} from "@/lib/modules/content-review";
+} from "@chernobog/external-projects/content-review";
 
 import {
   executeVaultBrainCommand,
@@ -132,12 +132,12 @@ import {
 import {
   executeContentIngestCommand,
   isContentIngestCommand,
-} from "@/lib/modules/content-ingest";
+} from "@chernobog/external-projects/content-ingest";
 
 import {
   executeYouTubeIngestCommand,
   isYouTubeIngestCommand,
-} from "@/lib/modules/youtube-ingest";
+} from "@chernobog/external-projects/youtube-ingest";
 
 
 type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {

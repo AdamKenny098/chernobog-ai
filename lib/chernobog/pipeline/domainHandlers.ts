@@ -4,7 +4,7 @@ import {
   getModuleForDomain,
   handleRegisteredModuleCommand,
   tryHandleRegisteredModuleFollowUp,
-} from "@/lib/modules/registry";
+} from "@chernobog/external-projects/registry";
 
 export type DomainHandlerContext = {
   userMessage: string;
