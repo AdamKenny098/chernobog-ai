@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "scope": "oh-1n-composition-root",
+  "activeRuntimeCutover": false,
+  "package": "@chernobog/runtime",
+  "slots": [
+    {
+      "slot": "contracts",
+      "package": "@chernobog/contracts",
+      "role": "public contracts"
+    },
+    {
+      "slot": "events",
+      "package": "@chernobog/events",
+      "role": "Event Spine"
+    },
+    {
+      "slot": "trust",
+      "package": "@chernobog/trust",
+      "role": "Trust Engine"
+    },
+    {
+      "slot": "tools",
+      "package": "@chernobog/tools",
+      "role": "Tool Gateway"
+    },
+    {
+      "slot": "models",
+      "package": "@chernobog/models",
+      "role": "Model Gateway"
+    },
+    {
+      "slot": "vault",
+      "package": "@chernobog/vault",
+      "role": "Vault"
+    },
+    {
+      "slot": "personalAssistance",
+      "package": "@chernobog/personal-assistance",
+      "role": "Personal Assistance providers"
+    },
+    {
+      "slot": "core",
+      "package": "@chernobog/core",
+      "role": "Core runtime"
+    },
+    {
+      "slot": "observability",
+      "package": "@chernobog/observability",
+      "role": "Observability vocabulary"
+    },
+    {
+      "slot": "externalProjects",
+      "package": "@chernobog/external-projects",
+      "role": "External project adapters"
+    }
+  ],
+  "persistenceOwnership": {
+    "core": "@chernobog/core",
+    "events": "@chernobog/events",
+    "vault": "@chernobog/vault",
+    "personalAssistance": "@chernobog/personal-assistance",
+    "externalProjects": "@chernobog/external-projects"
+  },
+  "handoff": {
+    "compatibilityCleanup": "OH-1O",
+    "runtimeRedesign": "OH-2"
+  }
+}

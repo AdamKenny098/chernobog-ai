@@ -23,6 +23,8 @@
       }
     ],
     "paths": {
+      "@chernobog/runtime": ["./packages/runtime/src/index.ts"],
+      "@chernobog/runtime/*": ["./packages/runtime/src/*"],
       "@chernobog/observability": ["./packages/observability/src/index.ts"],
       "@chernobog/observability/*": ["./packages/observability/src/*"],
       "@chernobog/external-projects": ["./packages/external-projects/src/index.ts"],
