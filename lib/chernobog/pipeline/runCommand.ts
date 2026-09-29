@@ -141,6 +141,7 @@ import {
 
 
 import { getDialogueRuntime } from "@chernobog/runtime";
+import { getRouterRuntime } from "@chernobog/runtime";
 type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {
   executionState?: ExecutionState;
 };
@@ -183,7 +184,7 @@ export async function runCommandPipeline(
 ): Promise<CommandPipelineResult> {
   return getDialogueRuntime().runTurn(
     { source: "command-pipeline" },
-    async () => {
+    async (dialogueTurn) => {
   let route: RouteName = "chat";
   let reply = "";
   const trace = createTrustTrace(userMessage, sessionId);
@@ -1122,7 +1123,7 @@ if (unifiedMemoryAction) {
           } else {
             route =
               inheritedFollowUpRoute ??
-              (await routeMessage(userMessage));
+              (await (await getRouterRuntime().resolveRoute(dialogueTurn.id, () => routeMessage(userMessage))));
             setTraceRoute(trace, route);
 
             addTraceStep(
