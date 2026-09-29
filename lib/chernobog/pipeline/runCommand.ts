@@ -142,6 +142,7 @@ import {
 
 import { getDialogueRuntime } from "@chernobog/runtime";
 import { getRouterRuntime } from "@chernobog/runtime";
+import { getPlannerRuntime } from "@chernobog/runtime";
 type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {
   executionState?: ExecutionState;
 };
@@ -535,10 +536,10 @@ export async function runCommandPipeline(
     const explicitPlannerCommand =
       parsePlannerCommand(userMessage);
     const explicitPlannerReply =
-      runPlannerCommand(
+      getPlannerRuntime().runPlanning(dialogueTurn.id, () => runPlannerCommand(
         explicitPlannerCommand,
         session,
-      );
+      ));
 
     if (explicitPlannerReply) {
       route = "planner";
@@ -732,7 +733,7 @@ if (unifiedMemoryAction) {
     const plannerCommand =
       unifiedToPlannerCommand(unifiedCommand) ??
       explicitPlannerCommand;
-    const plannerReply = runPlannerCommand(plannerCommand, session);
+    const plannerReply = getPlannerRuntime().runPlanning(dialogueTurn.id, () => runPlannerCommand(plannerCommand, session));
 
     if (plannerReply) {
       route = "planner";
@@ -907,7 +908,7 @@ if (unifiedMemoryAction) {
 
       addTraceStep(trace, "orchestration", "Checking V4.4 orchestration layer");
 
-      const orchestration = await orchestrateMessage(userMessage, session);
+      const orchestration = await getPlannerRuntime().runOrchestration(dialogueTurn.id, () => orchestrateMessage(userMessage, session));
 
       if (orchestration.handled) {
         route = orchestration.route;
