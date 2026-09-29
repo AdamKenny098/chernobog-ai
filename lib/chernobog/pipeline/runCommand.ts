@@ -140,6 +140,7 @@ import {
 } from "@chernobog/external-projects/youtube-ingest";
 
 
+import { getDialogueRuntime } from "@chernobog/runtime";
 type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {
   executionState?: ExecutionState;
 };
@@ -180,6 +181,9 @@ export async function runCommandPipeline(
     responseMode?: ChernobogResponseMode;
   } = {},
 ): Promise<CommandPipelineResult> {
+  return getDialogueRuntime().runTurn(
+    { source: "command-pipeline" },
+    async () => {
   let route: RouteName = "chat";
   let reply = "";
   const trace = createTrustTrace(userMessage, sessionId);
@@ -1278,4 +1282,7 @@ if (unifiedMemoryAction) {
   });
 
   return finalizePipelinePayload(sessionId, route, reply, trace);
+
+    },
+  );
 }
