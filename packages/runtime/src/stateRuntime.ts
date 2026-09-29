@@ -6,12 +6,14 @@
  * execution, World State, and readiness keep their accepted source owners.
  */
 
+import { getActionRuntime } from "./actionRuntime";
 import { getDialogueRuntime } from "./dialogueRuntime";
 import { getPlannerRuntime } from "./plannerRuntime";
 import { getRouterRuntime } from "./routerRuntime";
 
 export type StateAuthorityKey =
   | "session"
+  | "actionSelection"
   | "dialogue"
   | "routing"
   | "planning"
@@ -31,6 +33,12 @@ export type StateAuthorityDescriptor = {
 export const STATE_RUNTIME_AUTHORITIES: Readonly<
   Record<StateAuthorityKey, StateAuthorityDescriptor>
 > = Object.freeze({
+  actionSelection: {
+    authority: "@chernobog/runtime ActionRuntime",
+    persistenceOwner: null,
+    projectionOwner: "@chernobog/runtime StateRuntime",
+    mutableThroughStateRuntime: false,
+  },
   session: {
     authority: "lib/chernobog/session/store.ts",
     persistenceOwner: "session store",
@@ -99,7 +107,7 @@ type SessionBinding = {
 type DomainProjectionBinding = {
   key: Exclude<
     StateAuthorityKey,
-    "dialogue" | "routing" | "planning" | "session" | "clientProjection"
+    "dialogue" | "routing" | "planning" | "actionSelection" | "session" | "clientProjection"
   >;
   authority: string;
   reader: ProjectionReader;
@@ -110,6 +118,7 @@ export type StateRuntimeSnapshot = {
   revision: number;
   capturedAt: string;
   authorities: Readonly<Record<StateAuthorityKey, StateAuthorityDescriptor>>;
+  actionSelection: ReturnType<ReturnType<typeof getActionRuntime>["snapshot"]>;
   dialogue: ReturnType<ReturnType<typeof getDialogueRuntime>["snapshot"]>;
   routing: ReturnType<ReturnType<typeof getRouterRuntime>["snapshot"]>;
   planning: ReturnType<ReturnType<typeof getPlannerRuntime>["snapshot"]>;
@@ -123,7 +132,7 @@ export type StateRuntimeSnapshot = {
     Record<
       Exclude<
         StateAuthorityKey,
-        "dialogue" | "routing" | "planning" | "session" | "clientProjection"
+        "dialogue" | "routing" | "planning" | "actionSelection" | "session" | "clientProjection"
       >,
       {
         authority: string;
@@ -242,6 +251,7 @@ export class StateRuntime {
       revision: this.revision,
       capturedAt: this.now(),
       authorities: STATE_RUNTIME_AUTHORITIES,
+      actionSelection: getActionRuntime().snapshot(),
       dialogue: getDialogueRuntime().snapshot(),
       routing: getRouterRuntime().snapshot(),
       planning: getPlannerRuntime().snapshot(),

@@ -1,3 +1,4 @@
+import { getActionRuntime } from "./actionRuntime";
 /**
  * OH-2B — Authoritative Dialogue Runtime.
  *
@@ -71,6 +72,7 @@ export class DialogueRuntime {
   }
 
   public markInterrupted(turnId: string, reason?: string): DialogueTurnSnapshot | null {
+    getActionRuntime().interrupt(turnId, reason, "dialogue-runtime");
     const turn = this.activeTurns.get(turnId);
     if (!turn) return null;
 
@@ -81,6 +83,7 @@ export class DialogueRuntime {
   }
 
   public markResumed(turnId: string): DialogueTurnSnapshot | null {
+    getActionRuntime().resume(turnId, "dialogue-runtime");
     const turn = this.activeTurns.get(turnId);
     if (!turn) return null;
 
