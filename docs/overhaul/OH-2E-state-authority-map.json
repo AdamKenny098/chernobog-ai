@@ -1,0 +1,18 @@
+{
+  "stage": "OH-2E",
+  "baselineCommit": "443635af3d40b5070940ca59abe9c0ddbb5e0355",
+  "projectionOwner": "@chernobog/runtime StateRuntime",
+  "mutableThroughStateRuntime": false,
+  "fields": {
+    "session": "lib/chernobog/session/store.ts",
+    "dialogue": "@chernobog/runtime DialogueRuntime",
+    "routing": "@chernobog/runtime RouterRuntime",
+    "planning": "@chernobog/runtime PlannerRuntime",
+    "execution": "lib/chernobog/execution",
+    "activeTask": "lib/chernobog/execution",
+    "worldState": "World State domain",
+    "runtimeHealth": "packages/models/src/runtimeReadiness.ts",
+    "clientProjection": "@chernobog/runtime StateRuntime"
+  },
+  "rule": "State Runtime coordinates read-only projections and rejects competing projection authorities; domain persistence stays with its accepted owner."
+}

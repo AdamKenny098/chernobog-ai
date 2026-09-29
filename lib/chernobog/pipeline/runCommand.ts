@@ -143,6 +143,7 @@ import {
 import { getDialogueRuntime } from "@chernobog/runtime";
 import { getRouterRuntime } from "@chernobog/runtime";
 import { getPlannerRuntime } from "@chernobog/runtime";
+import { getStateRuntime } from "@chernobog/runtime";
 type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {
   executionState?: ExecutionState;
 };
@@ -191,6 +192,11 @@ export async function runCommandPipeline(
   const trace = createTrustTrace(userMessage, sessionId);
 
   const startingSession = getSessionContext(sessionId);
+  getStateRuntime().bindSession(
+    dialogueTurn.id,
+    sessionId,
+    () => getSessionContext(sessionId),
+  );
 
 
   const activeProjectResolution = resolveActiveProjectContext({
