@@ -5,7 +5,8 @@ import {
   saveSessionContext,
 } from "@/lib/chernobog/session/store";
 import { setSelectedFileFromPath, updateSessionFromToolResult } from "@/lib/chernobog/session/update";
-import { executePipelineTool as executeTool } from "@chernobog/tools";
+import { executeGovernedToolAction } from "@/lib/chernobog/execution/governedToolExecution";
+
 
 type FindFilesResultData = {
   root: string;
@@ -23,7 +24,7 @@ type ReadTextFileResultData = {
   truncated: boolean;
 };
 
-export type ToolExecutionResult = Awaited<ReturnType<typeof executeTool>>;
+export type ToolExecutionResult = Awaited<ReturnType<typeof executeGovernedToolAction>>["result"];
 export type FileActionTool = "read_text_file" | "open_file";
 
 export function formatToolReply(
@@ -134,10 +135,35 @@ export async function executeAndTrackTool(
 ): Promise<ToolExecutionResult> {
   const session = getSessionContext(sessionId);
 
-  const result = await executeTool(toolName, input, {
-    platform: process.platform,
-    sessionId,
-  });
+  const governedToolExecution =
+    await executeGovernedToolAction(
+      toolName,
+      input,
+      {
+        origin: "pipeline",
+        sessionId,
+        previousState:
+          (
+            session as typeof session & {
+              executionState?: import("@/lib/chernobog/execution").ExecutionState;
+            }
+          ).executionState,
+        context: {
+          platform: process.platform,
+          sessionId,
+        },
+      },
+    );
+
+  const result =
+    governedToolExecution.result;
+
+  (
+    session as typeof session & {
+      executionState?: import("@/lib/chernobog/execution").ExecutionState;
+    }
+  ).executionState =
+    governedToolExecution.executionState;
 
   try {
     logToolCall({

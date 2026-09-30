@@ -11,6 +11,8 @@ import { runExecutionTask } from "./runExecutionTask";
 import { ExecutionTask } from "./types";
 import { createDefaultExecutionHandlers } from "./defaultExecutionHandlers";
 import { createInternalExecutionHandlers } from "./internalExecutionHandlers";
+import { createGovernedToolContinuationHandlers } from "./governedToolExecution";
+
 
 export type ApprovalCommandKind = "approve" | "deny" | "none";
 
@@ -99,6 +101,7 @@ export async function handleApprovalCommand(
       ...createInternalExecutionHandlers({
         previousState: state,
       }),
+      ...createGovernedToolContinuationHandlers(approvedTask),
     },
   });
 

@@ -1,0 +1,22 @@
+{
+  "stage": "OH-2G",
+  "baselineCommit": "0aea20ddd87054639d400b264d598392e9abd479",
+  "architecture": [
+    "Action Intent",
+    "runExecutionTask Trust/Governance",
+    "ALLOW / DENY / APPROVAL REQUIRED",
+    "Unified Tool Gateway",
+    "Tool / Adapter"
+  ],
+  "migratedLegacyFamilies": [
+    "pipeline executeAndTrackTool",
+    "orchestration orchestrateMessage"
+  ],
+  "approvalContinuation": true,
+  "originalGatewayOriginsPreserved": [
+    "pipeline",
+    "orchestration"
+  ],
+  "lowLevelExecutorBypasses": 0,
+  "autonomyExpanded": false
+}

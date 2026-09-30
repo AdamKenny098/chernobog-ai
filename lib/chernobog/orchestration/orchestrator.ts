@@ -1,6 +1,4 @@
-﻿import path from "node:path";
-
-import { executeOrchestrationTool as executeTool } from "@chernobog/tools";
+import path from "node:path";
 import { logToolCall } from "@/lib/chernobog/db";
 import type { SessionContext } from "@/lib/chernobog/session/types";
 import { updateSessionFromToolResult } from "@/lib/chernobog/session/update";
@@ -10,6 +8,8 @@ import {
   getLastReadFilePath,
   getSelectedFilePath,
 } from "./resolver";
+import { executeGovernedToolAction } from "@/lib/chernobog/execution/governedToolExecution";
+
 
 type OrchestrationResult =
   | {
@@ -71,6 +71,42 @@ function formatReadReply(data: ReadTextFileData, lead = `Here is ${data.path}:`)
     ? `${lead}\n\n${data.content}\n\n[truncated]`
     : `${lead}\n\n${data.content}`;
 }
+type OrchestrationSessionWithExecutionState =
+  SessionContext & {
+    executionState?: import("@/lib/chernobog/execution").ExecutionState;
+  };
+
+async function executeGovernedOrchestrationTool(
+  toolName: string,
+  input: unknown,
+  session: SessionContext,
+) {
+  const executionSession =
+    session as OrchestrationSessionWithExecutionState;
+
+  const governed =
+    await executeGovernedToolAction(
+      toolName,
+      input,
+      {
+        origin:
+          "orchestration",
+        previousState:
+          executionSession.executionState,
+        context: {
+          platform:
+            process.platform,
+        },
+      },
+    );
+
+  executionSession.executionState =
+    governed.executionState;
+
+  return governed.result;
+}
+
+
 
 export async function orchestrateMessage(
   userMessage: string,
@@ -96,9 +132,7 @@ export async function orchestrateMessage(
       maxResults: 8,
     };
 
-    const result = await executeTool("find_files", input, {
-      platform: process.platform,
-    });
+    const result = await executeGovernedOrchestrationTool("find_files", input, session);
 
     logToolSafely("find_files", input, result, result.ok);
     updateSessionFromToolResult(session, "find_files", input, result);
@@ -132,9 +166,7 @@ export async function orchestrateMessage(
       maxResults: 8,
     };
 
-    const searchResult = await executeTool("find_files", searchInput, {
-      platform: process.platform,
-    });
+    const searchResult = await executeGovernedOrchestrationTool("find_files", searchInput, session);
 
     logToolSafely("find_files", searchInput, searchResult, searchResult.ok);
     updateSessionFromToolResult(session, "find_files", searchInput, searchResult);
@@ -162,9 +194,7 @@ export async function orchestrateMessage(
       path: firstMatch.path,
     };
 
-    const readResult = await executeTool("read_text_file", readInput, {
-      platform: process.platform,
-    });
+    const readResult = await executeGovernedOrchestrationTool("read_text_file", readInput, session);
 
     logToolSafely("read_text_file", readInput, readResult, readResult.ok);
     updateSessionFromToolResult(session, "read_text_file", readInput, readResult);
@@ -202,9 +232,7 @@ export async function orchestrateMessage(
       path: filePath,
     };
 
-    const result = await executeTool("read_text_file", input, {
-      platform: process.platform,
-    });
+    const result = await executeGovernedOrchestrationTool("read_text_file", input, session);
 
     logToolSafely("read_text_file", input, result, result.ok);
     updateSessionFromToolResult(session, "read_text_file", input, result);
@@ -254,19 +282,17 @@ export async function orchestrateMessage(
         reply: "I can search and open, but I need a clearer file name or search term.",
       };
     }
-  
+
     const searchInput = {
       query: parsed.query,
       maxResults: 8,
     };
-  
-    const searchResult = await executeTool("find_files", searchInput, {
-      platform: process.platform,
-    });
-  
+
+    const searchResult = await executeGovernedOrchestrationTool("find_files", searchInput, session);
+
     logToolSafely("find_files", searchInput, searchResult, searchResult.ok);
     updateSessionFromToolResult(session, "find_files", searchInput, searchResult);
-  
+
     if (!searchResult.ok) {
       return {
         handled: true,
@@ -274,10 +300,10 @@ export async function orchestrateMessage(
         reply: `Tool failed: ${searchResult.error}`,
       };
     }
-  
+
     const searchData = searchResult.data as FindFilesData;
     const firstMatch = searchData.matches[0];
-  
+
     if (!firstMatch) {
       return {
         handled: true,
@@ -285,18 +311,16 @@ export async function orchestrateMessage(
         reply: `I could not find any files matching "${searchData.query}".`,
       };
     }
-  
+
     const openInput = {
       path: firstMatch.path,
     };
-  
-    const openResult = await executeTool("open_file", openInput, {
-      platform: process.platform,
-    });
-  
+
+    const openResult = await executeGovernedOrchestrationTool("open_file", openInput, session);
+
     logToolSafely("open_file", openInput, openResult, openResult.ok);
     updateSessionFromToolResult(session, "open_file", openInput, openResult);
-  
+
     if (!openResult.ok) {
       return {
         handled: true,
@@ -304,9 +328,9 @@ export async function orchestrateMessage(
         reply: `I found ${firstMatch.name}, but I could not open it.\n${openResult.error}`,
       };
     }
-  
+
     const openData = openResult.data as { message: string };
-  
+
     return {
       handled: true,
       route: "tools",
@@ -316,7 +340,7 @@ export async function orchestrateMessage(
 
   if (parsed.intent === "open_selected") {
     const filePath = getSelectedFilePath(session) ?? getFirstSearchResultPath(session);
-  
+
     if (!filePath) {
       return {
         handled: true,
@@ -324,18 +348,16 @@ export async function orchestrateMessage(
         reply: "I know you want me to open a file, but there is no selected file yet.",
       };
     }
-  
+
     const input = {
       path: filePath,
     };
-  
-    const result = await executeTool("open_file", input, {
-      platform: process.platform,
-    });
-  
+
+    const result = await executeGovernedOrchestrationTool("open_file", input, session);
+
     logToolSafely("open_file", input, result, result.ok);
     updateSessionFromToolResult(session, "open_file", input, result);
-  
+
     if (!result.ok) {
       return {
         handled: true,
@@ -343,9 +365,9 @@ export async function orchestrateMessage(
         reply: `Tool failed: ${result.error}`,
       };
     }
-  
+
     const data = result.data as { message: string };
-  
+
     return {
       handled: true,
       route: "tools",

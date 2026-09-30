@@ -1,4 +1,4 @@
-﻿export * from "@chernobog/trust/execution/approval";
+export * from "@chernobog/trust/execution/approval";
 export * from "./approvalCommands";
 export * from "./buildExecutionTask";
 export * from "./createExecutionTask";
@@ -19,3 +19,4 @@ export * from "./toolCapabilities";
 
 export * from "./toolExecutionStatus";
 
+export * from "./governedToolExecution";
