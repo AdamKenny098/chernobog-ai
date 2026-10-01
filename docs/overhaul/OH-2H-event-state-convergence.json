@@ -1,0 +1,53 @@
+{
+  "stage": "OH-2H",
+  "name": "Event -> State Convergence",
+  "baselineCommit": "929872b4a5ab2c7071d52e54e71c965ccdacd00e",
+  "chain": [
+    "Tool / Execution Result",
+    "Unified Event Spine",
+    "StateRuntime read-only projections",
+    "Dialogue / Response projection"
+  ],
+  "authorities": {
+    "event": "Unified Event Spine",
+    "execution": "lib/chernobog/execution",
+    "worldState": "World State domain",
+    "stateProjection": "@chernobog/runtime StateRuntime"
+  },
+  "bindings": {
+    "worldState": "StateRuntime domain projection",
+    "execution": "Event-derived StateRuntime domain projection",
+    "activeTask": "Event-derived StateRuntime domain projection"
+  },
+  "preserved": {
+    "eventPersistence": true,
+    "eventReplay": true,
+    "eventCorrelation": true,
+    "worldStatePersistence": true,
+    "sessionContinuity": true,
+    "toolGateway": true,
+    "trustApproval": true,
+    "threeDObservation": true
+  },
+  "behaviorChange": "Authority convergence only; no autonomy expansion",
+  "version": "V6",
+  "compatibility": {
+    "phase11WorldModelCurrentness": "preserved",
+    "canonical11GSyncCall": true,
+    "canonical11JSnapshot": true,
+    "modelFacingWorldStateRegistrySource": "StateRuntime detached projection"
+  },
+  "integrationBoundary": {
+    "runCommandModified": false,
+    "executionEdge": "executeGovernedToolAction",
+    "worldStateResponseEdge": "getChernobogStateRuntimeWorldStateQuery",
+    "worldModelResponseEdge": "getChernobogStateRuntimeWorldStateRegistry"
+  },
+  "regressionPolicy": {
+    "worldModelCurrentness": "run",
+    "legacyWorldModelConversationalBridge": "excluded as stale; fails accepted OH-2G baseline",
+    "routedPipelineIntegration": "focused verifier checks accepted worldStateSystemText/worldModelSystemText shape",
+    "phase11FullAcceptance": "run",
+    "goldenV2": "run"
+  }
+}

@@ -1,11 +1,9 @@
-import {
-  ChernobogWorldStateQueryService,
-  getChernobogWorldStateRuntime,
-  type WorldStateReadItem,
-} from "@/lib/chernobog/worldState";
+import { type WorldStateReadItem } from "@/lib/chernobog/worldState";
 import {
   observeAndPublishOllamaHealth,
 } from "@/lib/chernobog/runtime/ollamaHealth";
+import { getChernobogStateRuntimeWorldStateQuery } from "@/lib/chernobog/runtime/eventStateConvergence";
+
 
 const LIVE_OBSERVATION_REFRESH_MS = 60_000;
 
@@ -185,8 +183,6 @@ export async function buildChernobogWorldStateContext(
   } = {},
 ): Promise<ChernobogWorldStateContext> {
   try {
-    const runtime =
-      await getChernobogWorldStateRuntime();
 
     try {
       await refreshLiveOperationalObservations();
@@ -195,9 +191,7 @@ export async function buildChernobogWorldStateContext(
     }
 
     const query =
-      new ChernobogWorldStateQueryService(
-        runtime.engine.worldState,
-      );
+      await getChernobogStateRuntimeWorldStateQuery();
 
     const result =
       query.read({}, "registry");

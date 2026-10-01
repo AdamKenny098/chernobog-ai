@@ -32,6 +32,8 @@ import type {
   ExecutionStep,
   ExecutionTask,
 } from "./types";
+import { ensureChernobogEventStateConvergence } from "@/lib/chernobog/runtime/eventStateConvergence";
+
 
 export type GovernedLegacyToolOrigin =
   | "pipeline"
@@ -262,6 +264,7 @@ export async function executeGovernedToolAction(
   input: unknown,
   options: GovernedToolExecutionOptions,
 ): Promise<GovernedToolExecutionResult> {
+  await ensureChernobogEventStateConvergence();
   const previousState =
     options.previousState ??
     createEmptyExecutionState();
