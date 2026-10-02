@@ -5,13 +5,50 @@ import {
 import {
   getModelRouterStatus,
 } from "@chernobog/models";
+import {
+  OLLAMA_LIFECYCLE_DEPENDENCY,
+  getLifecycleRuntime,
+} from "@chernobog/runtime";
 
 export const runtime = "nodejs";
 
 export async function GET() {
   try {
     const router =
-      await getModelRouterStatus();
+      await getLifecycleRuntime()
+        .runDependencyOperation({
+          dependencyId:
+            OLLAMA_LIFECYCLE_DEPENDENCY,
+          operation:
+            () =>
+              getModelRouterStatus(),
+          assess:
+            (routerStatus) => ({
+              status:
+                routerStatus.status,
+              ...(routerStatus.status ===
+                "unavailable"
+                ? {
+                    reason:
+                      "No model-router role is currently routable.",
+                  }
+                : {}),
+              metadata: {
+                primaryRoleCount:
+                  routerStatus
+                    .primaryRoles
+                    .length,
+                fallbackRoleCount:
+                  routerStatus
+                    .fallbackRoles
+                    .length,
+                unavailableRoleCount:
+                  routerStatus
+                    .unavailableRoles
+                    .length,
+              },
+            }),
+        });
 
     return NextResponse.json({
       ok: true,

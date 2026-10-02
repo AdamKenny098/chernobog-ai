@@ -1,4 +1,10 @@
-import { generateWithModel } from "@chernobog/models";
+import {
+  generateWithReliableOllama,
+} from "@chernobog/models/reliableOllama";
+import {
+  OLLAMA_LIFECYCLE_DEPENDENCY,
+  getLifecycleRuntime,
+} from "@chernobog/runtime";
 
 import { parseCharacterBrief } from "./characterBriefSchema";
 import { getCharacterStyleProfile } from "../styleProfiles";
@@ -275,12 +281,49 @@ function buildBriefGenerationPrompt(project: CharacterProject): string {
 export async function generateCharacterBriefDraft(
   project: CharacterProject
 ): Promise<CharacterBriefGenerationResult> {
-  const result = await generateWithModel({
-    role: "default",
-    prompt: buildBriefGenerationPrompt(project),
-    temperature: 0.2,
-    timeoutMs: 180_000,
-  });
+  const result =
+    await getLifecycleRuntime()
+      .runDependencyOperation({
+        dependencyId:
+          OLLAMA_LIFECYCLE_DEPENDENCY,
+        operation:
+          () =>
+            generateWithReliableOllama({
+              role: "default",
+              prompt:
+                buildBriefGenerationPrompt(
+                  project,
+                ),
+              temperature: 0.2,
+              timeoutMs: 180_000,
+            }),
+        assess:
+          (runtimeResult) => ({
+            status:
+              runtimeResult.ok
+                ? runtimeResult.fallbackCount > 0
+                  ? "degraded"
+                  : "ready"
+                : "unavailable",
+            attempts:
+              runtimeResult.attempts,
+            retries:
+              Math.max(
+                0,
+                runtimeResult.attempts - 1,
+              ),
+            ...(runtimeResult.error
+              ? {
+                  reason:
+                    runtimeResult.error,
+                }
+              : {}),
+            metadata: {
+              fallbackCount:
+                runtimeResult.fallbackCount,
+            },
+          }),
+      });
 
   if (result.ok && result.text) {
     try {

@@ -3,6 +3,10 @@ import {
   observeAndPublishOllamaHealth,
 } from "@/lib/chernobog/runtime/ollamaHealth";
 import { getChernobogStateRuntimeWorldStateQuery } from "@/lib/chernobog/runtime/eventStateConvergence";
+import {
+  OLLAMA_LIFECYCLE_DEPENDENCY,
+  getLifecycleRuntime,
+} from "@chernobog/runtime";
 
 
 const LIVE_OBSERVATION_REFRESH_MS = 60_000;
@@ -24,7 +28,35 @@ async function refreshLiveOperationalObservations(): Promise<void> {
   }
   const refresh = (async () => {
     try {
-      await observeAndPublishOllamaHealth();
+      const health =
+        await observeAndPublishOllamaHealth();
+
+      getLifecycleRuntime().observeDependency(
+        OLLAMA_LIFECYCLE_DEPENDENCY,
+        {
+          status:
+            health.observation.status ===
+              "healthy"
+              ? "ready"
+              : health.observation.status ===
+                  "degraded"
+                ? "degraded"
+                : "unavailable",
+          ...(health.observation.message
+            ? {
+                reason:
+                  health.observation.message,
+              }
+            : {}),
+          metadata: {
+            providerStatus:
+              health.observation.status,
+            installedModelCount:
+              health.installedModels.length,
+          },
+        },
+      );
+
       liveObservationGlobals.__chernobogLiveObservationRefreshAt = Date.now();
     } finally {
       liveObservationGlobals.__chernobogLiveObservationRefreshPromise = undefined;

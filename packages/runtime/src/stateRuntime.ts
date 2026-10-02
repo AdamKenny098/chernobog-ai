@@ -82,7 +82,7 @@ export const STATE_RUNTIME_AUTHORITIES: Readonly<
     mutableThroughStateRuntime: false,
   },
   runtimeHealth: {
-    authority: "packages/models/src/runtimeReadiness.ts",
+    authority: "@chernobog/runtime LifecycleRuntime",
     persistenceOwner: null,
     projectionOwner: "@chernobog/runtime StateRuntime",
     mutableThroughStateRuntime: false,

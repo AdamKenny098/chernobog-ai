@@ -1,6 +1,10 @@
 import {
   generateWithReliableOllama as generateWithOllama,
 } from "@chernobog/models/reliableOllama";
+import {
+  OLLAMA_LIFECYCLE_DEPENDENCY,
+  getLifecycleRuntime,
+} from "@chernobog/runtime";
 import type {
   OllamaChatMessage,
 } from "@chernobog/models";
@@ -192,12 +196,52 @@ async function callOllama(
     numPredict?: number;
   } = {},
 ): Promise<string> {
-  const result = await generateWithOllama({
-    role: options.role ?? "default",
-    messages,
-    temperature: options.temperature ?? 0.4,
-    numPredict: options.numPredict ?? 500,
-  });
+  const result =
+    await getLifecycleRuntime()
+      .runDependencyOperation({
+        dependencyId:
+          OLLAMA_LIFECYCLE_DEPENDENCY,
+        operation:
+          () =>
+            generateWithOllama({
+              role:
+                options.role ??
+                "default",
+              messages,
+              temperature:
+                options.temperature ??
+                0.4,
+              numPredict:
+                options.numPredict ??
+                500,
+            }),
+        assess:
+          (runtimeResult) => ({
+            status:
+              runtimeResult.ok
+                ? runtimeResult.fallbackCount > 0
+                  ? "degraded"
+                  : "ready"
+                : "unavailable",
+            attempts:
+              runtimeResult.attempts,
+            retries:
+              Math.max(
+                0,
+                runtimeResult.attempts - 1,
+              ),
+            ...(runtimeResult.error
+              ? {
+                  reason:
+                    runtimeResult.error,
+                }
+              : {}),
+            metadata: {
+              fallbackCount:
+                runtimeResult.fallbackCount,
+            },
+          }),
+      });
 
   if (!result.ok || !result.text) {
     throw new Error(

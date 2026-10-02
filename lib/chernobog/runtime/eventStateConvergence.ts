@@ -14,6 +14,7 @@ import {
   type ChernobogEvent,
 } from "@chernobog/events";
 import {
+  getLifecycleRuntime,
   getStateRuntime,
 } from "@chernobog/runtime";
 import {
@@ -972,6 +973,14 @@ async function startEventStateConvergence():
       () =>
         executionProjection
           .activeTask(),
+    );
+
+    stateRuntime.bindDomainProjection(
+      "runtimeHealth",
+      "@chernobog/runtime LifecycleRuntime",
+      () =>
+        getLifecycleRuntime()
+          .snapshot(),
     );
 
     return {
