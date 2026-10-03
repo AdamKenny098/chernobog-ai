@@ -19,6 +19,26 @@ export type JobStoreSnapshot = {
   runs: JobRun[];
 };
 
+export type JobStoreMutation =
+  | {
+      entity: "job";
+      before?: JobDefinition;
+      after?: JobDefinition;
+    }
+  | {
+      entity: "schedule";
+      before?: ScheduleDefinition;
+      after?: ScheduleDefinition;
+    }
+  | {
+      entity: "run";
+      before?: JobRun;
+      after?: JobRun;
+    };
+
+export type JobStoreMutationObserver = (
+  mutation: JobStoreMutation,
+) => void;
 export type ClaimRunnableOptions = {
   workerId: string;
   leaseDurationMs: number;
@@ -118,7 +138,10 @@ export function getDefaultJobStorePath(): string {
 }
 
 export class FileJobStore {
-  constructor(private readonly filePath: string = getDefaultJobStorePath()) {}
+  constructor(
+    private readonly filePath: string = getDefaultJobStorePath(),
+    private readonly observer?: JobStoreMutationObserver,
+  ) {}
 
   get storagePath(): string {
     return this.filePath;
@@ -150,8 +173,83 @@ export class FileJobStore {
     };
   }
 
+  private notifyMutations(
+    before: JobStoreSnapshot,
+    after: JobStoreSnapshot,
+  ): void {
+    const observer = this.observer;
+    if (!observer) return;
+
+    const notifyCollection = <T extends { id: string }>(
+      entity: JobStoreMutation["entity"],
+      beforeItems: T[],
+      afterItems: T[],
+    ): void => {
+      const beforeById = new Map(
+        beforeItems.map((item) => [item.id, item]),
+      );
+      const afterById = new Map(
+        afterItems.map((item) => [item.id, item]),
+      );
+
+      const ids = new Set([
+        ...beforeById.keys(),
+        ...afterById.keys(),
+      ]);
+
+      for (const id of ids) {
+        const previous = beforeById.get(id);
+        const next = afterById.get(id);
+
+        if (
+          previous !== undefined &&
+          next !== undefined &&
+          JSON.stringify(previous) === JSON.stringify(next)
+        ) {
+          continue;
+        }
+
+        try {
+          if (entity === "job") {
+            observer({
+              entity,
+              before: previous as JobDefinition | undefined,
+              after: next as JobDefinition | undefined,
+            });
+          } else if (entity === "schedule") {
+            observer({
+              entity,
+              before: previous as ScheduleDefinition | undefined,
+              after: next as ScheduleDefinition | undefined,
+            });
+          } else {
+            observer({
+              entity,
+              before: previous as JobRun | undefined,
+              after: next as JobRun | undefined,
+            });
+          }
+        } catch {
+          // Observability must never corrupt or roll back durable job state.
+        }
+      }
+    };
+
+    notifyCollection("job", before.jobs, after.jobs);
+    notifyCollection("schedule", before.schedules, after.schedules);
+    notifyCollection("run", before.runs, after.runs);
+  }
+
   private writeSnapshot(snapshot: JobStoreSnapshot): void {
+    const before = this.observer
+      ? this.readSnapshot()
+      : undefined;
+
     writeSnapshotAtomically(this.filePath, snapshot);
+
+    if (before) {
+      this.notifyMutations(before, snapshot);
+    }
   }
 
   private withExclusiveLock<T>(operation: () => T): T {
