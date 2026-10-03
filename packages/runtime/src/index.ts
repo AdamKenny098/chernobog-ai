@@ -10,3 +10,4 @@ export * from "./schedulerRuntime";
 export * from "./jobWorkerRuntime";
 export * from "./jobRecoveryRuntime";
 export * from "./jobObservabilityRuntime";
+export * from "./jobControlRuntime";
