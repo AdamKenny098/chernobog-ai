@@ -558,6 +558,134 @@ export class FileJobStore {
       return clone(retry);
     });
   }
+  recoverExpiredClaim(
+    runId: JobRunId,
+    now: Date = new Date(),
+  ): JobRun | undefined {
+    assertValidDate(now, "claim recovery time");
+
+    return this.withExclusiveLock(() => {
+      const snapshot = this.readSnapshot();
+      const index = snapshot.runs.findIndex(
+        (candidate) => candidate.id === runId,
+      );
+
+      if (index === -1) return undefined;
+
+      const current = snapshot.runs[index];
+      if (
+        current.status !== "claimed" ||
+        !isExpired(current.leaseExpiresAt, now)
+      ) {
+        return undefined;
+      }
+
+      const recovered: JobRun = {
+        ...current,
+        status: "queued",
+        workerId: undefined,
+        claimToken: undefined,
+        leaseExpiresAt: undefined,
+        claimedAt: undefined,
+      };
+
+      snapshot.runs[index] = recovered;
+      this.writeSnapshot(snapshot);
+      return clone(recovered);
+    });
+  }
+
+  recoverExpiredRunningForRetry(
+    runId: JobRunId,
+    now: Date,
+    nextAttempt: number,
+    scheduledFor: string,
+    error: NonNullable<JobRun["error"]>,
+  ): JobRun | undefined {
+    assertValidDate(now, "running recovery time");
+    const dueAt = new Date(scheduledFor);
+    assertValidDate(dueAt, "running recovery scheduledFor");
+
+    return this.withExclusiveLock(() => {
+      const snapshot = this.readSnapshot();
+      const index = snapshot.runs.findIndex(
+        (candidate) => candidate.id === runId,
+      );
+
+      if (index === -1) return undefined;
+
+      const current = snapshot.runs[index];
+      if (
+        current.status !== "running" ||
+        !isExpired(current.leaseExpiresAt, now)
+      ) {
+        return undefined;
+      }
+
+      if (nextAttempt !== current.attempt + 1) {
+        throw new Error(
+          `Recovery attempt must advance exactly once for ${runId}`,
+        );
+      }
+
+      const recovered: JobRun = {
+        ...current,
+        status: "scheduled",
+        attempt: nextAttempt,
+        scheduledFor: dueAt.toISOString(),
+        queuedAt: undefined,
+        claimedAt: undefined,
+        startedAt: undefined,
+        finishedAt: undefined,
+        workerId: undefined,
+        claimToken: undefined,
+        leaseExpiresAt: undefined,
+        error: clone(error),
+      };
+
+      snapshot.runs[index] = recovered;
+      this.writeSnapshot(snapshot);
+      return clone(recovered);
+    });
+  }
+
+  recoverExpiredRunningAsFailed(
+    runId: JobRunId,
+    now: Date,
+    error: NonNullable<JobRun["error"]>,
+  ): JobRun | undefined {
+    assertValidDate(now, "running recovery time");
+
+    return this.withExclusiveLock(() => {
+      const snapshot = this.readSnapshot();
+      const index = snapshot.runs.findIndex(
+        (candidate) => candidate.id === runId,
+      );
+
+      if (index === -1) return undefined;
+
+      const current = snapshot.runs[index];
+      if (
+        current.status !== "running" ||
+        !isExpired(current.leaseExpiresAt, now)
+      ) {
+        return undefined;
+      }
+
+      const recovered: JobRun = {
+        ...current,
+        status: "failed",
+        finishedAt: now.toISOString(),
+        claimToken: undefined,
+        leaseExpiresAt: undefined,
+        error: clone(error),
+      };
+
+      snapshot.runs[index] = recovered;
+      this.writeSnapshot(snapshot);
+      return clone(recovered);
+    });
+  }
   renewRunLease(
     runId: JobRunId,
     claimToken: string,

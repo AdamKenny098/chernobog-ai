@@ -2,6 +2,7 @@ import type {
   JobDefinition,
   JobRun,
   ScheduleDefinition,
+  ScheduleMissedRunPolicy,
   ScheduleStatus,
   ScheduleTrigger,
 } from "@chernobog/contracts";
@@ -9,6 +10,7 @@ import type { FileJobStore } from "@chernobog/core";
 
 const MINUTE_MS = 60_000;
 const MAX_CRON_SEARCH_MINUTES = 366 * 24 * 60;
+const MAX_CRON_RECONCILIATION_OCCURRENCES = 600_000;
 
 type CronField = {
   any: boolean;
@@ -51,9 +53,7 @@ function parseCronAtom(
   label: string,
 ): number[] {
   const trimmed = atom.trim();
-  if (!trimmed) {
-    throw new Error(`Empty ${label} cron atom`);
-  }
+  if (!trimmed) throw new Error(`Empty ${label} cron atom`);
 
   const stepParts = trimmed.split("/");
   if (stepParts.length > 2) {
@@ -162,7 +162,6 @@ function getFormatter(timeZone: string): Intl.DateTimeFormat {
     hourCycle: "h23",
   });
 
-  // Force validation now rather than during the first tick.
   formatter.format(new Date(0));
   formatterCache.set(timeZone, formatter);
   return formatter;
@@ -204,8 +203,6 @@ function cronMatches(parts: CronParts, local: ZonedMinute): boolean {
   const domMatch = parts.dayOfMonth.values.has(local.dayOfMonth);
   const dowMatch = parts.dayOfWeek.values.has(local.dayOfWeek);
 
-  // Standard cron semantics: when both DOM and DOW are restricted,
-  // either may match. If one is "*", the restricted field governs.
   if (!parts.dayOfMonth.any && !parts.dayOfWeek.any) {
     return domMatch || dowMatch;
   }
@@ -291,32 +288,19 @@ function deterministicRunId(
   return `schedule:${scheduleId}:${Date.parse(scheduledFor)}`;
 }
 
-function lastMaterializedOccurrence(
-  store: Pick<FileJobStore, "listRuns">,
-  scheduleId: string,
+function parseOptionalDate(
+  value: string | undefined,
+  label: string,
 ): Date | undefined {
-  let latest: Date | undefined;
-
-  for (const run of store.listRuns()) {
-    if (run.scheduleId !== scheduleId || !run.scheduledFor) continue;
-
-    const candidate = new Date(run.scheduledFor);
-    if (!Number.isFinite(candidate.getTime())) continue;
-
-    if (!latest || candidate.getTime() > latest.getTime()) {
-      latest = candidate;
-    }
+  if (!value) return undefined;
+  const parsed = new Date(value);
+  if (!Number.isFinite(parsed.getTime())) {
+    throw new Error(`Invalid ${label}: ${value}`);
   }
-
-  return latest;
+  return parsed;
 }
 
-function scheduleSearchBase(
-  schedule: ScheduleDefinition,
-  lastOccurrence: Date | undefined,
-): Date {
-  if (lastOccurrence) return lastOccurrence;
-
+function initialScheduleBase(schedule: ScheduleDefinition): Date {
   const createdAt = new Date(schedule.createdAt);
   if (!Number.isFinite(createdAt.getTime())) {
     throw new Error(`Invalid schedule createdAt: ${schedule.createdAt}`);
@@ -330,7 +314,6 @@ function scheduleSearchBase(
       );
     }
 
-    // Include an anchor exactly equal to schedule creation.
     if (anchor.getTime() >= createdAt.getTime()) {
       return new Date(anchor.getTime() - 1);
     }
@@ -349,6 +332,121 @@ function scheduleSearchBase(
   return new Date(createdAt.getTime() - 1);
 }
 
+function reconciliationBase(
+  schedule: ScheduleDefinition,
+): Date {
+  const baseCandidates = [
+    initialScheduleBase(schedule),
+    parseOptionalDate(
+      schedule.lastReconciledAt,
+      "schedule lastReconciledAt",
+    ),
+  ].filter((value): value is Date => Boolean(value));
+
+  return baseCandidates.reduce((latest, candidate) =>
+    candidate.getTime() > latest.getTime() ? candidate : latest,
+  );
+}
+
+function normalizeMissedRunPolicy(
+  policy: ScheduleMissedRunPolicy | undefined,
+): ScheduleMissedRunPolicy {
+  if (!policy) return { mode: "run-once" };
+
+  if (policy.mode === "catch-up") {
+    if (!Number.isInteger(policy.maxRuns) || policy.maxRuns < 1) {
+      throw new Error("catch-up maxRuns must be an integer >= 1");
+    }
+  }
+
+  return policy;
+}
+
+function selectIntervalOccurrences(
+  trigger: Extract<ScheduleTrigger, { kind: "interval" }>,
+  after: Date,
+  through: Date,
+  policy: ScheduleMissedRunPolicy,
+): Date[] {
+  const first = nextOccurrenceAfter(trigger, after);
+  if (!first || first.getTime() > through.getTime()) return [];
+
+  if (policy.mode === "skip") return [];
+
+  const count =
+    Math.floor(
+      (through.getTime() - first.getTime()) / trigger.everyMs,
+    ) + 1;
+
+  if (policy.mode === "run-once") {
+    return [
+      new Date(
+        first.getTime() + (count - 1) * trigger.everyMs,
+      ),
+    ];
+  }
+
+  const selected = Math.min(policy.maxRuns, count);
+  const firstSelectedIndex = count - selected;
+
+  return Array.from({ length: selected }, (_, index) =>
+    new Date(
+      first.getTime() +
+        (firstSelectedIndex + index) * trigger.everyMs,
+    ),
+  );
+}
+
+function selectDueOccurrences(
+  schedule: ScheduleDefinition,
+  after: Date,
+  through: Date,
+): Date[] {
+  const policy = normalizeMissedRunPolicy(
+    schedule.missedRunPolicy,
+  );
+
+  if (policy.mode === "skip") return [];
+
+  if (schedule.trigger.kind === "interval") {
+    return selectIntervalOccurrences(
+      schedule.trigger,
+      after,
+      through,
+      policy,
+    );
+  }
+
+  const selected: Date[] = [];
+  let cursor = after;
+
+  for (
+    let count = 0;
+    count < MAX_CRON_RECONCILIATION_OCCURRENCES;
+    count += 1
+  ) {
+    const next = nextOccurrenceAfter(schedule.trigger, cursor);
+    if (!next || next.getTime() > through.getTime()) {
+      return selected;
+    }
+
+    if (policy.mode === "run-once") {
+      selected.splice(0, selected.length, next);
+    } else {
+      selected.push(next);
+      if (selected.length > policy.maxRuns) {
+        selected.shift();
+      }
+    }
+
+    cursor = next;
+  }
+
+  throw new Error(
+    `Schedule reconciliation exceeded safety bound: ${schedule.id}`,
+  );
+}
+
 export class SchedulerRuntime {
   constructor(private readonly store: FileJobStore) {}
 
@@ -357,10 +455,9 @@ export class SchedulerRuntime {
   ): Date | undefined {
     if (schedule.status !== "active") return undefined;
 
-    const last = lastMaterializedOccurrence(this.store, schedule.id);
     return nextOccurrenceAfter(
       schedule.trigger,
-      scheduleSearchBase(schedule, last),
+      reconciliationBase(schedule),
     );
   }
 
@@ -397,12 +494,6 @@ export class SchedulerRuntime {
     return schedule;
   }
 
-  /**
-   * Materializes at most one due occurrence per schedule per tick.
-   *
-   * Catch-up/missed-run policy is intentionally deferred to OH-3G.
-   * Worker execution is intentionally deferred to OH-3D.
-   */
   tick(now: Date = new Date()): SchedulerTickResult {
     if (!Number.isFinite(now.getTime())) {
       throw new Error("Scheduler tick requires a valid Date");
@@ -432,37 +523,41 @@ export class SchedulerRuntime {
         continue;
       }
 
-      const next = this.getNextRunAt(schedule);
-      if (!next || next.getTime() > now.getTime()) {
-        continue;
+      const base = reconciliationBase(schedule);
+      const due = selectDueOccurrences(schedule, base, now);
+
+      for (const occurrence of due) {
+        const scheduledFor = occurrence.toISOString();
+        const runId = deterministicRunId(schedule.id, scheduledFor);
+
+        if (this.store.getRun(runId)) continue;
+
+        const run: JobRun = {
+          id: runId,
+          jobId: job.id,
+          scheduleId: schedule.id,
+          owner: job.owner,
+          source: {
+            kind: "subsystem",
+            subsystemId: schedule.owner.ownerId,
+          },
+          status: "queued",
+          payload: job.payload,
+          attempt: 1,
+          idempotencyKey: runId,
+          scheduledFor,
+          queuedAt: now.toISOString(),
+        };
+
+        this.store.enqueueRun(run);
+        result.materializedRuns.push(run);
       }
 
-      const scheduledFor = next.toISOString();
-      const runId = deterministicRunId(schedule.id, scheduledFor);
-
-      if (this.store.getRun(runId)) {
-        continue;
-      }
-
-      const run: JobRun = {
-        id: runId,
-        jobId: job.id,
-        scheduleId: schedule.id,
-        owner: job.owner,
-        source: {
-          kind: "subsystem",
-          subsystemId: schedule.owner.ownerId,
-        },
-        status: "queued",
-        payload: job.payload,
-        attempt: 1,
-        idempotencyKey: runId,
-        scheduledFor,
-        queuedAt: now.toISOString(),
-      };
-
-      this.store.enqueueRun(run);
-      result.materializedRuns.push(run);
+      this.store.upsertSchedule({
+        ...schedule,
+        lastReconciledAt: now.toISOString(),
+        updatedAt: now.toISOString(),
+      });
     }
 
     return result;

@@ -1,5 +1,5 @@
 /**
- * Chernobog OH-3A Ã¢â‚¬â€ Job Contracts & Ownership
+ * Chernobog OH-3A ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Job Contracts & Ownership
  *
  * Contract-only foundation for scheduling and background execution.
  *
@@ -165,6 +165,10 @@ export type JobDefinition<TPayload = unknown> = {
  * Schedule points at a reusable job definition.
  * The scheduler must not contain job-specific business logic.
  */
+export type ScheduleMissedRunPolicy =
+  | { mode: "skip" }
+  | { mode: "run-once" }
+  | { mode: "catch-up"; maxRuns: number };
 export type ScheduleDefinition = {
   id: ScheduleId;
   jobId: JobId;
@@ -172,6 +176,8 @@ export type ScheduleDefinition = {
   owner: JobOwner;
   status: ScheduleStatus;
   trigger: ScheduleTrigger;
+  missedRunPolicy?: ScheduleMissedRunPolicy;
+  lastReconciledAt?: string;
   createdAt: string;
   updatedAt: string;
 };

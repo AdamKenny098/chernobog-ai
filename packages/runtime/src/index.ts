@@ -8,3 +8,4 @@ export * from "./actionRuntime";
 export * from "./lifecycleRuntime";
 export * from "./schedulerRuntime";
 export * from "./jobWorkerRuntime";
+export * from "./jobRecoveryRuntime";
