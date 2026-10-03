@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Chernobog OH-3A â€” Job Contracts & Ownership
  *
  * Contract-only foundation for scheduling and background execution.
@@ -168,6 +168,7 @@ export type JobDefinition<TPayload = unknown> = {
 export type ScheduleDefinition = {
   id: ScheduleId;
   jobId: JobId;
+  scheduleId?: ScheduleId;
   owner: JobOwner;
   status: ScheduleStatus;
   trigger: ScheduleTrigger;
@@ -183,6 +184,7 @@ export type ScheduleDefinition = {
 export type JobRun<TPayload = unknown> = {
   id: JobRunId;
   jobId: JobId;
+  scheduleId?: ScheduleId;
   owner: JobOwner;
   source: JobSource;
   status: JobRunStatus;
