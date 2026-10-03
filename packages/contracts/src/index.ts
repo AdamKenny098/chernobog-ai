@@ -5,3 +5,4 @@ export * from "./trust";
 export * from "./models";
 export * from "./personal-assistance";
 export * from "./vault";
+export * from "./jobs";
