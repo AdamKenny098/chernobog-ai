@@ -496,6 +496,68 @@ export class FileJobStore {
     });
   }
 
+  rescheduleClaimedRunForRetry(
+    runId: JobRunId,
+    claimToken: string,
+    nextAttempt: number,
+    scheduledFor: string,
+    error: NonNullable<JobRun["error"]>,
+  ): JobRun {
+    if (!Number.isInteger(nextAttempt) || nextAttempt < 2) {
+      throw new Error("nextAttempt must be an integer >= 2");
+    }
+
+    const dueAt = new Date(scheduledFor);
+    assertValidDate(dueAt, "retry scheduledFor");
+
+    return this.withExclusiveLock(() => {
+      const snapshot = this.readSnapshot();
+      const index = snapshot.runs.findIndex(
+        (candidate) => candidate.id === runId,
+      );
+
+      if (index === -1) {
+        throw new Error(`Unknown job run: ${runId}`);
+      }
+
+      const current = snapshot.runs[index];
+
+      if (!current.claimToken || current.claimToken !== claimToken) {
+        throw new Error(`Job run claim token mismatch: ${runId}`);
+      }
+
+      if (current.status !== "running" && current.status !== "claimed") {
+        throw new Error(
+          `Cannot retry ${runId} from status ${current.status}`,
+        );
+      }
+
+      if (nextAttempt !== current.attempt + 1) {
+        throw new Error(
+          `Retry attempt must advance exactly once for ${runId}`,
+        );
+      }
+
+      const retry: JobRun = {
+        ...current,
+        status: "scheduled",
+        attempt: nextAttempt,
+        scheduledFor: dueAt.toISOString(),
+        queuedAt: undefined,
+        claimedAt: undefined,
+        startedAt: undefined,
+        finishedAt: undefined,
+        workerId: undefined,
+        claimToken: undefined,
+        leaseExpiresAt: undefined,
+        error: clone(error),
+      };
+
+      snapshot.runs[index] = retry;
+      this.writeSnapshot(snapshot);
+      return clone(retry);
+    });
+  }
   renewRunLease(
     runId: JobRunId,
     claimToken: string,
