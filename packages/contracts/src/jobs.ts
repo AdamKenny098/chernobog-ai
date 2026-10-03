@@ -1,5 +1,5 @@
 /**
- * Chernobog OH-3A â€” Job Contracts & Ownership
+ * Chernobog OH-3A Ã¢â‚¬â€ Job Contracts & Ownership
  *
  * Contract-only foundation for scheduling and background execution.
  *
@@ -190,12 +190,15 @@ export type JobRun<TPayload = unknown> = {
   status: JobRunStatus;
   payload: TPayload;
   attempt: number;
+  idempotencyKey?: string;
   scheduledFor?: string;
   queuedAt?: string;
   claimedAt?: string;
   startedAt?: string;
   finishedAt?: string;
   workerId?: string;
+  claimToken?: string;
+  leaseExpiresAt?: string;
   correlationId?: string;
   error?: {
     code?: string;

@@ -456,6 +456,7 @@ export class SchedulerRuntime {
         status: "queued",
         payload: job.payload,
         attempt: 1,
+        idempotencyKey: runId,
         scheduledFor,
         queuedAt: now.toISOString(),
       };

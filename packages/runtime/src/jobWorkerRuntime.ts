@@ -8,6 +8,7 @@ export type JobHandlerContext = {
   job: JobDefinition;
   run: JobRun;
   workerId: string;
+  renewLease: () => JobRun;
 };
 
 export type JobHandlerResult = {
@@ -22,9 +23,7 @@ export type JobHandler = (
 export type JobHandlerMap = Readonly<Record<string, JobHandler>>;
 
 export type WorkerRunResult =
-  | {
-      outcome: "idle";
-    }
+  | { outcome: "idle" }
   | {
       outcome: "succeeded";
       run: JobRun;
@@ -35,6 +34,8 @@ export type WorkerRunResult =
       run: JobRun;
       error: Error;
     };
+
+const DEFAULT_LEASE_DURATION_MS = 5 * 60 * 1000;
 
 function toError(value: unknown): Error {
   return value instanceof Error ? value : new Error(String(value));
@@ -48,52 +49,47 @@ function nowIso(now: () => Date): string {
   return value.toISOString();
 }
 
-/**
- * OH-3D worker.
- *
- * This is deliberately a thin execution coordinator:
- *   durable queue -> claim -> registered handler -> durable outcome
- *
- * Domain/business logic does not live here. Handlers are injected by the
- * composition layer. The canonical command handler routes through the existing
- * OH-2 runCommandPipeline rather than directly invoking tools.
- *
- * Atomic leases, duplicate-worker exclusion, and concurrency enforcement are
- * intentionally deferred to OH-3E.
- */
 export class JobWorkerRuntime {
   constructor(
     private readonly store: FileJobStore,
     private readonly handlers: JobHandlerMap,
     private readonly workerId: string,
     private readonly clock: () => Date = () => new Date(),
+    private readonly leaseDurationMs: number = DEFAULT_LEASE_DURATION_MS,
   ) {
     if (!workerId.trim()) {
       throw new Error("workerId is required");
     }
-  }
 
-  private selectRunnable(): JobRun | undefined {
-    return this.store.listRunnable(this.clock())[0];
+    if (!Number.isFinite(leaseDurationMs) || leaseDurationMs <= 0) {
+      throw new Error("leaseDurationMs must be a finite positive number");
+    }
   }
 
   public async runNext(): Promise<WorkerRunResult> {
-    const candidate = this.selectRunnable();
-    if (!candidate) {
-      return { outcome: "idle" };
+    const claimed = this.store.claimNextRunnable({
+      workerId: this.workerId,
+      leaseDurationMs: this.leaseDurationMs,
+      now: this.clock(),
+    });
+
+    if (!claimed) return { outcome: "idle" };
+
+    if (!claimed.claimToken) {
+      throw new Error(`Claimed run is missing claim token: ${claimed.id}`);
     }
 
-    const job = this.store.getJob(candidate.jobId);
+    const claimToken = claimed.claimToken;
+    const job = this.store.getJob(claimed.jobId);
+
     if (!job) {
       const error = new Error(
-        `Queued run ${candidate.id} references missing job ${candidate.jobId}`,
+        `Queued run ${claimed.id} references missing job ${claimed.jobId}`,
       );
 
       const failed: JobRun = {
-        ...candidate,
+        ...claimed,
         status: "failed",
-        workerId: this.workerId,
-        claimedAt: nowIso(this.clock),
         startedAt: nowIso(this.clock),
         finishedAt: nowIso(this.clock),
         error: {
@@ -103,7 +99,7 @@ export class JobWorkerRuntime {
         },
       };
 
-      this.store.updateRun(failed);
+      this.store.updateClaimedRun(failed, claimToken);
       return { outcome: "failed", run: failed, error };
     }
 
@@ -112,10 +108,8 @@ export class JobWorkerRuntime {
       const error = new Error(`No job handler registered for kind: ${job.kind}`);
 
       const failed: JobRun = {
-        ...candidate,
+        ...claimed,
         status: "failed",
-        workerId: this.workerId,
-        claimedAt: nowIso(this.clock),
         startedAt: nowIso(this.clock),
         finishedAt: nowIso(this.clock),
         error: {
@@ -125,31 +119,31 @@ export class JobWorkerRuntime {
         },
       };
 
-      this.store.updateRun(failed);
+      this.store.updateClaimedRun(failed, claimToken);
       return { outcome: "failed", run: failed, error };
     }
-
-    const claimed: JobRun = {
-      ...candidate,
-      status: "claimed",
-      workerId: this.workerId,
-      claimedAt: nowIso(this.clock),
-      error: undefined,
-    };
-    this.store.updateRun(claimed);
 
     const running: JobRun = {
       ...claimed,
       status: "running",
       startedAt: nowIso(this.clock),
     };
-    this.store.updateRun(running);
+    this.store.updateClaimedRun(running, claimToken);
+
+    const renewLease = (): JobRun =>
+      this.store.renewRunLease(
+        running.id,
+        claimToken,
+        this.leaseDurationMs,
+        this.clock(),
+      );
 
     try {
       const handlerResult = await handler({
         job,
         run: running,
         workerId: this.workerId,
+        renewLease,
       });
 
       const succeeded: JobRun = {
@@ -158,7 +152,7 @@ export class JobWorkerRuntime {
         finishedAt: nowIso(this.clock),
         error: undefined,
       };
-      this.store.updateRun(succeeded);
+      this.store.updateClaimedRun(succeeded, claimToken);
 
       return {
         outcome: "succeeded",
@@ -177,13 +171,9 @@ export class JobWorkerRuntime {
           retryable: undefined,
         },
       };
-      this.store.updateRun(failed);
+      this.store.updateClaimedRun(failed, claimToken);
 
-      return {
-        outcome: "failed",
-        run: failed,
-        error,
-      };
+      return { outcome: "failed", run: failed, error };
     }
   }
 }
