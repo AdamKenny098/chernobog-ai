@@ -5,16 +5,29 @@ import type {
 } from "@chernobog/contracts/models";
 
 import {
-  generateWithOllama,
-  type GenerateWithOllamaOptions,
-  type GenerateWithOllamaResult,
-} from "./providerAdapter";
+  generateWithReliableOllama,
+} from "./reliableOllama";
+import {
+  recordModelInvocationTelemetry,
+  unavailableCostUsage,
+  unavailableTokenUsage,
+  type ModelInvocationTelemetryContext,
+} from "./telemetry";
 
 export type ModelGenerateOptions =
-  GenerateWithOllamaOptions;
+  Parameters<
+    typeof generateWithReliableOllama
+  >[0] & {
+    telemetry?:
+      ModelInvocationTelemetryContext;
+  };
 
 export type ModelGenerateResult =
-  GenerateWithOllamaResult;
+  Awaited<
+    ReturnType<
+      typeof generateWithReliableOllama
+    >
+  >;
 
 /**
  * Provider-neutral public generation entry point.
@@ -24,7 +37,127 @@ export type ModelGenerateResult =
 export async function generateWithModel(
   options: ModelGenerateOptions,
 ): Promise<ModelGenerateResult> {
-  return generateWithOllama(options);
+  const {
+    telemetry,
+    ...generationOptions
+  } = options;
+
+  const startedAt =
+    Date.now();
+
+  try {
+    const result =
+      await generateWithReliableOllama(
+        generationOptions,
+      );
+
+    const attempts =
+      result.attempts ??
+      1;
+
+    await recordModelInvocationTelemetry(
+      {
+        taskType:
+          telemetry?.taskType ??
+          result.role ??
+          "unspecified",
+        provider:
+          "ollama",
+        model:
+          result.model,
+        requestedRole:
+          generationOptions.role ??
+          "default",
+        selectedModel:
+          result.selection
+            ?.selectedInstalledModel ??
+          result.selection
+            ?.selectedModel ??
+          result.model,
+        selectionReason:
+          result.selection
+            ?.reason,
+        outcome:
+          result.ok
+            ? "success"
+            : "failure",
+        latencyMs:
+          result.durationMs ??
+          Date.now() -
+            startedAt,
+        attempts,
+        retries:
+          Math.max(
+            0,
+            attempts - 1,
+          ),
+        fallbackCount:
+          result.fallbackCount ??
+          0,
+        tokenUsage:
+          unavailableTokenUsage(),
+        cost:
+          unavailableCostUsage(),
+        validationExpected:
+          telemetry
+            ?.validationExpected ===
+          true,
+        error:
+          result.error,
+        failureKind:
+          result.failureKind,
+      },
+      telemetry,
+    );
+
+    return result;
+  } catch (error) {
+    await recordModelInvocationTelemetry(
+      {
+        taskType:
+          telemetry?.taskType ??
+          generationOptions.role ??
+          "unspecified",
+        provider:
+          "ollama",
+        model:
+          generationOptions
+            .modelOverride ??
+          "unresolved",
+        requestedRole:
+          generationOptions.role ??
+          "default",
+        outcome:
+          "failure",
+        latencyMs:
+          Date.now() -
+          startedAt,
+        attempts:
+          0,
+        retries:
+          0,
+        fallbackCount:
+          0,
+        tokenUsage:
+          unavailableTokenUsage(),
+        cost:
+          unavailableCostUsage(),
+        validationExpected:
+          telemetry
+            ?.validationExpected ===
+          true,
+        error:
+          error instanceof Error
+            ? error.message
+            : String(error),
+        failureKind:
+          "gateway-exception",
+      },
+      telemetry,
+    );
+
+    throw error;
+  }
 }
 
 export const modelGateway: ModelGateway = {

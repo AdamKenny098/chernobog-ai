@@ -1,6 +1,6 @@
 import {
-  generateWithReliableOllama as generateWithOllama,
-} from "@chernobog/models/reliableOllama";
+  generateWithModel as generateWithOllama,
+} from "@chernobog/models/gateway";
 import {
   OLLAMA_LIFECYCLE_DEPENDENCY,
   getLifecycleRuntime,
