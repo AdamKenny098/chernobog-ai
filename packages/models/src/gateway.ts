@@ -186,6 +186,9 @@ export const modelGateway: ModelGateway = {
         ...(typeof metadata.numPredict === "number"
           ? { numPredict: metadata.numPredict }
           : {}),
+        ...(typeof metadata.think === "boolean"
+          ? { think: metadata.think }
+          : {}),
       });
 
     return {

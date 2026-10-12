@@ -1,0 +1,8532 @@
+
+============================================================
+FILE: app\api\cognition\autonomous-loop\route.ts
+============================================================
+import {
+  NextResponse,
+} from "next/server";
+
+import {
+  getAutonomousCognitiveLoopRuntime,
+  type AutonomousCognitiveLoopInput,
+} from "@chernobog/models/autonomousCognitiveLoop";
+
+export const runtime =
+  "nodejs";
+
+function failure(
+  error: unknown,
+  status = 400,
+) {
+  return NextResponse.json(
+    {
+      ok:
+        false,
+
+      error:
+        error instanceof Error
+          ? error.message
+          : String(error),
+    },
+    {
+      status,
+    },
+  );
+}
+
+export async function POST(
+  request: Request,
+) {
+  try {
+    const body =
+      await request.json() as {
+        action?:
+          "start"
+          | "run"
+          | "resume"
+          | "interrupt";
+
+        id?: string;
+
+        input?:
+          AutonomousCognitiveLoopInput;
+
+        humanInput?: unknown;
+
+        reason?: string;
+      };
+
+    const loop =
+      getAutonomousCognitiveLoopRuntime();
+
+    switch (
+      body.action
+    ) {
+      case "start":
+        if (
+          !body.input
+        ) {
+          throw new Error(
+            "input is required for OH-4AD start.",
+          );
+        }
+
+        return NextResponse.json({
+          ok:
+            true,
+
+          state:
+            await loop.start(
+              body.input,
+            ),
+        });
+
+      case "run":
+        if (
+          !body.id
+        ) {
+          throw new Error(
+            "id is required for OH-4AD run.",
+          );
+        }
+
+        return NextResponse.json({
+          ok:
+            true,
+
+          state:
+            await loop.run(
+              body.id,
+            ),
+        });
+
+      case "resume":
+        if (
+          !body.id
+        ) {
+          throw new Error(
+            "id is required for OH-4AD resume.",
+          );
+        }
+
+        return NextResponse.json({
+          ok:
+            true,
+
+          state:
+            await loop.resume(
+              body.id,
+              {
+                humanInput:
+                  body.humanInput,
+              },
+            ),
+        });
+
+      case "interrupt":
+        if (
+          !body.id
+        ) {
+          throw new Error(
+            "id is required for OH-4AD interrupt.",
+          );
+        }
+
+        return NextResponse.json({
+          ok:
+            true,
+
+          state:
+            await loop.interrupt(
+              body.id,
+              body.reason ??
+              "Interrupted by caller.",
+            ),
+        });
+
+      default:
+        throw new Error(
+          "action must be start, run, resume, or interrupt.",
+        );
+    }
+  } catch (error) {
+    return failure(
+      error,
+    );
+  }
+}
+
+export async function GET(
+  request: Request,
+) {
+  try {
+    const url =
+      new URL(
+        request.url,
+      );
+
+    const id =
+      url.searchParams
+        .get(
+          "id",
+        )
+        ?.trim();
+
+    if (!id) {
+      throw new Error(
+        "id query parameter is required.",
+      );
+    }
+
+    const state =
+      await getAutonomousCognitiveLoopRuntime()
+        .load(
+          id,
+        );
+
+    return NextResponse.json({
+      ok:
+        true,
+
+      state,
+    });
+  } catch (error) {
+    return failure(
+      error,
+    );
+  }
+}
+
+============================================================
+FILE: packages\models\src\autonomousCognitiveLoop.ts
+============================================================
+import {
+  randomUUID,
+} from "node:crypto";
+
+import {
+  mkdir,
+  readFile,
+  rename,
+  writeFile,
+} from "node:fs/promises";
+
+import {
+  dirname,
+  join,
+} from "node:path";
+
+import {
+  publishChernobogEventSafely,
+} from "@/lib/chernobog/events/publishers";
+
+import {
+  getFailureRecoveryEngine,
+  type FailureRecoveryContext,
+  type FailureRecoveryDecision,
+  type FailureSignal,
+  type RecoveryActionKind,
+  type RecoveryAttemptRecord,
+  type RecoveryResumeStage,
+} from "./failureRecovery";
+
+import type {
+  CognitiveProfileName,
+} from "./cognitiveProfiles";
+
+export const AUTONOMOUS_COGNITIVE_LOOP_VERSION =
+  "oh4ad.v1";
+
+export type AutonomousCognitiveStage =
+  | "observe"
+  | "interpret"
+  | "contextualize"
+  | "prioritize"
+  | "choose-strategy"
+  | "choose-models"
+  | "compile-prompt"
+  | "reason-plan"
+  | "validate"
+  | "authorize"
+  | "act"
+  | "verify"
+  | "record"
+  | "learn";
+
+export type AutonomousCognitiveLoopStatus =
+  | "created"
+  | "running"
+  | "waiting-human"
+  | "interrupted"
+  | "recovering"
+  | "completed"
+  | "failed"
+  | "stopped";
+
+export type AutonomousCognitiveStageStatus =
+  | "pending"
+  | "running"
+  | "completed"
+  | "waiting-human"
+  | "failed"
+  | "skipped";
+
+export type AutonomousCognitiveStageResult =
+  | {
+      status:
+        "completed"
+        | "skipped";
+
+      artifact?:
+        unknown;
+
+      notes?:
+        string[];
+    }
+  | {
+      status:
+        "waiting-human";
+
+      artifact?:
+        unknown;
+
+      questions:
+        string[];
+
+      reason: string;
+    }
+  | {
+      status:
+        "failed";
+
+      artifact?:
+        unknown;
+
+      error: string;
+
+      failure?:
+        Partial<
+          FailureSignal
+        >;
+
+      recoveryContext?:
+        Partial<
+          FailureRecoveryContext
+        >;
+    };
+
+export interface AutonomousCognitiveLoopInput {
+  rawInput: unknown;
+
+  profile?:
+    CognitiveProfileName;
+
+  subject?: string;
+
+  scope?: string;
+
+  correlationId?: string;
+
+  metadata?:
+    Record<
+      string,
+      unknown
+    >;
+}
+
+export interface AutonomousCognitiveStageState {
+  stage:
+    AutonomousCognitiveStage;
+
+  componentBinding:
+    string[];
+
+  status:
+    AutonomousCognitiveStageStatus;
+
+  attempts: number;
+
+  startedAt?: string;
+
+  completedAt?: string;
+
+  error?: string;
+
+  notes: string[];
+}
+
+export interface AutonomousCognitiveHumanIntervention {
+  at: string;
+
+  stage:
+    AutonomousCognitiveStage;
+
+  input: unknown;
+}
+
+export interface AutonomousCognitiveRecoveryRecord {
+  at: string;
+
+  failedStage:
+    AutonomousCognitiveStage;
+
+  failureFingerprint:
+    string;
+
+  action:
+    RecoveryActionKind;
+
+  resumeStage:
+    RecoveryResumeStage;
+
+  resumedAtStage?:
+    AutonomousCognitiveStage;
+
+  summary: string;
+}
+
+export interface AutonomousCognitiveLoopState {
+  version: string;
+
+  id: string;
+
+  createdAt: string;
+
+  updatedAt: string;
+
+  status:
+    AutonomousCognitiveLoopStatus;
+
+  input:
+    AutonomousCognitiveLoopInput;
+
+  currentStageIndex: number;
+
+  stages:
+    AutonomousCognitiveStageState[];
+
+  artifacts:
+    Partial<
+      Record<
+        AutonomousCognitiveStage,
+        unknown
+      >
+    >;
+
+  supersededArtifacts:
+    Partial<
+      Record<
+        AutonomousCognitiveStage,
+        unknown[]
+      >
+    >;
+
+  humanInterventions:
+    AutonomousCognitiveHumanIntervention[];
+
+  waitingForHuman?: {
+    stage:
+      AutonomousCognitiveStage;
+
+    reason: string;
+
+    questions:
+      string[];
+
+    recoveryDriven:
+      boolean;
+  };
+
+  interruption?: {
+    at: string;
+
+    reason: string;
+
+    stage:
+      AutonomousCognitiveStage;
+  };
+
+  recoveries:
+    AutonomousCognitiveRecoveryRecord[];
+
+  totalStageExecutions: number;
+
+  terminalReason?: string;
+
+  invariants: {
+    authorityBypassed: false;
+
+    directToolExecutionByLoop:
+      false;
+
+    directModelExecutionByLoop:
+      false;
+
+    hiddenScratchReasoningRequired:
+      false;
+
+    completedWorkSilentlyDiscarded:
+      false;
+
+    unsafePostActionRewindAllowed:
+      false;
+  };
+}
+
+export interface AutonomousCognitiveStageContext {
+  loopId: string;
+
+  stage:
+    AutonomousCognitiveStage;
+
+  input:
+    AutonomousCognitiveLoopInput;
+
+  artifacts:
+    Readonly<
+      Partial<
+        Record<
+          AutonomousCognitiveStage,
+          unknown
+        >
+      >
+    >;
+
+  stageStates:
+    readonly AutonomousCognitiveStageState[];
+
+  humanInput?:
+    unknown;
+
+  recoveryHistory:
+    readonly AutonomousCognitiveRecoveryRecord[];
+
+  signal:
+    AbortSignal;
+}
+
+export type AutonomousCognitiveStageHandler =
+  (
+    context:
+      AutonomousCognitiveStageContext,
+  ) =>
+    | Promise<
+        AutonomousCognitiveStageResult
+      >
+    | AutonomousCognitiveStageResult;
+
+export type AutonomousCognitiveLoopHandlers =
+  Record<
+    AutonomousCognitiveStage,
+    AutonomousCognitiveStageHandler
+  >;
+
+export interface AutonomousCognitiveLoopPolicy {
+  maxStageExecutions: number;
+
+  maxRecoveryAttempts: number;
+}
+
+export interface AutonomousCognitiveLoopEvent {
+  type: string;
+
+  loopId: string;
+
+  stage?:
+    AutonomousCognitiveStage;
+
+  status:
+    AutonomousCognitiveLoopStatus
+    | AutonomousCognitiveStageStatus;
+
+  detail?: string;
+}
+
+export type AutonomousCognitiveLoopEventPublisher =
+  (
+    event:
+      AutonomousCognitiveLoopEvent,
+    state:
+      AutonomousCognitiveLoopState,
+  ) =>
+    | Promise<void>
+    | void;
+
+export interface AutonomousCognitiveLoopStore {
+  save(
+    state:
+      AutonomousCognitiveLoopState,
+  ): Promise<void>;
+
+  load(
+    id: string,
+  ): Promise<
+    AutonomousCognitiveLoopState
+  >;
+}
+
+export interface AutonomousCognitiveRunOptions {
+  shouldInterrupt?:
+    (
+      state:
+        AutonomousCognitiveLoopState,
+    ) =>
+      | boolean
+      | Promise<boolean>;
+}
+
+export interface AutonomousCognitiveResumeOptions
+  extends AutonomousCognitiveRunOptions {
+  humanInput?: unknown;
+}
+
+export const AUTONOMOUS_COGNITIVE_STAGE_ORDER:
+  readonly AutonomousCognitiveStage[] = [
+    "observe",
+    "interpret",
+    "contextualize",
+    "prioritize",
+    "choose-strategy",
+    "choose-models",
+    "compile-prompt",
+    "reason-plan",
+    "validate",
+    "authorize",
+    "act",
+    "verify",
+    "record",
+    "learn",
+  ] as const;
+
+export const AUTONOMOUS_COGNITIVE_STAGE_BINDINGS:
+  Readonly<
+    Record<
+      AutonomousCognitiveStage,
+      readonly string[]
+    >
+  > = {
+    observe: [
+      "Core cognitiveRuntime / World State",
+    ],
+
+    interpret: [
+      "OH-4J Input Interpreter",
+    ],
+
+    contextualize: [
+      "OH-4K Context Engine",
+    ],
+
+    prioritize: [
+      "OH-4R Priority / Attention Engine",
+    ],
+
+    "choose-strategy": [
+      "OH-4N Strategy Router",
+      "OH-4AC Cognitive Profiles",
+    ],
+
+    "choose-models": [
+      "OH-4M Model Router",
+      "OH-4Z Continuous Calibration",
+      "OH-4AC Cognitive Profiles",
+    ],
+
+    "compile-prompt": [
+      "OH-4L Prompt Compiler",
+    ],
+
+    "reason-plan": [
+      "OH-4O Reasoning Contracts",
+      "OH-4P Goal Decomposer",
+      "OH-4Q Planning Engine",
+      "OH-4S Multi-Model Orchestrator",
+    ],
+
+    validate: [
+      "OH-4T Critic & Verification Layer",
+      "OH-4U Confidence Engine",
+      "OH-4V Escalation Engine",
+    ],
+
+    authorize: [
+      "OH-4W Authority Bridge",
+    ],
+
+    act: [
+      "OH-4X Action Bridge",
+      "Existing Execution Runtime",
+      "Unified Tool Gateway",
+    ],
+
+    verify: [
+      "OH-4T post-action verification",
+    ],
+
+    record: [
+      "OH-4AA Decision Provenance",
+      "OH-4Y Cognitive Memory",
+    ],
+
+    learn: [
+      "OH-4Z Continuous Calibration",
+      "Existing governed learning pipeline",
+    ],
+  };
+
+export const DEFAULT_AUTONOMOUS_COGNITIVE_LOOP_POLICY:
+  AutonomousCognitiveLoopPolicy = {
+    maxStageExecutions:
+      80,
+
+    maxRecoveryAttempts:
+      8,
+  };
+
+const TERMINAL_STATUSES =
+  new Set<
+    AutonomousCognitiveLoopStatus
+  >([
+    "completed",
+    "failed",
+    "stopped",
+  ]);
+
+function nowIso(
+  clock:
+    () => Date,
+): string {
+  return clock()
+    .toISOString();
+}
+
+function normalizeText(
+  value:
+    string
+    | undefined,
+): string | undefined {
+  const normalized =
+    value?.trim();
+
+  return normalized ||
+    undefined;
+}
+
+function requirePositiveInteger(
+  value: number,
+  field: string,
+): number {
+  if (
+    !Number.isInteger(
+      value,
+    ) ||
+    value < 1
+  ) {
+    throw new Error(
+      `${field} must be a positive integer.`,
+    );
+  }
+
+  return value;
+}
+
+function normalizePolicy(
+  value:
+    Partial<
+      AutonomousCognitiveLoopPolicy
+    >
+    | undefined,
+): AutonomousCognitiveLoopPolicy {
+  const merged = {
+    ...DEFAULT_AUTONOMOUS_COGNITIVE_LOOP_POLICY,
+    ...(
+      value ??
+      {}
+    ),
+  };
+
+  return {
+    maxStageExecutions:
+      requirePositiveInteger(
+        merged
+          .maxStageExecutions,
+        "autonomousLoop.maxStageExecutions",
+      ),
+
+    maxRecoveryAttempts:
+      requirePositiveInteger(
+        merged
+          .maxRecoveryAttempts,
+        "autonomousLoop.maxRecoveryAttempts",
+      ),
+  };
+}
+
+function jsonSafe(
+  value: unknown,
+): unknown {
+  try {
+    return JSON.parse(
+      JSON.stringify(
+        value,
+      ),
+    );
+  } catch {
+    throw new Error(
+      "OH-4AD loop state/artifacts must be JSON-safe.",
+    );
+  }
+}
+
+function stageIndex(
+  stage:
+    AutonomousCognitiveStage,
+): number {
+  return AUTONOMOUS_COGNITIVE_STAGE_ORDER
+    .indexOf(
+      stage,
+    );
+}
+
+function currentStage(
+  state:
+    AutonomousCognitiveLoopState,
+): AutonomousCognitiveStage {
+  return (
+    AUTONOMOUS_COGNITIVE_STAGE_ORDER[
+      Math.min(
+        state.currentStageIndex,
+        AUTONOMOUS_COGNITIVE_STAGE_ORDER
+          .length -
+        1,
+      )
+    ] ??
+    "learn"
+  );
+}
+
+function isTerminal(
+  state:
+    AutonomousCognitiveLoopState,
+): boolean {
+  return TERMINAL_STATUSES
+    .has(
+      state.status,
+    );
+}
+
+function cloneState(
+  state:
+    AutonomousCognitiveLoopState,
+): AutonomousCognitiveLoopState {
+  return structuredClone(
+    state,
+  );
+}
+
+function normalizeQuestions(
+  values:
+    readonly string[],
+): string[] {
+  return [
+    ...new Set(
+      values
+        .map(
+          (value) =>
+            value.trim(),
+        )
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function normalizeNotes(
+  values:
+    readonly string[]
+    | undefined,
+): string[] {
+  return [
+    ...new Set(
+      (
+        values ??
+        []
+      )
+        .map(
+          (value) =>
+            value.trim(),
+        )
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function recoveryResumeToStage(
+  resumeStage:
+    RecoveryResumeStage,
+  action:
+    RecoveryActionKind,
+  failedStage:
+    AutonomousCognitiveStage,
+): AutonomousCognitiveStage | undefined {
+  if (
+    action ===
+      "retry-tool" ||
+    action ===
+      "resume-from-checkpoint"
+  ) {
+    return "act";
+  }
+
+  switch (
+    resumeStage
+  ) {
+    case "context":
+      return "contextualize";
+
+    case "prompt":
+      return "compile-prompt";
+
+    case "model-route":
+      return "choose-models";
+
+    case "planning":
+    case "orchestration":
+      return "reason-plan";
+
+    case "verification":
+      return failedStage ===
+        "verify"
+        ? "verify"
+        : "validate";
+
+    case "authority":
+      return "authorize";
+
+    case "action":
+      return "act";
+
+    case "human":
+    case "stop":
+      return undefined;
+  }
+}
+
+function recoveryAttemptsForEngine(
+  state:
+    AutonomousCognitiveLoopState,
+): RecoveryAttemptRecord[] {
+  return state.recoveries
+    .map(
+      (
+        recovery,
+        index,
+      ) => ({
+        attempt:
+          index +
+          1,
+
+        action:
+          recovery.action,
+
+        failureFingerprint:
+          recovery
+            .failureFingerprint,
+
+        completed:
+          true,
+
+        succeeded:
+          false,
+
+        occurredAt:
+          recovery.at,
+      }),
+    );
+}
+
+function createStageStates():
+  AutonomousCognitiveStageState[] {
+  return AUTONOMOUS_COGNITIVE_STAGE_ORDER
+    .map(
+      (stage) => ({
+        stage,
+
+        componentBinding: [
+          ...AUTONOMOUS_COGNITIVE_STAGE_BINDINGS[
+            stage
+          ],
+        ],
+
+        status:
+          "pending",
+
+        attempts:
+          0,
+
+        notes:
+          [],
+      }),
+    );
+}
+
+function createLoopState(
+  input:
+    AutonomousCognitiveLoopInput,
+  clock:
+    () => Date,
+): AutonomousCognitiveLoopState {
+  const createdAt =
+    nowIso(
+      clock,
+    );
+
+  return {
+    version:
+      AUTONOMOUS_COGNITIVE_LOOP_VERSION,
+
+    id:
+      `oh4ad-${randomUUID()}`,
+
+    createdAt,
+
+    updatedAt:
+      createdAt,
+
+    status:
+      "created",
+
+    input: {
+      ...jsonSafe(
+        input,
+      ) as
+        AutonomousCognitiveLoopInput,
+
+      subject:
+        normalizeText(
+          input.subject,
+        ),
+
+      scope:
+        normalizeText(
+          input.scope,
+        ),
+
+      correlationId:
+        normalizeText(
+          input.correlationId,
+        ),
+    },
+
+    currentStageIndex:
+      0,
+
+    stages:
+      createStageStates(),
+
+    artifacts:
+      {},
+
+    supersededArtifacts:
+      {},
+
+    humanInterventions:
+      [],
+
+    recoveries:
+      [],
+
+    totalStageExecutions:
+      0,
+
+    invariants: {
+      authorityBypassed:
+        false,
+
+      directToolExecutionByLoop:
+        false,
+
+      directModelExecutionByLoop:
+        false,
+
+      hiddenScratchReasoningRequired:
+        false,
+
+      completedWorkSilentlyDiscarded:
+        false,
+
+      unsafePostActionRewindAllowed:
+        false,
+    },
+  };
+}
+
+function recordArtifact(
+  state:
+    AutonomousCognitiveLoopState,
+  stage:
+    AutonomousCognitiveStage,
+  artifact:
+    unknown,
+): void {
+  if (
+    artifact ===
+    undefined
+  ) {
+    return;
+  }
+
+  const safe =
+    jsonSafe(
+      artifact,
+    );
+
+  if (
+    state.artifacts[
+      stage
+    ] !==
+    undefined
+  ) {
+    const history =
+      state
+        .supersededArtifacts[
+          stage
+        ] ??
+      [];
+
+    history.push(
+      state.artifacts[
+        stage
+      ],
+    );
+
+    state.supersededArtifacts[
+      stage
+    ] =
+      history;
+  }
+
+  state.artifacts[
+    stage
+  ] =
+    safe;
+}
+
+function resetFromStage(
+  state:
+    AutonomousCognitiveLoopState,
+  resumeStage:
+    AutonomousCognitiveStage,
+): void {
+  const start =
+    stageIndex(
+      resumeStage,
+    );
+
+  for (
+    let index =
+      start;
+    index <
+      state.stages.length;
+    index +=
+      1
+  ) {
+    const stageState =
+      state.stages[
+        index
+      ];
+
+    if (
+      !stageState
+    ) {
+      continue;
+    }
+
+    if (
+      state.artifacts[
+        stageState.stage
+      ] !==
+      undefined
+    ) {
+      const history =
+        state
+          .supersededArtifacts[
+            stageState.stage
+          ] ??
+        [];
+
+      history.push(
+        state.artifacts[
+          stageState.stage
+        ],
+      );
+
+      state
+        .supersededArtifacts[
+          stageState.stage
+        ] =
+        history;
+
+      delete state
+        .artifacts[
+          stageState.stage
+        ];
+    }
+
+    stageState.status =
+      "pending";
+
+    stageState.startedAt =
+      undefined;
+
+    stageState.completedAt =
+      undefined;
+
+    stageState.error =
+      undefined;
+  }
+
+  state.currentStageIndex =
+    start;
+}
+
+function hasPassedAct(
+  state:
+    AutonomousCognitiveLoopState,
+): boolean {
+  const act =
+    state.stages[
+      stageIndex(
+        "act",
+      )
+    ];
+
+  return (
+    act?.status ===
+      "completed" ||
+    act?.status ===
+      "skipped"
+  );
+}
+
+function safePostActionRecovery(
+  decision:
+    FailureRecoveryDecision,
+  state:
+    AutonomousCognitiveLoopState,
+  failedStage:
+    AutonomousCognitiveStage,
+  recoveryContext:
+    Partial<
+      FailureRecoveryContext
+    >,
+): boolean {
+  if (
+    !hasPassedAct(
+      state,
+    ) &&
+    stageIndex(
+      failedStage,
+    ) <=
+      stageIndex(
+        "act",
+      )
+  ) {
+    return true;
+  }
+
+  if (
+    decision.selected
+      .action ===
+        "retry-tool" ||
+    decision.selected
+      .action ===
+        "resume-from-checkpoint"
+  ) {
+    const partial =
+      recoveryContext
+        .partialExecution;
+
+    return Boolean(
+      partial
+        ?.resumable &&
+      partial
+        .checkpointRef &&
+      (
+        !partial
+          .sideEffectsObserved ||
+        partial
+          .idempotencyKey
+      ),
+    );
+  }
+
+  if (
+    decision.selected
+      .action ===
+      "invoke-critic" &&
+    failedStage ===
+      "verify"
+  ) {
+    return true;
+  }
+
+  return (
+    decision.selected
+      .resumeStage ===
+      "human" ||
+    decision.selected
+      .resumeStage ===
+      "stop"
+  );
+}
+
+export class JsonAutonomousCognitiveLoopStore
+  implements AutonomousCognitiveLoopStore {
+  constructor(
+    private readonly directory =
+      join(
+        process.cwd(),
+        ".chernobog",
+        "cognition",
+        "autonomous-loop",
+      ),
+  ) {}
+
+  async save(
+    state:
+      AutonomousCognitiveLoopState,
+  ): Promise<void> {
+    const safe =
+      jsonSafe(
+        state,
+      );
+
+    const target =
+      this.pathFor(
+        state.id,
+      );
+
+    await mkdir(
+      dirname(
+        target,
+      ),
+      {
+        recursive:
+          true,
+      },
+    );
+
+    const temporary =
+      `${target}.${process.pid}.tmp`;
+
+    await writeFile(
+      temporary,
+      `${JSON.stringify(safe, null, 2)}\n`,
+      "utf8",
+    );
+
+    await rename(
+      temporary,
+      target,
+    );
+  }
+
+  async load(
+    id: string,
+  ): Promise<
+    AutonomousCognitiveLoopState
+  > {
+    const raw =
+      await readFile(
+        this.pathFor(
+          id,
+        ),
+        "utf8",
+      );
+
+    const parsed =
+      JSON.parse(
+        raw,
+      ) as
+        AutonomousCognitiveLoopState;
+
+    if (
+      parsed.version !==
+      AUTONOMOUS_COGNITIVE_LOOP_VERSION
+    ) {
+      throw new Error(
+        `Unsupported OH-4AD loop state version: ${String(parsed.version)}`,
+      );
+    }
+
+    return cloneState(
+      parsed,
+    );
+  }
+
+  private pathFor(
+    id: string,
+  ): string {
+    if (
+      !/^oh4ad-[a-zA-Z0-9-]+$/
+        .test(
+          id,
+        )
+    ) {
+      throw new Error(
+        "Invalid OH-4AD loop id.",
+      );
+    }
+
+    return join(
+      this.directory,
+      `${id}.json`,
+    );
+  }
+}
+
+async function defaultEventPublisher(
+  event:
+    AutonomousCognitiveLoopEvent,
+  state:
+    AutonomousCognitiveLoopState,
+): Promise<void> {
+  await publishChernobogEventSafely({
+    type:
+      event.type,
+
+    source: {
+      subsystem:
+        "cognition.autonomous-loop",
+    },
+
+    severity:
+      event.status ===
+        "failed" ||
+      event.status ===
+        "stopped"
+        ? "warning"
+        : event.status ===
+            "waiting-human" ||
+          event.status ===
+            "interrupted"
+          ? "notice"
+          : "info",
+
+    subject:
+      state.input
+        .subject ??
+      state.id,
+
+    scope:
+      state.input
+        .scope ??
+      "cognition:oh4ad",
+
+    correlationId:
+      state.input
+        .correlationId ??
+      state.id,
+
+    causationId:
+      event.stage
+        ? `${state.id}:${event.stage}`
+        : undefined,
+
+    payload: {
+      loopId:
+        state.id,
+
+      stage:
+        event.stage,
+
+      status:
+        event.status,
+
+      detail:
+        event.detail,
+
+      currentStageIndex:
+        state.currentStageIndex,
+
+      totalStageExecutions:
+        state
+          .totalStageExecutions,
+
+      recoveryCount:
+        state.recoveries
+          .length,
+    },
+
+    metadata: {
+      tags: [
+        "oh4",
+        "oh4ad",
+        "autonomous-cognitive-loop",
+        ...(
+          event.stage
+            ? [
+                event.stage,
+              ]
+            : []
+        ),
+      ],
+    },
+  });
+}
+
+export class AutonomousCognitiveLoop {
+  private readonly policy:
+    AutonomousCognitiveLoopPolicy;
+
+  private readonly store:
+    AutonomousCognitiveLoopStore;
+
+  private readonly clock:
+    () => Date;
+
+  private readonly eventPublisher:
+    AutonomousCognitiveLoopEventPublisher;
+
+  constructor(
+    private readonly handlers:
+      AutonomousCognitiveLoopHandlers,
+
+    options: {
+      policy?:
+        Partial<
+          AutonomousCognitiveLoopPolicy
+        >;
+
+      store?:
+        AutonomousCognitiveLoopStore;
+
+      clock?:
+        () => Date;
+
+      eventPublisher?:
+        AutonomousCognitiveLoopEventPublisher;
+    } = {},
+  ) {
+    this.policy =
+      normalizePolicy(
+        options.policy,
+      );
+
+    this.store =
+      options.store ??
+      new JsonAutonomousCognitiveLoopStore();
+
+    this.clock =
+      options.clock ??
+      (() => new Date());
+
+    this.eventPublisher =
+      options.eventPublisher ??
+      defaultEventPublisher;
+
+    for (
+      const stage
+      of AUTONOMOUS_COGNITIVE_STAGE_ORDER
+    ) {
+      if (
+        typeof this.handlers[
+          stage
+        ] !==
+        "function"
+      ) {
+        throw new Error(
+          `OH-4AD requires a stage adapter for "${stage}".`,
+        );
+      }
+    }
+  }
+
+  async create(
+    input:
+      AutonomousCognitiveLoopInput,
+  ): Promise<
+    AutonomousCognitiveLoopState
+  > {
+    const state =
+      createLoopState(
+        input,
+        this.clock,
+      );
+
+    await this.persist(
+      state,
+    );
+
+    await this.emit(
+      {
+        type:
+          "cognition.autonomous-loop.created",
+
+        loopId:
+          state.id,
+
+        status:
+          state.status,
+      },
+      state,
+    );
+
+    return cloneState(
+      state,
+    );
+  }
+
+  async start(
+    input:
+      AutonomousCognitiveLoopInput,
+    options:
+      AutonomousCognitiveRunOptions =
+      {},
+  ): Promise<
+    AutonomousCognitiveLoopState
+  > {
+    const state =
+      await this.create(
+        input,
+      );
+
+    return this.run(
+      state.id,
+      options,
+    );
+  }
+
+  async load(
+    id: string,
+  ): Promise<
+    AutonomousCognitiveLoopState
+  > {
+    return this.store
+      .load(
+        id,
+      );
+  }
+
+  async run(
+    id: string,
+    options:
+      AutonomousCognitiveRunOptions =
+      {},
+  ): Promise<
+    AutonomousCognitiveLoopState
+  > {
+    let state =
+      await this.store
+        .load(
+          id,
+        );
+
+    if (
+      isTerminal(
+        state,
+      )
+    ) {
+      return state;
+    }
+
+    if (
+      state.status ===
+        "waiting-human"
+    ) {
+      return state;
+    }
+
+    if (
+      state.status ===
+        "interrupted"
+    ) {
+      return state;
+    }
+
+    state.status =
+      "running";
+
+    state.updatedAt =
+      nowIso(
+        this.clock,
+      );
+
+    await this.persist(
+      state,
+    );
+
+    while (
+      state.currentStageIndex <
+      AUTONOMOUS_COGNITIVE_STAGE_ORDER
+        .length
+    ) {
+      if (
+        state.totalStageExecutions >=
+        this.policy
+          .maxStageExecutions
+      ) {
+        state.status =
+          "stopped";
+
+        state.terminalReason =
+          `OH-4AD exceeded max stage execution limit of ${this.policy.maxStageExecutions}.`;
+
+        await this.persist(
+          state,
+        );
+
+        await this.emit(
+          {
+            type:
+              "cognition.autonomous-loop.stopped",
+
+            loopId:
+              state.id,
+
+            status:
+              "stopped",
+
+            detail:
+              state
+                .terminalReason,
+          },
+          state,
+        );
+
+        return cloneState(
+          state,
+        );
+      }
+
+      if (
+        await options
+          .shouldInterrupt?.(
+            cloneState(
+              state,
+            ),
+          )
+      ) {
+        return this.interrupt(
+          state.id,
+          "External interruption requested.",
+        );
+      }
+
+      const stage =
+        AUTONOMOUS_COGNITIVE_STAGE_ORDER[
+          state.currentStageIndex
+        ];
+
+      if (!stage) {
+        break;
+      }
+
+      const stageState =
+        state.stages[
+          state.currentStageIndex
+        ];
+
+      if (!stageState) {
+        throw new Error(
+          `Missing OH-4AD stage state at index ${state.currentStageIndex}.`,
+        );
+      }
+
+      if (
+        stageState.status ===
+          "completed" ||
+        stageState.status ===
+          "skipped"
+      ) {
+        state.currentStageIndex +=
+          1;
+
+        continue;
+      }
+
+      stageState.status =
+        "running";
+
+      stageState.attempts +=
+        1;
+
+      stageState.startedAt =
+        nowIso(
+          this.clock,
+        );
+
+      stageState.error =
+        undefined;
+
+      state.totalStageExecutions +=
+        1;
+
+      state.updatedAt =
+        stageState.startedAt;
+
+      await this.persist(
+        state,
+      );
+
+      await this.emit(
+        {
+          type:
+            "cognition.autonomous-loop.stage.started",
+
+          loopId:
+            state.id,
+
+          stage,
+
+          status:
+            "running",
+        },
+        state,
+      );
+
+      const controller =
+        new AbortController();
+
+      const humanInput =
+        state
+          .humanInterventions
+          .filter(
+            (entry) =>
+              entry.stage ===
+              stage,
+          )
+          .at(
+            -1,
+          )
+          ?.input;
+
+      let result:
+        AutonomousCognitiveStageResult;
+
+      try {
+        result =
+          await this.handlers[
+            stage
+          ]({
+            loopId:
+              state.id,
+
+            stage,
+
+            input:
+              structuredClone(
+                state.input,
+              ),
+
+            artifacts:
+              structuredClone(
+                state.artifacts,
+              ),
+
+            stageStates:
+              structuredClone(
+                state.stages,
+              ),
+
+            humanInput:
+              humanInput ===
+                undefined
+                ? undefined
+                : structuredClone(
+                    humanInput,
+                  ),
+
+            recoveryHistory:
+              structuredClone(
+                state.recoveries,
+              ),
+
+            signal:
+              controller.signal,
+          });
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : String(
+                error,
+              );
+
+        result = {
+          status:
+            "failed",
+
+          error:
+            message,
+
+          failure: {
+            kind:
+              "unknown",
+
+            message,
+          },
+        };
+      }
+
+      recordArtifact(
+        state,
+        stage,
+        result.artifact,
+      );
+
+      if (
+        result.status ===
+          "completed" ||
+        result.status ===
+          "skipped"
+      ) {
+        stageState.status =
+          result.status;
+
+        stageState.completedAt =
+          nowIso(
+            this.clock,
+          );
+
+        stageState.notes = [
+          ...stageState
+            .notes,
+          ...normalizeNotes(
+            result.notes,
+          ),
+        ];
+
+        state.currentStageIndex +=
+          1;
+
+        state.updatedAt =
+          stageState
+            .completedAt;
+
+        await this.persist(
+          state,
+        );
+
+        await this.emit(
+          {
+            type:
+              "cognition.autonomous-loop.stage.completed",
+
+            loopId:
+              state.id,
+
+            stage,
+
+            status:
+              result.status,
+          },
+          state,
+        );
+
+        continue;
+      }
+
+      if (
+        result.status ===
+        "waiting-human"
+      ) {
+        const questions =
+          normalizeQuestions(
+            result.questions,
+          );
+
+        stageState.status =
+          "waiting-human";
+
+        stageState.error =
+          undefined;
+
+        state.status =
+          "waiting-human";
+
+        state.waitingForHuman = {
+          stage,
+
+          reason:
+            result.reason
+              .trim() ||
+            "Human intervention is required.",
+
+          questions,
+
+          recoveryDriven:
+            false,
+        };
+
+        state.updatedAt =
+          nowIso(
+            this.clock,
+          );
+
+        await this.persist(
+          state,
+        );
+
+        await this.emit(
+          {
+            type:
+              "cognition.autonomous-loop.waiting-human",
+
+            loopId:
+              state.id,
+
+            stage,
+
+            status:
+              "waiting-human",
+
+            detail:
+              state
+                .waitingForHuman
+                .reason,
+          },
+          state,
+        );
+
+        return cloneState(
+          state,
+        );
+      }
+
+      if (
+        result.status !==
+        "failed"
+      ) {
+        throw new Error(
+          `OH-4AD stage "${stage}" returned an unsupported result status.`,
+        );
+      }
+
+      state =
+        await this.handleFailure(
+          state,
+          stage,
+          result,
+        );
+
+      if (
+        state.status ===
+          "waiting-human" ||
+        state.status ===
+          "stopped" ||
+        state.status ===
+          "failed"
+      ) {
+        return cloneState(
+          state,
+        );
+      }
+    }
+
+    state.status =
+      "completed";
+
+    state.currentStageIndex =
+      AUTONOMOUS_COGNITIVE_STAGE_ORDER
+        .length;
+
+    state.updatedAt =
+      nowIso(
+        this.clock,
+      );
+
+    await this.persist(
+      state,
+    );
+
+    await this.emit(
+      {
+        type:
+          "cognition.autonomous-loop.completed",
+
+        loopId:
+          state.id,
+
+        status:
+          "completed",
+      },
+      state,
+    );
+
+    return cloneState(
+      state,
+    );
+  }
+
+  async interrupt(
+    id: string,
+    reason:
+      string,
+  ): Promise<
+    AutonomousCognitiveLoopState
+  > {
+    const state =
+      await this.store
+        .load(
+          id,
+        );
+
+    if (
+      isTerminal(
+        state,
+      )
+    ) {
+      return state;
+    }
+
+    const stage =
+      currentStage(
+        state,
+      );
+
+    state.status =
+      "interrupted";
+
+    state.interruption = {
+      at:
+        nowIso(
+          this.clock,
+        ),
+
+      reason:
+        normalizeText(
+          reason,
+        ) ??
+        "Interrupted.",
+
+      stage,
+    };
+
+    state.updatedAt =
+      state
+        .interruption
+        .at;
+
+    const stageState =
+      state.stages[
+        stageIndex(
+          stage,
+        )
+      ];
+
+    if (
+      stageState
+        ?.status ===
+        "running"
+    ) {
+      stageState.status =
+        "pending";
+    }
+
+    await this.persist(
+      state,
+    );
+
+    await this.emit(
+      {
+        type:
+          "cognition.autonomous-loop.interrupted",
+
+        loopId:
+          state.id,
+
+        stage,
+
+        status:
+          "interrupted",
+
+        detail:
+          state
+            .interruption
+            .reason,
+      },
+      state,
+    );
+
+    return cloneState(
+      state,
+    );
+  }
+
+  async resume(
+    id: string,
+    options:
+      AutonomousCognitiveResumeOptions =
+      {},
+  ): Promise<
+    AutonomousCognitiveLoopState
+  > {
+    const state =
+      await this.store
+        .load(
+          id,
+        );
+
+    if (
+      isTerminal(
+        state,
+      )
+    ) {
+      return state;
+    }
+
+    if (
+      state.status ===
+        "waiting-human"
+    ) {
+      if (
+        options.humanInput ===
+        undefined
+      ) {
+        throw new Error(
+          "OH-4AD loop is waiting for human intervention; humanInput is required to resume.",
+        );
+      }
+
+      const stage =
+        state
+          .waitingForHuman
+          ?.stage ??
+        currentStage(
+          state,
+        );
+
+      state
+        .humanInterventions
+        .push({
+          at:
+            nowIso(
+              this.clock,
+            ),
+
+          stage,
+
+          input:
+            jsonSafe(
+              options.humanInput,
+            ),
+        });
+
+      const stageState =
+        state.stages[
+          stageIndex(
+            stage,
+          )
+        ];
+
+      if (
+        stageState
+      ) {
+        stageState.status =
+          "pending";
+
+        stageState.error =
+          undefined;
+      }
+
+      state.waitingForHuman =
+        undefined;
+    }
+
+    if (
+      state.status ===
+        "interrupted"
+    ) {
+      const stage =
+        state
+          .interruption
+          ?.stage ??
+        currentStage(
+          state,
+        );
+
+      const stageState =
+        state.stages[
+          stageIndex(
+            stage,
+          )
+        ];
+
+      if (
+        stageState &&
+        stageState.status !==
+          "completed" &&
+        stageState.status !==
+          "skipped"
+      ) {
+        stageState.status =
+          "pending";
+      }
+
+      state.interruption =
+        undefined;
+    }
+
+    state.status =
+      "running";
+
+    state.updatedAt =
+      nowIso(
+        this.clock,
+      );
+
+    await this.persist(
+      state,
+    );
+
+    return this.run(
+      id,
+      options,
+    );
+  }
+
+  private async handleFailure(
+    state:
+      AutonomousCognitiveLoopState,
+    failedStage:
+      AutonomousCognitiveStage,
+    result:
+      Extract<
+        AutonomousCognitiveStageResult,
+        {
+          status:
+            "failed";
+        }
+      >,
+  ): Promise<
+    AutonomousCognitiveLoopState
+  > {
+    const failedState =
+      state.stages[
+        stageIndex(
+          failedStage,
+        )
+      ];
+
+    if (
+      failedState
+    ) {
+      failedState.status =
+        "failed";
+
+      failedState.error =
+        result.error;
+
+      failedState.completedAt =
+        nowIso(
+          this.clock,
+        );
+    }
+
+    await this.emit(
+      {
+        type:
+          "cognition.autonomous-loop.stage.failed",
+
+        loopId:
+          state.id,
+
+        stage:
+          failedStage,
+
+        status:
+          "failed",
+
+        detail:
+          result.error,
+      },
+      state,
+    );
+
+    if (
+      state.recoveries
+        .length >=
+      this.policy
+        .maxRecoveryAttempts
+    ) {
+      state.status =
+        "stopped";
+
+      state.terminalReason =
+        `OH-4AD exceeded max recovery attempt limit of ${this.policy.maxRecoveryAttempts}.`;
+
+      await this.persist(
+        state,
+      );
+
+      return state;
+    }
+
+    const recoveryContext:
+      FailureRecoveryContext = {
+        attemptCount:
+          state.recoveries
+            .length,
+
+        maxAttempts:
+          this.policy
+            .maxRecoveryAttempts,
+
+        recentAttempts:
+          recoveryAttemptsForEngine(
+            state,
+          ),
+
+        humanAvailable:
+          true,
+
+        ...(
+          result.recoveryContext ??
+          {}
+        ),
+      };
+
+    const failure:
+      FailureSignal = {
+        id:
+          result.failure
+            ?.id ??
+          `${state.id}:${failedStage}:${failedState?.attempts ?? 1}`,
+
+        kind:
+          result.failure
+            ?.kind ??
+          "unknown",
+
+        occurredAt:
+          result.failure
+            ?.occurredAt ??
+          nowIso(
+            this.clock,
+          ),
+
+        stage:
+          result.failure
+            ?.stage ??
+          failedStage,
+
+        source:
+          result.failure
+            ?.source ??
+          "oh4ad",
+
+        message:
+          result.failure
+            ?.message ??
+          result.error,
+
+        transient:
+          result.failure
+            ?.transient,
+
+        retryable:
+          result.failure
+            ?.retryable,
+
+        failureFingerprint:
+          result.failure
+            ?.failureFingerprint,
+
+        modelId:
+          result.failure
+            ?.modelId,
+
+        toolName:
+          result.failure
+            ?.toolName,
+
+        evidenceRefs:
+          result.failure
+            ?.evidenceRefs,
+      };
+
+    const decision =
+      getFailureRecoveryEngine()
+        .decide({
+          failure,
+
+          context:
+            recoveryContext,
+
+          policy: {
+            maxAttempts:
+              this.policy
+                .maxRecoveryAttempts,
+          },
+        });
+
+    const safe =
+      safePostActionRecovery(
+        decision,
+        state,
+        failedStage,
+        recoveryContext,
+      );
+
+    if (!safe) {
+      state.status =
+        "waiting-human";
+
+      state.waitingForHuman = {
+        stage:
+          failedStage,
+
+        reason:
+          "Automatic recovery would rewind across a completed action without explicit safe replay/resume evidence.",
+
+        questions: [
+          "An external or side-effecting action may already have occurred. Review the current state and choose whether to continue, repair manually, or stop.",
+        ],
+
+        recoveryDriven:
+          true,
+      };
+
+      state.updatedAt =
+        nowIso(
+          this.clock,
+        );
+
+      await this.persist(
+        state,
+      );
+
+      await this.emit(
+        {
+          type:
+            "cognition.autonomous-loop.waiting-human",
+
+          loopId:
+            state.id,
+
+          stage:
+            failedStage,
+
+          status:
+            "waiting-human",
+
+          detail:
+            state
+              .waitingForHuman
+              .reason,
+        },
+        state,
+      );
+
+      return state;
+    }
+
+    const mappedStage =
+      recoveryResumeToStage(
+        decision.selected
+          .resumeStage,
+        decision.selected
+          .action,
+        failedStage,
+      );
+
+    state.recoveries
+      .push({
+        at:
+          nowIso(
+            this.clock,
+          ),
+
+        failedStage,
+
+        failureFingerprint:
+          decision.failure
+            .fingerprint,
+
+        action:
+          decision.selected
+            .action,
+
+        resumeStage:
+          decision.selected
+            .resumeStage,
+
+        resumedAtStage:
+          mappedStage,
+
+        summary:
+          decision.selected
+            .summary,
+      });
+
+    if (
+      decision.selected
+        .action ===
+        "request-human-clarification"
+    ) {
+      state.status =
+        "waiting-human";
+
+      state.waitingForHuman = {
+        stage:
+          failedStage,
+
+        reason:
+          decision.selected
+            .summary,
+
+        questions: [
+          decision.selected
+            .summary,
+        ],
+
+        recoveryDriven:
+          true,
+      };
+
+      state.updatedAt =
+        nowIso(
+          this.clock,
+        );
+
+      await this.persist(
+        state,
+      );
+
+      return state;
+    }
+
+    if (
+      decision.selected
+        .action ===
+        "stop-safely" ||
+      !mappedStage
+    ) {
+      state.status =
+        "stopped";
+
+      state.terminalReason =
+        decision.selected
+          .summary;
+
+      state.updatedAt =
+        nowIso(
+          this.clock,
+        );
+
+      await this.persist(
+        state,
+      );
+
+      return state;
+    }
+
+    resetFromStage(
+      state,
+      mappedStage,
+    );
+
+    state.status =
+      "recovering";
+
+    state.updatedAt =
+      nowIso(
+        this.clock,
+      );
+
+    await this.persist(
+      state,
+    );
+
+    await this.emit(
+      {
+        type:
+          "cognition.autonomous-loop.recovering",
+
+        loopId:
+          state.id,
+
+        stage:
+          mappedStage,
+
+        status:
+          "recovering",
+
+        detail:
+          `${decision.selected.action}: ${decision.selected.summary}`,
+      },
+      state,
+    );
+
+    state.status =
+      "running";
+
+    state.updatedAt =
+      nowIso(
+        this.clock,
+      );
+
+    await this.persist(
+      state,
+    );
+
+    return state;
+  }
+
+  private async persist(
+    state:
+      AutonomousCognitiveLoopState,
+  ): Promise<void> {
+    state.updatedAt =
+      nowIso(
+        this.clock,
+      );
+
+    await this.store
+      .save(
+        state,
+      );
+  }
+
+  private async emit(
+    event:
+      AutonomousCognitiveLoopEvent,
+    state:
+      AutonomousCognitiveLoopState,
+  ): Promise<void> {
+    await this.eventPublisher(
+      event,
+      cloneState(
+        state,
+      ),
+    );
+  }
+}
+
+type RuntimeGlobals =
+  typeof globalThis & {
+    __chernobogAutonomousCognitiveLoop?:
+      AutonomousCognitiveLoop;
+  };
+
+const runtimeGlobals =
+  globalThis as
+    RuntimeGlobals;
+
+export function configureAutonomousCognitiveLoopRuntime(
+  handlers:
+    AutonomousCognitiveLoopHandlers,
+
+  options: ConstructorParameters<
+    typeof AutonomousCognitiveLoop
+  >[1] = {},
+): AutonomousCognitiveLoop {
+  const runtime =
+    new AutonomousCognitiveLoop(
+      handlers,
+      options,
+    );
+
+  runtimeGlobals
+    .__chernobogAutonomousCognitiveLoop =
+    runtime;
+
+  return runtime;
+}
+
+export function getAutonomousCognitiveLoopRuntime():
+  AutonomousCognitiveLoop {
+  const runtime =
+    runtimeGlobals
+      .__chernobogAutonomousCognitiveLoop;
+
+  if (!runtime) {
+    throw new Error(
+      "OH-4AD autonomous cognitive loop runtime is not configured with stage adapters.",
+    );
+  }
+
+  return runtime;
+}
+
+============================================================
+FILE: packages\models\src\modelDecisionRouter.ts
+============================================================
+import {
+  getDefaultModelRegistry,
+} from "./modelRegistry";
+import type {
+  InputInterpretation,
+} from "./inputInterpreter";
+
+export const MODEL_ROUTER_VERSION =
+  "oh4m.v1";
+
+export interface ModelRoutingCandidate {
+  id: string;
+  provider: string;
+  model: string;
+  displayName: string;
+
+  enabled: boolean;
+  availability:
+    | "available"
+    | "unavailable"
+    | "unknown";
+
+  local: boolean;
+
+  roles: string[];
+  capabilities: string[];
+
+  contextLimits: {
+    known: boolean;
+    contextWindowTokens?: number;
+    maxOutputTokens?: number;
+  };
+
+  cost: {
+    known: boolean;
+    mode:
+      | "local-compute"
+      | "metered"
+      | "subscription"
+      | "unknown";
+    currency?: string;
+    inputPerMillionTokens?: number;
+    outputPerMillionTokens?: number;
+  };
+
+  privacy: {
+    execution:
+      | "local"
+      | "remote"
+      | "hybrid"
+      | "unknown";
+    promptLeavesDevice:
+      | boolean
+      | null;
+    retention:
+      | "none"
+      | "local-runtime"
+      | "provider-policy"
+      | "unknown";
+  };
+
+  strengths: string[];
+  weaknesses: string[];
+  tags: string[];
+}
+
+export interface ModelCalibrationEvidence {
+  score: number;
+  confidence: number;
+  sampleCount?: number;
+}
+
+export interface ModelPreferenceEvidence {
+  score: number;
+  confidence: number;
+  sampleCount?: number;
+}
+
+export interface ModelTelemetryEvidence {
+  successRate?: number;
+  failureRate?: number;
+  averageLatencyMs?: number;
+  confidence?: number;
+  sampleCount?: number;
+}
+
+export interface ModelRoutingEvidence {
+  objectiveCalibration?: Record<
+    string,
+    ModelCalibrationEvidence
+  >;
+
+  subjectivePreference?: Record<
+    string,
+    ModelPreferenceEvidence
+  >;
+
+  telemetry?: Record<
+    string,
+    ModelTelemetryEvidence
+  >;
+}
+
+export interface ModelRoutingConstraints {
+  requiredModelIds?: string[];
+  excludedModelIds?: string[];
+
+  requireLocal?: boolean;
+  allowRemote?: boolean;
+
+  maxInputCostPerMillion?: number;
+  maxOutputCostPerMillion?: number;
+
+  maxLatencyMs?: number;
+
+  minimumRouteConfidence?: number;
+}
+
+export type ModelRouteComponent =
+  | "objective-calibration"
+  | "task-fit"
+  | "privacy"
+  | "latency"
+  | "cost"
+  | "availability"
+  | "subjective-preference"
+  | "reliability";
+
+export interface ModelRouteScoreComponent {
+  component: ModelRouteComponent;
+
+  score: number;
+  weight: number;
+  weightedScore: number;
+
+  confidence: number;
+  evidence:
+    | "measured"
+    | "declared"
+    | "derived"
+    | "unknown";
+
+  reasons: string[];
+}
+
+export interface RankedModelCandidate {
+  candidate: ModelRoutingCandidate;
+
+  eligible: boolean;
+  exclusionReasons: string[];
+
+  score: number;
+  confidence: number;
+
+  components:
+    ModelRouteScoreComponent[];
+
+  reasons: string[];
+}
+
+export interface ModelRouteDecision {
+  version: string;
+  routedAt: string;
+
+  status:
+    | "selected"
+    | "no-eligible-candidate";
+
+  selected?: RankedModelCandidate;
+
+  ranking: RankedModelCandidate[];
+
+  taskSummary: {
+    primaryDomain: string;
+    complexity: string;
+    creativity: string;
+    factuality: string;
+    reasoningDepth: string;
+    privacySensitivity: string;
+    latencyTolerance: string;
+    costTolerance: string;
+    requiredTools: string[];
+  };
+
+  constraints:
+    ModelRoutingConstraints;
+
+  warnings: string[];
+}
+
+export type CognitiveModelCandidateSource =
+  () =>
+    Promise<
+      ModelRoutingCandidate[]
+    >
+    | ModelRoutingCandidate[];
+
+function clamp01(
+  value: number,
+): number {
+  if (
+    !Number.isFinite(
+      value,
+    )
+  ) {
+    return 0;
+  }
+
+  return Math.max(
+    0,
+    Math.min(
+      1,
+      value,
+    ),
+  );
+}
+
+function asRecord(
+  value: unknown,
+): Record<string, unknown> {
+  return (
+    value &&
+    typeof value ===
+      "object" &&
+    !Array.isArray(
+      value,
+    )
+  )
+    ? value as
+        Record<
+          string,
+          unknown
+        >
+    : {};
+}
+
+function asString(
+  value: unknown,
+  fallback = "",
+): string {
+  return typeof value ===
+    "string"
+    ? value
+    : fallback;
+}
+
+function asBoolean(
+  value: unknown,
+  fallback = false,
+): boolean {
+  return typeof value ===
+    "boolean"
+    ? value
+    : fallback;
+}
+
+function asNumber(
+  value: unknown,
+): number | undefined {
+  return (
+    typeof value ===
+      "number" &&
+    Number.isFinite(
+      value,
+    )
+  )
+    ? value
+    : undefined;
+}
+
+function asStrings(
+  value: unknown,
+): string[] {
+  if (
+    !Array.isArray(
+      value,
+    )
+  ) {
+    return [];
+  }
+
+  return [
+    ...new Set(
+      value
+        .filter(
+          (
+            entry,
+          ): entry is string =>
+            typeof entry ===
+            "string",
+        )
+        .map(
+          (entry) =>
+            entry
+              .trim()
+              .toLowerCase(),
+        )
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function normalizeRegistryCandidate(
+  value: unknown,
+): ModelRoutingCandidate | null {
+  const record =
+    asRecord(
+      value,
+    );
+
+  const provider =
+    asString(
+      record.provider,
+    ).trim();
+
+  const model =
+    asString(
+      record.model,
+    ).trim();
+
+  const id =
+    asString(
+      record.id,
+      provider &&
+      model
+        ? `${provider}:${model}`
+        : "",
+    ).trim();
+
+  if (
+    !id ||
+    !provider ||
+    !model
+  ) {
+    return null;
+  }
+
+  const contextLimits =
+    asRecord(
+      record.contextLimits,
+    );
+
+  const cost =
+    asRecord(
+      record.cost,
+    );
+
+  const privacy =
+    asRecord(
+      record.privacy,
+    );
+
+  const availabilityRaw =
+    asString(
+      record.availability,
+      "unknown",
+    );
+
+  const availability =
+    availabilityRaw ===
+      "available" ||
+    availabilityRaw ===
+      "unavailable"
+      ? availabilityRaw
+      : "unknown";
+
+  const costModeRaw =
+    asString(
+      cost.mode,
+      "unknown",
+    );
+
+  const costMode:
+    ModelRoutingCandidate[
+      "cost"
+    ]["mode"] =
+      costModeRaw ===
+        "local-compute" ||
+      costModeRaw ===
+        "metered" ||
+      costModeRaw ===
+        "subscription"
+        ? costModeRaw
+        : "unknown";
+
+  const executionRaw =
+    asString(
+      privacy.execution,
+      "unknown",
+    );
+
+  const execution:
+    ModelRoutingCandidate[
+      "privacy"
+    ]["execution"] =
+      executionRaw ===
+        "local" ||
+      executionRaw ===
+        "remote" ||
+      executionRaw ===
+        "hybrid"
+        ? executionRaw
+        : "unknown";
+
+  const retentionRaw =
+    asString(
+      privacy.retention,
+      "unknown",
+    );
+
+  const retention:
+    ModelRoutingCandidate[
+      "privacy"
+    ]["retention"] =
+      retentionRaw ===
+        "none" ||
+      retentionRaw ===
+        "local-runtime" ||
+      retentionRaw ===
+        "provider-policy"
+        ? retentionRaw
+        : "unknown";
+
+  const promptLeavesDevice =
+    typeof privacy
+      .promptLeavesDevice ===
+      "boolean"
+      ? privacy
+          .promptLeavesDevice
+      : null;
+
+  return {
+    id,
+    provider,
+    model,
+    displayName:
+      asString(
+        record.displayName,
+        id,
+      ),
+    enabled:
+      asBoolean(
+        record.enabled,
+        true,
+      ),
+    availability,
+    local:
+      asBoolean(
+        record.local,
+        execution ===
+          "local",
+      ),
+    roles:
+      asStrings(
+        record.roles,
+      ),
+    capabilities:
+      asStrings(
+        record.capabilities,
+      ),
+    contextLimits: {
+      known:
+        asBoolean(
+          contextLimits.known,
+          false,
+        ),
+      contextWindowTokens:
+        asNumber(
+          contextLimits
+            .contextWindowTokens,
+        ),
+      maxOutputTokens:
+        asNumber(
+          contextLimits
+            .maxOutputTokens,
+        ),
+    },
+    cost: {
+      known:
+        asBoolean(
+          cost.known,
+          false,
+        ),
+      mode:
+        costMode,
+      currency:
+        asString(
+          cost.currency,
+        ) ||
+        undefined,
+      inputPerMillionTokens:
+        asNumber(
+          cost
+            .inputPerMillionTokens,
+        ),
+      outputPerMillionTokens:
+        asNumber(
+          cost
+            .outputPerMillionTokens,
+        ),
+    },
+    privacy: {
+      execution,
+      promptLeavesDevice,
+      retention,
+    },
+    strengths:
+      asStrings(
+        record.strengths,
+      ),
+    weaknesses:
+      asStrings(
+        record.weaknesses,
+      ),
+    tags:
+      asStrings(
+        record.tags,
+      ),
+  };
+}
+
+function defaultCandidateSource():
+  ModelRoutingCandidate[] {
+  const registry =
+    getDefaultModelRegistry();
+
+  return registry
+    .list()
+    .map(
+      (entry) =>
+        normalizeRegistryCandidate(
+          entry,
+        ),
+    )
+    .filter(
+      (
+        entry,
+      ): entry is
+        ModelRoutingCandidate =>
+          entry !== null,
+    );
+}
+
+function normalizedSet(
+  values:
+    readonly string[]
+    | undefined,
+): Set<string> {
+  return new Set(
+    (values ?? [])
+      .map(
+        (value) =>
+          value
+            .trim()
+            .toLowerCase(),
+      )
+      .filter(Boolean),
+  );
+}
+
+function taskTerms(
+  interpretation:
+    InputInterpretation,
+): Set<string> {
+  return normalizedSet([
+    interpretation
+      .taskIntelligence
+      .primaryDomain.value,
+    ...interpretation
+      .taskIntelligence
+      .secondaryDomains,
+    ...(
+      interpretation
+        .taskSignals
+        .requiredTools ??
+      []
+    ),
+  ]);
+}
+
+function candidateTerms(
+  candidate:
+    ModelRoutingCandidate,
+): Set<string> {
+  return normalizedSet([
+    ...candidate.roles,
+    ...candidate.capabilities,
+    ...candidate.strengths,
+    ...candidate.tags,
+  ]);
+}
+
+function taskFitScore(
+  candidate:
+    ModelRoutingCandidate,
+  interpretation:
+    InputInterpretation,
+): {
+  score: number;
+  reasons: string[];
+} {
+  const wanted =
+    taskTerms(
+      interpretation,
+    );
+
+  const offered =
+    candidateTerms(
+      candidate,
+    );
+
+  if (
+    wanted.size ===
+    0
+  ) {
+    return {
+      score:
+        0.5,
+      reasons: [
+        "No task-fit terms were available; neutral task-fit score used.",
+      ],
+    };
+  }
+
+  let matches =
+    0;
+
+  const matched:
+    string[] =
+      [];
+
+  for (
+    const term
+    of wanted
+  ) {
+    if (
+      offered.has(
+        term,
+      )
+    ) {
+      matches += 1;
+      matched.push(
+        term,
+      );
+    }
+  }
+
+  const domain =
+    interpretation
+      .taskIntelligence
+      .primaryDomain.value
+      .toLowerCase();
+
+  let domainBoost =
+    0;
+
+  if (
+    offered.has(
+      domain,
+    )
+  ) {
+    domainBoost =
+      0.25;
+  }
+
+  const score =
+    clamp01(
+      0.35 +
+      Math.min(
+        0.4,
+        matches *
+          0.12,
+      ) +
+      domainBoost,
+    );
+
+  return {
+    score,
+    reasons:
+      matched.length >
+      0
+        ? [
+            `Matched task-fit terms: ${matched.join(", ")}.`,
+          ]
+        : [
+            "No declared capability/tag directly matched the task; conservative baseline used.",
+          ],
+  };
+}
+
+function privacyScore(
+  candidate:
+    ModelRoutingCandidate,
+  interpretation:
+    InputInterpretation,
+): {
+  score: number;
+  reasons: string[];
+} {
+  const privacy =
+    interpretation
+      .taskIntelligence
+      .privacySensitivity.value;
+
+  const local =
+    candidate.local ||
+    candidate.privacy
+      .execution ===
+      "local";
+
+  const leaves =
+    candidate.privacy
+      .promptLeavesDevice ===
+      true;
+
+  if (
+    privacy ===
+      "highly-sensitive"
+  ) {
+    if (
+      local &&
+      !leaves
+    ) {
+      return {
+        score:
+          1,
+        reasons: [
+          "Highly-sensitive task remains local.",
+        ],
+      };
+    }
+
+    return {
+      score:
+        0,
+      reasons: [
+        "Highly-sensitive task is not guaranteed to remain local.",
+      ],
+    };
+  }
+
+  if (
+    privacy ===
+      "sensitive"
+  ) {
+    return local &&
+      !leaves
+      ? {
+          score:
+            1,
+          reasons: [
+            "Sensitive task benefits from local execution.",
+          ],
+        }
+      : {
+          score:
+            0.35,
+          reasons: [
+            "Sensitive task would use non-local/uncertain privacy handling.",
+          ],
+        };
+  }
+
+  if (
+    privacy ===
+      "personal" ||
+    privacy ===
+      "internal"
+  ) {
+    return local
+      ? {
+          score:
+            0.9,
+          reasons: [
+            "Local execution reduces exposure for non-public context.",
+          ],
+        }
+      : {
+          score:
+            0.65,
+          reasons: [
+            "Remote execution is acceptable but less privacy-preserving than local.",
+          ],
+        };
+  }
+
+  return {
+    score:
+      local
+        ? 0.85
+        : 0.75,
+    reasons: [
+      "Public/low-sensitivity task has no strong privacy restriction.",
+    ],
+  };
+}
+
+function costScore(
+  candidate:
+    ModelRoutingCandidate,
+  interpretation:
+    InputInterpretation,
+  constraints:
+    ModelRoutingConstraints,
+): {
+  score: number;
+  reasons: string[];
+} {
+  if (
+    candidate.cost.mode ===
+      "local-compute"
+  ) {
+    return {
+      score:
+        1,
+      reasons: [
+        "Local-compute model has no metered token charge in the registry.",
+      ],
+    };
+  }
+
+  const inputCost =
+    candidate.cost
+      .inputPerMillionTokens;
+
+  const outputCost =
+    candidate.cost
+      .outputPerMillionTokens;
+
+  if (
+    constraints
+      .maxInputCostPerMillion !==
+      undefined &&
+    inputCost !==
+      undefined &&
+    inputCost >
+      constraints
+        .maxInputCostPerMillion
+  ) {
+    return {
+      score:
+        0,
+      reasons: [
+        "Input token cost exceeds explicit routing ceiling.",
+      ],
+    };
+  }
+
+  if (
+    constraints
+      .maxOutputCostPerMillion !==
+      undefined &&
+    outputCost !==
+      undefined &&
+    outputCost >
+      constraints
+        .maxOutputCostPerMillion
+  ) {
+    return {
+      score:
+        0,
+      reasons: [
+        "Output token cost exceeds explicit routing ceiling.",
+      ],
+    };
+  }
+
+  const tolerance =
+    interpretation
+      .taskIntelligence
+      .costTolerance.value;
+
+  if (
+    !candidate.cost.known
+  ) {
+    return {
+      score:
+        tolerance ===
+          "minimal"
+          ? 0.35
+          : 0.5,
+      reasons: [
+        "Cost is unknown; router does not assume it is cheap.",
+      ],
+    };
+  }
+
+  const combined =
+    (
+      inputCost ??
+      0
+    ) +
+    (
+      outputCost ??
+      0
+    );
+
+  const divisor =
+    tolerance ===
+      "minimal"
+      ? 10
+      : tolerance ===
+          "low"
+        ? 25
+        : tolerance ===
+            "standard"
+          ? 75
+          : 150;
+
+  return {
+    score:
+      clamp01(
+        1 -
+        combined /
+          divisor,
+      ),
+    reasons: [
+      `Known metered cost considered against ${tolerance} task tolerance.`,
+    ],
+  };
+}
+
+function latencyScore(
+  candidate:
+    ModelRoutingCandidate,
+  interpretation:
+    InputInterpretation,
+  evidence:
+    ModelRoutingEvidence,
+  constraints:
+    ModelRoutingConstraints,
+): {
+  score: number;
+  confidence: number;
+  measured: boolean;
+  reasons: string[];
+} {
+  const telemetry =
+    evidence.telemetry
+      ?.[candidate.id];
+
+  const latency =
+    telemetry
+      ?.averageLatencyMs;
+
+  if (
+    latency ===
+    undefined
+  ) {
+    return {
+      score:
+        interpretation
+          .taskIntelligence
+          .latencyTolerance.value ===
+          "immediate"
+          ? 0.4
+          : 0.55,
+      confidence:
+        0.25,
+      measured:
+        false,
+      reasons: [
+        "No measured latency evidence is available.",
+      ],
+    };
+  }
+
+  if (
+    constraints
+      .maxLatencyMs !==
+      undefined &&
+    latency >
+      constraints
+        .maxLatencyMs
+  ) {
+    return {
+      score:
+        0,
+      confidence:
+        clamp01(
+          telemetry
+            ?.confidence ??
+          0.7,
+        ),
+      measured:
+        true,
+      reasons: [
+        `Measured latency ${latency}ms exceeds explicit ceiling.`,
+      ],
+    };
+  }
+
+  const tolerance =
+    interpretation
+      .taskIntelligence
+      .latencyTolerance.value;
+
+  const target =
+    tolerance ===
+      "immediate"
+      ? 1_500
+      : tolerance ===
+          "interactive"
+        ? 5_000
+        : tolerance ===
+            "flexible"
+          ? 20_000
+          : 60_000;
+
+  return {
+    score:
+      clamp01(
+        target /
+        Math.max(
+          target,
+          latency,
+        ),
+      ),
+    confidence:
+      clamp01(
+        telemetry
+          ?.confidence ??
+        0.7,
+      ),
+    measured:
+      true,
+    reasons: [
+      `Measured average latency ${latency}ms evaluated against ${tolerance} target ${target}ms.`,
+    ],
+  };
+}
+
+function reliabilityScore(
+  candidate:
+    ModelRoutingCandidate,
+  evidence:
+    ModelRoutingEvidence,
+): {
+  score: number;
+  confidence: number;
+  measured: boolean;
+  reasons: string[];
+} {
+  const telemetry =
+    evidence.telemetry
+      ?.[candidate.id];
+
+  if (
+    !telemetry
+  ) {
+    return {
+      score:
+        0.5,
+      confidence:
+        0.2,
+      measured:
+        false,
+      reasons: [
+        "No measured reliability evidence is available.",
+      ],
+    };
+  }
+
+  const success =
+    telemetry.successRate;
+
+  const failure =
+    telemetry.failureRate;
+
+  if (
+    success ===
+      undefined &&
+    failure ===
+      undefined
+  ) {
+    return {
+      score:
+        0.5,
+      confidence:
+        clamp01(
+          telemetry.confidence ??
+          0.3,
+        ),
+      measured:
+        false,
+      reasons: [
+        "Telemetry exists but contains no success/failure rate.",
+      ],
+    };
+  }
+
+  const score =
+    success !==
+      undefined
+      ? clamp01(
+          success,
+        )
+      : clamp01(
+          1 -
+          (
+            failure ??
+            0
+          ),
+        );
+
+  return {
+    score,
+    confidence:
+      clamp01(
+        telemetry.confidence ??
+        0.7,
+      ),
+    measured:
+      true,
+    reasons: [
+      "Reliability score derives from measured invocation telemetry.",
+    ],
+  };
+}
+
+function availabilityScore(
+  candidate:
+    ModelRoutingCandidate,
+): number {
+  switch (
+    candidate.availability
+  ) {
+    case "available":
+      return 1;
+    case "unknown":
+      return 0.5;
+    case "unavailable":
+    default:
+      return 0;
+  }
+}
+
+function dynamicWeights(
+  interpretation:
+    InputInterpretation,
+): Record<
+  ModelRouteComponent,
+  number
+> {
+  const weights:
+    Record<
+      ModelRouteComponent,
+      number
+    > = {
+      "objective-calibration":
+        0.24,
+      "task-fit":
+        0.18,
+      privacy:
+        0.14,
+      latency:
+        0.1,
+      cost:
+        0.09,
+      availability:
+        0.08,
+      "subjective-preference":
+        0.07,
+      reliability:
+        0.1,
+    };
+
+  const factuality =
+    interpretation
+      .taskIntelligence
+      .factuality.value;
+
+  const privacy =
+    interpretation
+      .taskIntelligence
+      .privacySensitivity.value;
+
+  const latency =
+    interpretation
+      .taskIntelligence
+      .latencyTolerance.value;
+
+  const cost =
+    interpretation
+      .taskIntelligence
+      .costTolerance.value;
+
+  if (
+    factuality ===
+      "critical" ||
+    factuality ===
+      "high"
+  ) {
+    weights[
+      "objective-calibration"
+    ] += 0.08;
+    weights[
+      "subjective-preference"
+    ] -= 0.03;
+    weights.cost -=
+      0.02;
+    weights.latency -=
+      0.03;
+  }
+
+  if (
+    privacy ===
+      "highly-sensitive" ||
+    privacy ===
+      "sensitive"
+  ) {
+    weights.privacy +=
+      0.1;
+    weights[
+      "subjective-preference"
+    ] -= 0.02;
+    weights.cost -=
+      0.03;
+    weights.latency -=
+      0.05;
+  }
+
+  if (
+    latency ===
+      "immediate"
+  ) {
+    weights.latency +=
+      0.1;
+    weights[
+      "objective-calibration"
+    ] -= 0.04;
+    weights[
+      "subjective-preference"
+    ] -= 0.02;
+    weights.cost -=
+      0.04;
+  }
+
+  if (
+    cost ===
+      "minimal" ||
+    cost ===
+      "low"
+  ) {
+    weights.cost +=
+      0.1;
+    weights[
+      "subjective-preference"
+    ] -= 0.02;
+    weights[
+      "objective-calibration"
+    ] -= 0.04;
+    weights.latency -=
+      0.04;
+  }
+
+  const total =
+    Object.values(
+      weights,
+    ).reduce(
+      (
+        sum,
+        value,
+      ) =>
+        sum +
+        Math.max(
+          0,
+          value,
+        ),
+      0,
+    );
+
+  for (
+    const key
+    of Object.keys(
+      weights,
+    ) as
+      ModelRouteComponent[]
+  ) {
+    weights[key] =
+      total > 0
+        ? Math.max(
+            0,
+            weights[key],
+          ) /
+          total
+        : 0;
+  }
+
+  return weights;
+}
+
+function eligibility(
+  candidate:
+    ModelRoutingCandidate,
+  interpretation:
+    InputInterpretation,
+  constraints:
+    ModelRoutingConstraints,
+): string[] {
+  const reasons:
+    string[] =
+      [];
+
+  const required =
+    normalizedSet(
+      constraints
+        .requiredModelIds,
+    );
+
+  const excluded =
+    normalizedSet(
+      constraints
+        .excludedModelIds,
+    );
+
+  if (
+    !candidate.enabled
+  ) {
+    reasons.push(
+      "model is disabled",
+    );
+  }
+
+  if (
+    candidate.availability ===
+      "unavailable"
+  ) {
+    reasons.push(
+      "model is unavailable",
+    );
+  }
+
+  if (
+    required.size >
+      0 &&
+    !required.has(
+      candidate.id
+        .toLowerCase(),
+    )
+  ) {
+    reasons.push(
+      "model is not in requiredModelIds",
+    );
+  }
+
+  if (
+    excluded.has(
+      candidate.id
+        .toLowerCase(),
+    )
+  ) {
+    reasons.push(
+      "model is explicitly excluded",
+    );
+  }
+
+  const isLocal =
+    candidate.local ||
+    candidate.privacy
+      .execution ===
+      "local";
+
+  if (
+    constraints.requireLocal &&
+    !isLocal
+  ) {
+    reasons.push(
+      "explicit constraint requires local execution",
+    );
+  }
+
+  if (
+    constraints.allowRemote ===
+      false &&
+    !isLocal
+  ) {
+    reasons.push(
+      "remote execution is explicitly disallowed",
+    );
+  }
+
+  const privacySensitivity =
+    interpretation
+      .taskIntelligence
+      .privacySensitivity
+      .value;
+
+  const privacyRequiresLocal =
+    privacySensitivity ===
+      "highly-sensitive" ||
+    interpretation
+      .taskIntelligence
+      .derived
+      .prefersLocalExecution ===
+      true;
+
+  if (
+    privacyRequiresLocal &&
+    (
+      !isLocal ||
+      candidate.privacy
+        .promptLeavesDevice ===
+        true
+    )
+  ) {
+    reasons.push(
+      privacySensitivity ===
+        "highly-sensitive"
+        ? "highly-sensitive task requires a model that keeps the prompt local"
+        : "task intelligence requires local execution for this privacy-sensitive task",
+    );
+  }
+
+  if (
+    constraints
+      .maxInputCostPerMillion !==
+      undefined &&
+    candidate.cost
+      .inputPerMillionTokens !==
+      undefined &&
+    candidate.cost
+      .inputPerMillionTokens >
+      constraints
+        .maxInputCostPerMillion
+  ) {
+    reasons.push(
+      "input cost exceeds explicit ceiling",
+    );
+  }
+
+  if (
+    constraints
+      .maxOutputCostPerMillion !==
+      undefined &&
+    candidate.cost
+      .outputPerMillionTokens !==
+      undefined &&
+    candidate.cost
+      .outputPerMillionTokens >
+      constraints
+        .maxOutputCostPerMillion
+  ) {
+    reasons.push(
+      "output cost exceeds explicit ceiling",
+    );
+  }
+
+  return reasons;
+}
+
+function component(
+  name:
+    ModelRouteComponent,
+  score:
+    number,
+  weight:
+    number,
+  confidence:
+    number,
+  evidence:
+    ModelRouteScoreComponent[
+      "evidence"
+    ],
+  reasons:
+    string[],
+): ModelRouteScoreComponent {
+  const normalizedScore =
+    clamp01(
+      score,
+    );
+
+  const normalizedWeight =
+    Math.max(
+      0,
+      weight,
+    );
+
+  return {
+    component:
+      name,
+    score:
+      normalizedScore,
+    weight:
+      normalizedWeight,
+    weightedScore:
+      normalizedScore *
+      normalizedWeight,
+    confidence:
+      clamp01(
+        confidence,
+      ),
+    evidence,
+    reasons,
+  };
+}
+
+function scoreCandidate(
+  candidate:
+    ModelRoutingCandidate,
+  interpretation:
+    InputInterpretation,
+  evidence:
+    ModelRoutingEvidence,
+  constraints:
+    ModelRoutingConstraints,
+): RankedModelCandidate {
+  const exclusions =
+    eligibility(
+      candidate,
+      interpretation,
+      constraints,
+    );
+
+  const weights =
+    dynamicWeights(
+      interpretation,
+    );
+
+  const calibration =
+    evidence
+      .objectiveCalibration
+      ?.[candidate.id];
+
+  const preference =
+    evidence
+      .subjectivePreference
+      ?.[candidate.id];
+
+  const taskFit =
+    taskFitScore(
+      candidate,
+      interpretation,
+    );
+
+  const privacy =
+    privacyScore(
+      candidate,
+      interpretation,
+    );
+
+  const latency =
+    latencyScore(
+      candidate,
+      interpretation,
+      evidence,
+      constraints,
+    );
+
+  const cost =
+    costScore(
+      candidate,
+      interpretation,
+      constraints,
+    );
+
+  const reliability =
+    reliabilityScore(
+      candidate,
+      evidence,
+    );
+
+  const components: ModelRouteScoreComponent[] =
+    [
+      component(
+        "objective-calibration",
+        calibration
+          ?.score ??
+        0.5,
+        weights[
+          "objective-calibration"
+        ],
+        calibration
+          ?.confidence ??
+        0.2,
+        calibration
+          ? "measured"
+          : "unknown",
+        calibration
+          ? [
+              `Objective calibration score=${clamp01(calibration.score).toFixed(2)} sampleCount=${calibration.sampleCount ?? "unknown"}.`,
+            ]
+          : [
+              "No objective calibration evidence; neutral score used rather than inventing capability.",
+            ],
+      ),
+      component(
+        "task-fit",
+        taskFit.score,
+        weights[
+          "task-fit"
+        ],
+        0.6,
+        "derived",
+        taskFit.reasons,
+      ),
+      component(
+        "privacy",
+        privacy.score,
+        weights.privacy,
+        candidate.privacy
+          .execution !==
+          "unknown"
+          ? 0.9
+          : 0.4,
+        "declared",
+        privacy.reasons,
+      ),
+      component(
+        "latency",
+        latency.score,
+        weights.latency,
+        latency.confidence,
+        latency.measured
+          ? "measured"
+          : "unknown",
+        latency.reasons,
+      ),
+      component(
+        "cost",
+        cost.score,
+        weights.cost,
+        candidate.cost
+          .known ||
+        candidate.cost.mode ===
+          "local-compute"
+          ? 0.9
+          : 0.3,
+        candidate.cost
+          .known ||
+        candidate.cost.mode ===
+          "local-compute"
+          ? "declared"
+          : "unknown",
+        cost.reasons,
+      ),
+      component(
+        "availability",
+        availabilityScore(
+          candidate,
+        ),
+        weights.availability,
+        candidate.availability ===
+          "unknown"
+          ? 0.4
+          : 0.95,
+        "declared",
+        [
+          `Registry availability=${candidate.availability}.`,
+        ],
+      ),
+      component(
+        "subjective-preference",
+        preference
+          ?.score ??
+        0.5,
+        weights[
+          "subjective-preference"
+        ],
+        preference
+          ?.confidence ??
+        0.2,
+        preference
+          ? "measured"
+          : "unknown",
+        preference
+          ? [
+              `Subjective preference score=${clamp01(preference.score).toFixed(2)} sampleCount=${preference.sampleCount ?? "unknown"}.`,
+              "Preference is intentionally separate from objective capability.",
+            ]
+          : [
+              "No subjective preference evidence; neutral score used.",
+            ],
+      ),
+      component(
+        "reliability",
+        reliability.score,
+        weights.reliability,
+        reliability.confidence,
+        reliability.measured
+          ? "measured"
+          : "unknown",
+        reliability.reasons,
+      ),
+    ];
+
+  const score =
+    exclusions.length >
+      0
+      ? 0
+      : clamp01(
+          components.reduce(
+            (
+              total,
+              entry,
+            ) =>
+              total +
+              entry.weightedScore,
+            0,
+          ),
+        );
+
+  const evidenceWeight =
+    components.reduce(
+      (
+        total,
+        entry,
+      ) =>
+        total +
+        entry.weight,
+      0,
+    );
+
+  const confidence =
+    exclusions.length >
+      0
+      ? 1
+      : clamp01(
+          evidenceWeight >
+            0
+            ? components.reduce(
+                (
+                  total,
+                  entry,
+                ) =>
+                  total +
+                  entry.confidence *
+                    entry.weight,
+                0,
+              ) /
+              evidenceWeight
+            : 0,
+        );
+
+  const reasons = [
+    ...components.flatMap(
+      (entry) =>
+        entry.reasons.map(
+          (reason) =>
+            `${entry.component}: ${reason}`,
+        ),
+    ),
+  ];
+
+  return {
+    candidate:
+      structuredClone(
+        candidate,
+      ),
+    eligible:
+      exclusions.length ===
+      0,
+    exclusionReasons:
+      exclusions,
+    score,
+    confidence,
+    components,
+    reasons,
+  };
+}
+
+export class ModelRouter {
+  constructor(
+    private readonly candidateSource:
+      CognitiveModelCandidateSource =
+        defaultCandidateSource,
+  ) {}
+
+  async route(
+    input: {
+      interpretation:
+        InputInterpretation;
+      evidence?:
+        ModelRoutingEvidence;
+      constraints?:
+        ModelRoutingConstraints;
+    },
+  ): Promise<ModelRouteDecision> {
+    const evidence =
+      input.evidence ??
+      {};
+
+    const constraints =
+      structuredClone(
+        input.constraints ??
+        {},
+      );
+
+    const candidates =
+      await this.candidateSource();
+
+    const ranking =
+      candidates
+        .map(
+          (candidate) =>
+            scoreCandidate(
+              candidate,
+              input.interpretation,
+              evidence,
+              constraints,
+            ),
+        )
+        .sort(
+          (
+            left,
+            right,
+          ) => {
+            if (
+              left.eligible !==
+              right.eligible
+            ) {
+              return left.eligible
+                ? -1
+                : 1;
+            }
+
+            if (
+              left.score !==
+              right.score
+            ) {
+              return (
+                right.score -
+                left.score
+              );
+            }
+
+            if (
+              left.confidence !==
+              right.confidence
+            ) {
+              return (
+                right.confidence -
+                left.confidence
+              );
+            }
+
+            return left
+              .candidate.id
+              .localeCompare(
+                right
+                  .candidate.id,
+              );
+          },
+        );
+
+    const minimum =
+      clamp01(
+        constraints
+          .minimumRouteConfidence ??
+        0,
+      );
+
+    const selected =
+      ranking.find(
+        (entry) =>
+          entry.eligible &&
+          entry.confidence >=
+            minimum,
+      );
+
+    const warnings:
+      string[] =
+        [];
+
+    if (
+      candidates.length ===
+      0
+    ) {
+      warnings.push(
+        "Model registry returned no candidates.",
+      );
+    }
+
+    if (
+      ranking.some(
+        (entry) =>
+          entry.components.some(
+            (componentScore) =>
+              componentScore
+                .evidence ===
+              "unknown",
+          ),
+      )
+    ) {
+      warnings.push(
+        "One or more routing dimensions lacked measured/declared evidence; neutral conservative scores were used.",
+      );
+    }
+
+    if (!selected) {
+      warnings.push(
+        "No eligible model satisfied the routing constraints/confidence threshold.",
+      );
+    }
+
+    return {
+      version:
+        MODEL_ROUTER_VERSION,
+      routedAt:
+        new Date()
+          .toISOString(),
+      status:
+        selected
+          ? "selected"
+          : "no-eligible-candidate",
+      selected:
+        selected
+          ? structuredClone(
+              selected,
+            )
+          : undefined,
+      ranking,
+      taskSummary: {
+        primaryDomain:
+          input
+            .interpretation
+            .taskIntelligence
+            .primaryDomain
+            .value,
+        complexity:
+          input
+            .interpretation
+            .taskIntelligence
+            .complexity.value,
+        creativity:
+          input
+            .interpretation
+            .taskIntelligence
+            .creativity.value,
+        factuality:
+          input
+            .interpretation
+            .taskIntelligence
+            .factuality.value,
+        reasoningDepth:
+          input
+            .interpretation
+            .taskIntelligence
+            .reasoningDepth.value,
+        privacySensitivity:
+          input
+            .interpretation
+            .taskIntelligence
+            .privacySensitivity
+            .value,
+        latencyTolerance:
+          input
+            .interpretation
+            .taskIntelligence
+            .latencyTolerance
+            .value,
+        costTolerance:
+          input
+            .interpretation
+            .taskIntelligence
+            .costTolerance.value,
+        requiredTools: [
+          ...(
+            input
+              .interpretation
+              .taskSignals
+              .requiredTools ??
+            []
+          ),
+        ],
+      },
+      constraints,
+      warnings,
+    };
+  }
+}
+
+const defaultModelRouter =
+  new ModelRouter();
+
+export function getModelRouter():
+  ModelRouter {
+  return defaultModelRouter;
+}
+
+============================================================
+FILE: packages\models\src\multiModelOrchestrator.ts
+============================================================
+import type {
+  CompiledPrompt,
+} from "./promptCompiler";
+
+import type {
+  ModelRouteDecision,
+  ModelRoutingCandidate,
+  RankedModelCandidate,
+} from "./modelDecisionRouter";
+
+import type {
+  CognitiveStrategyKind,
+  StrategyRouteDecision,
+} from "./strategyRouter";
+
+import type {
+  ReasoningContract,
+} from "./reasoningContracts";
+
+export const MULTI_MODEL_ORCHESTRATOR_VERSION =
+  "oh4s.v1";
+
+export type CognitiveModelPassKind =
+  | "primary"
+  | "secondary"
+  | "critic"
+  | "refinement"
+  | "fallback";
+
+export interface CognitiveModelExecutionRequest {
+  candidate:
+    ModelRoutingCandidate;
+
+  pass:
+    CognitiveModelPassKind;
+
+  purpose: string;
+
+  prompt: string;
+
+  timeoutMs?: number;
+}
+
+export interface CognitiveModelExecutionResult {
+  ok: boolean;
+
+  text?: string;
+  error?: string;
+
+  provider?: string;
+  model?: string;
+
+  latencyMs?: number;
+  confidence?: number;
+
+  metadata?: Record<
+    string,
+    unknown
+  >;
+}
+
+export type CognitiveModelExecutor =
+  (
+    request:
+      CognitiveModelExecutionRequest,
+  ) =>
+    Promise<
+      CognitiveModelExecutionResult
+    >;
+
+export interface MultiModelOrchestrationRun {
+  id: string;
+
+  sequence: number;
+
+  candidateId: string;
+  pass:
+    CognitiveModelPassKind;
+
+  purpose: string;
+
+  ok: boolean;
+
+  text?: string;
+  error?: string;
+
+  provider?: string;
+  model?: string;
+
+  latencyMs?: number;
+  confidence?: number;
+
+  routeScore?: number;
+  routeConfidence?: number;
+
+  retainedAsAuditArtifact: boolean;
+}
+
+export type MultiModelOrchestrationStatus =
+  | "completed"
+  | "partial"
+  | "blocked"
+  | "failed";
+
+export interface MultiModelOrchestrationResult {
+  version: string;
+  startedAt: string;
+  completedAt: string;
+
+  status:
+    MultiModelOrchestrationStatus;
+
+  strategy:
+    CognitiveStrategyKind;
+
+  selectedModelId?:
+    string;
+
+  finalText?: string;
+
+  finalSourceRunId?: string;
+
+  runs:
+    MultiModelOrchestrationRun[];
+
+  blockedRequirements: string[];
+
+  warnings: string[];
+
+  provenance: {
+    promptCompilerVersion:
+      string;
+    modelRouterVersion:
+      string;
+    strategyRouterVersion:
+      string;
+    reasoningContractVersion:
+      string;
+  };
+
+  invariants: {
+    toolsExecuted: false;
+    actionsExecuted: false;
+    authorityBypassed: false;
+    privateScratchReasoningRequired: false;
+    privateScratchReasoningPersisted: false;
+  };
+}
+
+function clamp01(
+  value:
+    number
+    | undefined,
+): number | undefined {
+  if (
+    value ===
+    undefined ||
+    !Number.isFinite(
+      value,
+    )
+  ) {
+    return undefined;
+  }
+
+  return Math.max(
+    0,
+    Math.min(
+      1,
+      value,
+    ),
+  );
+}
+
+function eligibleRanking(
+  route:
+    ModelRouteDecision,
+): RankedModelCandidate[] {
+  return route.ranking
+    .filter(
+      (entry) =>
+        entry.eligible,
+    );
+}
+
+function selectedCandidate(
+  route:
+    ModelRouteDecision,
+): RankedModelCandidate | undefined {
+  if (
+    route.status !==
+      "selected"
+  ) {
+    return undefined;
+  }
+
+  return route.selected;
+}
+
+function routeEntryFor(
+  route:
+    ModelRouteDecision,
+  id: string,
+): RankedModelCandidate | undefined {
+  return route.ranking
+    .find(
+      (entry) =>
+        entry.candidate.id ===
+        id,
+    );
+}
+
+function promptForPass(
+  base:
+    CompiledPrompt,
+  instruction:
+    string,
+  artifacts:
+    Array<{
+      label: string;
+      text: string;
+    }> = [],
+): string {
+  const artifactText =
+    artifacts.length >
+      0
+      ? [
+          "",
+          "<<<PRIOR ORCHESTRATION ARTIFACTS>>>",
+          ...artifacts.flatMap(
+            (artifact) => [
+              `[${artifact.label}]`,
+              artifact.text,
+            ],
+          ),
+        ].join(
+          "\n",
+        )
+      : "";
+
+  return [
+    base.renderedPrompt,
+    "",
+    "<<<OH-4S ORCHESTRATION INSTRUCTION>>>",
+    instruction,
+    "Return only the task-relevant artifact for this pass.",
+    "Do not claim tool execution, approval, authorization, or external actions unless supplied as authoritative input.",
+    "Do not expose or reconstruct hidden chain-of-thought; provide conclusions, critique findings, assumptions, uncertainties, or revisions as appropriate.",
+    artifactText,
+  ].join(
+    "\n",
+  );
+}
+
+function numericCost(
+  candidate:
+    ModelRoutingCandidate,
+): number {
+  if (
+    candidate.cost.mode ===
+      "local-compute"
+  ) {
+    return 0;
+  }
+
+  if (
+    !candidate.cost.known
+  ) {
+    return Number
+      .POSITIVE_INFINITY;
+  }
+
+  return (
+    candidate.cost
+      .inputPerMillionTokens ??
+    0
+  ) +
+  (
+    candidate.cost
+      .outputPerMillionTokens ??
+    0
+  );
+}
+
+function cheapCandidate(
+  route:
+    ModelRouteDecision,
+): RankedModelCandidate | undefined {
+  return eligibleRanking(
+    route,
+  )
+    .slice()
+    .sort(
+      (
+        left,
+        right,
+      ) => {
+        const costDiff =
+          numericCost(
+            left.candidate,
+          ) -
+          numericCost(
+            right.candidate,
+          );
+
+        if (
+          Number.isFinite(
+            costDiff,
+          ) &&
+          costDiff !==
+          0
+        ) {
+          return costDiff;
+        }
+
+        if (
+          left.score !==
+          right.score
+        ) {
+          return (
+            right.score -
+            left.score
+          );
+        }
+
+        return left
+          .candidate.id
+          .localeCompare(
+            right
+              .candidate.id,
+          );
+      },
+    )[0];
+}
+
+function competitionCandidates(
+  route:
+    ModelRouteDecision,
+): RankedModelCandidate[] {
+  return eligibleRanking(
+    route,
+  )
+    .slice(
+      0,
+      2,
+    );
+}
+
+function provisionalCompetitionWinner(
+  runs:
+    readonly MultiModelOrchestrationRun[],
+  route:
+    ModelRouteDecision,
+): MultiModelOrchestrationRun | undefined {
+  const successful =
+    runs.filter(
+      (run) =>
+        run.ok &&
+        Boolean(
+          run.text,
+        ),
+    );
+
+  return successful
+    .slice()
+    .sort(
+      (
+        left,
+        right,
+      ) => {
+        const leftConfidence =
+          left.confidence ??
+          routeEntryFor(
+            route,
+            left.candidateId,
+          )?.confidence ??
+          0;
+
+        const rightConfidence =
+          right.confidence ??
+          routeEntryFor(
+            route,
+            right.candidateId,
+          )?.confidence ??
+          0;
+
+        if (
+          leftConfidence !==
+          rightConfidence
+        ) {
+          return (
+            rightConfidence -
+            leftConfidence
+          );
+        }
+
+        const leftScore =
+          left.routeScore ??
+          0;
+
+        const rightScore =
+          right.routeScore ??
+          0;
+
+        if (
+          leftScore !==
+          rightScore
+        ) {
+          return (
+            rightScore -
+            leftScore
+          );
+        }
+
+        return left.id
+          .localeCompare(
+            right.id,
+          );
+      },
+    )[0];
+}
+
+function runId(
+  sequence:
+    number,
+  pass:
+    CognitiveModelPassKind,
+  candidateId:
+    string,
+): string {
+  return [
+    "oh4s",
+    sequence,
+    pass,
+    candidateId,
+  ].join(
+    ":",
+  );
+}
+
+export class MultiModelOrchestrator {
+  constructor(
+    private readonly executor:
+      CognitiveModelExecutor,
+  ) {}
+
+  async orchestrate(
+    input: {
+      compiledPrompt:
+        CompiledPrompt;
+      modelRoute:
+        ModelRouteDecision;
+      strategyRoute:
+        StrategyRouteDecision;
+      reasoningContract:
+        ReasoningContract;
+
+      escalationConfidenceThreshold?:
+        number;
+      timeoutMs?:
+        number;
+    },
+  ): Promise<MultiModelOrchestrationResult> {
+    const startedAt =
+      new Date()
+        .toISOString();
+
+    const warnings:
+      string[] =
+        [];
+
+    const blockedRequirements:
+      string[] =
+        [];
+
+    const runs:
+      MultiModelOrchestrationRun[] =
+        [];
+
+    const strategySelection =
+      input.strategyRoute
+        .selected;
+
+    const primary =
+      selectedCandidate(
+        input.modelRoute,
+      );
+
+    const finish =
+      (
+        status:
+          MultiModelOrchestrationStatus,
+        finalText?:
+          string,
+        finalSourceRunId?:
+          string,
+      ): MultiModelOrchestrationResult => ({
+        version:
+          MULTI_MODEL_ORCHESTRATOR_VERSION,
+        startedAt,
+        completedAt:
+          new Date()
+            .toISOString(),
+        status,
+        strategy:
+          strategySelection
+            ?.strategy ??
+          input.reasoningContract
+            .strategy,
+        selectedModelId:
+          primary
+            ?.candidate.id,
+        finalText,
+        finalSourceRunId,
+        runs:
+          structuredClone(
+            runs,
+          ),
+        blockedRequirements: [
+          ...blockedRequirements,
+        ],
+        warnings: [
+          ...warnings,
+        ],
+        provenance: {
+          promptCompilerVersion:
+            input
+              .compiledPrompt
+              .version,
+          modelRouterVersion:
+            input
+              .modelRoute
+              .version,
+          strategyRouterVersion:
+            input
+              .strategyRoute
+              .version,
+          reasoningContractVersion:
+            input
+              .reasoningContract
+              .version,
+        },
+        invariants: {
+          toolsExecuted:
+            false,
+          actionsExecuted:
+            false,
+          authorityBypassed:
+            false,
+          privateScratchReasoningRequired:
+            false,
+          privateScratchReasoningPersisted:
+            false,
+        },
+      });
+
+    if (
+      input.modelRoute
+        .status !==
+        "selected" ||
+      !primary
+    ) {
+      blockedRequirements.push(
+        "OH-4M must select an eligible primary model before orchestration.",
+      );
+
+      return finish(
+        "blocked",
+      );
+    }
+
+    if (
+      input.strategyRoute
+        .status !==
+        "selected" ||
+      !strategySelection
+    ) {
+      blockedRequirements.push(
+        "OH-4N must select an eligible strategy before orchestration.",
+      );
+
+      return finish(
+        "blocked",
+      );
+    }
+
+    if (
+      input.reasoningContract
+        .strategy !==
+      strategySelection
+        .strategy
+    ) {
+      blockedRequirements.push(
+        "OH-4O reasoning contract strategy does not match the OH-4N selected strategy.",
+      );
+
+      return finish(
+        "blocked",
+      );
+    }
+
+    const maxPasses =
+      Math.max(
+        1,
+        input
+          .reasoningContract
+          .execution
+          .maxPasses,
+      );
+
+    const execute =
+      async (
+        ranked:
+          RankedModelCandidate,
+        pass:
+          CognitiveModelPassKind,
+        purpose:
+          string,
+        prompt:
+          string,
+      ): Promise<MultiModelOrchestrationRun> => {
+        if (
+          runs.length >=
+          maxPasses
+        ) {
+          return {
+            id:
+              runId(
+                runs.length +
+                1,
+                pass,
+                ranked
+                  .candidate.id,
+              ),
+            sequence:
+              runs.length +
+              1,
+            candidateId:
+              ranked.candidate.id,
+            pass,
+            purpose,
+            ok:
+              false,
+            error:
+              "Reasoning-contract pass budget exhausted.",
+            routeScore:
+              ranked.score,
+            routeConfidence:
+              ranked.confidence,
+            retainedAsAuditArtifact:
+              true,
+          };
+        }
+
+        const sequence =
+          runs.length +
+          1;
+
+        let result:
+          CognitiveModelExecutionResult;
+
+        try {
+          result =
+            await this.executor({
+              candidate:
+                ranked.candidate,
+              pass,
+              purpose,
+              prompt,
+              timeoutMs:
+                input.timeoutMs,
+            });
+        } catch (
+          error
+        ) {
+          result = {
+            ok:
+              false,
+            error:
+              error instanceof Error
+                ? error.message
+                : String(
+                    error,
+                  ),
+          };
+        }
+
+        const run:
+          MultiModelOrchestrationRun = {
+            id:
+              runId(
+                sequence,
+                pass,
+                ranked
+                  .candidate.id,
+              ),
+            sequence,
+            candidateId:
+              ranked.candidate.id,
+            pass,
+            purpose,
+            ok:
+              result.ok,
+            text:
+              result.text,
+            error:
+              result.error,
+            provider:
+              result.provider,
+            model:
+              result.model,
+            latencyMs:
+              result.latencyMs,
+            confidence:
+              clamp01(
+                result.confidence,
+              ),
+            routeScore:
+              ranked.score,
+            routeConfidence:
+              ranked.confidence,
+            retainedAsAuditArtifact:
+              true,
+          };
+
+        runs.push(
+          run,
+        );
+
+        return run;
+      };
+
+    const strategy =
+      strategySelection
+        .strategy;
+
+    if (
+      strategy ===
+        "tool-assisted"
+    ) {
+      blockedRequirements.push(
+        "Tool-assisted strategy requires authoritative tool results before model orchestration can continue.",
+      );
+
+      warnings.push(
+        "OH-4S does not execute tools. Tool acquisition remains downstream of authority/action governance.",
+      );
+
+      return finish(
+        "blocked",
+      );
+    }
+
+    if (
+      strategy ===
+        "single-model" ||
+      strategy ===
+        "specialist"
+    ) {
+      const run =
+        await execute(
+          primary,
+          "primary",
+          strategy ===
+            "specialist"
+            ? "Produce the task artifact using the selected specialist model."
+            : "Produce the task artifact using the selected primary model.",
+          promptForPass(
+            input
+              .compiledPrompt,
+            strategy ===
+              "specialist"
+              ? "Act as the selected domain specialist. Produce the requested artifact while preserving all constraints and uncertainty."
+              : "Produce the requested artifact in one bounded pass while preserving all constraints and uncertainty.",
+          ),
+        );
+
+      if (
+        run.ok &&
+        run.text
+      ) {
+        return finish(
+          "completed",
+          run.text,
+          run.id,
+        );
+      }
+
+      warnings.push(
+        "Primary model execution failed.",
+      );
+
+      return finish(
+        "failed",
+      );
+    }
+
+    if (
+      strategy ===
+        "cheap-first-escalation"
+    ) {
+      const cheap =
+        cheapCandidate(
+          input.modelRoute,
+        ) ??
+        primary;
+
+      const first =
+        await execute(
+          cheap,
+          "primary",
+          "Attempt the task with the lowest-cost eligible model.",
+          promptForPass(
+            input
+              .compiledPrompt,
+            "Produce a complete candidate. Be explicit about uncertainty. This is the cheap-first pass; do not claim success beyond the evidence available.",
+          ),
+        );
+
+      const threshold =
+        clamp01(
+          input
+            .escalationConfidenceThreshold ??
+          0.72,
+        ) ??
+        0.72;
+
+      if (
+        first.ok &&
+        first.text &&
+        first.confidence !==
+          undefined &&
+        first.confidence >=
+          threshold
+      ) {
+        warnings.push(
+          "Cheap-first result met the configured execution-confidence threshold; escalation was not required.",
+        );
+
+        return finish(
+          "completed",
+          first.text,
+          first.id,
+        );
+      }
+
+      if (
+        primary.candidate.id ===
+        cheap.candidate.id
+      ) {
+        warnings.push(
+          "Cheap-first pass could not escalate because the selected primary model is already the cheapest eligible candidate.",
+        );
+
+        return first.ok &&
+          first.text
+          ? finish(
+              "partial",
+              first.text,
+              first.id,
+            )
+          : finish(
+              "failed",
+            );
+      }
+
+      const fallback =
+        await execute(
+          primary,
+          "fallback",
+          "Escalate to the OH-4M selected primary model after insufficient cheap-first confidence or failure.",
+          promptForPass(
+            input
+              .compiledPrompt,
+            "Produce a fresh, higher-confidence candidate. A cheaper model was attempted first but did not satisfy the escalation threshold. Do not assume its answer is correct.",
+            first.text
+              ? [
+                  {
+                    label:
+                      "CHEAP-FIRST CANDIDATE",
+                    text:
+                      first.text,
+                  },
+                ]
+              : [],
+          ),
+        );
+
+      if (
+        fallback.ok &&
+        fallback.text
+      ) {
+        return finish(
+          "completed",
+          fallback.text,
+          fallback.id,
+        );
+      }
+
+      return first.ok &&
+        first.text
+        ? finish(
+            "partial",
+            first.text,
+            first.id,
+          )
+        : finish(
+            "failed",
+          );
+    }
+
+    if (
+      strategy ===
+        "competition"
+    ) {
+      const competitors =
+        competitionCandidates(
+          input.modelRoute,
+        );
+
+      if (
+        competitors.length <
+        2
+      ) {
+        blockedRequirements.push(
+          "Competition requires at least two eligible OH-4M model candidates.",
+        );
+
+        return finish(
+          "blocked",
+        );
+      }
+
+      const remainingBudget =
+        Math.max(
+          0,
+          maxPasses -
+          runs.length,
+        );
+
+      const chosenCompetitors =
+        competitors.slice(
+          0,
+          Math.min(
+            2,
+            remainingBudget,
+          ),
+        );
+
+      const produced =
+        await Promise.all(
+          chosenCompetitors.map(
+            (
+              competitor,
+              index,
+            ) =>
+              execute(
+                competitor,
+                index ===
+                  0
+                  ? "primary"
+                  : "secondary",
+                "Generate an independent candidate for competition.",
+                promptForPass(
+                  input
+                    .compiledPrompt,
+                  "Generate an independent candidate. Do not use or assume another model's answer. Preserve constraints and surface uncertainty.",
+                ),
+              ),
+          ),
+        );
+
+      const winner =
+        provisionalCompetitionWinner(
+          produced,
+          input.modelRoute,
+        );
+
+      warnings.push(
+        "Competition winner is provisional and based only on execution/route confidence. Formal critique and verification are deferred to OH-4T.",
+      );
+
+      if (
+        winner?.text
+      ) {
+        return finish(
+          produced.every(
+            (run) =>
+              run.ok,
+          )
+            ? "completed"
+            : "partial",
+          winner.text,
+          winner.id,
+        );
+      }
+
+      return finish(
+        "failed",
+      );
+    }
+
+    if (
+      strategy ===
+        "refinement"
+    ) {
+      const draft =
+        await execute(
+          primary,
+          "primary",
+          "Produce the initial candidate for refinement.",
+          promptForPass(
+            input
+              .compiledPrompt,
+            "Produce the first complete candidate. Preserve all explicit constraints and surface uncertainty.",
+          ),
+        );
+
+      if (
+        !draft.ok ||
+        !draft.text
+      ) {
+        return finish(
+          "failed",
+        );
+      }
+
+      const refined =
+        await execute(
+          primary,
+          "refinement",
+          "Refine the initial candidate for quality, completeness, and task fit.",
+          promptForPass(
+            input
+              .compiledPrompt,
+            "Refine the prior candidate. Correct weaknesses, improve completeness and clarity, preserve valid content, and do not invent missing evidence.",
+            [
+              {
+                label:
+                  "INITIAL CANDIDATE",
+                text:
+                  draft.text,
+              },
+            ],
+          ),
+        );
+
+      if (
+        refined.ok &&
+        refined.text
+      ) {
+        return finish(
+          "completed",
+          refined.text,
+          refined.id,
+        );
+      }
+
+      warnings.push(
+        "Refinement pass failed; returning the initial candidate as partial output.",
+      );
+
+      return finish(
+        "partial",
+        draft.text,
+        draft.id,
+      );
+    }
+
+    if (
+      strategy ===
+        "critic-loop"
+    ) {
+      const draft =
+        await execute(
+          primary,
+          "primary",
+          "Produce the initial candidate for critique.",
+          promptForPass(
+            input
+              .compiledPrompt,
+            "Produce the first complete candidate. Preserve constraints, evidence boundaries, assumptions, and uncertainty.",
+          ),
+        );
+
+      if (
+        !draft.ok ||
+        !draft.text
+      ) {
+        return finish(
+          "failed",
+        );
+      }
+
+      const critic =
+        await execute(
+          primary,
+          "critic",
+          "Critique the initial candidate against the active task and reasoning contract.",
+          promptForPass(
+            input
+              .compiledPrompt,
+            "Critique the prior candidate. Identify concrete factual, logical, evidence, constraint, completeness, and uncertainty defects. Do not rewrite the answer yet.",
+            [
+              {
+                label:
+                  "CANDIDATE TO CRITIQUE",
+                text:
+                  draft.text,
+              },
+            ],
+          ),
+        );
+
+      if (
+        !critic.ok ||
+        !critic.text
+      ) {
+        warnings.push(
+          "Critic pass failed; returning the initial candidate as partial output.",
+        );
+
+        return finish(
+          "partial",
+          draft.text,
+          draft.id,
+        );
+      }
+
+      const refined =
+        await execute(
+          primary,
+          "refinement",
+          "Revise the candidate using the explicit critique findings.",
+          promptForPass(
+            input
+              .compiledPrompt,
+            "Revise the initial candidate using the critique. Repair supported defects, preserve valid content, and do not invent evidence. Return the revised final artifact.",
+            [
+              {
+                label:
+                  "INITIAL CANDIDATE",
+                text:
+                  draft.text,
+              },
+              {
+                label:
+                  "CRITIQUE FINDINGS",
+                text:
+                  critic.text,
+              },
+            ],
+          ),
+        );
+
+      if (
+        refined.ok &&
+        refined.text
+      ) {
+        warnings.push(
+          "OH-4S completed the strategy-level critic loop. Formal independent verification remains the responsibility of OH-4T.",
+        );
+
+        return finish(
+          "completed",
+          refined.text,
+          refined.id,
+        );
+      }
+
+      warnings.push(
+        "Final refinement failed after a successful critic pass; returning the initial candidate as partial output.",
+      );
+
+      return finish(
+        "partial",
+        draft.text,
+        draft.id,
+      );
+    }
+
+    blockedRequirements.push(
+      `Unsupported strategy: ${strategy}.`,
+    );
+
+    return finish(
+      "blocked",
+    );
+  }
+}
+
+============================================================
+FILE: packages\models\src\escalationEngine.ts
+============================================================
+import type {
+  ConfidenceAssessment,
+  ConfidenceBand,
+  ConfidenceComponentKind,
+} from "./confidenceEngine";
+
+import type {
+  CriticVerificationResult,
+} from "./criticVerificationLayer";
+
+import type {
+  ModelRouteDecision,
+  RankedModelCandidate,
+} from "./modelDecisionRouter";
+
+import type {
+  MultiModelOrchestrationResult,
+} from "./multiModelOrchestrator";
+
+import type {
+  ReasoningContract,
+} from "./reasoningContracts";
+
+export const ESCALATION_ENGINE_VERSION =
+  "oh4v.v1";
+
+export type EscalationActionKind =
+  | "none"
+  | "retry"
+  | "enrich-context"
+  | "switch-model"
+  | "increase-reasoning-effort"
+  | "invoke-critic"
+  | "request-human-clarification"
+  | "stop-safely";
+
+export type EscalationReasonCode =
+  | "confidence-sufficient"
+  | "blocking-ambiguity"
+  | "context-insufficient"
+  | "verification-critic-needed"
+  | "transient-failure"
+  | "model-underperforming"
+  | "reasoning-depth-insufficient"
+  | "low-confidence-retry"
+  | "attempt-budget-exhausted"
+  | "no-safe-recovery-path";
+
+export type EscalationReasoningEffort =
+  | "standard"
+  | "deep"
+  | "very-deep"
+  | "maximum";
+
+export interface EscalationQuestion {
+  question: string;
+  blocking: boolean;
+  reason?: string;
+}
+
+export interface EscalationContext {
+  attemptCount?: number;
+  maxAttempts?: number;
+
+  unresolvedQuestions?:
+    EscalationQuestion[];
+
+  humanClarificationNeeded?:
+    boolean;
+
+  contextCanBeEnriched?:
+    boolean;
+
+  contextGapCount?:
+    number;
+
+  criticAvailable?:
+    boolean;
+
+  criticCandidateId?:
+    string;
+
+  transientFailureCount?:
+    number;
+
+  modelFailureCount?:
+    number;
+
+  currentReasoningEffort?:
+    EscalationReasoningEffort;
+
+  maxReasoningEffort?:
+    EscalationReasoningEffort;
+
+  allowRetry?:
+    boolean;
+
+  allowContextEnrichment?:
+    boolean;
+
+  allowModelSwitch?:
+    boolean;
+
+  allowReasoningIncrease?:
+    boolean;
+
+  allowCritic?:
+    boolean;
+
+  allowHumanClarification?:
+    boolean;
+}
+
+export interface EscalationPolicy {
+  acceptanceThreshold: number;
+
+  contextEnrichmentThreshold:
+    number;
+
+  modelSwitchThreshold:
+    number;
+
+  reasoningIncreaseThreshold:
+    number;
+
+  retryThreshold:
+    number;
+
+  maxAttempts: number;
+
+  maxClarificationQuestions:
+    number;
+}
+
+export interface EscalationDirective {
+  kind:
+    EscalationActionKind;
+
+  reasonCode:
+    EscalationReasonCode;
+
+  summary: string;
+
+  prerequisites: string[];
+
+  preservesCurrentArtifact:
+    boolean;
+
+  targetModelId?: string;
+
+  nextReasoningEffort?:
+    EscalationReasoningEffort;
+
+  criticCandidateId?: string;
+
+  clarificationQuestions?:
+    string[];
+
+  attemptNumber?: number;
+
+  mayExecute: false;
+  authorityGranted: false;
+}
+
+export interface EscalationDecision {
+  version: string;
+  decidedAt: string;
+
+  required: boolean;
+
+  confidence: {
+    score: number;
+    percentage: number;
+    band:
+      ConfidenceBand;
+    acceptanceThreshold:
+      number;
+  };
+
+  verificationVerdict:
+    CriticVerificationResult[
+      "verdict"
+    ];
+
+  selected:
+    EscalationDirective;
+
+  alternatives:
+    EscalationDirective[];
+
+  attemptBudget: {
+    current: number;
+    maximum: number;
+    exhausted: boolean;
+  };
+
+  signals: {
+    contextGapDetected:
+      boolean;
+
+    criticGapDetected:
+      boolean;
+
+    transientFailureDetected:
+      boolean;
+
+    modelUnderperformanceDetected:
+      boolean;
+
+    reasoningDepthGapDetected:
+      boolean;
+
+    blockingAmbiguityDetected:
+      boolean;
+  };
+
+  warnings: string[];
+
+  provenance: {
+    confidenceEngineVersion:
+      string;
+    criticVerificationVersion:
+      string;
+    orchestratorVersion:
+      string;
+    modelRouterVersion:
+      string;
+    reasoningContractVersion:
+      string;
+  };
+
+  invariants: {
+    escalationExecuted: false;
+    toolsExecuted: false;
+    actionsExecuted: false;
+    authorityBypassed: false;
+    modelRouteMutated: false;
+    verificationMutated: false;
+  };
+}
+
+export const DEFAULT_ESCALATION_POLICY:
+  EscalationPolicy = {
+    acceptanceThreshold:
+      0.75,
+
+    contextEnrichmentThreshold:
+      0.68,
+
+    modelSwitchThreshold:
+      0.58,
+
+    reasoningIncreaseThreshold:
+      0.64,
+
+    retryThreshold:
+      0.52,
+
+    maxAttempts:
+      3,
+
+    maxClarificationQuestions:
+      5,
+  };
+
+const REASONING_ORDER:
+  EscalationReasoningEffort[] = [
+    "standard",
+    "deep",
+    "very-deep",
+    "maximum",
+  ];
+
+function clamp01(
+  value: number,
+  field: string,
+): number {
+  if (
+    !Number.isFinite(
+      value,
+    ) ||
+    value < 0 ||
+    value > 1
+  ) {
+    throw new Error(
+      `${field} must be between 0 and 1.`,
+    );
+  }
+
+  return value;
+}
+
+function nonNegativeInteger(
+  value:
+    number
+    | undefined,
+  fallback:
+    number,
+  field:
+    string,
+): number {
+  const normalized =
+    value ??
+    fallback;
+
+  if (
+    !Number.isInteger(
+      normalized,
+    ) ||
+    normalized < 0
+  ) {
+    throw new Error(
+      `${field} must be a non-negative integer.`,
+    );
+  }
+
+  return normalized;
+}
+
+function positiveInteger(
+  value:
+    number
+    | undefined,
+  fallback:
+    number,
+  field:
+    string,
+): number {
+  const normalized =
+    value ??
+    fallback;
+
+  if (
+    !Number.isInteger(
+      normalized,
+    ) ||
+    normalized < 1
+  ) {
+    throw new Error(
+      `${field} must be a positive integer.`,
+    );
+  }
+
+  return normalized;
+}
+
+function policyWithOverrides(
+  policy:
+    Partial<
+      EscalationPolicy
+    >
+    | undefined,
+): EscalationPolicy {
+  const merged = {
+    ...DEFAULT_ESCALATION_POLICY,
+    ...policy,
+  };
+
+  clamp01(
+    merged.acceptanceThreshold,
+    "acceptanceThreshold",
+  );
+
+  clamp01(
+    merged.contextEnrichmentThreshold,
+    "contextEnrichmentThreshold",
+  );
+
+  clamp01(
+    merged.modelSwitchThreshold,
+    "modelSwitchThreshold",
+  );
+
+  clamp01(
+    merged.reasoningIncreaseThreshold,
+    "reasoningIncreaseThreshold",
+  );
+
+  clamp01(
+    merged.retryThreshold,
+    "retryThreshold",
+  );
+
+  positiveInteger(
+    merged.maxAttempts,
+    DEFAULT_ESCALATION_POLICY
+      .maxAttempts,
+    "maxAttempts",
+  );
+
+  positiveInteger(
+    merged.maxClarificationQuestions,
+    DEFAULT_ESCALATION_POLICY
+      .maxClarificationQuestions,
+    "maxClarificationQuestions",
+  );
+
+  return merged;
+}
+
+function componentValue(
+  confidence:
+    ConfidenceAssessment,
+  kind:
+    ConfidenceComponentKind,
+): number | undefined {
+  return confidence.components
+    .find(
+      (component) =>
+        component.kind ===
+        kind,
+    )
+    ?.value;
+}
+
+function componentQuality(
+  confidence:
+    ConfidenceAssessment,
+  kind:
+    ConfidenceComponentKind,
+):
+  | "strong"
+  | "moderate"
+  | "weak"
+  | "missing"
+  | undefined {
+  return confidence.components
+    .find(
+      (component) =>
+        component.kind ===
+        kind,
+    )
+    ?.evidenceQuality;
+}
+
+function eligibleAlternates(
+  modelRoute:
+    ModelRouteDecision,
+): RankedModelCandidate[] {
+  const currentId =
+    modelRoute.selected
+      ?.candidate.id;
+
+  return modelRoute.ranking
+    .filter(
+      (entry) =>
+        entry.eligible &&
+        entry.candidate.id !==
+          currentId,
+    )
+    .sort(
+      (
+        left,
+        right,
+      ) => {
+        if (
+          left.score !==
+          right.score
+        ) {
+          return (
+            right.score -
+            left.score
+          );
+        }
+
+        if (
+          left.confidence !==
+          right.confidence
+        ) {
+          return (
+            right.confidence -
+            left.confidence
+          );
+        }
+
+        return left.candidate.id
+          .localeCompare(
+            right.candidate.id,
+          );
+      },
+    );
+}
+
+function nextReasoningEffort(
+  current:
+    EscalationReasoningEffort,
+  maximum:
+    EscalationReasoningEffort,
+):
+  | EscalationReasoningEffort
+  | undefined {
+  const currentIndex =
+    REASONING_ORDER
+      .indexOf(
+        current,
+      );
+
+  const maximumIndex =
+    REASONING_ORDER
+      .indexOf(
+        maximum,
+      );
+
+  if (
+    currentIndex <
+      0 ||
+    maximumIndex <
+      0
+  ) {
+    return undefined;
+  }
+
+  if (
+    currentIndex >=
+    maximumIndex
+  ) {
+    return undefined;
+  }
+
+  return REASONING_ORDER[
+    currentIndex +
+    1
+  ];
+}
+
+function findingCodes(
+  verification:
+    CriticVerificationResult,
+): Set<string> {
+  return new Set(
+    verification.findings
+      .map(
+        (finding) =>
+          finding.code,
+      ),
+  );
+}
+
+function directive(
+  input: Omit<
+    EscalationDirective,
+    "mayExecute"
+    | "authorityGranted"
+  >,
+): EscalationDirective {
+  return {
+    ...input,
+    mayExecute:
+      false,
+    authorityGranted:
+      false,
+  };
+}
+
+function uniqueAlternatives(
+  values:
+    EscalationDirective[],
+  selected:
+    EscalationDirective,
+): EscalationDirective[] {
+  const seen =
+    new Set<string>([
+      `${selected.kind}:${selected.targetModelId ?? ""}:${selected.nextReasoningEffort ?? ""}`,
+    ]);
+
+  const output:
+    EscalationDirective[] =
+      [];
+
+  for (
+    const value
+    of values
+  ) {
+    const key =
+      `${value.kind}:${value.targetModelId ?? ""}:${value.nextReasoningEffort ?? ""}`;
+
+    if (
+      seen.has(
+        key,
+      )
+    ) {
+      continue;
+    }
+
+    seen.add(
+      key,
+    );
+
+    output.push(
+      value,
+    );
+  }
+
+  return output;
+}
+
+export class EscalationEngine {
+  decide(
+    input: {
+      confidence:
+        ConfidenceAssessment;
+
+      verification:
+        CriticVerificationResult;
+
+      orchestration:
+        MultiModelOrchestrationResult;
+
+      modelRoute:
+        ModelRouteDecision;
+
+      reasoningContract:
+        ReasoningContract;
+
+      context?:
+        EscalationContext;
+
+      policy?:
+        Partial<
+          EscalationPolicy
+        >;
+    },
+  ): EscalationDecision {
+    const policy =
+      policyWithOverrides(
+        input.policy,
+      );
+
+    const context =
+      input.context ??
+      {};
+
+    const attemptCount =
+      nonNegativeInteger(
+        context.attemptCount,
+        0,
+        "attemptCount",
+      );
+
+    const maximumAttempts =
+      positiveInteger(
+        context.maxAttempts,
+        policy.maxAttempts,
+        "context.maxAttempts",
+      );
+
+    const attemptExhausted =
+      attemptCount >=
+      maximumAttempts;
+
+    const allowRetry =
+      context.allowRetry ??
+      true;
+
+    const allowContextEnrichment =
+      context
+        .allowContextEnrichment ??
+      true;
+
+    const allowModelSwitch =
+      context.allowModelSwitch ??
+      true;
+
+    const allowReasoningIncrease =
+      context
+        .allowReasoningIncrease ??
+      true;
+
+    const allowCritic =
+      context.allowCritic ??
+      true;
+
+    const allowHumanClarification =
+      context
+        .allowHumanClarification ??
+      true;
+
+    const unresolved =
+      (
+        context
+          .unresolvedQuestions ??
+        []
+      )
+        .filter(
+          (question) =>
+            question.question
+              .trim()
+              .length >
+            0,
+        );
+
+    const blockingQuestions =
+      unresolved.filter(
+        (question) =>
+          question.blocking,
+      );
+
+    const contextGapCount =
+      nonNegativeInteger(
+        context.contextGapCount,
+        0,
+        "contextGapCount",
+      );
+
+    const transientFailureCount =
+      nonNegativeInteger(
+        context.transientFailureCount,
+        0,
+        "transientFailureCount",
+      );
+
+    const modelFailureCount =
+      nonNegativeInteger(
+        context.modelFailureCount,
+        0,
+        "modelFailureCount",
+      );
+
+    const findingSet =
+      findingCodes(
+        input.verification,
+      );
+
+    const evidenceValue =
+      componentValue(
+        input.confidence,
+        "evidence-quality",
+      );
+
+    const evidenceQuality =
+      componentQuality(
+        input.confidence,
+        "evidence-quality",
+      );
+
+    const historyValue =
+      componentValue(
+        input.confidence,
+        "model-history",
+      );
+
+    const disagreementValue =
+      componentValue(
+        input.confidence,
+        "disagreement",
+      );
+
+    const noveltyValue =
+      componentValue(
+        input.confidence,
+        "task-novelty",
+      );
+
+    const uncertaintyValue =
+      componentValue(
+        input.confidence,
+        "uncertainty",
+      );
+
+    const criticGapDetected =
+      (
+        input.verification
+          .independentCritic
+          .required &&
+        !input.verification
+          .independentCritic
+          .parsed
+      ) ||
+      findingSet.has(
+        "independent-critic-executor-missing",
+      ) ||
+      findingSet.has(
+        "independent-critic-candidate-missing",
+      ) ||
+      findingSet.has(
+        "critic-unavailable",
+      );
+
+    const contextGapDetected =
+      contextGapCount >
+        0 ||
+      (
+        context.contextCanBeEnriched ===
+          true &&
+        (
+          evidenceQuality ===
+            "missing" ||
+          evidenceQuality ===
+            "weak" ||
+          (
+            evidenceValue !==
+              undefined &&
+            evidenceValue <
+              policy
+                .contextEnrichmentThreshold
+          ) ||
+          findingSet.has(
+            "missing-evidence-references",
+          ) ||
+          findingSet.has(
+            "constraint-coverage-missing",
+          ) ||
+          findingSet.has(
+            "factual-coverage-missing",
+          )
+        )
+      );
+
+    const transientFailureDetected =
+      transientFailureCount >
+        0 ||
+      input.orchestration
+        .status ===
+        "failed" ||
+      input.orchestration
+        .status ===
+        "partial";
+
+    const disagreementHigh =
+      disagreementValue !==
+        undefined &&
+      disagreementValue <
+        0.45;
+
+    const historyWeak =
+      historyValue !==
+        undefined &&
+      historyValue <
+        0.45;
+
+    const modelUnderperformanceDetected =
+      modelFailureCount >
+        0 ||
+      disagreementHigh ||
+      historyWeak;
+
+    const noveltyHigh =
+      noveltyValue !==
+        undefined &&
+      noveltyValue <
+        0.45;
+
+    const uncertaintyHigh =
+      uncertaintyValue !==
+        undefined &&
+      uncertaintyValue <
+        0.45;
+
+    const currentReasoningEffort =
+      context.currentReasoningEffort ??
+      "standard";
+
+    const maximumReasoningEffort =
+      context.maxReasoningEffort ??
+      "maximum";
+
+    const increasedEffort =
+      nextReasoningEffort(
+        currentReasoningEffort,
+        maximumReasoningEffort,
+      );
+
+    const reasoningDepthGapDetected =
+      Boolean(
+        increasedEffort,
+      ) &&
+      (
+        noveltyHigh ||
+        uncertaintyHigh ||
+        (
+          input.confidence.score <
+            policy
+              .reasoningIncreaseThreshold &&
+          input.reasoningContract
+            .taskProfile
+            .reasoningDepth ===
+            "very-deep"
+        )
+      );
+
+    const blockingAmbiguityDetected =
+      context.humanClarificationNeeded ===
+        true ||
+      blockingQuestions.length >
+        0;
+
+    const confidenceSufficient =
+      input.confidence.score >=
+        policy.acceptanceThreshold &&
+      input.verification
+        .verdict ===
+        "pass" &&
+      input.verification
+        .trustedConclusion &&
+      input.orchestration
+        .status ===
+        "completed";
+
+    const candidates:
+      EscalationDirective[] =
+        [];
+
+    if (
+      blockingAmbiguityDetected &&
+      allowHumanClarification
+    ) {
+      const questions =
+        (
+          blockingQuestions.length >
+            0
+            ? blockingQuestions
+            : unresolved
+        )
+          .slice(
+            0,
+            policy
+              .maxClarificationQuestions,
+          )
+          .map(
+            (question) =>
+              question.question
+                .trim(),
+          );
+
+      candidates.push(
+        directive({
+          kind:
+            "request-human-clarification",
+          reasonCode:
+            "blocking-ambiguity",
+          summary:
+            "Request human clarification because unresolved ambiguity blocks reliable continuation.",
+          prerequisites: [
+            "Present only the unresolved questions needed to continue.",
+            "Preserve the current cognitive artifact while waiting for clarification.",
+          ],
+          preservesCurrentArtifact:
+            true,
+          clarificationQuestions:
+            questions,
+        }),
+      );
+    }
+
+    if (
+      contextGapDetected &&
+      allowContextEnrichment
+    ) {
+      candidates.push(
+        directive({
+          kind:
+            "enrich-context",
+          reasonCode:
+            "context-insufficient",
+          summary:
+            "Retrieve or assemble additional relevant context/evidence before reasoning again.",
+          prerequisites: [
+            "Use OH-4K context retrieval rules.",
+            "Preserve source provenance and authority boundaries.",
+            "Do not treat retrieved context as permission to act.",
+          ],
+          preservesCurrentArtifact:
+            true,
+        }),
+      );
+    }
+
+    if (
+      criticGapDetected &&
+      allowCritic &&
+      context.criticAvailable ===
+        true
+    ) {
+      candidates.push(
+        directive({
+          kind:
+            "invoke-critic",
+          reasonCode:
+            "verification-critic-needed",
+          summary:
+            "Run the missing independent critic verification required by the active reasoning contract.",
+          prerequisites: [
+            "Critic candidate must be independent from the final-source model.",
+            "Critic candidate must satisfy privacy and availability gates.",
+          ],
+          preservesCurrentArtifact:
+            true,
+          criticCandidateId:
+            context
+              .criticCandidateId,
+        }),
+      );
+    }
+
+    if (
+      transientFailureDetected &&
+      allowRetry &&
+      !attemptExhausted
+    ) {
+      candidates.push(
+        directive({
+          kind:
+            "retry",
+          reasonCode:
+            "transient-failure",
+          summary:
+            "Retry the bounded cognitive operation because the current failure pattern may be transient.",
+          prerequisites: [
+            "Retry remains inside the configured attempt budget.",
+            "Reuse authoritative inputs unless fresher context is explicitly gathered.",
+          ],
+          preservesCurrentArtifact:
+            true,
+          attemptNumber:
+            attemptCount +
+            1,
+        }),
+      );
+    }
+
+    const alternate =
+      eligibleAlternates(
+        input.modelRoute,
+      )[0];
+
+    if (
+      modelUnderperformanceDetected &&
+      allowModelSwitch &&
+      alternate &&
+      input.confidence.score <
+        policy.modelSwitchThreshold
+    ) {
+      candidates.push(
+        directive({
+          kind:
+            "switch-model",
+          reasonCode:
+            "model-underperforming",
+          summary:
+            "Switch to the next eligible OH-4M-ranked model because current-model evidence indicates underperformance or disagreement.",
+          prerequisites: [
+            "Use only an OH-4M eligible alternate candidate.",
+            "Re-run the applicable strategy and verification steps after switching.",
+          ],
+          preservesCurrentArtifact:
+            true,
+          targetModelId:
+            alternate
+              .candidate.id,
+        }),
+      );
+    }
+
+    if (
+      reasoningDepthGapDetected &&
+      allowReasoningIncrease &&
+      increasedEffort &&
+      input.confidence.score <
+        policy
+          .reasoningIncreaseThreshold
+    ) {
+      candidates.push(
+        directive({
+          kind:
+            "increase-reasoning-effort",
+          reasonCode:
+            "reasoning-depth-insufficient",
+          summary:
+            "Increase bounded reasoning effort because novelty, uncertainty, or required reasoning depth exceeds the current setting.",
+          prerequisites: [
+            "Remain inside the active reasoning contract pass budget.",
+            "Do not treat increased reasoning effort as authority to act.",
+          ],
+          preservesCurrentArtifact:
+            true,
+          nextReasoningEffort:
+            increasedEffort,
+        }),
+      );
+    }
+
+    if (
+      allowRetry &&
+      !attemptExhausted &&
+      input.confidence.score <
+        policy.retryThreshold
+    ) {
+      candidates.push(
+        directive({
+          kind:
+            "retry",
+          reasonCode:
+            "low-confidence-retry",
+          summary:
+            "Retry the cognitive pass because confidence remains below the bounded retry threshold and no stronger prerequisite necessarily blocks continuation.",
+          prerequisites: [
+            "Retry remains inside the configured attempt budget.",
+            "Re-run downstream verification after retry.",
+          ],
+          preservesCurrentArtifact:
+            true,
+          attemptNumber:
+            attemptCount +
+            1,
+        }),
+      );
+    }
+
+    let selected:
+      EscalationDirective;
+
+    if (
+      confidenceSufficient
+    ) {
+      selected =
+        directive({
+          kind:
+            "none",
+          reasonCode:
+            "confidence-sufficient",
+          summary:
+            "No escalation is required; confidence and verification satisfy the acceptance threshold.",
+          prerequisites:
+            [],
+          preservesCurrentArtifact:
+            true,
+        });
+    } else if (
+      candidates.length >
+        0
+    ) {
+      selected =
+        candidates[0];
+    } else if (
+      attemptExhausted
+    ) {
+      selected =
+        directive({
+          kind:
+            "stop-safely",
+          reasonCode:
+            "attempt-budget-exhausted",
+          summary:
+            "Stop safely because the configured cognitive attempt budget is exhausted and no higher-priority recovery path is available.",
+          prerequisites: [
+            "Surface the unresolved limitation and preserve the last verified/auditable artifacts.",
+          ],
+          preservesCurrentArtifact:
+            true,
+        });
+    } else {
+      selected =
+        directive({
+          kind:
+            "stop-safely",
+          reasonCode:
+            "no-safe-recovery-path",
+          summary:
+            "Stop safely because confidence is insufficient and no permitted recovery path is currently available.",
+          prerequisites: [
+            "Surface the unresolved limitation instead of fabricating certainty.",
+          ],
+          preservesCurrentArtifact:
+            true,
+        });
+    }
+
+    const alternatives =
+      uniqueAlternatives(
+        candidates.slice(
+          selected.kind ===
+            "none"
+            ? 0
+            : 1,
+        ),
+        selected,
+      );
+
+    const warnings:
+      string[] =
+        [];
+
+    if (
+      input.confidence
+        .dataQuality
+        .missingSignals
+        .length >
+      0
+    ) {
+      warnings.push(
+        `Confidence assessment is missing signals: ${input.confidence.dataQuality.missingSignals.join(", ")}.`,
+      );
+    }
+
+    if (
+      selected.kind ===
+        "stop-safely"
+    ) {
+      warnings.push(
+        "Escalation cannot recover automatically under the current evidence, permissions, or attempt budget.",
+      );
+    }
+
+    if (
+      selected.kind ===
+        "switch-model" &&
+      selected.targetModelId
+    ) {
+      warnings.push(
+        "OH-4V selects an alternate model directive only; it does not mutate OH-4M routing state or execute the model.",
+      );
+    }
+
+    return {
+      version:
+        ESCALATION_ENGINE_VERSION,
+      decidedAt:
+        new Date()
+          .toISOString(),
+      required:
+        selected.kind !==
+        "none",
+      confidence: {
+        score:
+          input.confidence
+            .score,
+        percentage:
+          input.confidence
+            .percentage,
+        band:
+          input.confidence
+            .band,
+        acceptanceThreshold:
+          policy
+            .acceptanceThreshold,
+      },
+      verificationVerdict:
+        input.verification
+          .verdict,
+      selected,
+      alternatives,
+      attemptBudget: {
+        current:
+          attemptCount,
+        maximum:
+          maximumAttempts,
+        exhausted:
+          attemptExhausted,
+      },
+      signals: {
+        contextGapDetected,
+        criticGapDetected,
+        transientFailureDetected,
+        modelUnderperformanceDetected,
+        reasoningDepthGapDetected,
+        blockingAmbiguityDetected,
+      },
+      warnings,
+      provenance: {
+        confidenceEngineVersion:
+          input.confidence
+            .version,
+        criticVerificationVersion:
+          input.verification
+            .version,
+        orchestratorVersion:
+          input.orchestration
+            .version,
+        modelRouterVersion:
+          input.modelRoute
+            .version,
+        reasoningContractVersion:
+          input
+            .reasoningContract
+            .version,
+      },
+      invariants: {
+        escalationExecuted:
+          false,
+        toolsExecuted:
+          false,
+        actionsExecuted:
+          false,
+        authorityBypassed:
+          false,
+        modelRouteMutated:
+          false,
+        verificationMutated:
+          false,
+      },
+    };
+  }
+}
+
+const defaultEscalationEngine =
+  new EscalationEngine();
+
+export function getEscalationEngine():
+  EscalationEngine {
+  return defaultEscalationEngine;
+}
+
+============================================================
+FILE: lib\chernobog\pipeline\runCommand.ts
+============================================================
+import { respondForRoute, routeMessage } from "@/lib/chernobog/router";
+import type { ChernobogResponseMode } from "@/lib/chernobog/personality";
+import {
+  associateExplicitLearningCorrection,
+  captureLiveLearningIngress,
+} from "@/lib/chernobog/pipeline/liveLearningIngress";
+import {
+  clearAllMemories,
+  deleteMemory,
+  extractForgetFact,
+  extractMemoryFact,
+  getLastUserRoute,
+  getMemories,
+  getRecentMessages,
+  isForgetRequest,
+  isRecallRequest,
+  isRememberRequest,
+  isWipeMemoriesRequest,
+  saveMemory,
+  saveMessage,
+} from "@/lib/chernobog/memory";
+
+import { parseToolCommand } from "@chernobog/tools/parser";
+import { classifyToolIntent } from "@chernobog/tools/intent";
+import {
+  normalizeToolCall,
+  openAppCallLooksLikeFileRequest,
+} from "@chernobog/tools/normalize";
+
+import {
+  getSessionContext,
+  saveSessionContext,
+} from "@/lib/chernobog/session/store";
+
+import {
+  updateSessionAfterRoute,
+} from "@/lib/chernobog/session/update";
+
+import type { RouteName } from "@/lib/chernobog/session/types";
+import type { CommandPipelineResult } from "./types";
+import { finalizePipelinePayload } from "./payload";
+import {
+  executeAndTrackTool,
+  formatToolReply,
+  looksLikeExplicitFilePath,
+  looksLikeVagueFileRequest,
+  tryFileSearchFallback,
+} from "./toolExecution";
+import { orchestrateMessage } from "@/lib/chernobog/orchestration/orchestrator";
+import {
+  addTraceStep,
+  createTrustTrace,
+  setTraceRoute,
+  setTraceTool,
+} from "@chernobog/trust/trust/trace";
+
+import { buildChernobogWorldStateContext } from "@/lib/chernobog/pipeline/worldStateContext";
+import { buildChernobogWorldModelContext } from "@/lib/chernobog/pipeline/worldModelContext";
+import { buildWorkflowSnapshot } from "@chernobog/trust/trust/sessionSnapshot";
+import {
+  buildContinuityReply,
+  detectContinuityQuery,
+} from "@/lib/chernobog/session/continuity";
+import {
+  resolveConversationalFollowUpRoute,
+} from "./followUpRouting";
+
+import { parsePlannerCommand } from "@/lib/chernobog/planner/parser";
+import { runPlannerCommand } from "@/lib/chernobog/planner/coordinator";
+import { buildUnifiedMemoryContext } from "@chernobog/vault/memory-architecture";
+import {
+  excludeCurrentUserMessageFromHistory,
+  selectResponseContext,
+} from "./contextSelection";
+import {
+  buildBudgetedResponseContext,
+} from "./contextBudget";
+import {
+  buildProjectGroundedSystemText,
+  resolveActiveProjectContext,
+} from "@/lib/chernobog/project/activeProjectContext";
+import {
+  buildExecutionDiagnostics,
+  executeFromMessage,
+  type ExecutionState,
+} from "@/lib/chernobog/execution";
+
+import {
+  detectMemoryArchitectureCommand,
+  runMemoryArchitectureCommand,
+} from "@chernobog/vault/memory-architecture/commands";
+
+import {
+  formatCommandLanguageHelp,
+  parseUnifiedCommand,
+  unifiedToMemoryAction,
+  unifiedToMemoryArchitectureCommand,
+  unifiedToPlannerCommand,
+  unifiedToToolCall,
+} from "@/lib/chernobog/command-language";
+
+import {
+  getDomainHandler,
+  tryHandleModuleFollowUp,
+} from "./domainHandlers";
+
+import {
+  executeSavedContentCommand,
+  isSavedContentCommand,
+} from "@chernobog/external-projects/saved-content";
+
+import {
+  executeYouTubeOAuthCommand,
+  isYouTubeOAuthCommand,
+} from "@chernobog/external-projects/youtube-oauth";
+
+import {
+  executeSavedContentReliabilityCommand,
+  isSavedContentReliabilityCommand,
+} from "@chernobog/external-projects/saved-content-reliability";
+
+import {
+  executeContentReviewCommand,
+  isContentReviewCommand,
+} from "@chernobog/external-projects/content-review";
+
+import {
+  executeVaultBrainCommand,
+  isVaultBrainCommand,
+} from "@chernobog/vault/vault-brain";
+
+import {
+  executeContentIngestCommand,
+  isContentIngestCommand,
+} from "@chernobog/external-projects/content-ingest";
+
+import {
+  executeYouTubeIngestCommand,
+  isYouTubeIngestCommand,
+} from "@chernobog/external-projects/youtube-ingest";
+
+
+import { getDialogueRuntime } from "@chernobog/runtime";
+import { getRouterRuntime } from "@chernobog/runtime";
+import { getPlannerRuntime } from "@chernobog/runtime";
+import { getStateRuntime } from "@chernobog/runtime";
+type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {
+  executionState?: ExecutionState;
+};
+
+function shouldUseAuthoritativeAssessmentContext(
+  userMessage: string,
+  projectId?: string | null
+): boolean {
+  if (!projectId) {
+    return false;
+  }
+
+  const normalized = userMessage
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const asksForAssessment =
+    /\b(assess|assessment|evaluate|evaluation|status|state|health|healthy|attention|facts?|inferences?|predictions?|unknowns?|recommend(?:ed|ation)?s?|actions?)\b/i.test(
+      normalized
+    );
+
+  const asksForCurrentAuthority =
+    /\b(current|active|project|workspace|runtime|world state|evidence|known|scope|scoped)\b/i.test(
+      normalized
+    );
+
+  return (
+    asksForAssessment &&
+    asksForCurrentAuthority
+  );
+}
+
+export async function runCommandPipeline(
+  userMessage: string,
+  sessionId: string,
+  options: {
+    responseMode?: ChernobogResponseMode;
+  } = {},
+): Promise<CommandPipelineResult> {
+  return getDialogueRuntime().runTurn(
+    { source: "command-pipeline" },
+    async (dialogueTurn) => {
+  let route: RouteName = "chat";
+  let reply = "";
+  const trace = createTrustTrace(userMessage, sessionId);
+
+  const startingSession = getSessionContext(sessionId);
+  getStateRuntime().bindSession(
+    dialogueTurn.id,
+    sessionId,
+    () => getSessionContext(sessionId),
+  );
+
+
+  const activeProjectResolution = resolveActiveProjectContext({
+    userMessage,
+    sessionProjectId: startingSession.activeProjectId,
+  });
+
+  if (
+    startingSession.activeProjectId !==
+    activeProjectResolution.projectId
+  ) {
+    startingSession.activeProjectId =
+      activeProjectResolution.projectId;
+    saveSessionContext(startingSession);
+  }
+  addTraceStep(
+    trace,
+    "workflow_update",
+    "Workflow snapshot before command",
+    undefined,
+    buildWorkflowSnapshot(startingSession)
+  );
+
+  const unifiedCommand = parseUnifiedCommand(userMessage);
+
+  addTraceStep(
+    trace,
+    "router",
+    "Unified command language parsed input",
+    `${unifiedCommand.domain}.${unifiedCommand.action}.${unifiedCommand.target}`,
+    {
+      domain: unifiedCommand.domain,
+      action: unifiedCommand.action,
+      target: unifiedCommand.target,
+      reference: unifiedCommand.reference,
+      confidence: unifiedCommand.confidence,
+      confidenceLevel: unifiedCommand.confidenceLevel,
+      query: unifiedCommand.query,
+      stepIndex: unifiedCommand.stepIndex,
+      reasons: unifiedCommand.reasons,
+    }
+  );
+
+  if (isVaultBrainCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Vault brain command detected",
+      "vault-brain",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const vaultBrainResult = await executeVaultBrainCommand(userMessage);
+
+    reply = [
+      vaultBrainResult.title,
+      "",
+      vaultBrainResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isContentReviewCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Content review command detected",
+      "content-review",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const contentReviewResult = await executeContentReviewCommand(userMessage);
+
+    reply = [
+      contentReviewResult.title,
+      "",
+      contentReviewResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isContentIngestCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Content ingest command detected",
+      "content-ingest",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const contentIngestResult = await executeContentIngestCommand(userMessage);
+
+    reply = [
+      contentIngestResult.title,
+      "",
+      contentIngestResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isYouTubeIngestCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "YouTube playlist ingest command detected",
+      "youtube-playlist-ingest",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const youtubeIngestResult = await executeYouTubeIngestCommand(userMessage);
+
+    reply = [
+      youtubeIngestResult.title,
+      "",
+      youtubeIngestResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isSavedContentReliabilityCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Saved content reliability command detected",
+      "saved-content-reliability",
+      { userMessage }
+    );
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const reliabilityResult =
+      await executeSavedContentReliabilityCommand(userMessage);
+
+    reply = [
+      reliabilityResult.title,
+      "",
+      reliabilityResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isYouTubeOAuthCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "YouTube OAuth command detected",
+      "youtube-oauth",
+      {
+        userMessage,
+      }
+    );
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const youtubeOAuthResult = await executeYouTubeOAuthCommand(userMessage);
+
+    reply = [
+      youtubeOAuthResult.title,
+      "",
+      youtubeOAuthResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  if (isSavedContentCommand(userMessage)) {
+    route = "tools";
+    setTraceRoute(trace, route);
+
+    addTraceStep(
+      trace,
+      "parsed_tool",
+      "Saved content command detected",
+      "saved-content",
+      {
+        userMessage,
+      }
+    );
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const savedContentResult = await executeSavedContentCommand(userMessage);
+
+    reply = [
+      savedContentResult.title,
+      "",
+      savedContentResult.message,
+    ].join("\n");
+
+    return finalizePipelinePayload(sessionId, route, reply, trace);
+  }
+
+  
+
+  if (isWipeMemoriesRequest(userMessage)) {
+    route = "memory";
+    setTraceRoute(trace, route);
+
+    addTraceStep(trace, "memory_route", "Memory wipe request detected");
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const deletedCount = clearAllMemories();
+
+    reply =
+      deletedCount > 0
+        ? `All memories wiped. Removed ${deletedCount} stored entr${deletedCount === 1 ? "y" : "ies"}.`
+        : "There were no stored memories to wipe.";
+  } else if (isForgetRequest(userMessage)) {
+    route = "memory";
+    setTraceRoute(trace, route);
+
+    addTraceStep(trace, "memory_route", "Memory forget request detected");
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const fact = extractForgetFact(userMessage);
+
+    reply = !fact
+      ? "State the memory you want removed."
+      : deleteMemory(fact).deleted
+        ? `Memory removed: ${fact}.`
+        : `No matching memory found for: ${fact}.`;
+  } else if (isRememberRequest(userMessage)) {
+    route = "memory";
+    setTraceRoute(trace, route);
+
+    addTraceStep(trace, "memory_route", "Memory remember request detected");
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const fact = extractMemoryFact(userMessage);
+
+    if (!fact) {
+      reply = "State the fact you want stored.";
+    } else {
+      const result = saveMemory(fact);
+
+      reply = result.saved
+        ? `Memory stored: ${result.fact}.`
+        : `That memory already exists: ${result.fact}.`;
+    }
+  } else if (isRecallRequest(userMessage)) {
+    route = "memory";
+    setTraceRoute(trace, route);
+
+    addTraceStep(trace, "memory_route", "Memory recall request detected");
+
+    saveMessage("user", userMessage, route, sessionId);
+
+    const memories = getMemories(50);
+
+    reply =
+      memories.length === 0
+        ? "I do not have any persisted memories yet."
+        : [
+            "Persisted memories:",
+            ...memories.map((memory, index) => `${index + 1}. ${memory}`),
+          ].join("\n");
+  } else {
+    const session = getSessionContext(sessionId);
+    const previousUserRoute =
+      getLastUserRoute(sessionId);
+    const inheritedFollowUpRoute =
+      resolveConversationalFollowUpRoute(
+        userMessage,
+        previousUserRoute,
+      );
+    const continuityQuery = detectContinuityQuery(userMessage);
+
+    if (continuityQuery !== "none") {
+      route = "tools";
+      setTraceRoute(trace, route);
+
+      addTraceStep(
+        trace,
+        "workflow_update",
+        "Continuity query resolved from persisted session state",
+        continuityQuery
+      );
+
+      saveMessage("user", userMessage, route, sessionId);
+
+      reply = buildContinuityReply(continuityQuery, session);
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    if (
+      unifiedCommand.domain === "context" &&
+      unifiedCommand.action === "show" &&
+      unifiedCommand.query === "command_help"
+    ) {
+      route = "chat";
+      setTraceRoute(trace, route);
+    
+      addTraceStep(
+        trace,
+        "router",
+        "Unified command language help handled",
+        "command_help",
+        unifiedCommand
+      );
+    
+      saveMessage("user", userMessage, route, sessionId);
+    
+      reply = formatCommandLanguageHelp();
+    
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    const explicitPlannerCommand =
+      parsePlannerCommand(userMessage);
+    const explicitPlannerReply =
+      getPlannerRuntime().runPlanning(dialogueTurn.id, () => runPlannerCommand(
+        explicitPlannerCommand,
+        session,
+      ));
+
+    if (explicitPlannerReply) {
+      route = "planner";
+      setTraceRoute(trace, route);
+
+      addTraceStep(
+        trace,
+        "router",
+        "Explicit planner language handled before module routing",
+        explicitPlannerCommand.kind,
+        explicitPlannerCommand
+      );
+
+      saveMessage(
+        "user",
+        userMessage,
+        route,
+        sessionId,
+      );
+      saveSessionContext(session);
+
+      reply = explicitPlannerReply;
+
+      return finalizePipelinePayload(
+        sessionId,
+        route,
+        reply,
+        trace,
+      );
+    }
+
+    const moduleFollowUp = await tryHandleModuleFollowUp({
+      userMessage,
+      sessionId,
+    });
+    
+    if (moduleFollowUp) {
+      addTraceStep(
+        trace,
+        "router",
+        "Module follow-up handler detected",
+        moduleFollowUp.moduleId ?? "module",
+        {
+          route: moduleFollowUp.route,
+          moduleId: moduleFollowUp.moduleId,
+        }
+      );
+    
+      route = moduleFollowUp.route;
+      setTraceRoute(trace, route);
+      saveMessage("user", userMessage, route, sessionId);
+      reply = moduleFollowUp.reply;
+    
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    const domainHandler = getDomainHandler(unifiedCommand.domain);
+
+    if (domainHandler) {
+      addTraceStep(
+        trace,
+        "router",
+        "Module domain handler detected",
+        unifiedCommand.moduleId ?? unifiedCommand.domain,
+        {
+          domain: unifiedCommand.domain,
+          action: unifiedCommand.action,
+          target: unifiedCommand.target,
+          moduleId: unifiedCommand.moduleId,
+          query: unifiedCommand.query,
+        }
+      );
+    
+      const moduleResult = await domainHandler({
+        userMessage,
+        sessionId,
+        command: unifiedCommand,
+      });
+    
+      route = moduleResult.route;
+      setTraceRoute(trace, route);
+      saveMessage("user", userMessage, route, sessionId);
+      reply = moduleResult.reply;
+    
+      addTraceStep(
+        trace,
+        "router",
+        "Module domain handler completed",
+        moduleResult.moduleId ?? unifiedCommand.moduleId ?? unifiedCommand.domain,
+        {
+          route: moduleResult.route,
+          moduleId: moduleResult.moduleId,
+        }
+      );
+    
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    const unifiedMemoryAction = unifiedToMemoryAction(unifiedCommand);
+
+if (unifiedMemoryAction) {
+  route = "memory";
+  setTraceRoute(trace, route);
+
+  addTraceStep(
+    trace,
+    "memory_route",
+    "Unified memory action handled",
+    unifiedMemoryAction.kind,
+    unifiedMemoryAction
+  );
+
+  saveMessage("user", userMessage, route, sessionId);
+
+  if (unifiedMemoryAction.kind === "wipe") {
+    const deletedCount = clearAllMemories();
+
+    reply =
+      deletedCount > 0
+        ? `All memories wiped. Removed ${deletedCount} stored entr${
+            deletedCount === 1 ? "y" : "ies"
+          }.`
+        : "There were no stored memories to wipe.";
+  } else if (unifiedMemoryAction.kind === "remember") {
+    const fact = unifiedMemoryAction.fact.trim();
+
+    if (!fact) {
+      reply = "State the fact you want stored.";
+    } else {
+      const result = saveMemory(fact);
+
+      reply = result.saved
+        ? `Memory stored: ${result.fact}.`
+        : `That memory already exists: ${result.fact}.`;
+    }
+  } else if (unifiedMemoryAction.kind === "forget") {
+    const fact = unifiedMemoryAction.fact.trim();
+
+    reply = !fact
+      ? "State the memory you want removed."
+      : deleteMemory(fact).deleted
+        ? `Memory removed: ${fact}.`
+        : `No matching memory found for: ${fact}.`;
+  } else {
+    const memories = getMemories(50);
+
+    reply =
+      memories.length === 0
+        ? "I do not have any persisted memories yet."
+        : [
+            "Persisted memories:",
+            ...memories.map((memory, index) => `${index + 1}. ${memory}`),
+          ].join("\n");
+  }
+
+  return finalizePipelinePayload(sessionId, route, reply, trace);
+}
+
+    const memoryArchitectureCommand =
+  unifiedToMemoryArchitectureCommand(unifiedCommand) ??
+  detectMemoryArchitectureCommand(userMessage);
+
+    if (memoryArchitectureCommand !== "none") {
+      route = "memory";
+      setTraceRoute(trace, route);
+
+      addTraceStep(
+        trace,
+        "memory_route",
+        "Layered memory command handled",
+        memoryArchitectureCommand
+      );
+
+      const storedMemories = getMemories(50);
+      const recentMessages = getRecentMessages(sessionId, 12);
+
+      const memoryReply = runMemoryArchitectureCommand(memoryArchitectureCommand, {
+        session,
+        persistedMemories: storedMemories,
+        recentMessages,
+        userMessage,
+      });
+
+      saveMessage("user", userMessage, route, sessionId);
+
+      reply = memoryReply ?? "No memory architecture response was produced.";
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    const plannerCommand =
+      unifiedToPlannerCommand(unifiedCommand) ??
+      explicitPlannerCommand;
+    const plannerReply = getPlannerRuntime().runPlanning(dialogueTurn.id, () => runPlannerCommand(plannerCommand, session));
+
+    if (plannerReply) {
+      route = "planner";
+      setTraceRoute(trace, route);
+
+      addTraceStep(
+        trace,
+        "router",
+        "Persistent planner command handled",
+        plannerCommand.kind,
+        plannerCommand
+      );
+
+      saveMessage("user", userMessage, route, sessionId);
+      saveSessionContext(session);
+
+      reply = plannerReply;
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    addTraceStep(
+      trace,
+      "orchestration",
+      "Checking V5.0 autonomous execution layer"
+    );
+
+    const sessionWithExecution = session as SessionWithExecutionState;
+
+    const execution = await executeFromMessage(userMessage, {
+      previousState: sessionWithExecution.executionState,
+      sessionId,
+    });
+
+    if (execution.handled) {
+      route = "tools";
+      setTraceRoute(trace, route);
+
+      sessionWithExecution.executionState = execution.executionState;
+      saveSessionContext(sessionWithExecution);
+
+      addTraceStep(
+        trace,
+        "orchestration",
+        "V5.0 execution layer handled the message",
+        execution.task?.status ?? "unknown",
+        {
+          diagnostics: execution.task
+            ? buildExecutionDiagnostics(execution.task)
+            : undefined,
+          executionState: {
+            selectedFilePath: execution.executionState.selectedFilePath,
+            selectedFolderPath: execution.executionState.selectedFolderPath,
+            lastReadFilePath: execution.executionState.lastReadFilePath,
+            hasLastReadText: execution.executionState.lastReadText !== undefined,
+            activeTaskGoal: execution.executionState.activeTask?.goal,
+            lastTaskGoal: execution.executionState.lastTask?.goal,
+          },
+          steps: execution.task?.steps.map((step) => ({
+            id: step.id,
+            label: step.label,
+            action: step.action,
+            status: step.status,
+            risk: step.risk,
+            error: step.error,
+          })),
+        }
+      );
+
+      saveMessage("user", userMessage, route, sessionId);
+
+      reply = execution.response;
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+    addTraceStep(
+      trace,
+      "orchestration",
+      "V5.0 execution layer did not handle the message"
+    );
+
+    const unifiedToolCall = unifiedToToolCall(unifiedCommand);
+
+    if (unifiedToolCall && unifiedCommand.confidenceLevel === "high") {
+      route = "tools";
+      setTraceRoute(trace, route);
+      setTraceTool(trace, unifiedToolCall.tool);
+
+      addTraceStep(
+        trace,
+        "parsed_tool",
+        "Unified command converted to explicit tool call",
+        unifiedToolCall.tool,
+        {
+          command: unifiedCommand,
+          toolCall: unifiedToolCall,
+        }
+      );
+
+      saveMessage("user", userMessage, route, sessionId);
+
+      const normalizedToolCall = normalizeToolCall(unifiedToolCall);
+
+      if (openAppCallLooksLikeFileRequest(normalizedToolCall)) {
+        addTraceStep(
+          trace,
+          "vague_file_fallback",
+          "Blocked unified open_app because request looked like a file workflow",
+          userMessage,
+          normalizedToolCall
+        );
+
+        const fallbackReply = await tryFileSearchFallback(
+          userMessage,
+          sessionId,
+          "open_file"
+        );
+
+        reply =
+          fallbackReply ??
+          "That looked like a file-open request, not an app launch. I could not confidently resolve it to a real file.";
+
+        return finalizePipelinePayload(sessionId, route, reply, trace);
+      }
+
+      if (
+        normalizedToolCall.tool === "read_text_file" ||
+        normalizedToolCall.tool === "open_file"
+      ) {
+        const fileInput = normalizedToolCall.input as { path: string };
+
+        if (!looksLikeExplicitFilePath(fileInput.path)) {
+          const fallbackReply = await tryFileSearchFallback(
+            fileInput.path,
+            sessionId,
+            normalizedToolCall.tool
+          );
+
+          if (fallbackReply) {
+            reply = fallbackReply;
+          } else {
+            const toolResult = await executeAndTrackTool(
+              normalizedToolCall.tool,
+              normalizedToolCall.input,
+              sessionId
+            );
+
+            reply = formatToolReply(toolResult, sessionId);
+          }
+        } else {
+          const toolResult = await executeAndTrackTool(
+            normalizedToolCall.tool,
+            normalizedToolCall.input,
+            sessionId
+          );
+
+          reply = formatToolReply(toolResult, sessionId);
+        }
+      } else {
+        const toolResult = await executeAndTrackTool(
+          normalizedToolCall.tool,
+          normalizedToolCall.input,
+          sessionId
+        );
+
+        reply = formatToolReply(toolResult, sessionId);
+      }
+
+      return finalizePipelinePayload(sessionId, route, reply, trace);
+    }
+
+      addTraceStep(trace, "orchestration", "Checking V4.4 orchestration layer");
+
+      const orchestration = await getPlannerRuntime().runOrchestration(dialogueTurn.id, () => orchestrateMessage(userMessage, session));
+
+      if (orchestration.handled) {
+        route = orchestration.route;
+        setTraceRoute(trace, route);
+
+        addTraceStep(
+          trace,
+          "orchestration",
+          "V4.4 orchestration handled the message",
+          orchestration.reply
+        );
+
+        saveMessage("user", userMessage, route, sessionId);
+
+        reply = orchestration.reply;
+        saveSessionContext(session);
+      } else {
+        addTraceStep(
+          trace,
+          "orchestration",
+          "V4.4 orchestration did not handle the message"
+        );
+
+        const parsedToolCommand = parseToolCommand(userMessage);
+
+        if (parsedToolCommand) {
+          route = "tools";
+          setTraceRoute(trace, route);
+          setTraceTool(trace, parsedToolCommand.tool);
+
+          addTraceStep(
+            trace,
+            "parsed_tool",
+            "Explicit parsed tool command detected",
+            parsedToolCommand.tool,
+            parsedToolCommand.input
+          );
+
+          saveMessage("user", userMessage, route, sessionId);
+
+          const normalizedToolCall = normalizeToolCall(parsedToolCommand);
+
+          if (openAppCallLooksLikeFileRequest(normalizedToolCall)) {
+            addTraceStep(
+              trace,
+              "vague_file_fallback",
+              "Blocked open_app because request looked like a file-open workflow",
+              userMessage,
+              normalizedToolCall
+            );
+
+            const fallbackReply = await tryFileSearchFallback(
+              userMessage,
+              sessionId,
+              "open_file"
+            );
+
+            reply =
+              fallbackReply ??
+              "That looked like a file-open request, not an app launch. I could not confidently resolve it to a real file.";
+
+            return finalizePipelinePayload(sessionId, route, reply, trace);
+          }
+
+          if (
+            normalizedToolCall.tool === "read_text_file" ||
+            normalizedToolCall.tool === "open_file"
+          ) {
+            const fileInput = normalizedToolCall.input as { path: string };
+
+            if (!looksLikeExplicitFilePath(fileInput.path)) {
+              const fallbackReply = await tryFileSearchFallback(
+                fileInput.path,
+                sessionId,
+                normalizedToolCall.tool
+              );
+
+              if (fallbackReply) {
+                reply = fallbackReply;
+              } else {
+                const toolResult = await executeAndTrackTool(
+                  normalizedToolCall.tool,
+                  normalizedToolCall.input,
+                  sessionId
+                );
+
+                reply = formatToolReply(toolResult, sessionId);
+              }
+            } else {
+              const toolResult = await executeAndTrackTool(
+                normalizedToolCall.tool,
+                normalizedToolCall.input,
+                sessionId
+              );
+
+              reply = formatToolReply(toolResult, sessionId);
+            }
+          } else {
+            const toolResult = await executeAndTrackTool(
+              normalizedToolCall.tool,
+              normalizedToolCall.input,
+              sessionId
+            );
+
+            reply = formatToolReply(toolResult, sessionId);
+          }
+        } else {
+          const toolIntent = await classifyToolIntent(userMessage);
+
+          addTraceStep(
+            trace,
+            "tool_intent",
+            "LLM tool intent classifier completed",
+            toolIntent.tool,
+            toolIntent
+          );
+
+          if (toolIntent.tool !== "none") {
+            route = "tools";
+            setTraceRoute(trace, route);
+            setTraceTool(trace, toolIntent.tool);
+
+            saveMessage("user", userMessage, route, sessionId);
+
+            const normalizedToolCall = normalizeToolCall(toolIntent);
+
+            if (openAppCallLooksLikeFileRequest(normalizedToolCall)) {
+              addTraceStep(
+                trace,
+                "vague_file_fallback",
+                "Blocked open_app because request looked like a file-open workflow",
+                userMessage,
+                normalizedToolCall
+              );
+
+              const fallbackReply = await tryFileSearchFallback(
+                userMessage,
+                sessionId,
+                "open_file"
+              );
+
+              reply =
+                fallbackReply ??
+                "That looked like a file-open request, not an app launch. I could not confidently resolve it to a real file.";
+
+              return finalizePipelinePayload(sessionId, route, reply, trace);
+            }
+
+            if (
+              normalizedToolCall.tool === "read_text_file" ||
+              normalizedToolCall.tool === "open_file"
+            ) {
+              const fileInput = normalizedToolCall.input as { path: string };
+
+              if (!looksLikeExplicitFilePath(fileInput.path)) {
+                const fallbackReply = await tryFileSearchFallback(
+                  fileInput.path,
+                  sessionId,
+                  normalizedToolCall.tool
+                );
+
+                if (fallbackReply) {
+                  reply = fallbackReply;
+                } else {
+                  const toolResult = await executeAndTrackTool(
+                    normalizedToolCall.tool,
+                    normalizedToolCall.input,
+                    sessionId
+                  );
+
+                  reply = formatToolReply(toolResult, sessionId);
+                }
+              } else {
+                const toolResult = await executeAndTrackTool(
+                  normalizedToolCall.tool,
+                  normalizedToolCall.input,
+                  sessionId
+                );
+
+                reply = formatToolReply(toolResult, sessionId);
+              }
+            } else {
+              const toolResult = await executeAndTrackTool(
+                normalizedToolCall.tool,
+                normalizedToolCall.input,
+                sessionId
+              );
+
+              reply = formatToolReply(toolResult, sessionId);
+            }
+          } else if (looksLikeVagueFileRequest(userMessage)) {
+            route = "tools";
+            setTraceRoute(trace, route);
+
+            addTraceStep(
+              trace,
+              "vague_file_fallback",
+              "Vague file request fallback triggered",
+              userMessage
+            );
+
+            saveMessage("user", userMessage, route, sessionId);
+
+            const fallbackReply = await tryFileSearchFallback(
+              userMessage,
+              sessionId,
+              /\bopen\b/i.test(userMessage) ? "open_file" : "read_text_file"
+            );
+
+            reply =
+              fallbackReply ??
+              "I could not confidently resolve that to a real file. Give me the filename, a clearer query, or ask me to search for it first.";
+          } else {
+            route =
+              inheritedFollowUpRoute ??
+              (await (await getRouterRuntime().resolveRoute(dialogueTurn.id, () => routeMessage(userMessage))));
+            setTraceRoute(trace, route);
+
+            addTraceStep(
+              trace,
+              "router",
+              inheritedFollowUpRoute
+                ? "Conversational follow-up inherited previous route"
+                : "Falling back to normal message router",
+              route,
+              inheritedFollowUpRoute
+                ? {
+                    previousUserRoute,
+                  }
+                : undefined
+            );
+
+            saveMessage("user", userMessage, route, sessionId);
+
+            const activeSession = getSessionContext(sessionId);
+            const storedMemories = getMemories(12);
+            const recentMessages = getRecentMessages(sessionId, 8);
+
+            const responseContextSelection =
+              selectResponseContext(
+                userMessage,
+              );
+
+            addTraceStep(
+              trace,
+              "workflow_update",
+              "Phase 11 response context selected",
+              undefined,
+              {
+                includeWorldState:
+                  responseContextSelection.includeWorldState,
+                includeWorldModel:
+                  responseContextSelection.includeWorldModel,
+                reasons:
+                  responseContextSelection.reasons,
+              }
+            );
+
+            const worldStateSystemText =
+              responseContextSelection.includeWorldState
+                ? (
+                    await buildChernobogWorldStateContext({
+                      projectId:
+                        activeSession.activeProjectId ??
+                        undefined,
+                    })
+                  ).systemText
+                : "";
+
+            const worldModelSystemText =
+              responseContextSelection.includeWorldModel
+                ? (
+                    await buildChernobogWorldModelContext()
+                  ).systemText
+                : "";
+
+            const authoritativeAssessment =
+              shouldUseAuthoritativeAssessmentContext(
+                userMessage,
+                activeSession.activeProjectId
+              );
+
+            const historyRecentMessages =
+              excludeCurrentUserMessageFromHistory(
+                recentMessages,
+                userMessage,
+              );
+
+            const modelRecentMessages =
+              authoritativeAssessment
+                ? historyRecentMessages.filter(
+                    (message) =>
+                      message.role !== "assistant"
+                  )
+                : historyRecentMessages;
+
+            const memoryContext = await buildUnifiedMemoryContext({
+              session: activeSession,
+              persistedMemories: storedMemories,
+
+              // Conversation continuity is already supplied to the model as
+              // structured Ollama chat messages below. Do not copy that same
+              // transcript into the memory system prompt as well.
+              recentMessages: [],
+
+              userMessage,
+              projectId:
+                activeSession.activeProjectId ??
+                undefined,
+            });
+
+            addTraceStep(
+              trace,
+              "workflow_update",
+              "Working/retrieved memory context built for routed response",
+              undefined,
+              {
+                shortTermEntries: memoryContext.shortTerm.lines.length,
+                workingEntries: memoryContext.working.lines.length,
+                longTermEntries: memoryContext.longTerm.lines.length,
+              }
+            );
+
+            const budgetedResponseContext =
+              buildBudgetedResponseContext({
+                memorySystemText:
+                  memoryContext.systemText,
+                worldStateSystemText,
+                worldModelSystemText,
+              });
+
+            addTraceStep(
+              trace,
+              "workflow_update",
+              "Phase 11 response context budget applied",
+              undefined,
+              budgetedResponseContext.metrics
+            );
+
+            await associateExplicitLearningCorrection({
+              userMessage,
+              sessionId,
+              projectId:
+                activeSession.activeProjectId ??
+                undefined,
+            });
+
+            reply = await respondForRoute(route, userMessage, {
+              memories: storedMemories,
+              recentMessages: modelRecentMessages,
+              responseMode: options.responseMode ?? "text",
+              sessionSummary: buildProjectGroundedSystemText(
+                budgetedResponseContext.systemText,
+                activeSession.activeProjectId,
+              ),
+            });
+
+            updateSessionAfterRoute(activeSession, route);
+            saveSessionContext(activeSession);
+          }
+        }
+      }
+    
+  }
+
+  await captureLiveLearningIngress({
+    sessionId,
+    projectId:
+      getSessionContext(
+        sessionId,
+      ).activeProjectId ??
+      undefined,
+  });
+
+  return finalizePipelinePayload(sessionId, route, reply, trace);
+
+    },
+  );
+}

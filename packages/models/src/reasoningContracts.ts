@@ -470,7 +470,8 @@ function validationContract(
           ? 1
           : 0,
     validateConstraints:
-      true,
+      interpretation.constraints.length >
+      0,
     validateEvidence:
       required ||
       interpretation

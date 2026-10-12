@@ -29,7 +29,9 @@ export type GenerateWithOllamaOptions = {
   numPredict?: number;
   signal?: AbortSignal;
 
-  /*
+  
+  think?: boolean;
+/*
    * Internal exact-model execution hook.
    *
    * Higher-level routing is responsible for choosing this model.
@@ -158,6 +160,7 @@ export function buildOllamaRequestPlan(
         model,
         messages,
         stream: false,
+        think: options.think ?? false,
         keep_alive: options.keepAlive?.trim() || process.env.CHERNOBOG_OLLAMA_KEEP_ALIVE?.trim() || "30m",
         ...(options.format ? { format: options.format } : {}),
         options: requestOptions,
@@ -173,7 +176,8 @@ export function buildOllamaRequestPlan(
       model,
       prompt,
       stream: false,
-      keep_alive: options.keepAlive?.trim() || process.env.CHERNOBOG_OLLAMA_KEEP_ALIVE?.trim() || "30m",
+        think: options.think ?? false,
+        keep_alive: options.keepAlive?.trim() || process.env.CHERNOBOG_OLLAMA_KEEP_ALIVE?.trim() || "30m",
       ...(options.format ? { format: options.format } : {}),
       options: requestOptions,
     },
@@ -402,6 +406,7 @@ export async function generateWithOllama(
       promptChars: plan.inputChars,
       transport: plan.mode,
       temperature: options.temperature ?? 0.35,
+      think: options.think ?? false,
       timeoutMs,
       ...(options.numPredict !== undefined
         ? {

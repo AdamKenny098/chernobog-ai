@@ -317,6 +317,14 @@ function detectIntentKind(
   }
 
   if (
+    /^(?:please\s+)?(?:reply|respond|answer|say|return|output|print)\b/i.test(
+      text,
+    )
+  ) {
+    return "create";
+  }
+
+  if (
     /\?$/.test(
       text,
     ) ||
@@ -490,7 +498,7 @@ function inferTools(
   }
 
   if (
-    /\b(?:email|inbox|mail|reply|message)\b/.test(
+    /\b(?:email|e-mail|inbox|mailbox|mail)\b/.test(
       lower,
     )
   ) {
@@ -526,6 +534,7 @@ function extractExplicitConstraints(
   const patterns = [
     /\b(?:must|must not|don't|do not|only|without|keep|preserve|avoid|never|no)\b[^.!?\n]*/gi,
     /\b(?:under|within|at most|at least)\s+[^.!?\n]*/gi,
+    /\bexactly\b[^.!?\n]*/gi,
   ];
 
   for (

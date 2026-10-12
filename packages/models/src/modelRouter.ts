@@ -32,10 +32,16 @@ export interface ModelCandidate {
 }
 
 const BUILTIN_DEFAULT_MODEL =
-  "gemma3";
+  "qwen3.5:9b";
 
 const BUILTIN_CODE_MODEL =
   "deepseek-coder-v2:16b";
+
+const BUILTIN_DEEP_MODEL =
+  "gpt-oss:20b";
+
+const BUILTIN_DEEP_CODE_MODEL =
+  "qwen3-coder:30b";
 
 function readEnv(
   name: string,
@@ -72,6 +78,18 @@ export function resolveModel(
     readEnv("OLLAMA_MODEL") ??
     BUILTIN_CODE_MODEL;
 
+  const plannerModel =
+    readEnv(
+      "OLLAMA_PLANNER_MODEL",
+    ) ??
+    BUILTIN_DEEP_MODEL;
+
+  const repairModel =
+    readEnv(
+      "OLLAMA_REPAIR_MODEL",
+    ) ??
+    BUILTIN_DEEP_CODE_MODEL;
+
   switch (role) {
     case "code":
       return {
@@ -90,10 +108,10 @@ export function resolveModel(
       return {
         role,
         model:
-          codeModel,
+          plannerModel,
         source:
           readEnv(
-            "OLLAMA_CODE_MODEL",
+            "OLLAMA_PLANNER_MODEL",
           )
             ? "env"
             : "fallback",
@@ -103,10 +121,10 @@ export function resolveModel(
       return {
         role,
         model:
-          codeModel,
+          repairModel,
         source:
           readEnv(
-            "OLLAMA_CODE_MODEL",
+            "OLLAMA_REPAIR_MODEL",
           )
             ? "env"
             : "fallback",
@@ -187,6 +205,93 @@ export function getModelCandidates(
       {
         role,
         model:
+          BUILTIN_DEEP_MODEL,
+        source:
+          "builtin-role",
+      },
+      {
+        role,
+        model:
+          BUILTIN_DEFAULT_MODEL,
+        source:
+          "builtin-default",
+      },
+    ]);
+  }
+
+  if (role === "code") {
+    return dedupeCandidates([
+      {
+        role,
+        model:
+          primary.model,
+        source:
+          "role-primary",
+      },
+      {
+        role,
+        model:
+          BUILTIN_DEEP_CODE_MODEL,
+        source:
+          "builtin-role",
+      },
+      {
+        role,
+        model:
+          BUILTIN_CODE_MODEL,
+        source:
+          "builtin-role",
+      },
+      {
+        role,
+        model:
+          defaultModel.model,
+        source:
+          "default-model",
+      },
+      {
+        role,
+        model:
+          BUILTIN_DEEP_MODEL,
+        source:
+          "builtin-role",
+      },
+      {
+        role,
+        model:
+          BUILTIN_DEFAULT_MODEL,
+        source:
+          "builtin-default",
+      },
+    ]);
+  }
+
+  if (role === "planner") {
+    return dedupeCandidates([
+      {
+        role,
+        model:
+          primary.model,
+        source:
+          "role-primary",
+      },
+      {
+        role,
+        model:
+          BUILTIN_DEEP_MODEL,
+        source:
+          "builtin-role",
+      },
+      {
+        role,
+        model:
+          defaultModel.model,
+        source:
+          "default-model",
+      },
+      {
+        role,
+        model:
           BUILTIN_DEFAULT_MODEL,
         source:
           "builtin-default",
@@ -205,6 +310,13 @@ export function getModelCandidates(
     {
       role,
       model:
+        BUILTIN_DEEP_CODE_MODEL,
+      source:
+        "builtin-role",
+    },
+    {
+      role,
+      model:
         BUILTIN_CODE_MODEL,
       source:
         "builtin-role",
@@ -219,13 +331,19 @@ export function getModelCandidates(
     {
       role,
       model:
+        BUILTIN_DEEP_MODEL,
+      source:
+        "builtin-role",
+    },
+    {
+      role,
+      model:
         BUILTIN_DEFAULT_MODEL,
       source:
         "builtin-default",
     },
   ]);
 }
-
 export function getModelRoutingSummary() {
   const defaultModel =
     resolveModel("default");
