@@ -1,9 +1,9 @@
-import type { TrustActionRequest } from "./trustActionTypes";
-import { TRUST_ACTION_TYPES, TRUST_RISK_LEVELS, normalizeTrustActionType } from "./trustActionTypes";
-import { createTrustDecision, formatTrustDecision } from "./trustDecision";
-import { createTrustPolicyStore, DEFAULT_TRUST_POLICY_MANIFEST } from "./trustPolicyManifest";
-import { appendTrustAuditEvent, loadTrustAuditLog } from "./trustAuditLog";
-import { listDefaultToolPermissions } from "./toolPermissionRegistry";
+import type { TrustActionRequest } from "@chernobog/trust/vault/trustActionTypes";
+import { TRUST_ACTION_TYPES, TRUST_RISK_LEVELS, normalizeTrustActionType } from "@chernobog/trust/vault/trustActionTypes";
+import { createTrustDecision, formatTrustDecision } from "@chernobog/trust/vault/trustDecision";
+import { createTrustPolicyStore, DEFAULT_TRUST_POLICY_MANIFEST } from "@chernobog/trust/vault/trustPolicyManifest";
+import { appendTrustAuditEvent, loadTrustAuditLog } from "@chernobog/trust/vault/trustAuditLog";
+import { listDefaultToolPermissions } from "@chernobog/trust/vault/toolPermissionRegistry";
 import type { VaultBrainCommandResult } from "./types";
 
 function normalize(command: string): string {

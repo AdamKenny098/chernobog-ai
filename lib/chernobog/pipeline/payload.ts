@@ -1,15 +1,15 @@
 import { saveMessage } from "@/lib/chernobog/memory";
 import { getSessionContext } from "@/lib/chernobog/session/store";
 import type { RouteName } from "@/lib/chernobog/session/types";
-import { buildWorkflowSnapshot } from "@/lib/chernobog/trust/sessionSnapshot";
-import { saveTrustTrace } from "@/lib/chernobog/trust/store";
+import { buildWorkflowSnapshot } from "@chernobog/trust/trust/sessionSnapshot";
+import { saveTrustTrace } from "@chernobog/trust/trust/store";
 import {
   addTraceStep,
   finishTrace,
   printTraceInDev,
   summarizeTrace,
-} from "@/lib/chernobog/trust/trace";
-import type { TrustTrace } from "@/lib/chernobog/trust/types";
+} from "@chernobog/trust/trust/trace";
+import type { TrustTrace } from "@chernobog/trust/trust/types";
 import type { ChatUiPayload, CommandPipelineResult } from "./types";
 
 export function buildUiPayload(

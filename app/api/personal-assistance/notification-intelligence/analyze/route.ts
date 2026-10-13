@@ -4,7 +4,7 @@ import {
 import {
   analyzeAndProjectNotification,
   parseNotificationIntelligenceObservation,
-} from "@/lib/chernobog/personalAssistance/notificationIntelligence";
+} from "@chernobog/personal-assistance/notificationIntelligence";
 
 export const dynamic =
   "force-dynamic";

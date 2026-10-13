@@ -1,6 +1,6 @@
 import {
   publishChernobogEventSafely,
-} from "../events/publishers";
+} from "@chernobog/events/publishers";
 import type {
   GenerateWithOllamaOptions,
   GenerateWithOllamaResult,

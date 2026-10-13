@@ -4,14 +4,20 @@ import {
 
 import {
   getChernobogCognitiveRuntime,
-} from "@/lib/chernobog/cognition";
+} from "@chernobog/core/cognition";
+
+import {
+  personalAttentionProvider,
+} from "@chernobog/personal-assistance";
 
 export const runtime = "nodejs";
 
 export async function GET() {
   try {
     const cognition =
-      await getChernobogCognitiveRuntime();
+      await getChernobogCognitiveRuntime({
+        personalAttentionProvider,
+      });
 
     const cycle =
       await cognition.evaluate();

@@ -3,7 +3,7 @@ import {
 } from "../../modules/registry";
 import {
   toolRegistry,
-} from "../tools/registry";
+} from "@chernobog/tools/registry";
 import {
   createToolExecutionHandlers,
 } from "./toolExecutionHandlers";

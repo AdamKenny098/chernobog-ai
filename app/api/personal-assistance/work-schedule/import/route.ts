@@ -1,11 +1,11 @@
 import {
   syncWorkScheduleToGoogleCalendarSafely,
-} from "@/lib/chernobog/personalAssistance/calendar";import {
+} from "@chernobog/personal-assistance/calendar";import {
   NextResponse,
 } from "next/server";
 import {
   importAlkimiiWorkSchedule,
-} from "@/lib/chernobog/personalAssistance/workSchedule";
+} from "@chernobog/personal-assistance/workSchedule";
 
 export const runtime =
   "nodejs";

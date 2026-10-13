@@ -1,6 +1,6 @@
 import type {
   ChernobogEventBus,
-} from "../events/eventBus";
+} from "@chernobog/events/eventBus";
 import type {
   ChernobogWorldStateRuntime,
   WorldStateRecord,

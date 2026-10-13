@@ -1,4 +1,4 @@
-import type { ChernobogEvent } from "../events/types";
+import type { ChernobogEvent } from "@chernobog/events/types";
 import type { WorldStateProjector } from "./projectorTypes";
 
 function normalizeProjectorId(value: string): string {

@@ -12,6 +12,8 @@ import type {
   CognitiveInitiativePolicy,
   CognitiveInitiativeReason,
 } from "./initiativeTypes";
+import { getActionRuntime } from "@chernobog/runtime";
+
 
 function addReason(
   reasons:
@@ -198,6 +200,8 @@ export function decideCognitiveInitiative(
     now?: Date;
   } = {},
 ): CognitiveInitiativeDecision {
+  return getActionRuntime().select("initiativeDecision.decideCognitiveInitiative", () => {
+
   const now =
     options.now ??
     new Date();
@@ -316,4 +320,6 @@ export function decideCognitiveInitiative(
   }
 
   return result;
+
+  });
 }

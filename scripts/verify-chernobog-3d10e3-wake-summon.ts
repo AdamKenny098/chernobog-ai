@@ -4,7 +4,7 @@ const path = require("node:path");
 const root = process.cwd();
 
 function read(relativePath: string): string {
-  return fs.readFileSync(path.join(root, relativePath), "utf8");
+  return (fs.readFileSync(path.join(root, relativePath), "utf8")).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 }
 
 function pass(message: string): void {

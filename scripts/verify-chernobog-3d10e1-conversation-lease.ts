@@ -20,7 +20,7 @@ if (!fs.existsSync(deckPath)) {
   fail("SensoryControlDeck.tsx exists");
 }
 
-const deck = fs.readFileSync(deckPath, "utf8");
+const deck = (fs.readFileSync(deckPath, "utf8")).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 
 const required = [
   "let conversationLeaseActive = false",

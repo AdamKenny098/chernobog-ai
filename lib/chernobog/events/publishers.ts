@@ -1,9 +1,9 @@
-import { getChernobogEventBus } from "./index";
-import { getChernobogEventContext } from "./eventContext";
+import { getChernobogEventBus } from "@chernobog/events/index";
+import { getChernobogEventContext } from "@chernobog/events/eventContext";
 import {
   ChernobogEventInput,
   ChernobogEventPublishResult,
-} from "./types";
+} from "@chernobog/events/types";
 
 export interface ChernobogEventPublisher {
   publish(

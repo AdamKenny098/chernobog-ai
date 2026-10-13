@@ -1,0 +1,84 @@
+{
+  "slice": "OH-1K2",
+  "acceptedCheckpoint": "81bcbe16ae8ae241cb5f0a0f32fec6dd002378a9",
+  "refreshedBy": "OH-1L",
+  "disposition": "post-persistence-ownership-closure",
+  "privateCoreImportCount": 0,
+  "projectCodeFileCount": 524,
+  "publicChernobogImportCount": 47,
+  "publicPackageCounts": {
+    "@chernobog/core": 13,
+    "@chernobog/events": 3,
+    "@chernobog/models": 1,
+    "@chernobog/tools": 15,
+    "@chernobog/trust": 15
+  },
+  "publicCoreImports": [
+    {
+      "consumer": "lib/modules/adapters/obsidianVaultAdapter.ts",
+      "specifier": "@chernobog/core/command-language"
+    },
+    {
+      "consumer": "lib/modules/adapters/obsidianVaultAdapter.ts",
+      "specifier": "@chernobog/core/session/types"
+    },
+    {
+      "consumer": "lib/modules/character-generator/commands/parseCharacterGeneratorCommand.ts",
+      "specifier": "@chernobog/core/command-language"
+    },
+    {
+      "consumer": "lib/modules/discord-ingest/commands/parseDiscordCommand.ts",
+      "specifier": "@chernobog/core/command-language"
+    },
+    {
+      "consumer": "lib/modules/file-workflow/index.ts",
+      "specifier": "@chernobog/core/command-language"
+    },
+    {
+      "consumer": "lib/modules/file-workflow/index.ts",
+      "specifier": "@chernobog/core/db"
+    },
+    {
+      "consumer": "lib/modules/file-workflow/index.ts",
+      "specifier": "@chernobog/core/session/followups"
+    },
+    {
+      "consumer": "lib/modules/file-workflow/index.ts",
+      "specifier": "@chernobog/core/session/store"
+    },
+    {
+      "consumer": "lib/modules/file-workflow/index.ts",
+      "specifier": "@chernobog/core/session/update"
+    },
+    {
+      "consumer": "lib/modules/project-operations/commands/parseProjectOperationsCommand.ts",
+      "specifier": "@chernobog/core/command-language"
+    },
+    {
+      "consumer": "lib/modules/registry.ts",
+      "specifier": "@chernobog/core/command-language"
+    },
+    {
+      "consumer": "lib/modules/types.ts",
+      "specifier": "@chernobog/core/command-language"
+    },
+    {
+      "consumer": "lib/modules/types.ts",
+      "specifier": "@chernobog/core/session/types"
+    }
+  ],
+  "earlierSlicesAlreadyRemovedReverseCoupling": [
+    "OH-1C Tool Gateway",
+    "OH-1E Models",
+    "OH-1H Core"
+  ],
+  "persistenceOwnership": {
+    "projectOperations": "domain-owned-client-established-in-OH-1L",
+    "physicalCompatibilityFile": "data/chernobog.db",
+    "itchDiscoveryOwnSqlite": "preserve-external-project-ownership"
+  },
+  "laterHandoffs": {
+    "composition": "OH-1N",
+    "compatibilityCleanup": "OH-1O"
+  }
+}

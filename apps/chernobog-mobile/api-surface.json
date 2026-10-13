@@ -1,0 +1,14 @@
+{
+  "owner": "apps/chernobog-mobile",
+  "legacySourceRoot": "mobile/android-companion",
+  "transportPolicy": "HTTPS endpoints through accepted EndpointPolicy; bearer authentication where enrolled credentials are required",
+  "paths": [
+    "/api/personal-assistance/mobile/enroll",
+    "/api/personal-assistance/mobile/heartbeat",
+    "/api/personal-assistance/mobile/notifications",
+    "/api/personal-assistance/mobile/notifications/reconcile",
+    "/api/personal-assistance/mobile/session",
+    "/api/personal-assistance/mobile/transport",
+    "/api/personal-assistance/mobile/work-schedule/alkimii-roster"
+  ]
+}

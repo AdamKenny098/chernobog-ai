@@ -3,7 +3,7 @@ import {
 } from "next/server";
 import {
   beginGoogleCalendarConnection,
-} from "@/lib/chernobog/personalAssistance/calendar";
+} from "@chernobog/personal-assistance/calendar";
 
 export const runtime =
   "nodejs";

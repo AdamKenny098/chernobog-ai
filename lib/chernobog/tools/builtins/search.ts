@@ -2,14 +2,14 @@ import fs from "node:fs/promises";
 import type { Dirent } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
-import { ToolDefinition } from "../types";
+import { ToolDefinition } from "@chernobog/tools/types";
 import {
   ensureAllowedPath,
   getNormalizedExtension,
   isReadableTextFileName,
   resolveSearchRoot,
   shouldSkipDirectory,
-} from "../fs-policy";
+} from "@chernobog/tools/fs-policy";
 
 const DEFAULT_MAX_RESULTS = 20;
 const MAX_RESULTS_CAP = 50;

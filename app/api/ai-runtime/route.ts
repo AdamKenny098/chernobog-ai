@@ -4,14 +4,47 @@ import {
 
 import {
   getAiRuntimeStatus,
-} from "@/lib/chernobog/llm";
+} from "@chernobog/models";
+import {
+  OLLAMA_LIFECYCLE_DEPENDENCY,
+  getLifecycleRuntime,
+} from "@chernobog/runtime";
 
 export const runtime = "nodejs";
 
 export async function GET() {
   try {
     const status =
-      await getAiRuntimeStatus();
+      await getLifecycleRuntime()
+        .runDependencyOperation({
+          dependencyId:
+            OLLAMA_LIFECYCLE_DEPENDENCY,
+          operation:
+            () =>
+              getAiRuntimeStatus(),
+          assess:
+            (runtimeStatus) => ({
+              status:
+                runtimeStatus.status,
+              ...(runtimeStatus.status ===
+                "unavailable"
+                ? {
+                    reason:
+                      "No configured model role is currently ready.",
+                  }
+                : {}),
+              metadata: {
+                readyRoleCount:
+                  runtimeStatus
+                    .readyRoles
+                    .length,
+                unavailableRoleCount:
+                  runtimeStatus
+                    .unavailableRoles
+                    .length,
+              },
+            }),
+        });
 
     return NextResponse.json({
       ok: true,

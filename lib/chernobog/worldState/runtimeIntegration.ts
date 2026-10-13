@@ -1,6 +1,6 @@
 import type {
   ChernobogEventBus,
-} from "../events/eventBus";
+} from "@chernobog/events/eventBus";
 import {
   buildWorldStateSnapshot,
 } from "./snapshotIntegrity";

@@ -1,4 +1,4 @@
-import type { ToolResult } from "@/lib/chernobog/tools/types";
+import type { ToolResult } from "@chernobog/tools/types";
 import type {
   VaultActiveNote,
   VaultBacklink,

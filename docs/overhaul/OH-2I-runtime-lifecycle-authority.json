@@ -1,0 +1,31 @@
+{
+  "stage": "OH-2I",
+  "authority": "@chernobog/runtime LifecycleRuntime",
+  "stateProjectionOwner": "@chernobog/runtime StateRuntime",
+  "dependency": "model-provider:ollama",
+  "delegates": {
+    "modelReadiness": "@chernobog/models/runtimeReadiness",
+    "modelRetryAndFallback": "@chernobog/models/reliableOllama",
+    "healthObservation": "lib/chernobog/runtime/ollamaHealth.ts",
+    "healthEventHistory": "lib/chernobog/runtime/runtimeHealthEvents.ts"
+  },
+  "owns": [
+    "startup state",
+    "dependency lifecycle state",
+    "temporary unavailability",
+    "recovery transition",
+    "retry accounting",
+    "shutdown state",
+    "runtimeHealth current projection"
+  ],
+  "doesNotOwn": [
+    "provider transport",
+    "provider retry taxonomy",
+    "trust decisions",
+    "tool execution",
+    "Event Spine persistence",
+    "World State persistence",
+    "domain-specific retry loops"
+  ],
+  "historicalAuthorityPreserved": "docs/overhaul/OH-2E-state-authority-map.json"
+}

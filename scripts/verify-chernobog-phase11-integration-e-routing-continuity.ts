@@ -110,7 +110,7 @@ pass("pipeline resolves prior route before final fallback routing");
 
 assert.match(
   source,
-  /route\s*=\s*inheritedFollowUpRoute\s*\?\?\s*\(await routeMessage\(userMessage\)\);/,
+  /route\s*=\s*inheritedFollowUpRoute\s*\?\?\s*\(await(?:\s+routeMessage\(userMessage\)|\s+\(await\s+getRouterRuntime\(\)\.resolveRoute\(dialogueTurn\.id,\s*\(\)\s*=>\s*routeMessage\(userMessage\)\)\))\);/,
 );
 pass("safe conversational follow-up bypasses fresh LLM route guessing");
 

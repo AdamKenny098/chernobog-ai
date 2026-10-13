@@ -3,7 +3,7 @@ import { getMemories, getRecentMessages } from "@/lib/chernobog/memory";
 import {
   getSessionContext,
   resolveSessionId,
-} from "@/lib/chernobog/session/store";
+} from "@chernobog/core/session/store";
 import { buildMemoryContext } from "@/lib/chernobog/memory-architecture";
 
 export const runtime = "nodejs";

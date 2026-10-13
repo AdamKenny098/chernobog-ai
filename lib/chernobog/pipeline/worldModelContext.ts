@@ -11,6 +11,8 @@ import {
   ChernobogWorldStateQueryService,
   getChernobogWorldStateRuntime,
 } from "@/lib/chernobog/worldState";
+import { getChernobogStateRuntimeWorldStateRegistry } from "@/lib/chernobog/runtime/eventStateConvergence";
+
 
 const MAX_ENTITIES = 24;
 const MAX_RELATIONSHIPS = 24;
@@ -624,7 +626,7 @@ export async function buildChernobogWorldModelContext():
       await getChernobogWorldStateRuntime();
     const worldStateQuery =
       new ChernobogWorldStateQueryService(
-        worldStateRuntime.engine.worldState,
+        await getChernobogStateRuntimeWorldStateRegistry(),
       );
     const worldStateResult =
       worldStateQuery.read({}, "registry");
@@ -879,12 +881,12 @@ export async function buildChernobogWorldModelContext():
       "- DEPENDENCY CONTRACT: only relationships in the explicit dependency relationship section are dependencies. Never classify has-state as a dependency.",
       "- PREDICTION CONTRACT: when supported predictions exposed=0, say exactly 'No supported predictions.' Do not invent a placeholder prediction, confidence, sample count, or candidate.",
       "- CONSEQUENCE CONTRACT: prefer the precomputed World Model impact assessments below. Do not replace a non-empty impact assessment with 'no dependency path'.",
-      "- RELATIONAL EVIDENCE CONTRACT: when explicit dependency relationships exposed>0, do not output the no-substantive-relational-evidence sentinel.", 
+      "- RELATIONAL EVIDENCE CONTRACT: when explicit dependency relationships exposed>0, do not output the no-substantive-relational-evidence sentinel.",
       "- DEPENDENCY BACKBONE CONTRACT: the compact dependency backbone below is the highest-priority 11J relationship evidence. Preserve every listed requires-model and served-by edge.",
       "- CHAIN CONTRACT: when a DEPENDENCY_CHAIN includes --served-by--> model:ollama, do not claim that the Ollama relationship is missing.",
       "- IMPACT CONTRACT: when an impact assessment for model:ollama is non-empty, report those downstream dependents instead of saying no dependency path exists.",
       "- CONCLUSION CONTRACT: RELATIONAL_STATUS=substantive means the World Model is providing substantive relational evidence. The fallback sentence is forbidden.",
-      "- MISSING-MODEL CONTRACT: do not list an explicit edge, entity, provider relationship, or dependency chain as missing when it appears in the dependency backbone.", 
+      "- MISSING-MODEL CONTRACT: do not list an explicit edge, entity, provider relationship, or dependency chain as missing when it appears in the dependency backbone.",
     ];
 
     sections.push(

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import type { ToolDefinition } from "@/lib/chernobog/tools/types";
-import { createToolFailure, createToolSuccess } from "@/lib/chernobog/tools/types";
+import type { ToolDefinition } from "@chernobog/tools/types";
+import { createToolFailure, createToolSuccess } from "@chernobog/tools/types";
 import type { VaultNoteType } from "../types";
 import { buildNoteTemplate, defaultFolderForType } from "../templates";
 import { writeVaultNote } from "../markdown/writeNote";

@@ -1,14 +1,14 @@
 import { z } from "zod";
 
-import { publishChernobogEventSafely } from "../events/publishers";
-import { getTool } from "./registry";
+import { publishChernobogEventSafely } from "@chernobog/events/publishers";
+import { getTool } from "@chernobog/tools/registry";
 import {
   ToolExecutionContext,
   ToolFailureKind,
   ToolResult,
   createToolFailure,
   createToolSuccess,
-} from "./types";
+} from "@chernobog/tools/types";
 
 type AnyToolDefinition = {
   name: string;

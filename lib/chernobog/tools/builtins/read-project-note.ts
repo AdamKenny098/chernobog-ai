@@ -3,7 +3,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
-import { ToolDefinition } from "../types";
+import { ToolDefinition } from "@chernobog/tools/types";
 
 const readProjectNoteInputSchema = z.object({
   noteName: z.string().min(1),

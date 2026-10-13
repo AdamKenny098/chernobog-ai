@@ -2,11 +2,11 @@ import type {
   ChernobogRoute,
   ChernobogRouteKind,
   ChernobogRouteStatus,
-} from "@/lib/chernobog-ui/routeRegistry";
+} from "@chernobog/ui/registry/routeRegistry";
 import {
   CHERNOBOG_ROUTE_KINDS,
   CHERNOBOG_ROUTE_STATUSES,
-} from "@/lib/chernobog-ui/routeRegistry";
+} from "@chernobog/ui/registry/routeRegistry";
 
 export type RouteMatrixTone = "amber" | "green" | "red" | "muted";
 

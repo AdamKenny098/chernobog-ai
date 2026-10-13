@@ -1,6 +1,6 @@
 import {
   publishChernobogEventSafely,
-} from "../events";
+} from "@chernobog/events";
 import {
   getPersonalAssistanceProfile,
 } from "./profileStore";

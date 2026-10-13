@@ -1,0 +1,39 @@
+{
+  "stage": "OH-2J",
+  "name": "Legacy Runtime Path Removal & Final Acceptance",
+  "pipeline": [
+    "Ingress",
+    "Dialogue",
+    "Route",
+    "Plan / Action",
+    "Trust",
+    "Tool",
+    "Event",
+    "State",
+    "Response"
+  ],
+  "authorities": {
+    "dialogue": "@chernobog/runtime DialogueRuntime",
+    "routing": "@chernobog/runtime RouterRuntime",
+    "planning": "@chernobog/runtime PlannerRuntime",
+    "action": "@chernobog/runtime ActionRuntime",
+    "trust": "@chernobog/trust runtime governance",
+    "execution": "lib/chernobog/execution/runExecutionTask.ts",
+    "tool": "Unified Tool Gateway",
+    "event": "Unified Event Spine",
+    "state": "@chernobog/runtime StateRuntime",
+    "lifecycle": "@chernobog/runtime LifecycleRuntime",
+    "response": "lib/chernobog/pipeline/runCommand.ts"
+  },
+  "legacyLlmTree": {
+    "path": "lib/chernobog/llm",
+    "classification": "IMPLEMENTATION-LEAF / COMPATIBILITY",
+    "authoritativeRuntime": false,
+    "allowedActiveEdges": [
+      "packages/models/src/providerAdapter.ts -> single accepted Ollama transport",
+      "lib/chernobog/execution/internalExecutionHandlers.ts -> accepted source-sensitive compatibility imports"
+    ],
+    "reason": "OH-1E intentionally retained the accepted provider transport and compatibility edges while moving model authority to packages/models"
+  },
+  "parallelLegacyRuntime": false
+}

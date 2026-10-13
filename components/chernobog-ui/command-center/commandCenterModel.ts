@@ -1,5 +1,5 @@
-import type { ChernobogModule } from "@/lib/chernobog-ui/moduleRegistry";
-import type { ChernobogRoute } from "@/lib/chernobog-ui/routeRegistry";
+import type { ChernobogModule } from "@chernobog/ui/registry/moduleRegistry";
+import type { ChernobogRoute } from "@chernobog/ui/registry/routeRegistry";
 
 export type CommandCenterTone = "amber" | "green" | "red" | "muted";
 

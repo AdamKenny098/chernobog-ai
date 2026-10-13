@@ -8,10 +8,10 @@ import {
   getPersonalAssistanceProfile,
   getPersonalAssistanceMobileTransportPolicy,
   recordPersonalAssistanceMobileHeartbeat,
-} from "@/lib/chernobog/personalAssistance";
+} from "@chernobog/personal-assistance";
 import type {
   PersonalAssistanceMobileHeartbeatInput,
-} from "@/lib/chernobog/personalAssistance";
+} from "@chernobog/personal-assistance";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

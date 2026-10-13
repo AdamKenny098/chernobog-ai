@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import {
   clearSessionContext,
   resolveSessionId,
-} from "@/lib/chernobog/session/store";
+} from "@chernobog/core/session/store";
 
 export const runtime = "nodejs";
 

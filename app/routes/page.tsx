@@ -1,6 +1,6 @@
 import { RouteMatrixView } from "@/components/chernobog-ui/routes/RouteMatrixView";
 import { buildRouteMatrixModel } from "@/components/chernobog-ui/routes/routeMatrixModel";
-import { getAllChernobogRoutes } from "@/lib/chernobog-ui/routeRegistry";
+import { getAllChernobogRoutes } from "@chernobog/ui/registry/routeRegistry";
 
 type RouteSearchParams = {
   q?: string | string[];

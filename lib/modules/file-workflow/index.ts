@@ -1,34 +1,34 @@
 import os from "node:os";
 import path from "node:path";
 
-import { logToolCall } from "@/lib/chernobog/db";
+import { logToolCall } from "@chernobog/core/db";
 import type {
   CommandConfidenceLevel,
   UnifiedCommand,
-} from "@/lib/chernobog/command-language";
-import { tryResolveFollowUp } from "@/lib/chernobog/session/followups";
+} from "@chernobog/core/command-language";
+import { tryResolveFollowUp } from "@chernobog/core/session/followups";
 import {
   clearPendingDisambiguation,
   getSessionContext,
   saveSessionContext,
   setPendingDisambiguation,
-} from "@/lib/chernobog/session/store";
+} from "@chernobog/core/session/store";
 import {
   setSelectedFileFromPath,
   updateSessionFromToolResult,
-} from "@/lib/chernobog/session/update";
+} from "@chernobog/core/session/update";
 import {
   listFilesTool,
   openFileTool,
   openFolderTool,
   readTextFileTool,
-} from "@/lib/chernobog/tools/builtins/files";
-import { findFilesTool } from "@/lib/chernobog/tools/builtins/search";
-import type { ToolExecutionContext, ToolResult } from "@/lib/chernobog/tools/types";
+} from "@chernobog/tools/builtins/files";
+import { findFilesTool } from "@chernobog/tools/builtins/search";
+import type { ToolExecutionContext, ToolResult } from "@chernobog/tools/types";
 import {
   createToolFailure,
   createToolSuccess,
-} from "@/lib/chernobog/tools/types";
+} from "@chernobog/tools/types";
 import type {
   ChernobogModule,
   ModuleCommandContext,

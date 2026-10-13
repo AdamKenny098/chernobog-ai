@@ -1,4 +1,5 @@
-import { db } from "@/lib/chernobog/db";
+import { projectOperationsDb as db } from "./persistence";
+// Physical compatibility location remains data/chernobog.db; Project Operations owns only project_operations_* persistence.
 
 import { createInitialProjectSeed } from "./seed";
 import type { Project } from "./types";

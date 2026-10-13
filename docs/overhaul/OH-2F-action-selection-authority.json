@@ -1,0 +1,30 @@
+{
+  "stage": "OH-2F",
+  "baselineCommit": "d5015fd39fa80d23f86f3546b36c08cfe78a30f4",
+  "authority": "@chernobog/runtime ActionRuntime",
+  "implementationEngine": "lib/chernobog/cognition/initiativeDecision.ts",
+  "governedExports": [
+    {
+      "name": "decideCognitiveInitiative",
+      "directExternalCalls": 0,
+      "async": false,
+      "governancePoint": "exported function body"
+    }
+  ],
+  "outcomes": [
+    "respond",
+    "continue",
+    "plan",
+    "act",
+    "wait",
+    "defer",
+    "interrupt",
+    "cancel",
+    "resume",
+    "request-approval"
+  ],
+  "interruptionHandoff": "@chernobog/runtime DialogueRuntime -> ActionRuntime",
+  "stateProjection": "@chernobog/runtime StateRuntime -> ActionRuntime.snapshot()",
+  "autonomyExpanded": false,
+  "executableAuthority": "unchanged; Trust and Unified Tool Gateway remain mandatory for execution"
+}

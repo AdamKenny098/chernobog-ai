@@ -24,3 +24,4 @@ export * from "./initiativeQueue";
 export * from "./runtimeTypes";
 export * from "./cognitiveRuntime";
 export * from "./runtimeSingleton";
+export * from "./contract";

@@ -1,27 +1,27 @@
-import { getTimeTool } from "./builtins/time";
+import { getTimeTool } from "@chernobog/tools/builtins/time";
 import {
   listFilesTool,
   readTextFileTool,
   openFileTool,
   openFolderTool,
-} from "./builtins/files";
-import { openAppTool } from "./builtins/apps";
-import { openUrlTool } from "./builtins/web";
-import { findFilesTool } from "./builtins/search";
-import { createFolderTool } from "./builtins/create-folder";
-import { createTextFileTool } from "./builtins/create-text-file";
-import { appendTextFileTool } from "./builtins/append-text-file";
-import { renamePathTool } from "./builtins/rename-path";
-import { listDirectoryTool } from "./builtins/list-directory";
-import { getPathInfoTool } from "./builtins/get-path-info";
-import { copyPathTool } from "./builtins/copy-path";
-import { movePathTool } from "./builtins/move-path";
-import { writeProjectFileTool } from "./builtins/write-project-file";
-import { runProjectCommandTool } from "./builtins/run-project-command";
-import { readProjectNoteTool } from "./builtins/read-project-note";
-import { searchProjectNotesTool } from "./builtins/search-project-notes";
-import { buildModuleToolRegistry } from "@/lib/modules/registry";
-import { getProjectGitStateTool } from "./builtins/get-project-git-state";
+} from "@chernobog/tools/builtins/files";
+import { openAppTool } from "@chernobog/tools/builtins/apps";
+import { openUrlTool } from "@chernobog/tools/builtins/web";
+import { findFilesTool } from "@chernobog/tools/builtins/search";
+import { createFolderTool } from "@chernobog/tools/builtins/create-folder";
+import { createTextFileTool } from "@chernobog/tools/builtins/create-text-file";
+import { appendTextFileTool } from "@chernobog/tools/builtins/append-text-file";
+import { renamePathTool } from "@chernobog/tools/builtins/rename-path";
+import { listDirectoryTool } from "@chernobog/tools/builtins/list-directory";
+import { getPathInfoTool } from "@chernobog/tools/builtins/get-path-info";
+import { copyPathTool } from "@chernobog/tools/builtins/copy-path";
+import { movePathTool } from "@chernobog/tools/builtins/move-path";
+import { writeProjectFileTool } from "@chernobog/tools/builtins/write-project-file";
+import { runProjectCommandTool } from "@chernobog/tools/builtins/run-project-command";
+import { readProjectNoteTool } from "@chernobog/tools/builtins/read-project-note";
+import { searchProjectNotesTool } from "@chernobog/tools/builtins/search-project-notes";
+import { buildModuleToolRegistry } from "@chernobog/external-projects/registry";
+import { getProjectGitStateTool } from "@chernobog/tools/builtins/get-project-git-state";
 
 export const toolRegistry = {
   get_time: getTimeTool,

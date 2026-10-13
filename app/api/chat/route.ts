@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { runCommandPipeline } from "@/lib/chernobog/pipeline/runCommand";
+import { runLiveOh4CommandPipeline } from "@/lib/chernobog/cognition/liveOh4CommandPipeline";
 import { buildSpokenReply } from "@/lib/chernobog/personality";
 
 export const runtime = "nodejs";
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = await runCommandPipeline(
+    const result = await runLiveOh4CommandPipeline(
       userMessage,
       sessionId,
       { responseMode },

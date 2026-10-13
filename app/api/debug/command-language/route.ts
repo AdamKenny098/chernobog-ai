@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { parseUnifiedCommand } from "@/lib/chernobog/command-language";
+import { parseUnifiedCommand } from "@chernobog/core/command-language";
 
 export const runtime = "nodejs";
 

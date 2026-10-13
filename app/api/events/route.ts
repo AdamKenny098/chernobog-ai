@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import {
   getChernobogEventBus,
   type ChernobogEventQuery,
-} from "@/lib/chernobog/events";
+} from "@chernobog/events";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

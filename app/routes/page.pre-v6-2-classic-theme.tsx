@@ -5,7 +5,7 @@ import {
   CHERNOBOG_ROUTE_STATUSES,
   getAllChernobogRoutes,
   getPrimaryNavigationRoutes,
-} from "@/lib/chernobog-ui/routeRegistry";
+} from "@chernobog/ui/registry/routeRegistry";
 
 type SearchParamsValue = string | string[] | undefined;
 type SearchParams = Record<string, SearchParamsValue>;

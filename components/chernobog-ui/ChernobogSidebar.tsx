@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getPrimaryNavigationRoutes } from "@/lib/chernobog-ui/routeRegistry";
+import { getPrimaryNavigationRoutes } from "@chernobog/ui/registry/routeRegistry";
 
 export function ChernobogSidebar() {
   const routes = getPrimaryNavigationRoutes();

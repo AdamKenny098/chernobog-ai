@@ -5,7 +5,7 @@ import { buildVaultMemoryManifest, type VaultMemoryManifest } from "./memoryMani
 import type { VaultMemoryStatus } from "./memoryStatus";
 import { assertVaultMemoryStatusTransition } from "./memoryStatus";
 import type { VaultMemoryType } from "./memoryTypes";
-import { publishChernobogEventSafely } from "../../chernobog/events/publishers";
+import { publishChernobogEventSafely } from "@chernobog/events/publishers";
 
 export type VaultMemoryAuditEvent = {
   id: string;

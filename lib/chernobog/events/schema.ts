@@ -4,7 +4,7 @@ import {
   CHERNOBOG_EVENT_SCHEMA_VERSION,
   ChernobogEvent,
   ChernobogEventInput,
-} from "./types";
+} from "@chernobog/events/types";
 
 const EVENT_TYPE_PATTERN = /^[a-z0-9]+(?:[._-][a-z0-9]+)+$/;
 

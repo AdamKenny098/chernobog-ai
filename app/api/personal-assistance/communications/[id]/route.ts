@@ -3,7 +3,7 @@ import {
 } from "next/server";
 import {
   applyCommunicationAction,
-} from "@/lib/chernobog/personalAssistance/communicationResponsibility";
+} from "@chernobog/personal-assistance/communicationResponsibility";
 
 export const runtime =
   "nodejs";

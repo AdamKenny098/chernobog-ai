@@ -1,6 +1,6 @@
 import os from "node:os";
 import path from "node:path";
-import { ParsedToolCommand } from "./types";
+import { ParsedToolCommand } from "@chernobog/tools/types";
 
 function normalizeMessage(message: string) {
   return message.trim().replace(/\s+/g, " ");

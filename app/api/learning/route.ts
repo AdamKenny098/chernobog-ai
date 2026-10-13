@@ -4,7 +4,7 @@ import {
 
 import {
   getChernobogLearningRuntime,
-} from "@/lib/chernobog/learning";
+} from "@chernobog/core/learning";
 
 export const runtime = "nodejs";
 

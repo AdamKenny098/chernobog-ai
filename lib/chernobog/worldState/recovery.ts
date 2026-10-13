@@ -1,10 +1,10 @@
 import type {
   ChernobogEvent,
   ChernobogEventHandler,
-} from "../events/types";
+} from "@chernobog/events/types";
 import type {
   ChernobogEventBus,
-} from "../events/eventBus";
+} from "@chernobog/events/eventBus";
 import {
   buildWorldStateSnapshot,
 } from "./snapshotIntegrity";

@@ -1,5 +1,5 @@
 import type { UnifiedCommand } from "./types";
-import { parseRegisteredModuleCommand } from "@/lib/modules/registry";
+import { parseRegisteredModuleCommand } from "@chernobog/external-projects/registry";
 
 export type ModuleCommandParser = (message: string) => UnifiedCommand | null;
 

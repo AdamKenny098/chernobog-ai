@@ -1,4 +1,4 @@
-import { getChernobogEventBus } from "../events";
+import { getChernobogEventBus } from "@chernobog/events";
 
 export interface SensoryEventOptions {
   turnId?: string;

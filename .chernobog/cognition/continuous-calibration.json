@@ -1,0 +1,738 @@
+{
+  "schemaVersion": 1,
+  "savedAt": "2026-10-12T12:18:21.817Z",
+  "observations": [
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:deepseek-coder-v2:16b:code-diagnosis",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:deepseek-coder-v2:16b",
+      "modelVersion": "63fb193b3a9b",
+      "strategy": "single-model",
+      "task": {
+        "domain": "coding"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 3460,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "code-diagnosis"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:deepseek-coder-v2:16b:context",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:deepseek-coder-v2:16b",
+      "modelVersion": "63fb193b3a9b",
+      "strategy": "single-model",
+      "task": {
+        "domain": "context-comprehension"
+      },
+      "objective": {
+        "score": 0,
+        "success": false,
+        "verificationVerdict": "reject",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 3590,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "context"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:deepseek-coder-v2:16b:critic",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:deepseek-coder-v2:16b",
+      "modelVersion": "63fb193b3a9b",
+      "strategy": "single-model",
+      "task": {
+        "domain": "critic"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 8370,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "critic"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:deepseek-coder-v2:16b:planning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:deepseek-coder-v2:16b",
+      "modelVersion": "63fb193b3a9b",
+      "strategy": "single-model",
+      "task": {
+        "domain": "planning"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 8090,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "planning"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:deepseek-coder-v2:16b:reasoning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:deepseek-coder-v2:16b",
+      "modelVersion": "63fb193b3a9b",
+      "strategy": "single-model",
+      "task": {
+        "domain": "general-reasoning"
+      },
+      "objective": {
+        "score": 0,
+        "success": false,
+        "verificationVerdict": "reject",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 88470,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "reasoning"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:deepseek-r1:8b:context",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:deepseek-r1:8b",
+      "modelVersion": "6995872bfe4c",
+      "strategy": "single-model",
+      "task": {
+        "domain": "context-comprehension"
+      },
+      "objective": {
+        "score": 0,
+        "success": false,
+        "verificationVerdict": "reject",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 10160,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "context"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:deepseek-r1:8b:critic",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:deepseek-r1:8b",
+      "modelVersion": "6995872bfe4c",
+      "strategy": "single-model",
+      "task": {
+        "domain": "critic"
+      },
+      "objective": {
+        "score": 0,
+        "success": false,
+        "verificationVerdict": "reject",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 9950,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "critic"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:deepseek-r1:8b:planning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:deepseek-r1:8b",
+      "modelVersion": "6995872bfe4c",
+      "strategy": "single-model",
+      "task": {
+        "domain": "planning"
+      },
+      "objective": {
+        "score": 0,
+        "success": false,
+        "verificationVerdict": "reject",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 9900,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "planning"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:deepseek-r1:8b:reasoning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:deepseek-r1:8b",
+      "modelVersion": "6995872bfe4c",
+      "strategy": "single-model",
+      "task": {
+        "domain": "general-reasoning"
+      },
+      "objective": {
+        "score": 0,
+        "success": false,
+        "verificationVerdict": "reject",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 58470,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "reasoning"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:gpt-oss:20b:code-diagnosis",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:gpt-oss:20b",
+      "modelVersion": "f38aa0c53da5",
+      "strategy": "single-model",
+      "task": {
+        "domain": "coding"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 15410,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "code-diagnosis"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:gpt-oss:20b:context",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:gpt-oss:20b",
+      "modelVersion": "f38aa0c53da5",
+      "strategy": "single-model",
+      "task": {
+        "domain": "context-comprehension"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 7120,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "context"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:gpt-oss:20b:critic",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:gpt-oss:20b",
+      "modelVersion": "f38aa0c53da5",
+      "strategy": "single-model",
+      "task": {
+        "domain": "critic"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 15600,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "critic"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:gpt-oss:20b:planning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:gpt-oss:20b",
+      "modelVersion": "f38aa0c53da5",
+      "strategy": "single-model",
+      "task": {
+        "domain": "planning"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 24830,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "planning"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:gpt-oss:20b:reasoning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:gpt-oss:20b",
+      "modelVersion": "f38aa0c53da5",
+      "strategy": "single-model",
+      "task": {
+        "domain": "general-reasoning"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 141280,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "reasoning"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3-coder:30b:code-diagnosis",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3-coder:30b",
+      "modelVersion": "06c1097efce0",
+      "strategy": "single-model",
+      "task": {
+        "domain": "coding"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 19230,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "code-diagnosis"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3-coder:30b:context",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3-coder:30b",
+      "modelVersion": "06c1097efce0",
+      "strategy": "single-model",
+      "task": {
+        "domain": "context-comprehension"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 11120,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "context"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3-coder:30b:critic",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3-coder:30b",
+      "modelVersion": "06c1097efce0",
+      "strategy": "single-model",
+      "task": {
+        "domain": "critic"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 7150,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "critic"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3-coder:30b:planning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3-coder:30b",
+      "modelVersion": "06c1097efce0",
+      "strategy": "single-model",
+      "task": {
+        "domain": "planning"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 14400,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "planning"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3-coder:30b:reasoning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3-coder:30b",
+      "modelVersion": "06c1097efce0",
+      "strategy": "single-model",
+      "task": {
+        "domain": "general-reasoning"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 160790,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "reasoning"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3.5:9b:code-diagnosis",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3.5:9b",
+      "modelVersion": "56671c2ab938",
+      "strategy": "single-model",
+      "task": {
+        "domain": "coding"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 8690,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "code-diagnosis"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3.5:9b:context",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3.5:9b",
+      "modelVersion": "56671c2ab938",
+      "strategy": "single-model",
+      "task": {
+        "domain": "context-comprehension"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 3800,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "context"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3.5:9b:critic",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3.5:9b",
+      "modelVersion": "56671c2ab938",
+      "strategy": "single-model",
+      "task": {
+        "domain": "critic"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 1410,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "critic"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3.5:9b:planning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3.5:9b",
+      "modelVersion": "56671c2ab938",
+      "strategy": "single-model",
+      "task": {
+        "domain": "planning"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 5360,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "planning"
+      }
+    },
+    {
+      "id": "oh4-local-model-baseline-2026-10-12:qwen3.5:9b:reasoning",
+      "observedAt": "2026-10-12T00:48:19.623Z",
+      "source": "scheduled-evaluation",
+      "modelId": "ollama:qwen3.5:9b",
+      "modelVersion": "56671c2ab938",
+      "strategy": "single-model",
+      "task": {
+        "domain": "general-reasoning"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "executionSucceeded": true,
+        "evidenceConfidence": 1
+      },
+      "telemetry": {
+        "latencyMs": 71820,
+        "cost": 0,
+        "retries": 0,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "evaluationId": "oh4-local-model-baseline-2026-10-12",
+        "taskId": "reasoning"
+      }
+    },
+    {
+      "id": "oh4ad-a77e1f9e-17f0-4141-91bf-2a859a0195c3:real-work",
+      "observedAt": "2026-10-12T12:03:52.108Z",
+      "source": "real-work",
+      "modelId": "qwen3.5:9b",
+      "modelVersion": "56671c2ab938",
+      "strategy": "single-model",
+      "task": {
+        "domain": "reasoning",
+        "complexity": "trivial",
+        "creativity": "none",
+        "factuality": "low",
+        "reasoningDepth": "shallow",
+        "privacySensitivity": "public",
+        "toolUse": "false"
+      },
+      "objective": {
+        "score": 0.590656283504437,
+        "success": false,
+        "verificationVerdict": "revise",
+        "evidenceConfidence": 0.590656283504437
+      },
+      "telemetry": {
+        "latencyMs": 857,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "taskId": "oh4ad-a77e1f9e-17f0-4141-91bf-2a859a0195c3"
+      }
+    },
+    {
+      "id": "oh4ad-39191e30-eec7-4fc6-9990-3046a8de3b8e:real-work",
+      "observedAt": "2026-10-12T12:18:21.817Z",
+      "source": "real-work",
+      "modelId": "gpt-oss:20b",
+      "modelVersion": "f38aa0c53da5",
+      "strategy": "single-model",
+      "task": {
+        "domain": "reasoning",
+        "complexity": "trivial",
+        "creativity": "none",
+        "factuality": "low",
+        "reasoningDepth": "shallow",
+        "privacySensitivity": "public",
+        "toolUse": "false"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "evidenceConfidence": 0.8186557773851789
+      },
+      "telemetry": {
+        "latencyMs": 837,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "taskId": "oh4ad-39191e30-eec7-4fc6-9990-3046a8de3b8e"
+      }
+    }
+  ]
+}

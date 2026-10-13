@@ -3,7 +3,7 @@ import { ChernobogShell } from "@/components/chernobog-ui/ChernobogShell";
 import {
   getAllChernobogRoutes,
   getPrimaryNavigationRoutes,
-} from "@/lib/chernobog-ui/routeRegistry";
+} from "@chernobog/ui/registry/routeRegistry";
 import {
   ClassicBadge,
   ClassicFrame,

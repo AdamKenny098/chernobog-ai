@@ -1,4 +1,4 @@
-import type { UnifiedCommand } from "@/lib/chernobog/command-language";
+import type { UnifiedCommand } from "@chernobog/core/command-language";
 import { obsidianVaultModule } from "@/lib/modules/adapters/obsidianVaultAdapter";
 import { discordIngestModule } from "@/lib/modules/discord-ingest";
 import { fileWorkflowModule } from "@/lib/modules/file-workflow";

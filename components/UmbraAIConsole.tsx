@@ -143,7 +143,7 @@ type ExecutionStateSnapshot = {
 };
 
 const SESSION_STORAGE_KEY = "chernobog.sessionId";
-const REQUEST_TIMEOUT_MS = 120_000;
+const REQUEST_TIMEOUT_MS = 360_000;
 
 function nowTime() {
   return new Date().toLocaleTimeString();

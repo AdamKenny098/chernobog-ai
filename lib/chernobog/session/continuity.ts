@@ -2,7 +2,7 @@ import type { SessionContext } from "./types";
 import {
     buildWorkingMemorySnapshot,
     formatWorkingMemory,
-  } from "@/lib/chernobog/memory-architecture";
+  } from "@chernobog/vault/memory-architecture";
 
 
 export type ContinuityQueryKind =

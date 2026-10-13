@@ -8,7 +8,7 @@ import {
   listPersonalAttentionAudit,
   resetPersonalAttention,
   setPersonalAttention,
-} from "@/lib/chernobog/personalAssistance";
+} from "@chernobog/personal-assistance";
 
 export const runtime = "nodejs";
 

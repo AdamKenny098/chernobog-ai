@@ -4,8 +4,8 @@ import { spawn } from "node:child_process";
 
 import { z } from "zod";
 
-import { publishChernobogEventSafely } from "../../events/publishers";
-import { ToolDefinition } from "../types";
+import { publishChernobogEventSafely } from "@chernobog/events/publishers";
+import { ToolDefinition } from "@chernobog/tools/types";
 
 const runProjectCommandInputSchema = z.object({
   command: z.enum(["typecheck"]),

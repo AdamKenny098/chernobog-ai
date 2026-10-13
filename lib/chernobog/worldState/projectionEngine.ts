@@ -1,8 +1,8 @@
 import type {
   ChernobogEvent,
   ChernobogEventHandler,
-} from "../events/types";
-import type { ChernobogEventBus } from "../events/eventBus";
+} from "@chernobog/events/types";
+import type { ChernobogEventBus } from "@chernobog/events/eventBus";
 import {
   buildWorldStateInputFromEvent,
 } from "./eventProjection";

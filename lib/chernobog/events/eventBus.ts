@@ -1,5 +1,5 @@
-import { createChernobogEvent } from "./schema";
-import { ChernobogEventStore } from "./store";
+import { createChernobogEvent } from "@chernobog/events/schema";
+import { ChernobogEventStore } from "@chernobog/events/store";
 import {
   ChernobogEvent,
   ChernobogEventHandler,
@@ -7,28 +7,28 @@ import {
   ChernobogEventPublishResult,
   ChernobogEventQuery,
   ChernobogEventSubscriptionFilter,
-} from "./types";
+} from "@chernobog/events/types";
 
 import type {
   ChernobogEventRetentionPolicy,
   ChernobogEventRetentionResult,
-} from "./retention";
+} from "@chernobog/events/retention";
 
 import {
   describeReplayError,
   type ChernobogEventReplayHandler,
   type ChernobogEventReplayOptions,
   type ChernobogEventReplayResult,
-} from "./replay";
+} from "@chernobog/events/replay";
 
 import {
   buildChernobogEventDiagnostics,
   type ChernobogEventDiagnostics,
-} from "./diagnostics";
+} from "@chernobog/events/diagnostics";
 
 import type {
   ChernobogEventCorruptionRecoveryResult,
-} from "./store";
+} from "@chernobog/events/store";
 
 interface Subscription {
   id: number;

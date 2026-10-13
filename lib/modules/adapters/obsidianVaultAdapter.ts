@@ -2,7 +2,7 @@ import type {
     CommandConfidenceLevel,
     CommandTarget,
     UnifiedCommand,
-  } from "@/lib/chernobog/command-language";
+  } from "@chernobog/core/command-language";
   
   import {
     handleVaultCommand,
@@ -18,7 +18,7 @@ import type {
     ModuleHandlerResult,
   } from "@/lib/modules/types";
 
-import type { RouteName } from "@/lib/chernobog/session/types";
+import type { RouteName } from "@chernobog/core/session/types";
 import type { ModuleCommandResult } from "@/lib/modules/obsidian-vault/contract";
   
   function toConfidenceLevel(confidence: number): CommandConfidenceLevel {

@@ -1,6 +1,6 @@
 import type { ChernobogIncDepartment } from "./chernobogMissionTypes";
-import { createTrustDecision } from "./trustDecision";
-import type { TrustActionType } from "./trustActionTypes";
+import { createTrustDecision } from "@chernobog/trust/vault/trustDecision";
+import type { TrustActionType } from "@chernobog/trust/vault/trustActionTypes";
 import { generateV6ReadinessReport } from "./v6ReadinessReport";
 import type {
   V6OperatingLoopPhase,

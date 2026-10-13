@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 
 import type {
   ChernobogEvent,
-} from "./types";
+} from "@chernobog/events/types";
 
 export interface ChernobogEventLogCorruption {
   lineNumber: number;

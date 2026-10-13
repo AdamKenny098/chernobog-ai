@@ -1,4 +1,4 @@
-import type { ChernobogEvent } from "../events/types";
+import type { ChernobogEvent } from "@chernobog/events/types";
 import type {
   WorldStateJsonValue,
 } from "./types";

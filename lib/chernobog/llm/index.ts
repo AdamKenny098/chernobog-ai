@@ -8,3 +8,4 @@ export * from "./runtimeReadiness";
 export * from "./reliableOllama";
 export * from "./runtimeStatus";
 export * from "./modelRouterStatus";
+export * from "./gateway";

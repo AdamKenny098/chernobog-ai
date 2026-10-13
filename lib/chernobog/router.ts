@@ -1,12 +1,16 @@
 import {
-  generateWithReliableOllama as generateWithOllama,
-} from "./llm/reliableOllama";
+  generateWithModel as generateWithOllama,
+} from "@chernobog/models/gateway";
+import {
+  OLLAMA_LIFECYCLE_DEPENDENCY,
+  getLifecycleRuntime,
+} from "@chernobog/runtime";
 import type {
   OllamaChatMessage,
-} from "./llm/ollamaClient";
+} from "@chernobog/models";
 import type {
   ModelRole,
-} from "./llm/modelRouter";
+} from "@chernobog/models/modelRouter";
 import {
   buildChernobogPersonalityPrompt,
   type ChernobogResponseMode,
@@ -192,12 +196,52 @@ async function callOllama(
     numPredict?: number;
   } = {},
 ): Promise<string> {
-  const result = await generateWithOllama({
-    role: options.role ?? "default",
-    messages,
-    temperature: options.temperature ?? 0.4,
-    numPredict: options.numPredict ?? 500,
-  });
+  const result =
+    await getLifecycleRuntime()
+      .runDependencyOperation({
+        dependencyId:
+          OLLAMA_LIFECYCLE_DEPENDENCY,
+        operation:
+          () =>
+            generateWithOllama({
+              role:
+                options.role ??
+                "default",
+              messages,
+              temperature:
+                options.temperature ??
+                0.4,
+              numPredict:
+                options.numPredict ??
+                500,
+            }),
+        assess:
+          (runtimeResult) => ({
+            status:
+              runtimeResult.ok
+                ? runtimeResult.fallbackCount > 0
+                  ? "degraded"
+                  : "ready"
+                : "unavailable",
+            attempts:
+              runtimeResult.attempts,
+            retries:
+              Math.max(
+                0,
+                runtimeResult.attempts - 1,
+              ),
+            ...(runtimeResult.error
+              ? {
+                  reason:
+                    runtimeResult.error,
+                }
+              : {}),
+            metadata: {
+              fallbackCount:
+                runtimeResult.fallbackCount,
+            },
+          }),
+      });
 
   if (!result.ok || !result.text) {
     throw new Error(

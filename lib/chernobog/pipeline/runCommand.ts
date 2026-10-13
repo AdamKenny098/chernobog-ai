@@ -20,12 +20,12 @@ import {
   saveMessage,
 } from "@/lib/chernobog/memory";
 
-import { parseToolCommand } from "@/lib/chernobog/tools/parser";
-import { classifyToolIntent } from "@/lib/chernobog/tools/intent";
+import { parseToolCommand } from "@chernobog/tools/parser";
+import { classifyToolIntent } from "@chernobog/tools/intent";
 import {
   normalizeToolCall,
   openAppCallLooksLikeFileRequest,
-} from "@/lib/chernobog/tools/normalize";
+} from "@chernobog/tools/normalize";
 
 import {
   getSessionContext,
@@ -52,11 +52,11 @@ import {
   createTrustTrace,
   setTraceRoute,
   setTraceTool,
-} from "@/lib/chernobog/trust/trace";
+} from "@chernobog/trust/trust/trace";
 
 import { buildChernobogWorldStateContext } from "@/lib/chernobog/pipeline/worldStateContext";
 import { buildChernobogWorldModelContext } from "@/lib/chernobog/pipeline/worldModelContext";
-import { buildWorkflowSnapshot } from "@/lib/chernobog/trust/sessionSnapshot";
+import { buildWorkflowSnapshot } from "@chernobog/trust/trust/sessionSnapshot";
 import {
   buildContinuityReply,
   detectContinuityQuery,
@@ -67,7 +67,7 @@ import {
 
 import { parsePlannerCommand } from "@/lib/chernobog/planner/parser";
 import { runPlannerCommand } from "@/lib/chernobog/planner/coordinator";
-import { buildUnifiedMemoryContext } from "@/lib/chernobog/memory-architecture";
+import { buildUnifiedMemoryContext } from "@chernobog/vault/memory-architecture";
 import {
   excludeCurrentUserMessageFromHistory,
   selectResponseContext,
@@ -88,7 +88,7 @@ import {
 import {
   detectMemoryArchitectureCommand,
   runMemoryArchitectureCommand,
-} from "@/lib/chernobog/memory-architecture/commands";
+} from "@chernobog/vault/memory-architecture/commands";
 
 import {
   formatCommandLanguageHelp,
@@ -107,39 +107,43 @@ import {
 import {
   executeSavedContentCommand,
   isSavedContentCommand,
-} from "@/lib/modules/saved-content";
+} from "@chernobog/external-projects/saved-content";
 
 import {
   executeYouTubeOAuthCommand,
   isYouTubeOAuthCommand,
-} from "@/lib/modules/youtube-oauth";
+} from "@chernobog/external-projects/youtube-oauth";
 
 import {
   executeSavedContentReliabilityCommand,
   isSavedContentReliabilityCommand,
-} from "@/lib/modules/saved-content-reliability";
+} from "@chernobog/external-projects/saved-content-reliability";
 
 import {
   executeContentReviewCommand,
   isContentReviewCommand,
-} from "@/lib/modules/content-review";
+} from "@chernobog/external-projects/content-review";
 
 import {
   executeVaultBrainCommand,
   isVaultBrainCommand,
-} from "@/lib/modules/vault-brain";
+} from "@chernobog/vault/vault-brain";
 
 import {
   executeContentIngestCommand,
   isContentIngestCommand,
-} from "@/lib/modules/content-ingest";
+} from "@chernobog/external-projects/content-ingest";
 
 import {
   executeYouTubeIngestCommand,
   isYouTubeIngestCommand,
-} from "@/lib/modules/youtube-ingest";
+} from "@chernobog/external-projects/youtube-ingest";
 
 
+import { getDialogueRuntime } from "@chernobog/runtime";
+import { getRouterRuntime } from "@chernobog/runtime";
+import { getPlannerRuntime } from "@chernobog/runtime";
+import { getStateRuntime } from "@chernobog/runtime";
 type SessionWithExecutionState = ReturnType<typeof getSessionContext> & {
   executionState?: ExecutionState;
 };
@@ -180,11 +184,19 @@ export async function runCommandPipeline(
     responseMode?: ChernobogResponseMode;
   } = {},
 ): Promise<CommandPipelineResult> {
+  return getDialogueRuntime().runTurn(
+    { source: "command-pipeline" },
+    async (dialogueTurn) => {
   let route: RouteName = "chat";
   let reply = "";
   const trace = createTrustTrace(userMessage, sessionId);
 
   const startingSession = getSessionContext(sessionId);
+  getStateRuntime().bindSession(
+    dialogueTurn.id,
+    sessionId,
+    () => getSessionContext(sessionId),
+  );
 
 
   const activeProjectResolution = resolveActiveProjectContext({
@@ -530,10 +542,10 @@ export async function runCommandPipeline(
     const explicitPlannerCommand =
       parsePlannerCommand(userMessage);
     const explicitPlannerReply =
-      runPlannerCommand(
+      getPlannerRuntime().runPlanning(dialogueTurn.id, () => runPlannerCommand(
         explicitPlannerCommand,
         session,
-      );
+      ));
 
     if (explicitPlannerReply) {
       route = "planner";
@@ -727,7 +739,7 @@ if (unifiedMemoryAction) {
     const plannerCommand =
       unifiedToPlannerCommand(unifiedCommand) ??
       explicitPlannerCommand;
-    const plannerReply = runPlannerCommand(plannerCommand, session);
+    const plannerReply = getPlannerRuntime().runPlanning(dialogueTurn.id, () => runPlannerCommand(plannerCommand, session));
 
     if (plannerReply) {
       route = "planner";
@@ -902,7 +914,7 @@ if (unifiedMemoryAction) {
 
       addTraceStep(trace, "orchestration", "Checking V4.4 orchestration layer");
 
-      const orchestration = await orchestrateMessage(userMessage, session);
+      const orchestration = await getPlannerRuntime().runOrchestration(dialogueTurn.id, () => orchestrateMessage(userMessage, session));
 
       if (orchestration.handled) {
         route = orchestration.route;
@@ -1118,7 +1130,7 @@ if (unifiedMemoryAction) {
           } else {
             route =
               inheritedFollowUpRoute ??
-              (await routeMessage(userMessage));
+              (await (await getRouterRuntime().resolveRoute(dialogueTurn.id, () => routeMessage(userMessage))));
             setTraceRoute(trace, route);
 
             addTraceStep(
@@ -1278,4 +1290,7 @@ if (unifiedMemoryAction) {
   });
 
   return finalizePipelinePayload(sessionId, route, reply, trace);
+
+    },
+  );
 }

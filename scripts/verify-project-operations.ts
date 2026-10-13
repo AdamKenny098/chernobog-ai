@@ -123,6 +123,14 @@ async function main() {
     }
   } finally {
     db.close();
+    // OH-1L lifecycle cleanup: Project Operations
+    try {
+      const persistence = await import("../lib/modules/project-operations/persistence");
+      persistence.closeProjectOperationsPersistence();
+    } catch {
+      // Best-effort verifier cleanup only.
+    }
+
     fs.rmSync(tempRoot, { recursive: true, force: true });
   }
 }

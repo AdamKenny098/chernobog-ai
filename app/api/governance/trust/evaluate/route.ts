@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import type { TrustActionRequest } from "@/lib/modules/vault-brain/trustActionTypes";
-import { createTrustDecision } from "@/lib/modules/vault-brain/trustDecision";
-import { appendTrustAuditEvent } from "@/lib/modules/vault-brain/trustAuditLog";
-import { normalizeTrustActionType } from "@/lib/modules/vault-brain/trustActionTypes";
+import type { TrustActionRequest } from "@chernobog/trust/vault/trustActionTypes";
+import { createTrustDecision } from "@chernobog/trust/vault/trustDecision";
+import { appendTrustAuditEvent } from "@chernobog/trust/vault/trustAuditLog";
+import { normalizeTrustActionType } from "@chernobog/trust/vault/trustActionTypes";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({})) as Partial<TrustActionRequest>;

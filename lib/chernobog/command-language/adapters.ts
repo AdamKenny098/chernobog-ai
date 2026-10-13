@@ -1,5 +1,5 @@
 import type { ParsedPlannerCommand } from "@/lib/chernobog/planner/types";
-import type { MemoryArchitectureCommandKind } from "@/lib/chernobog/memory-architecture/commands";
+import type { MemoryArchitectureCommandKind } from "@chernobog/vault/memory-architecture/commands";
 import type { UnifiedCommand } from "./types";
 
 type UnifiedToolCall =

@@ -1,6 +1,6 @@
 import type {
     ChernobogEvent,
-  } from "./types";
+  } from "@chernobog/events/types";
   
   const DEFAULT_RETENTION_DAYS =
     30;

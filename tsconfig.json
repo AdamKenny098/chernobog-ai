@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +23,61 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@chernobog/runtime": ["./packages/runtime/src/index.ts"],
+      "@chernobog/runtime/*": ["./packages/runtime/src/*"],
+      "@chernobog/observability": ["./packages/observability/src/index.ts"],
+      "@chernobog/observability/*": ["./packages/observability/src/*"],
+      "@chernobog/external-projects": ["./packages/external-projects/src/index.ts"],
+      "@chernobog/external-projects/*": ["./packages/external-projects/src/*"],
+      "@chernobog/ui": ["./apps/chernobog-ui/src/index.ts"],
+      "@chernobog/ui/*": ["./apps/chernobog-ui/src/*"],
+      "@chernobog/core": ["./packages/core/src/index.ts"],
+      "@chernobog/core/*": ["./packages/core/src/*"],
+      "@/*": [
+        "./*"
+      ],
+      "@chernobog/contracts": [
+        "./packages/contracts/src/index.ts"
+      ],
+      "@chernobog/contracts/*": [
+        "./packages/contracts/src/*"
+      ],
+      "@chernobog/events": [
+        "./packages/events/src/index.ts"
+      ],
+      "@chernobog/events/*": [
+        "./packages/events/src/*"
+      ],
+      "@chernobog/tools": [
+        "./packages/tools/src/index.ts"
+      ],
+      "@chernobog/tools/*": [
+        "./packages/tools/src/*"
+      ],
+      "@chernobog/trust": [
+        "./packages/trust/src/index.ts"
+      ],
+      "@chernobog/trust/*": [
+        "./packages/trust/src/*"
+      ],
+      "@chernobog/models": [
+        "./packages/models/src/index.ts"
+      ],
+      "@chernobog/models/*": [
+        "./packages/models/src/*"
+      ],
+      "@chernobog/vault": [
+        "./packages/vault/src/index.ts"
+      ],
+      "@chernobog/vault/*": [
+        "./packages/vault/src/*"
+      ],
+      "@chernobog/personal-assistance": [
+        "./packages/personal-assistance/src/index.ts"
+      ],
+      "@chernobog/personal-assistance/*": [
+        "./packages/personal-assistance/src/*"
+      ]
     }
   },
   "include": [

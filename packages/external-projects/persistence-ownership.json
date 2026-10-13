@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "slice": "OH-1L",
+  "physicalDataMigration": "none",
+  "owners": {
+    "core": {
+      "scope": "Core runtime/session/state persistence",
+      "compatibilityFile": "data/chernobog.db"
+    },
+    "events": {
+      "scope": "Event Spine persistence",
+      "implementation": "packages/events/src/store.ts"
+    },
+    "vault": {
+      "scope": "Vault and memory persistence",
+      "implementationBoundary": "packages/vault"
+    },
+    "personalAssistance": {
+      "scope": "PA profile/attention/mobile/responsibility/calendar/work-schedule persistence",
+      "client": "packages/personal-assistance/src/persistence.ts",
+      "physicalCompatibilityFile": "data/chernobog.db",
+      "dataDirectoryOverride": "CHERNOBOG_DATA_DIR"
+    },
+    "externalProjects": {
+      "projectOperations": {
+        "scope": "project_operations_* tables",
+        "client": "lib/modules/project-operations/persistence.ts",
+        "physicalCompatibilityFile": "data/chernobog.db"
+      },
+      "itchGameRadar": {
+        "scope": "Itch/Game Radar SQLite",
+        "implementation": "lib/modules/itch-discovery/database/client.ts",
+        "ownership": "independent"
+      }
+    }
+  },
+  "rules": [
+    "No package reaches directly into another package persistence implementation",
+    "No stored data is moved or deleted in OH-1L",
+    "Physical compatibility locations may remain while logical ownership is separated"
+  ]
+}

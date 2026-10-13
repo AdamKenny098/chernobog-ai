@@ -1,7 +1,7 @@
 import type {
   CommandConfidenceLevel,
   UnifiedCommand,
-} from "@/lib/chernobog/command-language";
+} from "@chernobog/core/command-language";
 
 import type {
   ProjectOperationsModuleCommand,

@@ -1,7 +1,7 @@
 import os from "node:os";
 import path from "node:path";
-import { ParsedToolCommand } from "./types";
-import { ToolIntent } from "./intent";
+import { ParsedToolCommand } from "@chernobog/tools/types";
+import { ToolIntent } from "@chernobog/tools/intent";
 
 type ExecutableToolCall = Exclude<ToolIntent, { tool: "none" }> | ParsedToolCommand;
 

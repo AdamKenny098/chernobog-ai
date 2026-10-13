@@ -3,7 +3,7 @@ import {
 } from "node:crypto";
 import {
   publishChernobogEventSafely,
-} from "@/lib/chernobog/events";
+} from "@chernobog/events";
 import {
   patchPersonalAssistanceProfile,
 } from "../profileStore";

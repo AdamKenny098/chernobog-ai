@@ -1,7 +1,11 @@
 import { z } from "zod";
 import {
   generateWithReliableOllama as generateWithOllama,
-} from "../llm/reliableOllama";
+} from "@chernobog/models/reliableOllama";
+import {
+  OLLAMA_LIFECYCLE_DEPENDENCY,
+  getLifecycleRuntime,
+} from "@chernobog/runtime";
 
 const toolIntentSchema = z.discriminatedUnion("tool", [
   z.object({
@@ -98,12 +102,46 @@ export async function classifyToolIntent(message: string): Promise<ToolIntent> {
     `Message: ${JSON.stringify(message)}`,
   ].join("\n");
 
-  const result = await generateWithOllama({
-    role: "default",
-    prompt,
-    temperature: 0,
-    format: "json",
-  });
+  const result =
+    await getLifecycleRuntime()
+      .runDependencyOperation({
+        dependencyId:
+          OLLAMA_LIFECYCLE_DEPENDENCY,
+        operation:
+          () =>
+            generateWithOllama({
+              role: "default",
+              prompt,
+              temperature: 0,
+              format: "json",
+            }),
+        assess:
+          (runtimeResult) => ({
+            status:
+              runtimeResult.ok
+                ? runtimeResult.fallbackCount > 0
+                  ? "degraded"
+                  : "ready"
+                : "unavailable",
+            attempts:
+              runtimeResult.attempts,
+            retries:
+              Math.max(
+                0,
+                runtimeResult.attempts - 1,
+              ),
+            ...(runtimeResult.error
+              ? {
+                  reason:
+                    runtimeResult.error,
+                }
+              : {}),
+            metadata: {
+              fallbackCount:
+                runtimeResult.fallbackCount,
+            },
+          }),
+      });
 
   if (!result.ok || !result.text) {
     return { tool: "none", input: {} };
