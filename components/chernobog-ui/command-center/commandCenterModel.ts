@@ -137,7 +137,7 @@ export function buildCommandCenterModel({
   primaryRoutes,
   modules,
 }: BuildCommandCenterModelInput): CommandCenterModel {
-  const headerRouteIds = ["command", "routes", "modules", "vault"];
+  const headerRouteIds = ["command", "routes", "modules", "models", "vault"];
   const subsystemRouteIds = [
     "command",
     "vault",

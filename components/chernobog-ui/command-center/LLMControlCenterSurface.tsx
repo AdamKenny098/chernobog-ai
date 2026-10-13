@@ -62,6 +62,54 @@ type TestResult = {
   fallbackCount?: number;
 };
 
+type BenchmarkCheck = {
+  id: string;
+  label: string;
+  weight: number;
+  mandatory: boolean;
+  passed: boolean;
+  detail: string;
+};
+
+type BenchmarkScenario = {
+  id: string;
+  title: string;
+  finalStatus: string;
+  passed: boolean;
+  checks: BenchmarkCheck[];
+  humanInterventionCount: number;
+  recoveryCount: number;
+  stageExecutionCount: number;
+  selectedProfile: string;
+  selectedStrategy?: string;
+  selectedModel?: string;
+  actCount: number;
+  notes: string[];
+};
+
+type BenchmarkReport = {
+  version: string;
+  benchmarkName: "Vespr Benchmark";
+  generatedAt: string;
+  mode: "deterministic-delegation-acceptance";
+  score: number;
+  maximumScore: number;
+  percentage: number;
+  passThreshold: number;
+  passed: boolean;
+  mandatoryFailures: string[];
+  scenarios: BenchmarkScenario[];
+  coverage: Record<string, boolean>;
+  architecture: {
+    fullStageOrder: string[];
+    callerPreselectsModel: false;
+    callerPreselectsStrategy: false;
+    hiddenScratchReasoningRequired: false;
+    liveProviderQualityMeasured: false;
+  };
+  notes: string[];
+};
+
 async function callControl(
   body?: Record<string, unknown>,
 ) {
@@ -153,6 +201,25 @@ export function LLMControlCenterSurface() {
     setBusy,
   ] =
     useState(false);
+
+  const [
+    benchmarkReport,
+    setBenchmarkReport,
+  ] =
+    useState<BenchmarkReport | null>(
+      null,
+    );
+
+  const [
+    benchmarkBusy,
+    setBenchmarkBusy,
+  ] = useState(false);
+
+  const [
+    benchmarkError,
+    setBenchmarkError,
+  ] =
+    useState<string | null>(null);
 
   const refresh =
     useCallback(
@@ -356,6 +423,46 @@ export function LLMControlCenterSurface() {
     );
   }
 
+  async function runBenchmark() {
+    setBenchmarkBusy(true);
+    setBenchmarkError(null);
+
+    try {
+      const response =
+        await fetch(
+          "/api/cognition/vespr-benchmark",
+          {
+            method: "POST",
+          },
+        );
+
+      const data =
+        await response.json();
+
+      if (
+        !response.ok ||
+        !data.ok
+      ) {
+        throw new Error(
+          data.error ??
+          "Vespr Benchmark request failed.",
+        );
+      }
+
+      setBenchmarkReport(
+        data.report as BenchmarkReport,
+      );
+    } catch (value) {
+      setBenchmarkError(
+        value instanceof Error
+          ? value.message
+          : String(value),
+      );
+    } finally {
+      setBenchmarkBusy(false);
+    }
+  }
+
   return (
     <div className="grid gap-3">
       <header className="border border-[#5d3214]/80 bg-[#070503]/95 p-4">
@@ -368,6 +475,21 @@ export function LLMControlCenterSurface() {
         <p className="mt-2 max-w-4xl text-xs leading-5 text-[#b7a386]">
           Replaceable administrative surface over the core model registry and gateway.
         </p>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <a
+            href="#model-control"
+            className="border border-[#c9782f]/60 bg-[#281508]/35 px-3 py-1.5 text-[8px] font-semibold uppercase tracking-[0.2em] text-[#ffd28a]"
+          >
+            Model Control
+          </a>
+          <a
+            href="#vespr-benchmark"
+            className="border border-[#5d3214]/70 bg-black/25 px-3 py-1.5 text-[8px] font-semibold uppercase tracking-[0.2em] text-[#b7a386]"
+          >
+            Vespr Benchmark
+          </a>
+        </div>
 
         {snapshot ? (
           <div className="mt-4 grid gap-2 sm:grid-cols-3 lg:grid-cols-6">
@@ -403,7 +525,10 @@ export function LLMControlCenterSurface() {
         </div>
       ) : null}
 
-      <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div
+        id="model-control"
+        className="grid scroll-mt-4 gap-3 xl:grid-cols-[minmax(0,1fr)_320px]"
+      >
         <section className="border border-[#5d3214]/80 bg-[#070503]/95 p-3">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#ffe0ac]">
@@ -548,6 +673,10 @@ export function LLMControlCenterSurface() {
               Test / Compare
             </h2>
 
+            <p className="mt-2 text-[9px] leading-4 text-[#8e785c]">
+              Live model test surface. Prompts are sent through the registered provider path and returned duration/output is measured separately from the deterministic Vespr architecture benchmark.
+            </p>
+
             <textarea
               value={prompt}
               onChange={(event) => setPrompt(event.target.value)}
@@ -604,6 +733,220 @@ export function LLMControlCenterSurface() {
           </div>
         </section>
       ) : null}
+
+      <section
+        id="vespr-benchmark"
+        className="scroll-mt-4 border border-[#5d3214]/80 bg-[#070503]/95 p-3"
+      >
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#ffe0ac]">
+              Vespr Benchmark
+            </h2>
+            <p className="mt-2 max-w-4xl text-[9px] leading-4 text-[#b7a386]">
+              Deterministic OH-4AE delegation and control-plane acceptance test. It validates architecture behaviour such as clarification, routing, planning, authority, recovery, interruption and provenance. It does not measure live Qwen, DeepSeek, Ollama or other provider quality.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            disabled={benchmarkBusy}
+            onClick={() => void runBenchmark()}
+            className="border border-[#c9782f]/60 bg-[#281508]/50 px-3 py-1.5 text-[8px] font-semibold uppercase tracking-[0.2em] text-[#ffd28a] disabled:opacity-40"
+          >
+            {benchmarkBusy
+              ? "Running Benchmark..."
+              : "Run Vespr Benchmark"}
+          </button>
+        </div>
+
+        <div className="mt-3 border border-[#5d3214]/55 bg-black/25 p-3 text-[9px] leading-4 text-[#8e785c]">
+          <span className="font-semibold uppercase tracking-[0.16em] text-[#ffd28a]">
+            Benchmark integrity:
+          </span>{" "}
+          Scenario model identifiers are deterministic routing fixtures used to exercise the OH-4 architecture. They are not measured model-performance results.
+        </div>
+
+        {benchmarkError ? (
+          <div className="mt-3 border border-red-400/40 bg-red-950/20 p-3 text-xs text-red-200">
+            {benchmarkError}
+          </div>
+        ) : null}
+
+        {benchmarkBusy ? (
+          <div className="mt-3 border border-[#5d3214]/55 bg-black/25 p-3 text-[9px] uppercase tracking-[0.16em] text-[#b7a386]">
+            Executing deterministic acceptance scenarios...
+          </div>
+        ) : null}
+
+        {benchmarkReport ? (
+          <div className="mt-3 grid gap-3">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="border border-[#5d3214]/55 bg-black/25 p-3">
+                <div className="text-[7px] uppercase tracking-[0.22em] text-[#8e785c]">
+                  Overall Score
+                </div>
+                <div className="mt-1 font-mono text-sm text-[#ffd28a]">
+                  {benchmarkReport.score}/{benchmarkReport.maximumScore} ({benchmarkReport.percentage}%)
+                </div>
+              </div>
+              <div className="border border-[#5d3214]/55 bg-black/25 p-3">
+                <div className="text-[7px] uppercase tracking-[0.22em] text-[#8e785c]">
+                  Status
+                </div>
+                <div
+                  className={[
+                    "mt-1 font-mono text-sm",
+                    benchmarkReport.passed
+                      ? "text-emerald-200"
+                      : "text-red-200",
+                  ].join(" ")}
+                >
+                  {benchmarkReport.passed ? "PASS" : "FAIL"}
+                </div>
+              </div>
+              <div className="border border-[#5d3214]/55 bg-black/25 p-3">
+                <div className="text-[7px] uppercase tracking-[0.22em] text-[#8e785c]">
+                  Pass Threshold
+                </div>
+                <div className="mt-1 font-mono text-sm text-[#ffd28a]">
+                  {benchmarkReport.passThreshold}%
+                </div>
+              </div>
+              <div className="border border-[#5d3214]/55 bg-black/25 p-3">
+                <div className="text-[7px] uppercase tracking-[0.22em] text-[#8e785c]">
+                  Live Provider Quality
+                </div>
+                <div className="mt-1 font-mono text-sm text-[#b7a386]">
+                  {benchmarkReport.architecture.liveProviderQualityMeasured
+                    ? "MEASURED"
+                    : "NOT MEASURED"}
+                </div>
+              </div>
+            </div>
+
+            <section className="border border-[#5d3214]/55 bg-black/25 p-3">
+              <h3 className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#ffe0ac]">
+                Mandatory Failures
+              </h3>
+              <div className="mt-2 font-mono text-[10px] leading-5 text-[#b7a386]">
+                {benchmarkReport.mandatoryFailures.length > 0
+                  ? benchmarkReport.mandatoryFailures.join(", ")
+                  : "None"}
+              </div>
+            </section>
+
+            <section className="border border-[#5d3214]/55 bg-black/25 p-3">
+              <h3 className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#ffe0ac]">
+                Scenario Results
+              </h3>
+              <div className="mt-3 grid gap-2">
+                {benchmarkReport.scenarios.map((scenario) => (
+                  <article
+                    key={scenario.id}
+                    className="border border-[#5d3214]/45 bg-[#090604] p-3"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <div className="font-mono text-[10px] text-[#ffd28a]">
+                          {scenario.title}
+                        </div>
+                        <div className="mt-1 text-[8px] uppercase tracking-[0.16em] text-[#8e785c]">
+                          {scenario.id} / {scenario.finalStatus}
+                        </div>
+                      </div>
+                      <span
+                        className={
+                          scenario.passed
+                            ? "border border-emerald-400/40 px-2 py-1 text-[8px] uppercase text-emerald-200"
+                            : "border border-red-400/40 px-2 py-1 text-[8px] uppercase text-red-200"
+                        }
+                      >
+                        {scenario.passed ? "PASS" : "FAIL"}
+                      </span>
+                    </div>
+
+                    <div className="mt-2 grid gap-1 text-[9px] leading-4 text-[#8e785c] sm:grid-cols-2 lg:grid-cols-4">
+                      <div>Profile: {scenario.selectedProfile}</div>
+                      <div>Strategy: {scenario.selectedStrategy ?? "n/a"}</div>
+                      <div>Routing fixture: {scenario.selectedModel ?? "n/a"}</div>
+                      <div>Recoveries: {scenario.recoveryCount}</div>
+                    </div>
+
+                    <div className="mt-3 grid gap-1">
+                      {scenario.checks.map((check) => (
+                        <div
+                          key={check.id}
+                          className="border border-[#5d3214]/35 bg-black/20 p-2 text-[9px] leading-4 text-[#b7a386]"
+                        >
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span className="font-mono text-[#ffd28a]">
+                              {check.label}
+                            </span>
+                            <span className={check.passed ? "text-emerald-200" : "text-red-200"}>
+                              {check.passed ? "PASS" : "FAIL"}
+                              {check.mandatory ? " / mandatory" : ""}
+                              {` / weight ${check.weight}`}
+                            </span>
+                          </div>
+                          <div className="mt-1 text-[#8e785c]">
+                            {check.detail}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="grid gap-2 lg:grid-cols-2">
+              <div className="border border-[#5d3214]/55 bg-black/25 p-3">
+                <h3 className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#ffe0ac]">
+                  Coverage
+                </h3>
+                <div className="mt-2 grid gap-1">
+                  {Object.entries(benchmarkReport.coverage).map(([label, passed]) => (
+                    <div
+                      key={label}
+                      className="flex items-center justify-between gap-3 text-[9px] text-[#b7a386]"
+                    >
+                      <span>{label}</span>
+                      <span className={passed ? "text-emerald-200" : "text-red-200"}>
+                        {passed ? "PASS" : "FAIL"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border border-[#5d3214]/55 bg-black/25 p-3">
+                <h3 className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#ffe0ac]">
+                  Diagnostics
+                </h3>
+                <div className="mt-2 text-[9px] leading-4 text-[#b7a386]">
+                  <div>Mode: {benchmarkReport.mode}</div>
+                  <div>Version: {benchmarkReport.version}</div>
+                  <div>Generated: {benchmarkReport.generatedAt}</div>
+                  <div>Caller preselects model: no</div>
+                  <div>Caller preselects strategy: no</div>
+                  <div>Hidden scratch reasoning required: no</div>
+                </div>
+                <div className="mt-3 grid gap-1">
+                  {benchmarkReport.notes.map((note) => (
+                    <div
+                      key={note}
+                      className="border-l border-[#c9782f]/45 pl-2 text-[9px] leading-4 text-[#8e785c]"
+                    >
+                      {note}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </div>
+        ) : null}
+      </section>
     </div>
   );
 }

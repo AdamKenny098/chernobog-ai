@@ -160,6 +160,19 @@ export const CHERNOBOG_ROUTES: ChernobogRoute[] = [
     isUserFacing: true,
   },
   {
+    id: "models",
+    label: "LLM Control Center",
+    path: "/command-center/models",
+    kind: "settings",
+    status: "active",
+    description:
+      "Model registry, model testing, comparison, and Vespr architecture benchmark surface.",
+    moduleId: "command-core",
+    commands: ["open llm control center", "show models"],
+    isPrimaryNavigation: false,
+    isUserFacing: true,
+  },
+  {
     id: "vault",
     label: "Vault",
     path: "/vault",
