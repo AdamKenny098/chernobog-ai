@@ -1,0 +1,5 @@
+# OH-5J - Project State, Tasks and Proactive Review
+
+A project-registered, SQLite-backed task/milestone/blocker/decision ledger. All incoming project-state observations are **proposals**, never completed facts. An authenticated owner must explicitly promote a proposal to open, then change states with a meaningful reason and expected revision. Completion timestamps and append-only status-audit events persist over restarts. All operations require explicit project scope.
+
+`OH5ProjectState.attention` produces **review-queue-only** attention candidates; it does not send notifications, bypass DND, change a calendar, or autonomously mark tasks complete. External evidence cannot issue project commands. The authenticated `/api/oh5/project-state` route exposes propose/change/brief/attention/history; this is not yet connected to live OH-4 chat, PA notifications or the OH-5K review UI. Integration and adversarial acceptance are deferred to OH-5N.

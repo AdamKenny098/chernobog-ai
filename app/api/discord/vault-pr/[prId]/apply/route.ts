@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { hasOwnerAuthorization } from "@/packages/vault/src/oh5/auth";
 
 import { applyApprovedVaultPullRequest } from "@/lib/modules/discord-ingest/approval/applyVaultPullRequest";
 
@@ -13,6 +14,9 @@ type ApplyRequestBody = {
 };
 
 export async function POST(request: Request, context: RouteContext) {
+  if (!hasOwnerAuthorization(request.headers.get("authorization"))) {
+    return NextResponse.json({ ok: false, error: "Owner authorization required" }, { status: 401 });
+  }
   const { prId } = await context.params;
   const body = (await request.json()) as ApplyRequestBody;
 

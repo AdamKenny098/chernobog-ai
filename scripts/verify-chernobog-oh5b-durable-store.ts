@@ -1,0 +1,45 @@
+import assert from "node:assert/strict";
+import path from "node:path";
+import os from "node:os";
+import fs from "node:fs";
+import { randomUUID } from "node:crypto";
+import { GovernedMemoryStore } from "../packages/vault/src/oh5/store";
+import { hasOwnerAuthorization } from "../packages/vault/src/oh5/auth";
+const root=fs.mkdtempSync(path.join(os.tmpdir(),"chernobog-oh5b-"));const db=path.join(root,"test.sqlite");let count=0;
+function check(name:string,fn:()=>void){fn();count++;console.log("PASS",name);}
+let store=new GovernedMemoryStore(db);
+try{
+ const m=store.ingest({projectId:"malware",body:"Skyquake recovered",sourceRef:"chat:test:1",channel:"discord"});
+ check("external ingress only raw",()=>assert.equal(m.tier,"raw"));
+ check("outside project cannot read",()=>assert.equal(store.get("vestige",m.id),undefined));
+ check("raw absent from approved recall",()=>assert.deepEqual(store.recall("malware","Skyquake"),[]));
+ check("source provenance retained",()=>assert.equal(store.get("malware",m.id)?.sourceRef,"chat:test:1"));
+ check("reject unscoped",()=>assert.throws(()=>store.ingest({projectId:"",body:"x",sourceRef:"test",channel:"file"})));
+ check("reject empty provenance",()=>assert.throws(()=>store.ingest({projectId:"malware",body:"x",sourceRef:"",channel:"file"})));
+ check("no forged owner decision",()=>assert.throws(()=>store.ownerDecision({action:"confirm",projectId:"malware",id:m.id,expectedRevision:1,reason:"x",evidenceRefs:["a"],approvalId:randomUUID()},false)));
+ check("raw cannot confirm",()=>assert.throws(()=>store.ownerDecision({action:"confirm",projectId:"malware",id:m.id,expectedRevision:1,reason:"x",evidenceRefs:["a"],approvalId:randomUUID()},true)));
+ const candidate=store.propose({projectId:"malware",id:m.id,expectedRevision:1,channel:"model"});
+ check("propose candidate",()=>assert.equal(candidate.tier,"candidate"));
+ check("stale revision blocked",()=>assert.throws(()=>store.propose({projectId:"malware",id:m.id,expectedRevision:1,channel:"model"})));
+ const approvalId=randomUUID();
+ const confirmed=store.ownerDecision({action:"confirm",projectId:"malware",id:m.id,expectedRevision:2,reason:"Owner accepted canon",evidenceRefs:["chat:test:1"],approvalId},true);
+ check("approved tier confirmed",()=>assert.equal(confirmed.tier,"confirmed"));
+ check("approved recall scoped",()=>assert.equal(store.recall("malware","Skyquake").length,1));
+ check("wrong scope cannot mutate",()=>assert.throws(()=>store.ownerDecision({action:"reject",projectId:"vestige",id:m.id,expectedRevision:3,reason:"x",evidenceRefs:["a"],approvalId:randomUUID()},true)));
+ check("approval cannot be reused",()=>{const n=store.ingest({projectId:"malware",body:"test",sourceRef:"source",channel:"file"});const c=store.propose({projectId:"malware",id:n.id,expectedRevision:1,channel:"model"});assert.throws(()=>store.ownerDecision({action:"confirm",projectId:"malware",id:c.id,expectedRevision:2,reason:"x",evidenceRefs:["a"],approvalId},true))});
+ const replacement=store.ingest({projectId:"malware",body:"Skyquake status revised",sourceRef:"chat:test:2",channel:"owner-ui"});
+ const rc=store.propose({projectId:"malware",id:replacement.id,expectedRevision:1,channel:"owner-ui"});
+ const newConfirmed=store.ownerDecision({action:"confirm",projectId:"malware",id:rc.id,expectedRevision:2,reason:"new canon",evidenceRefs:["chat:test:2"],approvalId:randomUUID()},true);
+ check("supersession requires reason",()=>assert.throws(()=>store.ownerDecision({action:"supersede",projectId:"malware",id:m.id,expectedRevision:3,reason:"",replacementId:newConfirmed.id,evidenceRefs:["a"],approvalId:randomUUID()},true)));
+ const prior=store.ownerDecision({action:"supersede",projectId:"malware",id:m.id,expectedRevision:3,reason:"new canon replaces old",replacementId:newConfirmed.id,evidenceRefs:["chat:test:2"],approvalId:randomUUID()},true);
+ check("supersession retains predecessor",()=>assert.equal(prior.supersededBy,newConfirmed.id));
+ check("superseded excluded from recall",()=>assert.deepEqual(store.recall("malware","recovered"),[]));
+ check("audit captures chain",()=>assert.equal(store.audit("malware",m.id).length,4));
+ store.close();store=new GovernedMemoryStore(db);
+ check("restart durable",()=>assert.equal(store.get("malware",m.id)?.tier,"superseded"));
+ check("source audit survives restart",()=>assert.equal(store.audit("malware",m.id).length,4));
+ check("owner API token missing fail closed",()=>assert.equal(hasOwnerAuthorization(null,"x".repeat(40)),false));
+ check("owner API bearer match",()=>assert.equal(hasOwnerAuthorization("Bearer "+"x".repeat(40),"x".repeat(40)),true));
+ check("owner API bad bearer rejected",()=>assert.equal(hasOwnerAuthorization("Bearer "+"y".repeat(40),"x".repeat(40)),false));
+ console.log(`OH-5B DURABLE STORE: PASS ${count}/${count}`);
+}finally{store.close();fs.rmSync(root,{recursive:true,force:true});}

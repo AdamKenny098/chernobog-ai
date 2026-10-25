@@ -1,0 +1,5 @@
+# OH-5I - Scoped Evidence Packets and Extractive Answers
+
+`OH5ContextAssembler` accepts an explicitly selected registered project and calls the OH-5H confirmed-only recall service. It emits bounded context packets with per-record memory IDs, source references, revisions, timestamps, and explicit omission counts. The `general` mode does not read memory. `vault-only` and `vault-first` require a project. The generated text labels stored content as evidence, never instructions.
+
+`composeEvidenceAnswer` provides extractive, cited snippets and an insufficient-evidence response. It is intentionally not an LLM synthesizer. A separate owner-authenticated `/api/oh5/context` endpoint supports `packet`, `model-context`, and `answer` output. These features remain opt-in and **do not modify the live OH-4 chat pipeline**. Live conversational integration and source-grounding regression must be completed before OH-5N system acceptance. No automatic memory writeback occurs.

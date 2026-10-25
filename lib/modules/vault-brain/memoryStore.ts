@@ -131,6 +131,12 @@ function matchesText(entry: VaultMemoryEntry, text: string): boolean {
   return query.split(/\s+/g).every((token) => haystack.includes(token));
 }
 
+function assertLegacyApprovalDisabled(update: VaultMemoryStatusUpdate): void {
+  if (update.status === "approved") {
+    throw new Error("OH-5B: legacy memory approval disabled. Use authenticated /api/oh5/memory confirmation.");
+  }
+}
+
 export class VaultMemoryStore {
   readonly paths: VaultMemoryStorePaths;
 
@@ -337,6 +343,7 @@ export class VaultMemoryStore {
     id: string,
     update: VaultMemoryStatusUpdate
   ): Promise<VaultMemoryEntry> {
+    assertLegacyApprovalDisabled(update);
     const entries = await this.loadEntries();
     const index = entries.findIndex((entry) => entry.id === id);
 

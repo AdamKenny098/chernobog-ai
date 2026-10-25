@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { hasOwnerAuthorization } from "@/packages/vault/src/oh5/auth";
 
 import { setVaultPullRequestChangeStatus } from "@/lib/modules/discord-ingest/approval/pullRequestStore";
 import type { VaultProposedChangeStatus } from "@/lib/modules/discord-ingest/types";
@@ -25,6 +26,9 @@ function isValidStatus(value: unknown): value is VaultProposedChangeStatus {
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
+  if (!hasOwnerAuthorization(request.headers.get("authorization"))) {
+    return NextResponse.json({ ok: false, error: "Owner authorization required" }, { status: 401 });
+  }
   const { prId, changeId } = await context.params;
   const body = (await request.json()) as ChangeStatusRequestBody;
 

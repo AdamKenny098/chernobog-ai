@@ -88,6 +88,7 @@ type ChatApiResponse = {
   executionState?: ExecutionStateSnapshot | null;
   debugTrace?: DebugTrace;
   details?: string;
+  memoryCitations?: unknown[];
   error?: string;
 };
 
@@ -262,6 +263,10 @@ export default function UmbraAIConsole() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [isBusy, setIsBusy] = useState(false);
+  const [oh5Enabled, setOh5Enabled] = useState(false);
+  const [oh5ProjectId, setOh5ProjectId] = useState("chernobog");
+  const [oh5OwnerToken, setOh5OwnerToken] = useState("");
+  const [oh5CitationCount, setOh5CitationCount] = useState<number | null>(null);
 
   const [debugTrace, setDebugTrace] = useState<DebugTrace | null>(null);
   const [debugVisible, setDebugVisible] = useState(true);
@@ -372,7 +377,7 @@ export default function UmbraAIConsole() {
       ...prev,
       sessionId: browserSessionId,
     }));
-    });
+    });
   }, []);
 
   useEffect(() => {
@@ -629,11 +634,13 @@ if (cancelled) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            ...(oh5Enabled ? { Authorization: `Bearer ${oh5OwnerToken}` } : {}),
           },
           signal: controller.signal,
           body: JSON.stringify({
             message: value,
             sessionId: activeSessionId,
+            ...(oh5Enabled ? { oh5Memory: { mode: "vault-first", projectId: oh5ProjectId.trim() } } : {}),
           }),
         });
       } finally {
@@ -641,6 +648,7 @@ if (cancelled) {
       }
 
       const data: ChatApiResponse = await response.json();
+      setOh5CitationCount(oh5Enabled ? (Array.isArray(data.memoryCitations) ? data.memoryCitations.length : 0) : null);
 
       const reviewUrl = getReviewUrlFromResponse(data);
 
@@ -724,16 +732,37 @@ if (cancelled) {
     }
   }
 
+  // OH5N_CONSOLE_MEMORY_OPT_IN: explicit project + ephemeral owner token, never persisted.
+  const oh5Panel = (
+    <section className="mb-3 rounded border border-emerald-400/40 bg-slate-950 p-3 text-sm text-slate-100">
+      <div className="mb-2 font-semibold">OH-5 Second Brain (local opt-in)</div>
+      <label className="flex items-center gap-2 mb-2">
+        <input type="checkbox" checked={oh5Enabled} onChange={(event) => setOh5Enabled(event.target.checked)} />
+        Include confirmed memory in typed chat
+      </label>
+      <label className="mb-1 block" htmlFor="oh5-project">Registered project ID</label>
+      <input id="oh5-project" className="mb-2 w-full rounded border border-slate-500 bg-slate-900 p-2 text-white"
+        placeholder="chernobog" value={oh5ProjectId} autoComplete="off"
+        onChange={(event) => setOh5ProjectId(event.target.value)} />
+      <label className="mb-1 block" htmlFor="oh5-token">Owner API token (memory only; never saved)</label>
+      <input id="oh5-token" type="password" className="w-full rounded border border-slate-500 bg-slate-900 p-2 text-white"
+        autoComplete="off" value={oh5OwnerToken}
+        onChange={(event) => setOh5OwnerToken(event.target.value)} />
+      <p className="mt-2 text-xs text-slate-300">Only for local trusted use. The token is held in this browser tab only. It is not saved to browser storage.</p>
+      <p className="mt-1 text-xs text-slate-300">Last OH-5 references: {oh5CitationCount === null ? "not requested" : oh5CitationCount}</p>
+    </section>
+  );
+
   const developerPanel = developerMode ? (
-    <RightDashboardRail
+    <div>{oh5Panel}<RightDashboardRail
       sessionId={sessionId}
       session={session}
       debugTrace={debugTrace}
       debugVisible={debugVisible}
       onToggleDebugVisible={() => setDebugVisible((value) => !value)}
       onSelectTrace={setDebugTrace}
-    />
-  ) : null;
+    /></div>
+  ) : oh5Panel;
 
   return (
     <CommandShell
