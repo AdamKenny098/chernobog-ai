@@ -1,0 +1,7 @@
+# OH-5G â€” Corrections, Conflicts and History
+
+This milestone installs an owner-authenticated, project-scoped correction workflow at `POST /api/oh5/conflicts`. A correction is a **new, independently confirmed memory** followed by an explicit owner-reviewed supersession of the previous confirmed record. The original record, its provenance, and its audit trail remain available; ordinary confirmed recall excludes superseded facts. No automatic semantic conflict detection is claimed: `suggest` is only scoped text matching, and decisions remain exclusively owner-authorized.
+
+Operations: `preview` requires projectId, previousId, replacementId and reason; it returns both bodies, source references, revisions, a ten-minute challenge and fingerprint. `resolve` requires projectId, challengeId, fingerprint and exact acknowledgement `lock correction in`. `history` returns completed corrections, and `suggest` returns scoped confirmed matches. All operations require the owner bearer token. Other projects are inaccessible.
+
+The governed store atomically persists supersession state, audit entry and approval-token consumption. The challenge's resolvedAt marker is a separate write; if interrupted, replay is rejected by the underlying consumed approval token. OH-5M will cover broader recovery and security properties; OH-5N is final system acceptance. This module adds a new API without migrating, overwriting, or deleting existing Obsidian notes. Full graphical review belongs to OH-5K.

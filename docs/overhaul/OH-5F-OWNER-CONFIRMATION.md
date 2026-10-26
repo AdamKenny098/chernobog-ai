@@ -1,0 +1,5 @@
+# OH-5F â€” Owner Confirmation Gate
+
+An owner-authenticated review API is available at `POST /api/oh5/review` with `operation` = `queue`, `preview`, or `decide`. Authentication uses the existing local bearer token configuration. Queue is project-scoped and displays candidates; preview issues a ten-minute single-use challenge bound to project, record ID, revision, source and exact text digest. The owner must review the preview before issuing `decide` with `acknowledgement: "lock it in"` or `"reject"`, an explicit reason, the nonce and fingerprint. The durable store atomically updates memory, audit and consumed approval ID. No external source text can grant owner authority; the API never calls an LLM for approval.
+
+This is a protected service endpoint rather than a finished interactive UI; OH-5K implements the review interface. The review challenge consumed marker is persisted separately after the governed decision transaction. Approval ID reuse and record revision checks fail closed if interrupted, but OH-5M should validate recovery and the crash window. OH-5G will add conflict-aware supersession and rich editing. Comprehensive live acceptance remains OH-5N.

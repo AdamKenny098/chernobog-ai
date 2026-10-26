@@ -66,6 +66,9 @@ export async function recallStructuredVaultMemory(
   const inferredScope = inferVaultProjectScope(query);
   const projectId = normalizeProjectId(request.projectId) ?? inferredScope.projectId;
   const version = normalizeVersion(request.version) ?? inferredScope.version;
+  if (!projectId) {
+    throw new Error("OH-5B: structured memory recall requires an explicit or inferable project scope.");
+  }
   const answerMode = request.answerMode ?? "vault-only";
   const limit = request.limit ?? DEFAULT_RECALL_LIMIT;
   const warnings: string[] = [];

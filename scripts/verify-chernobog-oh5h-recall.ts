@@ -1,0 +1,62 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { randomUUID } from "node:crypto";
+import { OH5ObsidianLayout } from "../packages/vault/src/oh5/layout";
+import { GovernedMemoryStore } from "../packages/vault/src/oh5/store";
+import { OH5RecallService } from "../packages/vault/src/oh5/recall";
+const temp=fs.mkdtempSync(path.join(os.tmpdir(),"oh5h-"));
+const root=path.join(temp,"vault"),db=path.join(temp,"mem.sqlite");
+fs.mkdirSync(path.join(root,".obsidian"),{recursive:true});
+const layout=new OH5ObsidianLayout(root);
+layout.registerProject("malware","Malware",true);
+layout.registerProject("vestige","Vestige",true);
+const store=new GovernedMemoryStore(db);
+const service=new OH5RecallService(db,root);
+let n=0;
+function check(name:string,fn:()=>void){fn();n++;console.log(`PASS ${name}`);}
+function add(projectId:string,body:string,confirm=true){
+ const r=store.ingest({projectId,body,sourceRef:"owner:test",channel:"owner-ui"});
+ if(!confirm)return r;
+ const c=store.propose({projectId,id:r.id,expectedRevision:r.revision,channel:"model"});
+ return store.ownerDecision({action:"confirm",projectId,id:c.id,expectedRevision:c.revision,reason:"reviewed source",evidenceRefs:[c.sourceRef],approvalId:randomUUID()},true);
+}
+try {
+ const a=add("malware","Skyquake returned to the Nemesis and survived");
+ const v=add("vestige","Skyquake in a separate writing project");
+ const raw=add("malware","Skyquake secret unreviewed draft",false);
+ const superseded=add("malware","Skyquake old outdated lore");
+ const replacement=add("malware","Skyquake new canonical lore");
+ store.ownerDecision({action:"supersede",projectId:"malware",id:superseded.id,expectedRevision:superseded.revision,reason:"updated established lore",evidenceRefs:[superseded.sourceRef,replacement.sourceRef],approvalId:randomUUID(),replacementId:replacement.id},true);
+ check("scoped confirmed retrieval",()=>assert.equal(service.search({projectId:"malware",query:"Skyquake"}).length,2));
+ check("cross-project leakage prevented",()=>assert.ok(service.search({projectId:"malware",query:"Skyquake"}).every(x=>x.projectId==="malware")));
+ check("separate creative project stays separate",()=>assert.deepEqual(service.search({projectId:"vestige",query:"Skyquake"}).map(x=>x.id),[v.id]));
+ check("raw not recalled",()=>assert.ok(!service.search({projectId:"malware",query:"secret"}).some(x=>x.id===raw.id)));
+ check("superseded not recalled",()=>assert.equal(service.search({projectId:"malware",query:"outdated"}).length,0));
+ check("source provenance retained",()=>assert.equal(service.search({projectId:"malware",query:"Nemesis"})[0].sourceRef,"owner:test"));
+ check("multi-term matching",()=>assert.equal(service.search({projectId:"malware",query:"Skyquake Nemesis"})[0].id,a.id));
+ check("no project inference",()=>assert.throws(()=>service.search({projectId:"",query:"Skyquake"})));
+ check("unknown project blocked",()=>assert.throws(()=>service.search({projectId:"unknown",query:"Skyquake"})));
+ check("traversal scope blocked",()=>assert.throws(()=>service.search({projectId:"../malware",query:"Skyquake"})));
+ check("query length bounded",()=>assert.throws(()=>service.search({projectId:"malware",query:"x".repeat(301)})));
+ check("limit bounded",()=>assert.throws(()=>service.search({projectId:"malware",query:"Skyquake",limit:10000})));
+ check("SQL-looking text treated as literal",()=>assert.deepEqual(service.search({projectId:"malware",query:"' OR 1=1"}),[]));
+ check("history owner-only",()=>assert.throws(()=>service.history("malware",a.id,false)));
+ check("history cross project blocked",()=>assert.throws(()=>service.history("vestige",a.id,true)));
+ check("history retains supersession",()=>assert.equal(service.history("malware",superseded.id,true).record.tier,"superseded"));
+ check("history has audit",()=>assert.ok(service.history("malware",superseded.id,true).events.length>0));
+ check("cross-project requires owner",()=>assert.throws(()=>service.searchAcrossProjects({projectIds:["malware","vestige"],query:"Skyquake",reason:"deliberate owner comparison"},false)));
+ check("cross-project requires reason",()=>assert.throws(()=>service.searchAcrossProjects({projectIds:["malware","vestige"],query:"Skyquake",reason:"no"},true)));
+ check("cross-project rejects duplicate projects",()=>assert.throws(()=>service.searchAcrossProjects({projectIds:["malware","malware"],query:"Skyquake",reason:"deliberate owner comparison"},true)));
+ check("cross-project rejects unknown projects",()=>assert.throws(()=>service.searchAcrossProjects({projectIds:["malware","unknown"],query:"Skyquake",reason:"deliberate owner comparison"},true)));
+ const cross=service.searchAcrossProjects({projectIds:["malware","vestige"],query:"Skyquake",reason:"deliberate owner comparison"},true);
+ check("owner cross-project gets both",()=>assert.ok(new Set(cross.hits.map(h=>h.projectId)).size===2));
+ check("cross-project read audit exists",()=>assert.ok(service.crossProjectAudit(true).some(x=>x.id===cross.auditId)));
+ check("cross-project audit owner protected",()=>assert.throws(()=>service.crossProjectAudit(false)));
+ service.close();store.close();
+ const again=new OH5RecallService(db,root);
+ check("read audit survives restart",()=>assert.ok(again.crossProjectAudit(true).some(x=>x.id===cross.auditId)));
+ again.close();
+ console.log(`OH-5H PROJECT-SCOPED RECALL: PASS ${n}/${n}`);
+} finally {try{service.close();}catch{/* closed */}try{store.close();}catch{/* closed */}fs.rmSync(temp,{recursive:true,force:true});}

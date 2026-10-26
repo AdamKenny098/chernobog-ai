@@ -305,6 +305,13 @@ export async function answerVaultOnlyQuestion(
     projectId: request.projectId,
     version: request.version,
   });
+  if (!scope.projectId) {
+    return {
+      ok: false, query, answer: "Memory recall blocked: project scope is required.",
+      usedEntryIds: [], sources: [], warnings: [...scope.warnings, "No project scope; fail closed."],
+      policy: getVaultOnlyAnswerPolicy({ strictVersion: request.strictVersion }),
+    };
+  }
   const policy = getVaultOnlyAnswerPolicy({ strictVersion: request.strictVersion });
   const loaded = await loadApprovedEntries({
     projectId: scope.projectId,

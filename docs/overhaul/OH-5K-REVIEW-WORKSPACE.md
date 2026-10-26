@@ -1,0 +1,7 @@
+# OH-5K â€” Second Brain Review Workspace
+
+An owner-only **development** UI at `/oh5/memory-review`. Provides candidate queue, exact-body preview, "Lock It In" / rejection, confirmed scoped search and history, explicit correction comparison/approval, project task management, and attention suggestions. All mutations are executed by the existing owner-authenticated OH-5F/G/H/J API routes, not client-side direct SQLite access.
+
+The UI requires a **registered project ID** and the `CHERNOBOG_OH5_OWNER_TOKEN` from the local `.env.local`, entered manually. Token is held in React state only and sent in the Authorization header. Do not expose this development interface over public internet, and do not paste the token into chat or logs. It does not yet use Chernobog's interactive user session or shared auth; a permanent security-reviewed session integration is required in OH-5M/N.
+
+This milestone does not perform migration, live OH-4 chat integration, calendar updates, external ingestion activation or notification delivery. No existing vault notes, old UI screens, or OH-4 runtime code is modified. It is a functional interface bound to existing OH-5 API routes; comprehensive runtime and adversarial acceptance is deferred to OH-5N.

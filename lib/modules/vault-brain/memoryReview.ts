@@ -115,6 +115,9 @@ async function updateStatus(args: {
   note?: string;
   supersededBy?: string;
 }): Promise<VaultBrainCommandResult> {
+  if (args.status === "approved") {
+    return { ok: false, title: "Legacy approval disabled", message: "Use authenticated OH-5B memory approval." };
+  }
   const store = createVaultMemoryStore();
 
   try {

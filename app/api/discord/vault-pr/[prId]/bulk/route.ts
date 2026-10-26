@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { hasOwnerAuthorization } from "@/packages/vault/src/oh5/auth";
 
 import {
   setAllVaultPullRequestChangeStatuses,
@@ -39,6 +40,9 @@ function parseChangeIds(value: unknown): string[] | null {
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
+  if (!hasOwnerAuthorization(request.headers.get("authorization"))) {
+    return NextResponse.json({ ok: false, error: "Owner authorization required" }, { status: 401 });
+  }
   const { prId } = await context.params;
   const body = (await request.json()) as BulkStatusRequestBody;
 

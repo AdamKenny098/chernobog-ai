@@ -76,3 +76,6 @@ repo-files-clean.txt
 /mobile/android-companion/**/build/
 # PA-5 Google Calendar encrypted OAuth state
 data/personal-assistance/google-calendar.json
+
+# OH-5 projected memory data must stay local
+/vault/chernobog/_chernobog-oh5/
