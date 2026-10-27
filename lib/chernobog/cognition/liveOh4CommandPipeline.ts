@@ -703,9 +703,14 @@ function createHandlers(): AutonomousCognitiveLoopHandlers {
         sessionProjectId: session.activeProjectId ?? undefined,
       }, projectDescriptors);
       const engine = (ContextEngineModule as AnyRecord).getContextEngine();
+      // Fail closed for ambiguous/unresolved requests: an absent projectId is
+      // NOT a retrieval restriction in ContextEngine. An impossible source ID
+      // ensures no source is queried. Scoped source enforcement remains a
+      // separate acceptance requirement for project-aware source adapters.
       const packet = await engine.assemble({
         interpretation: interpreted.interpretation,
         projectId: requestScope.retrievalProjectId ?? undefined,
+        ...(!requestScope.retrievalProjectId ? { requestedSourceIds: ["__psi1c_no_sources__"] } : {}),
         maxItems: 24,
         maxChars: 24_000,
       });

@@ -81,18 +81,23 @@ export function resolveRequestContext(
       ambiguity.push("Explicit project is unknown or archived");
     }
   } else if (mentioned.length > 1) {
+    // Cross-project requests require explicit, authenticated scope selection.
     ambiguity.push("Multiple projects referenced in the request");
-  } else if (mentioned.length === 1) {
-    projectId = mentioned[0];
-    provenance = "inferred";
   } else if (input.sessionProjectId && known.has(input.sessionProjectId)) {
+    // A name mentioned in prose is not authority to change the active scope.
     projectId = input.sessionProjectId;
     provenance = "verified";
+  } else if (input.sessionProjectId) {
+    ambiguity.push("Session project is unknown or archived");
   } else if (input.conversationProjectId && known.has(input.conversationProjectId)) {
     projectId = input.conversationProjectId;
     provenance = "inferred";
-  } else if (input.sessionProjectId || input.conversationProjectId) {
-    ambiguity.push("Session or conversation project is unknown or archived");
+  } else if (input.conversationProjectId) {
+    ambiguity.push("Conversation project is unknown or archived");
+  } else if (mentioned.length === 1) {
+    // A single mention can identify a subject only when no trusted scope exists.
+    projectId = mentioned[0];
+    provenance = "inferred";
   }
 
   if (projectId !== null) resolution = "resolved";
