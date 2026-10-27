@@ -2,6 +2,8 @@ import { saveMessage } from "@/lib/chernobog/memory";
 import { buildUiPayload } from "@/lib/chernobog/pipeline/payload";
 import type { CommandPipelineResult } from "@/lib/chernobog/pipeline/types";
 import { getSessionContext } from "@/lib/chernobog/session/store";
+import { resolveRequestContext, type ProjectDescriptor } from "@/lib/chernobog/project/requestContext";
+import { getAllProjects } from "@chernobog/external-projects/project-operations";
 import type { RouteName } from "@/lib/chernobog/session/types";
 import { routeMessage } from "@/lib/chernobog/router";
 import { runCommandPipeline } from "@chernobog/core/pipeline/runCommand";
@@ -686,10 +688,24 @@ function createHandlers(): AutonomousCognitiveLoopHandlers {
       const interpreted = artifact(context, "interpret");
       const observed = artifact(context, "observe");
       const session = getSessionContext(observed.sessionId);
+      const projectDescriptors: ProjectDescriptor[] = getAllProjects().map((project) => ({
+        id: project.slug,
+        aliases: [project.name, project.repoName].filter((value): value is string => typeof value === "string" && value.length > 0),
+        archived: project.archived,
+      }));
+      // The active session project is verified server-side. User-message references
+      // are evidence of subject matter, not authorisation to switch project scope.
+      const requestScope = resolveRequestContext({
+        requestId: String(context.loopId),
+        sessionId: observed.sessionId,
+        actorTrust: "unknown",
+        userMessage: observed.rawText,
+        sessionProjectId: session.activeProjectId ?? undefined,
+      }, projectDescriptors);
       const engine = (ContextEngineModule as AnyRecord).getContextEngine();
       const packet = await engine.assemble({
         interpretation: interpreted.interpretation,
-        projectId: session.activeProjectId ?? undefined,
+        projectId: requestScope.retrievalProjectId ?? undefined,
         maxItems: 24,
         maxChars: 24_000,
       });
@@ -698,7 +714,8 @@ function createHandlers(): AutonomousCognitiveLoopHandlers {
         status: "completed",
         artifact: {
           packet,
-          projectId: session.activeProjectId ?? undefined,
+          projectId: requestScope.retrievalProjectId ?? undefined,
+          requestScope,
         },
       };
     },
