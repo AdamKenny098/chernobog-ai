@@ -710,6 +710,7 @@ function createHandlers(): AutonomousCognitiveLoopHandlers {
       const packet = await engine.assemble({
         interpretation: interpreted.interpretation,
         projectId: requestScope.retrievalProjectId ?? undefined,
+        strictProjectIsolation: true,
         ...(!requestScope.retrievalProjectId ? { requestedSourceIds: ["__psi1c_no_sources__"] } : {}),
         maxItems: 24,
         maxChars: 24_000,

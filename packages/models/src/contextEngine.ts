@@ -65,6 +65,8 @@ export interface ContextSourceRequest {
   interpretation: InputInterpretation;
 
   projectId?: string;
+  /** PSI 1D: enforce source and item project boundaries (opt-in for existing callers). */
+  strictProjectIsolation?: boolean;
   requestedCategories?: ContextCategory[];
   requestedSourceIds?: string[];
 
@@ -74,6 +76,8 @@ export interface ContextSourceRequest {
 
 export interface ContextSource {
   id: string;
+  /** Only audited sources may declare project-scoped or globally safe retrieval. */
+  isolationScope?: "project" | "global";
   categories: ContextCategory[];
 
   retrieve(
@@ -1142,6 +1146,15 @@ export class ContextEngine {
         continue;
       }
 
+      // PSI 1D: unknown sources are not trusted for strict retrieval.
+      if (request.strictProjectIsolation && (
+        !source.isolationScope ||
+        (source.isolationScope === "project" && !request.projectId?.trim())
+      )) {
+        diagnostics.push({ sourceId: source.id, status: "skipped", itemCount: 0, reason: "PSI 1D: source has no authorised scope or project is unresolved" });
+        continue;
+      }
+
       try {
         const items =
           await source.retrieve(
@@ -1157,8 +1170,17 @@ export class ContextEngine {
               ),
           );
 
+        // Fail closed: project sources must label every returned item.
+        // Global sources must not return sensitive or project-tagged items.
+        const authorised = request.strictProjectIsolation
+          ? normalized.filter((item) => {
+              const scope = item.metadata?.projectId;
+              if (source.isolationScope === "global") return item.sensitive === false && scope === undefined;
+              return typeof scope === "string" && scope === request.projectId;
+            })
+          : normalized;
         retrieved.push(
-          ...normalized,
+          ...authorised,
         );
 
         diagnostics.push({
@@ -1167,9 +1189,11 @@ export class ContextEngine {
           status:
             "queried",
           itemCount:
-            normalized.length,
+            authorised.length,
           reason:
-            "retrieval completed",
+            request.strictProjectIsolation && authorised.length !== normalized.length
+              ? "PSI 1D: retrieval completed; unscoped or foreign items excluded"
+              : "retrieval completed",
         });
       } catch (error) {
         diagnostics.push({
