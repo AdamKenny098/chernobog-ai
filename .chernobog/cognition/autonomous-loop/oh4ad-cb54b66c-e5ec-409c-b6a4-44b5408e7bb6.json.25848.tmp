@@ -1,0 +1,413 @@
+{
+  "version": "oh4ad.v1",
+  "id": "oh4ad-cb54b66c-e5ec-409c-b6a4-44b5408e7bb6",
+  "createdAt": "2026-10-28T01:45:05.635Z",
+  "updatedAt": "2026-10-28T01:45:05.700Z",
+  "status": "running",
+  "input": {
+    "rawInput": "Within the Malware project, what is the verification number associated with the fictional codename Silver Heron?",
+    "subject": "command",
+    "scope": "command:/command",
+    "correlationId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+    "metadata": {
+      "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+      "responseMode": "text",
+      "compatibilityRoute": "chat"
+    }
+  },
+  "currentStageIndex": 3,
+  "stages": [
+    {
+      "stage": "observe",
+      "componentBinding": [
+        "Core cognitiveRuntime / World State"
+      ],
+      "status": "completed",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-28T01:45:05.645Z",
+      "completedAt": "2026-10-28T01:45:05.651Z"
+    },
+    {
+      "stage": "interpret",
+      "componentBinding": [
+        "OH-4J Input Interpreter"
+      ],
+      "status": "completed",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-28T01:45:05.656Z",
+      "completedAt": "2026-10-28T01:45:05.664Z"
+    },
+    {
+      "stage": "contextualize",
+      "componentBinding": [
+        "OH-4K Context Engine"
+      ],
+      "status": "completed",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-28T01:45:05.674Z",
+      "completedAt": "2026-10-28T01:45:05.694Z"
+    },
+    {
+      "stage": "prioritize",
+      "componentBinding": [
+        "OH-4R Priority / Attention Engine"
+      ],
+      "status": "running",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-28T01:45:05.700Z"
+    },
+    {
+      "stage": "choose-strategy",
+      "componentBinding": [
+        "OH-4N Strategy Router",
+        "OH-4AC Cognitive Profiles"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "choose-models",
+      "componentBinding": [
+        "OH-4M Model Router",
+        "OH-4Z Continuous Calibration",
+        "OH-4AC Cognitive Profiles"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "compile-prompt",
+      "componentBinding": [
+        "OH-4L Prompt Compiler"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "reason-plan",
+      "componentBinding": [
+        "OH-4O Reasoning Contracts",
+        "OH-4P Goal Decomposer",
+        "OH-4Q Planning Engine",
+        "OH-4S Multi-Model Orchestrator"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "validate",
+      "componentBinding": [
+        "OH-4T Critic & Verification Layer",
+        "OH-4U Confidence Engine",
+        "OH-4V Escalation Engine"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "authorize",
+      "componentBinding": [
+        "OH-4W Authority Bridge"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "act",
+      "componentBinding": [
+        "OH-4X Action Bridge",
+        "Existing Execution Runtime",
+        "Unified Tool Gateway"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "verify",
+      "componentBinding": [
+        "OH-4T post-action verification"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "record",
+      "componentBinding": [
+        "OH-4AA Decision Provenance",
+        "OH-4Y Cognitive Memory"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "learn",
+      "componentBinding": [
+        "OH-4Z Continuous Calibration",
+        "Existing governed learning pipeline"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    }
+  ],
+  "artifacts": {
+    "observe": {
+      "observedAt": "2026-10-28T01:45:05.651Z",
+      "rawText": "Within the Malware project, what is the verification number associated with the fictional codename Silver Heron?",
+      "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+      "responseMode": "text",
+      "compatibilityRoute": "chat"
+    },
+    "interpret": {
+      "interpretation": {
+        "raw": {
+          "modality": "typed",
+          "text": "Within the Malware project, what is the verification number associated with the fictional codename Silver Heron?",
+          "turnId": "oh4ad-cb54b66c-e5ec-409c-b6a4-44b5408e7bb6"
+        },
+        "normalizedText": "Within the Malware project, what is the verification number associated with the fictional codename Silver Heron?",
+        "intent": {
+          "kind": "ask",
+          "confidence": 1
+        },
+        "goal": {
+          "summary": "Within the Malware project, what is the verification number associated with the fictional codename Silver Heron?",
+          "confidence": 1
+        },
+        "desiredOutcome": {
+          "summary": "Within the Malware project, what is the verification number associated with the fictional codename Silver Heron?",
+          "confidence": 1
+        },
+        "constraints": [
+          {
+            "kind": "explicit",
+            "text": "Within the Malware project, what is the verification number associated with the fictional codename Silver Heron",
+            "sourceText": "Within the Malware project, what is the verification number associated with the fictional codename Silver Heron"
+          }
+        ],
+        "unresolvedQuestions": [],
+        "clarificationRequired": false,
+        "completeness": 1,
+        "ambiguity": 0,
+        "taskSignals": {
+          "domains": [
+            "conversation"
+          ],
+          "estimatedSteps": 1,
+          "dependencyCount": 0,
+          "ambiguityLevel": 0,
+          "noveltyLevel": 0.25,
+          "creativeGeneration": 0.05,
+          "styleSensitivity": 0.05,
+          "factualVerification": 0.25,
+          "evidenceDependency": 0.1,
+          "consequenceSeverity": 0.25,
+          "reasoningSteps": 1,
+          "crossDomainReasoning": false,
+          "containsPersonalData": false,
+          "containsSecrets": false,
+          "containsFinancialData": false,
+          "containsHealthData": false,
+          "containsCredentials": false,
+          "canRunAsynchronously": false,
+          "minimizeCost": false,
+          "requiredTools": []
+        },
+        "taskIntelligence": {
+          "primaryDomain": {
+            "value": "conversation",
+            "confidence": 0.92,
+            "reasons": [
+              "Primary domain supplied by normalized task signals."
+            ]
+          },
+          "secondaryDomains": [],
+          "complexity": {
+            "value": "trivial",
+            "confidence": 0.85,
+            "reasons": [
+              "estimatedSteps=1",
+              "dependencyCount=0",
+              "ambiguity=0.00",
+              "novelty=0.25"
+            ]
+          },
+          "creativity": {
+            "value": "none",
+            "confidence": 0.9,
+            "reasons": [
+              "creativeGeneration=0.05",
+              "styleSensitivity=0.05"
+            ]
+          },
+          "factuality": {
+            "value": "low",
+            "confidence": 0.82,
+            "reasons": [
+              "factualVerification=0.25",
+              "evidenceDependency=0.10",
+              "consequenceSeverity=0.25"
+            ]
+          },
+          "reasoningDepth": {
+            "value": "shallow",
+            "confidence": 0.84,
+            "reasons": [
+              "reasoningSteps=1",
+              "crossDomain=false"
+            ]
+          },
+          "privacySensitivity": {
+            "value": "public",
+            "confidence": 0.7,
+            "reasons": [
+              "No sensitive-data signal supplied."
+            ]
+          },
+          "latencyTolerance": {
+            "value": "interactive",
+            "confidence": 0.65,
+            "reasons": [
+              "No explicit latency deadline; defaulting to interactive."
+            ]
+          },
+          "costTolerance": {
+            "value": "standard",
+            "confidence": 0.65,
+            "reasons": [
+              "No explicit cost constraint; defaulting to standard."
+            ]
+          },
+          "requiredTools": [],
+          "derived": {
+            "multiDomain": false,
+            "requiresExternalEvidence": false,
+            "highRiskIncorrectness": false,
+            "prefersLocalExecution": false,
+            "toolUseRequired": false
+          },
+          "classifiedAt": "2026-10-28T01:45:05.663Z"
+        },
+        "interpretedAt": "2026-10-28T01:45:05.663Z"
+      },
+      "compatibilityRoute": "chat"
+    },
+    "contextualize": {
+      "packet": {
+        "generatedAt": "2026-10-28T01:45:05.694Z",
+        "items": [
+          {
+            "id": "oh5-memory:0c7f4779-6315-4258-9380-2a4fe2069715",
+            "category": "memory",
+            "title": "Confirmed project memory: 0c7f4779-6315-4258-9380-2a4fe2069715",
+            "content": "PSI-1 CONTROLLED TEST RECORD. Fictional project codename: Silver Heron. Verification number: 4827. Fictional next milestone: Lantern Protocol. This record belongs exclusively to project chernobog. This is test data, not an actual development decision.",
+            "provenance": {
+              "sourceId": "oh5-governed-memory",
+              "sourceType": "oh5-confirmed-memory",
+              "reference": "psi1-acceptance-test-silver-heron-20261028",
+              "recordKey": "0c7f4779-6315-4258-9380-2a4fe2069715",
+              "retrievedAt": "2026-10-28T01:45:05.692Z"
+            },
+            "observedAt": "2026-10-28T01:02:24.126Z",
+            "freshness": "historical",
+            "confidence": 0.95,
+            "sensitive": true,
+            "relevanceTags": [
+              "memory",
+              "confirmed"
+            ],
+            "metadata": {
+              "projectId": "chernobog",
+              "memoryId": "0c7f4779-6315-4258-9380-2a4fe2069715",
+              "revision": 3,
+              "tier": "confirmed",
+              "channel": "owner-cli"
+            },
+            "relevance": 0.4363636363636364,
+            "relevanceReasons": [
+              "categoryNeed=0.20",
+              "lexicalOverlap=0.55",
+              "freshness=historical",
+              "confidence=0.95"
+            ],
+            "originalChars": 251,
+            "includedChars": 251,
+            "truncated": false
+          }
+        ],
+        "systemText": "CHERNOBOG TASK CONTEXT PACKET\n\nOnly the selected context below should be treated as retrieved task context.\n\nPreserve provenance, freshness, confidence, and sensitivity distinctions.\n\nMissing context must not be invented.\n\n\n\n## CONTEXT ITEM: Confirmed project memory: 0c7f4779-6315-4258-9380-2a4fe2069715\nid=oh5-memory:0c7f4779-6315-4258-9380-2a4fe2069715\ncategory=memory\nsource=oh5-governed-memory\nfreshness=historical\nconfidence=0.95\nrelevance=0.44\nsensitive=true\nreference=psi1-acceptance-test-silver-heron-20261028\n\nPSI-1 CONTROLLED TEST RECORD. Fictional project codename: Silver Heron. Verification number: 4827. Fictional next milestone: Lantern Protocol. This record belongs exclusively to project chernobog. This is test data, not an actual development decision.",
+        "diagnostics": [
+          {
+            "sourceId": "runtime-world-state",
+            "status": "skipped",
+            "itemCount": 0,
+            "reason": "PSI 1D: source has no authorised scope or project is unresolved"
+          },
+          {
+            "sourceId": "runtime-world-model",
+            "status": "skipped",
+            "itemCount": 0,
+            "reason": "PSI 1D: source has no authorised scope or project is unresolved"
+          },
+          {
+            "sourceId": "oh5-governed-memory",
+            "status": "queried",
+            "itemCount": 2,
+            "reason": "retrieval completed"
+          }
+        ],
+        "metrics": {
+          "retrievedItems": 2,
+          "selectedItems": 1,
+          "excludedItems": 1,
+          "originalChars": 1276,
+          "includedChars": 251,
+          "truncatedItems": 0,
+          "totalSources": 3,
+          "queriedSources": 1,
+          "failedSources": 0
+        }
+      },
+      "projectId": "chernobog",
+      "requestScope": {
+        "requestId": "oh4ad-cb54b66c-e5ec-409c-b6a4-44b5408e7bb6",
+        "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+        "actorTrust": "unknown",
+        "userMessage": "Within the Malware project, what is the verification number associated with the fictional codename Silver Heron?",
+        "answerMode": "vault-first",
+        "resolution": "resolved",
+        "provenance": "verified",
+        "projectId": "chernobog",
+        "mentionedProjectIds": [],
+        "ambiguity": [],
+        "retrievalProjectId": "chernobog",
+        "readOnly": true
+      }
+    }
+  },
+  "supersededArtifacts": {},
+  "humanInterventions": [],
+  "recoveries": [],
+  "totalStageExecutions": 4,
+  "invariants": {
+    "authorityBypassed": false,
+    "directToolExecutionByLoop": false,
+    "directModelExecutionByLoop": false,
+    "hiddenScratchReasoningRequired": false,
+    "completedWorkSilentlyDiscarded": false,
+    "unsafePostActionRewindAllowed": false
+  }
+}

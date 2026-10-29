@@ -1,3 +1,6 @@
+import path from "node:path";
+import { defaultOH5BDatabasePath } from "../../vault/src/oh5/store";
+import { retrieveOH5Hybrid } from "../../vault/src/oh5/hybridRetrieval";
 import {
   buildChernobogWorldModelContext,
 } from "../../../lib/chernobog/pipeline/worldModelContext";
@@ -1273,14 +1276,19 @@ export class ContextEngine {
                   .sourceId,
               );
 
-            const topicalOverlap =
+            const hybridRelevance = item.provenance.sourceId === "oh5-governed-memory" &&
+              item.metadata?.projectId === request.projectId &&
+              typeof item.metadata?.oh5HybridScore === "number" &&
+              Number.isFinite(item.metadata.oh5HybridScore) &&
+              item.metadata.oh5HybridScore >= 0.42;
+            const topicalOverlap = hybridRelevance ? 1 :
               lexicalOverlap(
                 item,
                 request
                   .interpretation,
               );
 
-            const score =
+            const baseScore =
               scoreItem(
                 item,
                 request
@@ -1288,6 +1296,9 @@ export class ContextEngine {
                 explicit,
               );
 
+            const score = hybridRelevance ?
+              {score:Math.max(baseScore.score,Math.min(0.95,item.metadata!.oh5HybridScore as number)),
+               reasons:[...baseScore.reasons,"PSI 2C: scoped hybrid memory relevance"]} : baseScore;
             return {
               item,
               explicit,
@@ -1660,6 +1671,46 @@ function runtimeWorldModelSource():
   };
 }
 
+/**
+ * OH-5 PSI 1E: governed confirmed memory is available as read-only context.
+ * Retrieval fails closed without a project ID; the store is opened and closed
+ * for each retrieval, following the existing OH-5 API lifecycle.
+ */
+/** PSI 2C: one source for lexical and semantic confirmed-memory evidence.
+ * A memory item is never trusted unless its project ID matches request.projectId.
+ */
+function governedOH5MemorySource(): ContextSource {
+  return {
+    id: "oh5-governed-memory",
+    isolationScope: "project",
+    categories: ["memory"],
+    async retrieve(request) {
+      const projectId=request.projectId?.trim();
+      if(!projectId) return [];
+      const query=request.interpretation.normalizedText?.trim();
+      if(!query || query.length<2) return [];
+      const records=await retrieveOH5Hybrid(defaultOH5BDatabasePath(),
+        path.join(process.cwd(),".chernobog","runtime","oh5","psi2b-vectors.sqlite"),
+        {projectId,query:query.slice(0,300),limit:20});
+      const retrievedAt=new Date().toISOString();
+      return records.map((record):ContextItem=>{
+        if(record.projectId!==projectId) throw new Error("OH5 project isolation violation");
+        return {
+          id:`oh5-memory:${record.id}`,category:"memory",
+          title:`Confirmed project memory: ${record.id}`,
+          content:record.body,
+          provenance:{sourceId:"oh5-governed-memory",sourceType:"oh5-confirmed-memory",
+            reference:record.sourceRef,recordKey:record.id,retrievedAt},
+          observedAt:record.updatedAt,freshness:"historical",confidence:0.95,
+          sensitive:true,relevanceTags:["memory","confirmed"],
+          metadata:{projectId:record.projectId,memoryId:record.id,revision:record.revision,
+            tier:"confirmed",channel:record.channel,oh5HybridScore:record.score,
+            retrievalMode:record.retrievalMode},
+        };
+      });
+    },
+  };
+}
 const defaultContextEngine =
   new ContextEngine();
 
@@ -1671,6 +1722,9 @@ defaultContextEngine.registerSource(
   runtimeWorldModelSource(),
 );
 
+defaultContextEngine.registerSource(
+  governedOH5MemorySource(),
+);
 export function getContextEngine():
   ContextEngine {
   return defaultContextEngine;

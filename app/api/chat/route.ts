@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { getSessionContext } from "@/lib/chernobog/session/store";
+import { getAllProjects } from "@chernobog/external-projects/project-operations";
+import { verifyOH5MemoryScope } from "@/lib/chernobog/project/oh5MemoryScope";
 import { runLiveOh4CommandPipeline } from "@/lib/chernobog/cognition/liveOh4CommandPipeline";
 import { buildSpokenReply } from "@/lib/chernobog/personality";
 import { hasOwnerAuthorization } from "@/packages/vault/src/oh5/auth";
@@ -27,6 +30,25 @@ export async function POST(req: Request) {
     }
 
     // OH-5N: opt-in authenticated project-scoped context; never infer authority from message text.
+        // PSI 1F: resolve a project mention against server-owned session state
+    // before either retrieval path (including when the OH-5 UI toggle is off).
+    const session = getSessionContext(sessionId);
+    const projectDescriptors = getAllProjects().map((project) => ({
+      id: project.slug,
+      aliases: [project.name, project.repoName].filter((value): value is string =>
+        typeof value === "string" && value.length > 0),
+      archived: project.archived,
+    }));
+    if (session.activeProjectId) {
+      const projectMatch = verifyOH5MemoryScope({
+        sessionId, sessionProjectId: session.activeProjectId,
+        selectedProjectId: session.activeProjectId, userMessage,
+        projects: projectDescriptors,
+      });
+      if (!projectMatch.allowed) {
+        return NextResponse.json({ error: "Project scope conflict", details: projectMatch.reason }, { status: 409 });
+      }
+    }
     const memoryOptions = body?.oh5Memory;
     let memoryEvidence: string | undefined;
     let memoryCitations: unknown[] = [];
@@ -46,11 +68,24 @@ export async function POST(req: Request) {
         !/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(memoryOptions.projectId)) {
         return NextResponse.json({ error: "Explicit project scope and vault-first mode required" }, { status: 400 });
       }
+      const memoryScope = verifyOH5MemoryScope({
+        sessionId,
+        sessionProjectId: session.activeProjectId ?? undefined,
+        selectedProjectId: memoryOptions.projectId,
+        userMessage,
+        projects: projectDescriptors,
+      });
+      if (!memoryScope.allowed || !memoryScope.projectId) {
+        return NextResponse.json({
+          error: "OH-5 memory scope rejected",
+          details: memoryScope.reason,
+        }, { status: 409 });
+      }
       let recall: OH5RecallService | undefined;
       try {
         recall = new OH5RecallService(defaultOH5BDatabasePath(), defaultObsidianRoot());
         const packet = new OH5ContextAssembler(recall).build({
-          mode: "vault-first", projectId: memoryOptions.projectId, query: recallQuery, maxRecords: 6, maxCharacters: 3600,
+          mode: "vault-first", projectId: memoryScope.projectId, query: recallQuery, maxRecords: 6, maxCharacters: 3600,
         });
         memoryCitations = packet.citations;
         memoryEvidence = formatContextForModel(packet);
