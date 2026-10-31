@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "savedAt": "2026-10-28T01:41:59.022Z",
+  "savedAt": "2026-10-31T12:55:06.274Z",
   "observations": [
     {
       "id": "oh4-local-model-baseline-2026-10-12:deepseek-coder-v2:16b:code-diagnosis",
@@ -762,6 +762,96 @@
       },
       "provenance": {
         "taskId": "oh4ad-0e208cbe-c092-46bc-9d84-5ff706627cde"
+      }
+    },
+    {
+      "id": "oh4ad-dbf55d0d-e44a-413a-8182-39671980a3e2:real-work",
+      "observedAt": "2026-10-29T11:32:35.958Z",
+      "source": "real-work",
+      "modelId": "qwen3.5:9b",
+      "modelVersion": "56671c2ab938",
+      "strategy": "single-model",
+      "task": {
+        "domain": "planning",
+        "complexity": "trivial",
+        "creativity": "none",
+        "factuality": "low",
+        "reasoningDepth": "shallow",
+        "privacySensitivity": "public",
+        "toolUse": "false"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "evidenceConfidence": 0.7961501096478137
+      },
+      "telemetry": {
+        "latencyMs": 1350,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "taskId": "oh4ad-dbf55d0d-e44a-413a-8182-39671980a3e2"
+      }
+    },
+    {
+      "id": "oh4ad-5321ce99-a026-4608-aec3-ce5ba4d5f9c6:real-work",
+      "observedAt": "2026-10-29T11:45:11.943Z",
+      "source": "real-work",
+      "modelId": "qwen3-coder:30b",
+      "modelVersion": "06c1097efce0",
+      "strategy": "single-model",
+      "task": {
+        "domain": "reasoning",
+        "complexity": "trivial",
+        "creativity": "none",
+        "factuality": "low",
+        "reasoningDepth": "shallow",
+        "privacySensitivity": "public",
+        "toolUse": "false"
+      },
+      "objective": {
+        "score": 0.6281498153318432,
+        "success": false,
+        "verificationVerdict": "revise",
+        "evidenceConfidence": 0.6281498153318432
+      },
+      "telemetry": {
+        "latencyMs": 8398,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "taskId": "oh4ad-5321ce99-a026-4608-aec3-ce5ba4d5f9c6"
+      }
+    },
+    {
+      "id": "oh4ad-923fd10b-5a19-47be-89af-916738d30a12:real-work",
+      "observedAt": "2026-10-31T12:55:06.273Z",
+      "source": "real-work",
+      "modelId": "qwen3.5:9b",
+      "modelVersion": "56671c2ab938",
+      "strategy": "single-model",
+      "task": {
+        "domain": "planning",
+        "complexity": "trivial",
+        "creativity": "none",
+        "factuality": "low",
+        "reasoningDepth": "shallow",
+        "privacySensitivity": "public",
+        "toolUse": "false"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "evidenceConfidence": 0.7961832009573797
+      },
+      "telemetry": {
+        "latencyMs": 3934,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "taskId": "oh4ad-923fd10b-5a19-47be-89af-916738d30a12"
       }
     }
   ]

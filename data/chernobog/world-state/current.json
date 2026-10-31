@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "createdAt": "2026-10-28T13:25:38.687Z",
+  "createdAt": "2026-10-31T13:11:33.246Z",
   "recordCount": 49,
-  "recordsSha256": "10f58d23d22689a2840ac7910927542151b7f0ecaf4205393d8593ba0fe7ab80",
+  "recordsSha256": "50f9ca9f78abfe16950d5024e5e794440f25351607a46b243e08c16962369e21",
   "records": [
     {
       "schemaVersion": 1,
@@ -31,7 +31,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.149Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "7ef41c3e-69ab-445c-baeb-9922b0af058b",
@@ -74,7 +74,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.144Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "ebf34300-8a66-43ae-bffc-4c12186ad14f",
@@ -118,7 +118,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.153Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "f1989947-6498-4980-9073-12a5b5612e2e",
@@ -161,7 +161,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.151Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "804713db-6dca-480f-8f94-5233bd075bb8",
@@ -204,7 +204,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.154Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "d3bf9ed0-049b-4673-b040-5fb4cb2c671d",
@@ -248,7 +248,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.155Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "794f75f8-6836-4c71-835d-8e1ba52b72c0",
@@ -291,7 +291,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.158Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "2d8b8599-dd75-4f59-879f-c02cd4528812",
@@ -334,7 +334,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.156Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "26c48cb0-51b7-4cbc-9ec6-a6f88ef46428",
@@ -378,7 +378,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.160Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "d016dcb7-b841-4d35-b315-04aba9475f89",
@@ -421,7 +421,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.159Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "9c36a83b-f932-4ad7-a050-f5636ebe792a",
@@ -465,7 +465,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.163Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "c0f3939d-9e57-4892-8d55-94be908ade2f",
@@ -508,7 +508,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.162Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "4ba9fef3-662b-46ac-856e-31f7a075792e",
@@ -551,7 +551,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.164Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "7d794782-07eb-4776-aab1-d21b01342bd0",
@@ -595,7 +595,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.166Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "171b18d1-f969-4c47-b017-379e8663c5b2",
@@ -638,7 +638,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.167Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "a6c4b9fe-91bb-4718-899b-d914fcd81442",
@@ -682,7 +682,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:53.168Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "51eb77a3-ca59-47a0-bda3-761a6627af0f",
@@ -725,7 +725,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.821Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "757c328b-2de1-4e85-88f0-68e63197a02f",
@@ -768,7 +768,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.817Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "4677d1b2-e820-4641-9b4c-f26ec2fccff6",
@@ -812,7 +812,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.825Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "1024437e-7f3a-4271-b97a-f5edfc6a2386",
@@ -855,7 +855,7 @@
         "basis": "ttl",
         "expiresAt": "2026-08-28T13:11:54.823Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "74f3ce54-2522-4178-8e42-950ed9d785d0",
@@ -896,7 +896,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T11:18:16.487Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "58f3a320-e45f-4103-9396-b93b401a01df",
@@ -939,7 +939,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T11:17:31.820Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "8a11ff00-b335-43ef-b2e1-728f6e8dc01f",
@@ -984,7 +984,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:02:16.277Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "08fa149d-1d5a-4d8e-a4ee-04e1f0ba1f93",
@@ -1027,7 +1027,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:02:16.248Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "3589ca53-abfc-4c2a-8dcc-2dd1edf61afb",
@@ -1076,7 +1076,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:02:16.271Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "7a8ebb0e-ba28-484a-bb40-30f051d366e3",
@@ -1127,7 +1127,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:02:16.254Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "db006456-bcc1-4aab-a3a1-21d70aaac686",
@@ -1178,7 +1178,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:12:38.084Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "769e86ef-c424-45c5-94fd-39e11a12322a",
@@ -1223,7 +1223,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:12:51.438Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "ad1b3886-862e-4aba-9ea1-13961f555e6d",
@@ -1266,7 +1266,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:12:51.433Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "c113853a-5ddc-4b62-b84f-c784cfb510e1",
@@ -1314,7 +1314,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:12:51.437Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "4afb7593-a366-4129-983b-1aa7916b34fa",
@@ -1364,7 +1364,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:12:51.435Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "3ebd439c-cef9-4bd6-835e-f5e188d9ab38",
@@ -1409,7 +1409,7 @@
         "basis": "ttl",
         "expiresAt": "2026-09-05T23:12:38.088Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "006653c8-14d9-4a9b-a394-2b4da286be68",
@@ -1452,7 +1452,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T11:18:16.512Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "30e9033c-13e9-4127-93cb-0868666bba31",
@@ -1495,7 +1495,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T11:17:31.792Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "40960885-b995-4397-8d9e-ed89d0a52088",
@@ -1544,7 +1544,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T11:18:16.498Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "204362e6-1ec5-4dd9-b394-c36dd8212b6f",
@@ -1595,7 +1595,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T11:17:31.809Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "3ca0ce0b-24f0-49c3-b66a-ba49cb008f23",
@@ -1630,7 +1630,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T11:18:16.476Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "9aa71116-d33a-4d3d-83b2-f645c220a569",
@@ -1661,7 +1661,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T11:18:16.476Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "9aa71116-d33a-4d3d-83b2-f645c220a569",
@@ -1692,7 +1692,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.346Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "b3ebe4c7-cc87-4937-beed-8fd4dddac7b5",
@@ -1720,7 +1720,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.343Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "c3a44b54-f9cb-40d4-b7d0-05e500b03a62",
@@ -1760,7 +1760,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.346Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "b3ebe4c7-cc87-4937-beed-8fd4dddac7b5",
@@ -1795,7 +1795,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.349Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "ffa153b3-ca36-481d-a74c-43d61c2f80f9",
@@ -1824,7 +1824,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.349Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "ffa153b3-ca36-481d-a74c-43d61c2f80f9",
@@ -1860,7 +1860,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.348Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "6c76223a-3d24-43d2-ac7c-baac5821d664",
@@ -1889,7 +1889,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.348Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "6c76223a-3d24-43d2-ac7c-baac5821d664",
@@ -1925,7 +1925,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.351Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "6437ffae-98ef-4dbd-8804-2b3c283e389f",
@@ -1954,7 +1954,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.351Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "6437ffae-98ef-4dbd-8804-2b3c283e389f",
@@ -1990,7 +1990,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.352Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "a0d1514d-d427-480d-8264-879056004d93",
@@ -2019,7 +2019,7 @@
         "basis": "ttl",
         "expiresAt": "2026-10-26T13:29:23.352Z",
         "ttlMs": 300000,
-        "evaluatedAt": "2026-10-28T13:25:38.686Z"
+        "evaluatedAt": "2026-10-31T13:11:33.245Z"
       },
       "provenance": {
         "eventId": "a0d1514d-d427-480d-8264-879056004d93",

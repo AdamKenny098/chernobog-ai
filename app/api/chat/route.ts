@@ -5,6 +5,8 @@ import { verifyOH5MemoryScope } from "@/lib/chernobog/project/oh5MemoryScope";
 import { runLiveOh4CommandPipeline } from "@/lib/chernobog/cognition/liveOh4CommandPipeline";
 import { buildSpokenReply } from "@/lib/chernobog/personality";
 import { hasOwnerAuthorization } from "@/packages/vault/src/oh5/auth";
+import { executeGovernedMilestoneCommand } from "@/lib/chernobog/pipeline/governedMilestoneCommand";
+import { buildUiPayload } from "@/lib/chernobog/pipeline/payload";
 import { OH5RecallService } from "@/packages/vault/src/oh5/recall";
 import { OH5ContextAssembler, formatContextForModel } from "@/packages/vault/src/oh5/context";
 import { defaultOH5BDatabasePath } from "@/packages/vault/src/oh5/store";
@@ -93,6 +95,16 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Project-scoped memory context unavailable or invalid" }, { status: 400 });
       } finally { recall?.close(); }
     }
+    // OH5: intercept only deterministic, explicitly scoped test-milestone mutations.
+    // Never allow a conversational response to impersonate a successful governed write.
+    const governedReply = executeGovernedMilestoneCommand(userMessage, {
+      authenticated: hasOwnerAuthorization(req.headers.get("authorization")),
+      sessionId,
+    });
+    if (governedReply !== null) {
+      return NextResponse.json({ ...buildUiPayload(sessionId, "memory", governedReply), memoryCitations: [] });
+    }
+
     const result = await runLiveOh4CommandPipeline(
       userMessage,
       sessionId,

@@ -1,0 +1,466 @@
+{
+  "version": "oh4ad.v1",
+  "id": "oh4ad-2e4532a8-a9dd-44a9-bab5-55185943dcf6",
+  "createdAt": "2026-10-29T11:35:08.105Z",
+  "updatedAt": "2026-10-29T11:35:08.601Z",
+  "status": "running",
+  "input": {
+    "rawInput": "For testing purposes, I propose that Chernobog's next development milestone should be called Project Northstar. Do not confirm this yet.",
+    "subject": "command",
+    "scope": "command:/command",
+    "correlationId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+    "metadata": {
+      "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+      "responseMode": "text",
+      "compatibilityRoute": "planner"
+    }
+  },
+  "currentStageIndex": 3,
+  "stages": [
+    {
+      "stage": "observe",
+      "componentBinding": [
+        "Core cognitiveRuntime / World State"
+      ],
+      "status": "completed",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-29T11:35:08.114Z",
+      "completedAt": "2026-10-29T11:35:08.118Z"
+    },
+    {
+      "stage": "interpret",
+      "componentBinding": [
+        "OH-4J Input Interpreter"
+      ],
+      "status": "completed",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-29T11:35:08.124Z",
+      "completedAt": "2026-10-29T11:35:08.137Z"
+    },
+    {
+      "stage": "contextualize",
+      "componentBinding": [
+        "OH-4K Context Engine"
+      ],
+      "status": "completed",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-29T11:35:08.145Z",
+      "completedAt": "2026-10-29T11:35:08.589Z"
+    },
+    {
+      "stage": "prioritize",
+      "componentBinding": [
+        "OH-4R Priority / Attention Engine"
+      ],
+      "status": "running",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-29T11:35:08.600Z"
+    },
+    {
+      "stage": "choose-strategy",
+      "componentBinding": [
+        "OH-4N Strategy Router",
+        "OH-4AC Cognitive Profiles"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "choose-models",
+      "componentBinding": [
+        "OH-4M Model Router",
+        "OH-4Z Continuous Calibration",
+        "OH-4AC Cognitive Profiles"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "compile-prompt",
+      "componentBinding": [
+        "OH-4L Prompt Compiler"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "reason-plan",
+      "componentBinding": [
+        "OH-4O Reasoning Contracts",
+        "OH-4P Goal Decomposer",
+        "OH-4Q Planning Engine",
+        "OH-4S Multi-Model Orchestrator"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "validate",
+      "componentBinding": [
+        "OH-4T Critic & Verification Layer",
+        "OH-4U Confidence Engine",
+        "OH-4V Escalation Engine"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "authorize",
+      "componentBinding": [
+        "OH-4W Authority Bridge"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "act",
+      "componentBinding": [
+        "OH-4X Action Bridge",
+        "Existing Execution Runtime",
+        "Unified Tool Gateway"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "verify",
+      "componentBinding": [
+        "OH-4T post-action verification"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "record",
+      "componentBinding": [
+        "OH-4AA Decision Provenance",
+        "OH-4Y Cognitive Memory"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "learn",
+      "componentBinding": [
+        "OH-4Z Continuous Calibration",
+        "Existing governed learning pipeline"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    }
+  ],
+  "artifacts": {
+    "observe": {
+      "observedAt": "2026-10-29T11:35:08.118Z",
+      "rawText": "For testing purposes, I propose that Chernobog's next development milestone should be called Project Northstar. Do not confirm this yet.",
+      "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+      "responseMode": "text",
+      "compatibilityRoute": "planner"
+    },
+    "interpret": {
+      "interpretation": {
+        "raw": {
+          "modality": "typed",
+          "text": "For testing purposes, I propose that Chernobog's next development milestone should be called Project Northstar. Do not confirm this yet.",
+          "turnId": "oh4ad-2e4532a8-a9dd-44a9-bab5-55185943dcf6"
+        },
+        "normalizedText": "For testing purposes, I propose that Chernobog's next development milestone should be called Project Northstar. Do not confirm this yet.",
+        "intent": {
+          "kind": "unknown",
+          "confidence": 0.64
+        },
+        "goal": {
+          "summary": "For testing purposes, I propose that Chernobog's next development milestone should be called Project Northstar. Do not confirm this yet.",
+          "confidence": 0.64
+        },
+        "desiredOutcome": {
+          "summary": "For testing purposes, I propose that Chernobog's next development milestone should be called Project Northstar. Do not confirm this yet.",
+          "confidence": 0.64
+        },
+        "constraints": [
+          {
+            "kind": "explicit",
+            "text": "Do not confirm this yet",
+            "sourceText": "Do not confirm this yet"
+          }
+        ],
+        "unresolvedQuestions": [
+          {
+            "id": "q-01",
+            "question": "What outcome should Chernobog produce from this input?",
+            "blocking": true,
+            "reason": "No clear request type could be determined."
+          }
+        ],
+        "clarificationRequired": true,
+        "completeness": 0.5,
+        "ambiguity": 0.6,
+        "taskSignals": {
+          "domains": [
+            "planning"
+          ],
+          "estimatedSteps": 2,
+          "dependencyCount": 0,
+          "ambiguityLevel": 0.6,
+          "noveltyLevel": 0.25,
+          "creativeGeneration": 0.05,
+          "styleSensitivity": 0.05,
+          "factualVerification": 0.25,
+          "evidenceDependency": 0.1,
+          "consequenceSeverity": 0.25,
+          "reasoningSteps": 2,
+          "crossDomainReasoning": false,
+          "containsPersonalData": false,
+          "containsSecrets": false,
+          "containsFinancialData": false,
+          "containsHealthData": false,
+          "containsCredentials": false,
+          "canRunAsynchronously": false,
+          "minimizeCost": false,
+          "requiredTools": []
+        },
+        "taskIntelligence": {
+          "primaryDomain": {
+            "value": "planning",
+            "confidence": 0.92,
+            "reasons": [
+              "Primary domain supplied by normalized task signals."
+            ]
+          },
+          "secondaryDomains": [],
+          "complexity": {
+            "value": "simple",
+            "confidence": 0.82,
+            "reasons": [
+              "estimatedSteps=2",
+              "dependencyCount=0",
+              "ambiguity=0.60",
+              "novelty=0.25"
+            ]
+          },
+          "creativity": {
+            "value": "none",
+            "confidence": 0.9,
+            "reasons": [
+              "creativeGeneration=0.05",
+              "styleSensitivity=0.05"
+            ]
+          },
+          "factuality": {
+            "value": "low",
+            "confidence": 0.82,
+            "reasons": [
+              "factualVerification=0.25",
+              "evidenceDependency=0.10",
+              "consequenceSeverity=0.25"
+            ]
+          },
+          "reasoningDepth": {
+            "value": "shallow",
+            "confidence": 0.84,
+            "reasons": [
+              "reasoningSteps=2",
+              "crossDomain=false"
+            ]
+          },
+          "privacySensitivity": {
+            "value": "public",
+            "confidence": 0.7,
+            "reasons": [
+              "No sensitive-data signal supplied."
+            ]
+          },
+          "latencyTolerance": {
+            "value": "interactive",
+            "confidence": 0.65,
+            "reasons": [
+              "No explicit latency deadline; defaulting to interactive."
+            ]
+          },
+          "costTolerance": {
+            "value": "standard",
+            "confidence": 0.65,
+            "reasons": [
+              "No explicit cost constraint; defaulting to standard."
+            ]
+          },
+          "requiredTools": [],
+          "derived": {
+            "multiDomain": false,
+            "requiresExternalEvidence": false,
+            "highRiskIncorrectness": false,
+            "prefersLocalExecution": false,
+            "toolUseRequired": false
+          },
+          "classifiedAt": "2026-10-29T11:35:08.136Z"
+        },
+        "interpretedAt": "2026-10-29T11:35:08.137Z"
+      },
+      "compatibilityRoute": "planner"
+    },
+    "contextualize": {
+      "packet": {
+        "generatedAt": "2026-10-29T11:35:08.588Z",
+        "items": [
+          {
+            "id": "oh5-memory:b82829c6-981c-4859-a106-d632080693db",
+            "category": "memory",
+            "title": "Confirmed project memory: b82829c6-981c-4859-a106-d632080693db",
+            "content": "---\ntype: decision\nproject: Chernobog\nstatus: accepted\nupdated: 2026-05-22\ntags:\n  - chernobog\n  - adr\n  - vault\n  - memory\n---\n\n# ADR-0002 - Obsidian Vault as Project Knowledge Layer\n\n## Decision\n\nChernobog will use a local Obsidian-style Markdown vault as an inspectable project knowledge layer.\n\n## Context\n\nSQLite memory is useful for operational assistant memory, but it is not ideal as the only source of durable project doctrine.\n\nThe vault gives Chernobog and the operator a shared, readable knowledge graph.\n\n## The Vault Stores\n\n- roadmap state\n- architecture doctrine\n- file maps\n- design doctrine\n- patch safety rules\n- known failures\n- module maps\n- self-development rules\n- ADRs\n- checklists\n\n## The Vault Does Not Replace\n\n- runtime session state\n- SQLite memories\n- source control\n- approval-gated project writes\n\n## Rule\n\nBefore self-development proposals or patch plans, Chernobog should retrieve relevant vault doctrine.\n\n## Related\n\n- [[Vault Module]]\n- [[Self-Development Rules]]\n- [[Patch Safety Rules]]",
+            "provenance": {
+              "sourceId": "oh5-governed-memory",
+              "sourceType": "oh5-confirmed-memory",
+              "reference": "legacy-obsidian:decisions/ADR-0002-obsidian-vault-as-project-knowledge-layer.md",
+              "recordKey": "b82829c6-981c-4859-a106-d632080693db",
+              "retrievedAt": "2026-10-29T11:35:08.587Z"
+            },
+            "observedAt": "2026-10-25T12:27:09.249Z",
+            "freshness": "historical",
+            "confidence": 0.95,
+            "sensitive": true,
+            "relevanceTags": [
+              "memory",
+              "confirmed"
+            ],
+            "metadata": {
+              "projectId": "chernobog",
+              "memoryId": "b82829c6-981c-4859-a106-d632080693db",
+              "revision": 3,
+              "tier": "confirmed",
+              "channel": "file",
+              "oh5HybridScore": 0.5487935326240873,
+              "retrievalMode": "hybrid"
+            },
+            "relevance": 0.5487935326240873,
+            "relevanceReasons": [
+              "categoryNeed=0.20",
+              "lexicalOverlap=0.25",
+              "freshness=historical",
+              "confidence=0.95",
+              "PSI 2C: scoped hybrid memory relevance"
+            ],
+            "originalChars": 1025,
+            "includedChars": 1025,
+            "truncated": false
+          },
+          {
+            "id": "oh5-memory:0c7f4779-6315-4258-9380-2a4fe2069715",
+            "category": "memory",
+            "title": "Confirmed project memory: 0c7f4779-6315-4258-9380-2a4fe2069715",
+            "content": "PSI-1 CONTROLLED TEST RECORD. Fictional project codename: Silver Heron. Verification number: 4827. Fictional next milestone: Lantern Protocol. This record belongs exclusively to project chernobog. This is test data, not an actual development decision.",
+            "provenance": {
+              "sourceId": "oh5-governed-memory",
+              "sourceType": "oh5-confirmed-memory",
+              "reference": "psi1-acceptance-test-silver-heron-20261028",
+              "recordKey": "0c7f4779-6315-4258-9380-2a4fe2069715",
+              "retrievedAt": "2026-10-29T11:35:08.587Z"
+            },
+            "observedAt": "2026-10-28T01:02:24.126Z",
+            "freshness": "historical",
+            "confidence": 0.95,
+            "sensitive": true,
+            "relevanceTags": [
+              "memory",
+              "confirmed"
+            ],
+            "metadata": {
+              "projectId": "chernobog",
+              "memoryId": "0c7f4779-6315-4258-9380-2a4fe2069715",
+              "revision": 3,
+              "tier": "confirmed",
+              "channel": "owner-cli",
+              "oh5HybridScore": 0.5469992487224127,
+              "retrievalMode": "hybrid"
+            },
+            "relevance": 0.5469992487224127,
+            "relevanceReasons": [
+              "categoryNeed=0.20",
+              "lexicalOverlap=0.42",
+              "freshness=historical",
+              "confidence=0.95",
+              "PSI 2C: scoped hybrid memory relevance"
+            ],
+            "originalChars": 251,
+            "includedChars": 251,
+            "truncated": false
+          }
+        ],
+        "systemText": "CHERNOBOG TASK CONTEXT PACKET\n\nOnly the selected context below should be treated as retrieved task context.\n\nPreserve provenance, freshness, confidence, and sensitivity distinctions.\n\nMissing context must not be invented.\n\n\n\n## CONTEXT ITEM: Confirmed project memory: b82829c6-981c-4859-a106-d632080693db\nid=oh5-memory:b82829c6-981c-4859-a106-d632080693db\ncategory=memory\nsource=oh5-governed-memory\nfreshness=historical\nconfidence=0.95\nrelevance=0.55\nsensitive=true\nreference=legacy-obsidian:decisions/ADR-0002-obsidian-vault-as-project-knowledge-layer.md\n\n---\ntype: decision\nproject: Chernobog\nstatus: accepted\nupdated: 2026-05-22\ntags:\n  - chernobog\n  - adr\n  - vault\n  - memory\n---\n\n# ADR-0002 - Obsidian Vault as Project Knowledge Layer\n\n## Decision\n\nChernobog will use a local Obsidian-style Markdown vault as an inspectable project knowledge layer.\n\n## Context\n\nSQLite memory is useful for operational assistant memory, but it is not ideal as the only source of durable project doctrine.\n\nThe vault gives Chernobog and the operator a shared, readable knowledge graph.\n\n## The Vault Stores\n\n- roadmap state\n- architecture doctrine\n- file maps\n- design doctrine\n- patch safety rules\n- known failures\n- module maps\n- self-development rules\n- ADRs\n- checklists\n\n## The Vault Does Not Replace\n\n- runtime session state\n- SQLite memories\n- source control\n- approval-gated project writes\n\n## Rule\n\nBefore self-development proposals or patch plans, Chernobog should retrieve relevant vault doctrine.\n\n## Related\n\n- [[Vault Module]]\n- [[Self-Development Rules]]\n- [[Patch Safety Rules]]\n\n## CONTEXT ITEM: Confirmed project memory: 0c7f4779-6315-4258-9380-2a4fe2069715\nid=oh5-memory:0c7f4779-6315-4258-9380-2a4fe2069715\ncategory=memory\nsource=oh5-governed-memory\nfreshness=historical\nconfidence=0.95\nrelevance=0.55\nsensitive=true\nreference=psi1-acceptance-test-silver-heron-20261028\n\nPSI-1 CONTROLLED TEST RECORD. Fictional project codename: Silver Heron. Verification number: 4827. Fictional next milestone: Lantern Protocol. This record belongs exclusively to project chernobog. This is test data, not an actual development decision.",
+        "diagnostics": [
+          {
+            "sourceId": "runtime-world-state",
+            "status": "skipped",
+            "itemCount": 0,
+            "reason": "PSI 1D: source has no authorised scope or project is unresolved"
+          },
+          {
+            "sourceId": "runtime-world-model",
+            "status": "skipped",
+            "itemCount": 0,
+            "reason": "PSI 1D: source has no authorised scope or project is unresolved"
+          },
+          {
+            "sourceId": "oh5-governed-memory",
+            "status": "queried",
+            "itemCount": 2,
+            "reason": "retrieval completed"
+          }
+        ],
+        "metrics": {
+          "retrievedItems": 2,
+          "selectedItems": 2,
+          "excludedItems": 0,
+          "originalChars": 1276,
+          "includedChars": 1276,
+          "truncatedItems": 0,
+          "totalSources": 3,
+          "queriedSources": 1,
+          "failedSources": 0
+        }
+      },
+      "projectId": "chernobog",
+      "requestScope": {
+        "requestId": "oh4ad-2e4532a8-a9dd-44a9-bab5-55185943dcf6",
+        "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+        "actorTrust": "unknown",
+        "userMessage": "For testing purposes, I propose that Chernobog's next development milestone should be called Project Northstar. Do not confirm this yet.",
+        "answerMode": "vault-first",
+        "resolution": "resolved",
+        "provenance": "verified",
+        "projectId": "chernobog",
+        "mentionedProjectIds": [
+          "chernobog"
+        ],
+        "ambiguity": [],
+        "retrievalProjectId": "chernobog",
+        "readOnly": true
+      }
+    }
+  },
+  "supersededArtifacts": {},
+  "humanInterventions": [],
+  "recoveries": [],
+  "totalStageExecutions": 4,
+  "invariants": {
+    "authorityBypassed": false,
+    "directToolExecutionByLoop": false,
+    "directModelExecutionByLoop": false,
+    "hiddenScratchReasoningRequired": false,
+    "completedWorkSilentlyDiscarded": false,
+    "unsafePostActionRewindAllowed": false
+  }
+}
