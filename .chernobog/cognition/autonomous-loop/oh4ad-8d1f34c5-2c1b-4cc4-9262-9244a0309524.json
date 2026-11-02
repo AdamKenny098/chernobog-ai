@@ -1,0 +1,183 @@
+{
+  "version": "oh4ad.v1",
+  "id": "oh4ad-8d1f34c5-2c1b-4cc4-9262-9244a0309524",
+  "createdAt": "2026-10-29T11:39:46.575Z",
+  "updatedAt": "2026-10-29T11:39:46.629Z",
+  "status": "running",
+  "input": {
+    "rawInput": "What is Chernobog's confirmed next development milestone?",
+    "subject": "command",
+    "scope": "command:/command",
+    "correlationId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+    "metadata": {
+      "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+      "responseMode": "text",
+      "compatibilityRoute": "chat"
+    }
+  },
+  "currentStageIndex": 1,
+  "stages": [
+    {
+      "stage": "observe",
+      "componentBinding": [
+        "Core cognitiveRuntime / World State"
+      ],
+      "status": "completed",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-29T11:39:46.596Z",
+      "completedAt": "2026-10-29T11:39:46.614Z"
+    },
+    {
+      "stage": "interpret",
+      "componentBinding": [
+        "OH-4J Input Interpreter"
+      ],
+      "status": "running",
+      "attempts": 1,
+      "notes": [],
+      "startedAt": "2026-10-29T11:39:46.629Z"
+    },
+    {
+      "stage": "contextualize",
+      "componentBinding": [
+        "OH-4K Context Engine"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "prioritize",
+      "componentBinding": [
+        "OH-4R Priority / Attention Engine"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "choose-strategy",
+      "componentBinding": [
+        "OH-4N Strategy Router",
+        "OH-4AC Cognitive Profiles"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "choose-models",
+      "componentBinding": [
+        "OH-4M Model Router",
+        "OH-4Z Continuous Calibration",
+        "OH-4AC Cognitive Profiles"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "compile-prompt",
+      "componentBinding": [
+        "OH-4L Prompt Compiler"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "reason-plan",
+      "componentBinding": [
+        "OH-4O Reasoning Contracts",
+        "OH-4P Goal Decomposer",
+        "OH-4Q Planning Engine",
+        "OH-4S Multi-Model Orchestrator"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "validate",
+      "componentBinding": [
+        "OH-4T Critic & Verification Layer",
+        "OH-4U Confidence Engine",
+        "OH-4V Escalation Engine"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "authorize",
+      "componentBinding": [
+        "OH-4W Authority Bridge"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "act",
+      "componentBinding": [
+        "OH-4X Action Bridge",
+        "Existing Execution Runtime",
+        "Unified Tool Gateway"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "verify",
+      "componentBinding": [
+        "OH-4T post-action verification"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "record",
+      "componentBinding": [
+        "OH-4AA Decision Provenance",
+        "OH-4Y Cognitive Memory"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "learn",
+      "componentBinding": [
+        "OH-4Z Continuous Calibration",
+        "Existing governed learning pipeline"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    }
+  ],
+  "artifacts": {
+    "observe": {
+      "observedAt": "2026-10-29T11:39:46.614Z",
+      "rawText": "What is Chernobog's confirmed next development milestone?",
+      "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+      "responseMode": "text",
+      "compatibilityRoute": "chat"
+    }
+  },
+  "supersededArtifacts": {},
+  "humanInterventions": [],
+  "recoveries": [],
+  "totalStageExecutions": 2,
+  "invariants": {
+    "authorityBypassed": false,
+    "directToolExecutionByLoop": false,
+    "directModelExecutionByLoop": false,
+    "hiddenScratchReasoningRequired": false,
+    "completedWorkSilentlyDiscarded": false,
+    "unsafePostActionRewindAllowed": false
+  }
+}

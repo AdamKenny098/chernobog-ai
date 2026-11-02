@@ -1,0 +1,172 @@
+{
+  "version": "oh4ad.v1",
+  "id": "oh4ad-6eda6da9-1296-49bb-a6ca-795c071471bd",
+  "createdAt": "2026-10-28T12:33:54.912Z",
+  "updatedAt": "2026-10-28T12:33:54.933Z",
+  "status": "running",
+  "input": {
+    "rawInput": "Within the Chernobog project, what is the verification number associated with the fictional codename Silver Heron?",
+    "subject": "command",
+    "scope": "command:/command",
+    "correlationId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+    "metadata": {
+      "sessionId": "87975a7b-dbf9-4982-bd0c-c721ea39f4d4",
+      "responseMode": "text",
+      "compatibilityRoute": "chat"
+    }
+  },
+  "currentStageIndex": 0,
+  "stages": [
+    {
+      "stage": "observe",
+      "componentBinding": [
+        "Core cognitiveRuntime / World State"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "interpret",
+      "componentBinding": [
+        "OH-4J Input Interpreter"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "contextualize",
+      "componentBinding": [
+        "OH-4K Context Engine"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "prioritize",
+      "componentBinding": [
+        "OH-4R Priority / Attention Engine"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "choose-strategy",
+      "componentBinding": [
+        "OH-4N Strategy Router",
+        "OH-4AC Cognitive Profiles"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "choose-models",
+      "componentBinding": [
+        "OH-4M Model Router",
+        "OH-4Z Continuous Calibration",
+        "OH-4AC Cognitive Profiles"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "compile-prompt",
+      "componentBinding": [
+        "OH-4L Prompt Compiler"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "reason-plan",
+      "componentBinding": [
+        "OH-4O Reasoning Contracts",
+        "OH-4P Goal Decomposer",
+        "OH-4Q Planning Engine",
+        "OH-4S Multi-Model Orchestrator"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "validate",
+      "componentBinding": [
+        "OH-4T Critic & Verification Layer",
+        "OH-4U Confidence Engine",
+        "OH-4V Escalation Engine"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "authorize",
+      "componentBinding": [
+        "OH-4W Authority Bridge"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "act",
+      "componentBinding": [
+        "OH-4X Action Bridge",
+        "Existing Execution Runtime",
+        "Unified Tool Gateway"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "verify",
+      "componentBinding": [
+        "OH-4T post-action verification"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "record",
+      "componentBinding": [
+        "OH-4AA Decision Provenance",
+        "OH-4Y Cognitive Memory"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    },
+    {
+      "stage": "learn",
+      "componentBinding": [
+        "OH-4Z Continuous Calibration",
+        "Existing governed learning pipeline"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "notes": []
+    }
+  ],
+  "artifacts": {},
+  "supersededArtifacts": {},
+  "humanInterventions": [],
+  "recoveries": [],
+  "totalStageExecutions": 0,
+  "invariants": {
+    "authorityBypassed": false,
+    "directToolExecutionByLoop": false,
+    "directModelExecutionByLoop": false,
+    "hiddenScratchReasoningRequired": false,
+    "completedWorkSilentlyDiscarded": false,
+    "unsafePostActionRewindAllowed": false
+  }
+}

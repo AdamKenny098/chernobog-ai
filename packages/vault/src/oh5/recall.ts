@@ -2,6 +2,7 @@ import Database from "better-sqlite3";
 import { randomUUID } from "node:crypto";
 import { GovernedMemoryStore, type MemoryRecord } from "./store";
 import { OH5ObsidianLayout, validateProjectId } from "./layout";
+import { retrieveOH5Confirmed } from "./retrieval";
 
 export type RecallHit = { id:string; projectId:string; body:string; sourceRef:string; channel:string; revision:number; updatedAt:string; score:number };
 export type RecallRequest = { projectId:string; query:string; limit?:number };
@@ -27,25 +28,15 @@ export class OH5RecallService {
     if(!this.layout.projectRegistered(p))throw new Error("Project not registered");
     return p;
   }
-  private terms(query:string):string[] {
-    if(typeof query!=="string"||query.trim().length<2||query.length>300)throw new Error("Query length invalid");
-    const result=query.toLocaleLowerCase("en").trim().split(/\s+/).filter(Boolean);
-    if(result.length>12)throw new Error("Too many search terms");
-    return result;
-  }
-  search(input:RecallRequest):RecallHit[] {
-    const projectId=this.scope(input.projectId), terms=this.terms(input.query);
-    const limit=input.limit===undefined?20:input.limit;
-    if(!Number.isSafeInteger(limit)||limit<1||limit>50)throw new Error("Limit must be 1 to 50");
-    const rows=this.db.prepare(`SELECT id,projectId,body,sourceRef,channel,revision,updatedAt
-      FROM memory WHERE projectId=? AND tier='confirmed' AND supersededBy IS NULL
-      ORDER BY updatedAt DESC, id ASC`).all(projectId) as Omit<RecallHit,"score">[];
-    return rows.flatMap(row=>{
-      const text=row.body.toLocaleLowerCase("en");
-      if(!terms.every(term=>text.includes(term)))return [];
-      const score=terms.reduce((sum,term)=>sum+(text.split(term).length-1),0);
-      return [{...row,score}];
-    }).sort((a,b)=>b.score-a.score||b.updatedAt.localeCompare(a.updatedAt)||a.id.localeCompare(b.id)).slice(0,limit);
+  /** Shared confirmed-memory retrieval with mandatory project registration. */
+  search(input: RecallRequest): RecallHit[] {
+    const projectId = this.scope(input.projectId);
+
+    return retrieveOH5Confirmed(this.db.name, {
+      projectId,
+      query: input.query,
+      limit: input.limit,
+    });
   }
   /** Exact ID/history lookups never infer a project from content or an ID. */
   history(projectId:string, memoryId:string, ownerAuthenticated:boolean):{record:MemoryRecord; events:unknown[]} {

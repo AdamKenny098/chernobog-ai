@@ -2,6 +2,8 @@ import { saveMessage } from "@/lib/chernobog/memory";
 import { buildUiPayload } from "@/lib/chernobog/pipeline/payload";
 import type { CommandPipelineResult } from "@/lib/chernobog/pipeline/types";
 import { getSessionContext } from "@/lib/chernobog/session/store";
+import { resolveRequestContext, type ProjectDescriptor } from "@/lib/chernobog/project/requestContext";
+import { getAllProjects } from "@chernobog/external-projects/project-operations";
 import type { RouteName } from "@/lib/chernobog/session/types";
 import { routeMessage } from "@/lib/chernobog/router";
 import { runCommandPipeline } from "@chernobog/core/pipeline/runCommand";
@@ -650,6 +652,26 @@ function createHandlers(): AutonomousCognitiveLoopHandlers {
         turnId: context.loopId,
       });
 
+      // OH5N_READONLY_RECALL_INTERPRETATION_V2
+      // Only evidence-backed, read-only explain questions may override a false unknown classification.
+      // Do not change any action/write/tool request or requests without authenticated OH-5 evidence.
+      const oh5Evidence = metadata(context).oh5Evidence;
+      const oh5Question = observed.rawText.trim();
+      const isExplanation = /^(?:using\s+only\s+confirmed\s+memories\s+for\s+project\s+[a-z][a-z0-9-]*\s*,?\s*)?(?:please\s+)?(?:explain|describe|summarize|what\s+(?:is|was|does|did|are|were)\b|how\s+(?:does|did|is|was)\b|why\s+(?:is|was|does|did)\b)/i.test(oh5Question);
+      const isAction = /\b(?:execute|run|delete|remove|install|deploy|publish|send|email|schedule|change|edit|modify|update|write|save|store|approve|confirm|lock\s+it\s+in|create|build|fix|repair|replace|restart|shell|terminal|powershell)\b/i.test(oh5Question);
+      if (
+        typeof oh5Evidence === "string" && oh5Evidence.trim().length > 0 &&
+        observed.responseMode === "text" &&
+        interpretation.intent?.kind === "unknown" &&
+        interpretation.clarificationRequired === true &&
+        isExplanation && !isAction && oh5Question.length <= 2000
+      ) {
+        interpretation.intent = { kind: "ask", confidence: 0.95 };
+        interpretation.clarificationRequired = false;
+        interpretation.unresolvedQuestions = [];
+        interpretation.completeness = 1;
+        interpretation.ambiguity = 0;
+      }
       return {
         status: "completed",
         artifact: {
@@ -666,10 +688,30 @@ function createHandlers(): AutonomousCognitiveLoopHandlers {
       const interpreted = artifact(context, "interpret");
       const observed = artifact(context, "observe");
       const session = getSessionContext(observed.sessionId);
+      const projectDescriptors: ProjectDescriptor[] = getAllProjects().map((project) => ({
+        id: project.slug,
+        aliases: [project.name, project.repoName].filter((value): value is string => typeof value === "string" && value.length > 0),
+        archived: project.archived,
+      }));
+      // The active session project is verified server-side. User-message references
+      // are evidence of subject matter, not authorisation to switch project scope.
+      const requestScope = resolveRequestContext({
+        requestId: String(context.loopId),
+        sessionId: observed.sessionId,
+        actorTrust: "unknown",
+        userMessage: observed.rawText,
+        sessionProjectId: session.activeProjectId ?? undefined,
+      }, projectDescriptors);
       const engine = (ContextEngineModule as AnyRecord).getContextEngine();
+      // Fail closed for ambiguous/unresolved requests: an absent projectId is
+      // NOT a retrieval restriction in ContextEngine. An impossible source ID
+      // ensures no source is queried. Scoped source enforcement remains a
+      // separate acceptance requirement for project-aware source adapters.
       const packet = await engine.assemble({
         interpretation: interpreted.interpretation,
-        projectId: session.activeProjectId ?? undefined,
+        projectId: requestScope.retrievalProjectId ?? undefined,
+        strictProjectIsolation: true,
+        ...(!requestScope.retrievalProjectId ? { requestedSourceIds: ["__psi1c_no_sources__"] } : {}),
         maxItems: 24,
         maxChars: 24_000,
       });
@@ -678,7 +720,8 @@ function createHandlers(): AutonomousCognitiveLoopHandlers {
         status: "completed",
         artifact: {
           packet,
-          projectId: session.activeProjectId ?? undefined,
+          projectId: requestScope.retrievalProjectId ?? undefined,
+          requestScope,
         },
       };
     },
@@ -1680,6 +1723,27 @@ export async function runLiveOh4CommandPipeline(
     });
 
     if (state.status === "waiting-human") {
+      // OH5N_WAITING_HUMAN_DIAGNOSTIC: metadata only; never log user text or evidence.
+      if (typeof options.oh5Evidence === "string" && options.oh5Evidence.trim()) {
+        const interpreted = asRecord(state.artifacts.interpret);
+        const interpretation = asRecord(interpreted.interpretation);
+        const validation = asRecord(state.artifacts.validate);
+        const escalation = asRecord(validation.escalation);
+        const selected = asRecord(escalation.selected);
+        const compile = asRecord(state.artifacts["compile-prompt"]);
+        const reason = asRecord(state.artifacts["reason-plan"]);
+        console.info("OH5N_WAITING_HUMAN_DIAGNOSTIC", {
+          status: state.status,
+          stageKeys: Object.keys(state.artifacts).sort(),
+          interpretationKind: String(asRecord(interpretation.intent).kind ?? "unknown"),
+          clarificationRequired: interpretation.clarificationRequired === true,
+          unresolvedQuestionCount: Array.isArray(interpretation.unresolvedQuestions) ? interpretation.unresolvedQuestions.length : 0,
+          escalationKind: String(selected.kind ?? "none"),
+          compiledPresent: Boolean(compile.compiled),
+          orchestrationStatus: String(asRecord(reason.orchestration).status ?? "none"),
+          terminalReasonPresent: Boolean(state.terminalReason),
+        });
+      }
       const reply = replyFromWaitingState(state);
       const route = liveRouteFromState(state);
       saveMessage("user", userMessage, route, sessionId);
