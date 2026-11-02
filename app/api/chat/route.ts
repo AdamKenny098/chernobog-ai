@@ -5,7 +5,7 @@ import { verifyOH5MemoryScope } from "@/lib/chernobog/project/oh5MemoryScope";
 import { runLiveOh4CommandPipeline } from "@/lib/chernobog/cognition/liveOh4CommandPipeline";
 import { buildSpokenReply } from "@/lib/chernobog/personality";
 import { hasOwnerAuthorization } from "@/packages/vault/src/oh5/auth";
-import { executeGovernedMilestoneCommand } from "@/lib/chernobog/pipeline/governedMilestoneCommand";
+import { dispatchGovernedMemoryCommand } from "@/lib/chernobog/pipeline/governedMemoryCommandService";
 import { buildUiPayload } from "@/lib/chernobog/pipeline/payload";
 import { OH5RecallService } from "@/packages/vault/src/oh5/recall";
 import { OH5ContextAssembler, formatContextForModel } from "@/packages/vault/src/oh5/context";
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
     }
     // OH5: intercept only deterministic, explicitly scoped test-milestone mutations.
     // Never allow a conversational response to impersonate a successful governed write.
-    const governedReply = executeGovernedMilestoneCommand(userMessage, {
+    const governedReply = dispatchGovernedMemoryCommand(userMessage, {
       authenticated: hasOwnerAuthorization(req.headers.get("authorization")),
       sessionId,
     });

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "savedAt": "2026-10-31T12:55:06.274Z",
+  "savedAt": "2026-11-02T01:09:28.077Z",
   "observations": [
     {
       "id": "oh4-local-model-baseline-2026-10-12:deepseek-coder-v2:16b:code-diagnosis",
@@ -852,6 +852,36 @@
       },
       "provenance": {
         "taskId": "oh4ad-923fd10b-5a19-47be-89af-916738d30a12"
+      }
+    },
+    {
+      "id": "oh4ad-125ffed3-b51e-45d1-9323-96e24d66a817:real-work",
+      "observedAt": "2026-11-02T01:09:28.077Z",
+      "source": "real-work",
+      "modelId": "gpt-oss:20b",
+      "modelVersion": "f38aa0c53da5",
+      "strategy": "single-model",
+      "task": {
+        "domain": "reasoning",
+        "complexity": "trivial",
+        "creativity": "none",
+        "factuality": "low",
+        "reasoningDepth": "shallow",
+        "privacySensitivity": "public",
+        "toolUse": "false"
+      },
+      "objective": {
+        "score": 1,
+        "success": true,
+        "verificationVerdict": "pass",
+        "evidenceConfidence": 0.7961731155992512
+      },
+      "telemetry": {
+        "latencyMs": 3790,
+        "fallbackCount": 0
+      },
+      "provenance": {
+        "taskId": "oh4ad-125ffed3-b51e-45d1-9323-96e24d66a817"
       }
     }
   ]
