@@ -6,3 +6,5 @@ export * from "./profileStore";
 export * from "./mobile";
 export * from "./attentionProvider";
 export * from "./eventPublisher";
+export type { PersonalAssistanceReadAuthority } from "./readAuthority";
+export { personalAssistanceReadAuthority } from "./liveReadAuthority";
