@@ -100,6 +100,50 @@ class ChernobogApiClient {
         )
     }
 
+    /**
+     * Replace an invalid credential without resetting the installation ID
+     * or touching the Room notification spool.
+     */
+    fun recover(
+        endpoint: String,
+        deviceId: String,
+        installationId: String,
+        recoveryCode: String,
+    ): EnrollmentRecord {
+        val normalizedEndpoint = EndpointPolicy.normalize(endpoint)
+        require(deviceId.isNotBlank() && installationId.isNotBlank()) {
+            "An existing device identity is required for recovery."
+        }
+        require(recoveryCode.trim().length >= 32) {
+            "Recovery code is too short."
+        }
+        val response = request(
+            method = "POST",
+            url = EndpointPolicy.apiUrl(
+                normalizedEndpoint,
+                "/api/personal-assistance/mobile/recover",
+            ),
+            token = null,
+            body = JSONObject()
+                .put("deviceId", deviceId)
+                .put("installationId", installationId)
+                .put("recoveryCode", recoveryCode.trim()),
+        )
+        val device = response.getJSONObject("device")
+        val returnedId = device.getString("deviceId")
+        val returnedInstall = device.getString("installationId")
+        require(returnedId == deviceId && returnedInstall == installationId) {
+            "Server returned the wrong device identity during recovery."
+        }
+        return EnrollmentRecord(
+            endpoint = normalizedEndpoint,
+            installationId = returnedInstall,
+            deviceId = returnedId,
+            displayName = device.getString("displayName"),
+            token = response.getJSONObject("credential").getString("token"),
+        )
+    }
+
     fun session(
         endpoint: String,
         token: String,

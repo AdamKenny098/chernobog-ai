@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "source": "alkimii",
+  "latestSnapshot": {
+    "schemaVersion": 1,
+    "snapshotId": "schedule_975512a740bdc33090734c28142c9b6f",
+    "source": "alkimii",
+    "importedAt": "2026-11-04T02:58:54.259Z",
+    "observedAt": "2026-11-04T02:58:53.290534Z",
+    "fileName": "mobile-roster:alkimii-accessibility-b77fc90a614872a94f38c61a24c5a75492770e292208be20db2beea3b33a6fdf",
+    "timeZone": "UTC",
+    "shifts": [
+      {
+        "id": "shift_d3d94decb6c7d87363a27c95",
+        "source": "alkimii",
+        "date": "2026-11-02",
+        "startAt": "2026-11-02T09:00:00.000Z",
+        "endAt": "2026-11-02T16:34:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "e438125d3605fbecca7e25b73bece3def01726b694f99a104593e5839f238ac3"
+      },
+      {
+        "id": "shift_32e4fad0e8e47a63370453ec",
+        "source": "alkimii",
+        "date": "2026-11-03",
+        "startAt": "2026-11-03T14:00:00.000Z",
+        "endAt": "2026-11-03T23:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "f6e78dacebab28a49173db99f5fbc264496f6db7a403e3e890e1397a19e6d86d"
+      },
+      {
+        "id": "shift_7371fef0ae035581154399a0",
+        "source": "alkimii",
+        "date": "2026-11-04",
+        "startAt": "2026-11-04T14:00:00.000Z",
+        "endAt": "2026-11-04T23:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "599e03a10cb71151e73a31a4b56854547645bd0ce681b8efeece647be16ecc15"
+      },
+      {
+        "id": "shift_70e4794b6db14c9b844faf4b",
+        "source": "alkimii",
+        "date": "2026-11-05",
+        "startAt": "2026-11-05T07:00:00.000Z",
+        "endAt": "2026-11-05T16:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "21dbc9a156f79d38ace725219ede3a15251e895f740594dfafafa2003f3cea12"
+      },
+      {
+        "id": "shift_2c0db2a55aa244e072ac8d53",
+        "source": "alkimii",
+        "date": "2026-11-07",
+        "startAt": "2026-11-07T09:00:00.000Z",
+        "endAt": "2026-11-07T17:30:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "89d9c1deb50b12195081411d6bd81cf4a1f7722f006d9f4d84569497970f8686"
+      }
+    ]
+  },
+  "latestChanges": [],
+  "latestSignal": null,
+  "pendingRefresh": false,
+  "seenSignalIds": []
+}

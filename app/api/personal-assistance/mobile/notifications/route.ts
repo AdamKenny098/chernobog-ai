@@ -182,10 +182,19 @@ export async function POST(
           notification,
         );
 
-      await observeCommunicationResponsibilitySafely(
-        notification,
-        projection,
-      );
+      const communication =
+        await observeCommunicationResponsibilitySafely(
+          notification,
+          projection,
+        );
+
+      // The observer catches its own exceptions and reports "failed".
+      // Do not acknowledge a receipt when a downstream obligation failed.
+      if (communication.outcome === "failed") {
+        throw new Error(
+          `Communication projection failed for ${item.eventId}; receipt will remain pending.`,
+        );
+      }
 
       intelligence.push(
         intelligenceSummary(

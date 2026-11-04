@@ -14,6 +14,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -25,6 +27,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -39,8 +45,11 @@ fun CompanionScreen(
     onPairingCodeChange: (String) -> Unit,
     onDisplayNameChange: (String) -> Unit,
     onEnroll: () -> Unit,
+    onRecover: () -> Unit,
+    onPrepareFreshEnrollment: () -> Unit,
     onRefresh: () -> Unit,
 ) {
+    var confirmFreshEnrollment by remember { mutableStateOf(false) }
     Surface(
         modifier =
             Modifier.fillMaxSize(),
@@ -88,6 +97,57 @@ fun CompanionScreen(
                     state = state,
                     onRefresh =
                         onRefresh,
+                )
+                if (state.connectionState == ConnectionState.ERROR) {
+                    EnrollmentPanel(
+                        state = state,
+                        onEndpointChange = onEndpointChange,
+                        onPairingCodeChange = onPairingCodeChange,
+                        onDisplayNameChange = onDisplayNameChange,
+                        onEnroll = onRecover,
+                        recoveryMode = true,
+                    )
+                    HudCard(title = "MISSING SERVER REGISTRATION") {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text(
+                                "Only use this when the live server's /api/personal-assistance/mobile/devices response contains an empty devices list."
+                            )
+                            Text(
+                                "This resets the obsolete saved phone credential and device reference. It retains the installation ID and does not clear app data or the notification spool."
+                            )
+                            Button(
+                                onClick = { confirmFreshEnrollment = true },
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                Text("PREPARE RE-ENROLMENT")
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (confirmFreshEnrollment) {
+                AlertDialog(
+                    onDismissRequest = { confirmFreshEnrollment = false },
+                    title = { Text("Re-enrol this phone?") },
+                    text = {
+                        Text(
+                            "Continue only if the CURRENT server has no device registration. The old phone credential and device reference will be cleared. The installation ID and offline notification spool will remain. You will need a new pairing code."
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            confirmFreshEnrollment = false
+                            onPrepareFreshEnrollment()
+                        }) {
+                            Text("CONFIRM")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { confirmFreshEnrollment = false }) {
+                            Text("CANCEL")
+                        }
+                    },
                 )
             }
 
@@ -260,10 +320,11 @@ private fun EnrollmentPanel(
     onPairingCodeChange: (String) -> Unit,
     onDisplayNameChange: (String) -> Unit,
     onEnroll: () -> Unit,
+    recoveryMode: Boolean = false,
 ) {
     HudCard(
         title =
-            "ENROLLMENT",
+            if (recoveryMode) "CREDENTIAL RECOVERY" else "ENROLLMENT",
     ) {
         Column(
             verticalArrangement =
@@ -322,7 +383,7 @@ private fun EnrollmentPanel(
                     onPairingCodeChange,
                 label = {
                     Text(
-                        "One-time pairing code",
+                        if (recoveryMode) "Owner-generated recovery code" else "One-time pairing code",
                     )
                 },
                 visualTransformation =
@@ -364,7 +425,7 @@ private fun EnrollmentPanel(
                     CircularProgressIndicator()
                 } else {
                     Text(
-                        "ENROLL DEVICE",
+                        if (recoveryMode) "RECOVER DEVICE - PRESERVE SPOOL" else "ENROLL DEVICE",
                     )
                 }
             }

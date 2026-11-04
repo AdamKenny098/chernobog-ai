@@ -40,3 +40,16 @@ export interface PersonalAssistanceMobileCredential {
   scheme: "Bearer";
   token: string;
 }
+
+/** Owner-created single-use recovery code; never persist the raw code. */
+export interface PersonalAssistanceMobileRecoveryChallenge {
+  deviceId: string;
+  expiresAt: string;
+  recoveryCode: string;
+}
+
+export interface PersonalAssistanceMobileRecoveryInput {
+  deviceId: string;
+  installationId: string;
+  recoveryCode: string;
+}

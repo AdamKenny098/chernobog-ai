@@ -41,6 +41,10 @@ class MainActivity :
                         model::updateDisplayName,
                     onEnroll =
                         model::enroll,
+                    onRecover =
+                        model::recoverEnrollment,
+                    onPrepareFreshEnrollment =
+                        model::prepareFreshEnrollment,
                     onRefresh =
                         model::refreshSession,
                 )
