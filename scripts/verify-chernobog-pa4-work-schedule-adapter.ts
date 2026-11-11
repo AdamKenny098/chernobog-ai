@@ -288,9 +288,7 @@ try {
     );
 
   assert(
-    service.includes(
-      'type:\n            "work-schedule"',
-    ) &&
+    /getResponsibilityLedger\s*\(\s*\)\s*\.create\s*\(\s*\{[\s\S]*?source:\s*\{\s*type:\s*"work-schedule"[\s\S]*?state:\s*"waiting-user"[\s\S]*?requiresHuman:\s*true/u.test(service) &&
     service.includes(
       '"waiting-user"',
     ) &&
