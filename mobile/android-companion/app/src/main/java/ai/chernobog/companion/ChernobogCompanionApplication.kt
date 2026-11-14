@@ -37,6 +37,16 @@ class ChernobogCompanionApplication :
                 .enqueueImmediate(
                     this,
                 )
+
+            ReminderDeliveryScheduler
+                .ensurePeriodic(
+                    this,
+                )
+
+            ReminderDeliveryScheduler
+                .enqueueNow(
+                    this,
+                )
         }
     }
 }

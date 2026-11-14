@@ -19,6 +19,18 @@ class MainActivity :
 
         enableEdgeToEdge()
 
+        // One explicit Android permission prompt; never silently grant access.
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU &&
+            checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) !=
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            val preferences = getSharedPreferences("chernobog-reminder-permissions", MODE_PRIVATE)
+            if (!preferences.getBoolean("prompted", false)) {
+                preferences.edit().putBoolean("prompted", true).apply()
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 6131)
+            }
+        }
+
         setContent {
             ChernobogTheme {
                 val model:
