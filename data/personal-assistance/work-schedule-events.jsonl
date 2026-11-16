@@ -1,0 +1,4 @@
+{"id":"work_schedule_event_7db079fb-acb3-4cca-8225-ec54171ff85f","type":"snapshot-baseline","occurredAt":"2026-11-04T02:58:54.261Z","details":{"snapshotId":"schedule_975512a740bdc33090734c28142c9b6f","shiftCount":5,"changeCount":0}}
+{"id":"work_schedule_event_71d21f85-0c5d-467b-b113-b843c4206cf6","type":"snapshot-updated","occurredAt":"2026-11-11T13:40:38.904Z","details":{"snapshotId":"schedule_7b67929b8714beaf9b5d24198829cd34","shiftCount":5,"changeCount":10}}
+{"id":"work_schedule_event_12ed2873-98cc-4fdd-a400-c717d2c55fc4","type":"snapshot-confirmed","occurredAt":"2026-11-12T16:39:35.145Z","details":{"snapshotId":"schedule_7b67929b8714beaf9b5d24198829cd34","shiftCount":5,"changeCount":0}}
+{"id":"work_schedule_event_65ad0e99-a0e0-44a6-be34-96be089c37b7","type":"snapshot-updated","occurredAt":"2026-11-12T16:39:39.699Z","details":{"snapshotId":"schedule_d4c4fb9fe53123a4319358bceebc44fd","shiftCount":5,"changeCount":10}}

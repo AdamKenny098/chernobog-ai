@@ -1,0 +1,6 @@
+﻿PASS useful verdict, transaction idempotency, revision conflicts and bounded audit
+PASS explicit suppression, show-hidden recovery, source ranking and truthful totals
+PASS future revisit, expiring dismissals, critical visibility and evidence-change invalidation
+PASS clear/undo, strict offset bounds, immutability, DND and preference noninterference
+PASS privacy-minimized SQLite, guarded explicit API and unchanged push/DND boundaries
+OH-6K4 EXPLICIT ADAPTIVE FEEDBACK: PASS

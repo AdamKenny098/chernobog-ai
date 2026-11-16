@@ -10,6 +10,8 @@ import type {
   PersonalAssistanceMobileEnrollmentChallenge,
   PersonalAssistanceMobileEnrollmentInput,
   PersonalAssistanceMobileEnrollmentResult,
+  PersonalAssistanceMobileRecoveryInput,
+  PersonalAssistanceMobileRecoveryChallenge,
 } from "./types";
 
 const DEFAULT_ENROLLMENT_MINUTES = 10;
@@ -64,6 +66,53 @@ CREATE TABLE IF NOT EXISTS personal_assistance_mobile_device (
 
 CREATE INDEX IF NOT EXISTS idx_personal_assistance_mobile_device_status
 ON personal_assistance_mobile_device(revoked_at, enrolled_at);
+`);
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS personal_assistance_mobile_recovery (
+  code_hash TEXT PRIMARY KEY,
+  device_id TEXT NOT NULL,
+  installation_id TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  consumed_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_pa_mobile_recovery_device
+ON personal_assistance_mobile_recovery(device_id, expires_at);
+`);
+
+type RecoveryRow = {
+  code_hash: string;
+  device_id: string;
+  installation_id: string;
+  created_at: string;
+  expires_at: string;
+  consumed_at: string | null;
+};
+
+const insertRecoveryStatement = db.prepare(`
+INSERT INTO personal_assistance_mobile_recovery (
+  code_hash, device_id, installation_id, created_at, expires_at, consumed_at
+) VALUES (?, ?, ?, ?, ?, NULL)
+`);
+
+const readRecoveryStatement = db.prepare(`
+SELECT code_hash, device_id, installation_id, created_at, expires_at, consumed_at
+FROM personal_assistance_mobile_recovery
+WHERE code_hash = ? LIMIT 1
+`);
+
+const consumeRecoveryStatement = db.prepare(`
+UPDATE personal_assistance_mobile_recovery
+SET consumed_at = ?
+WHERE code_hash = ? AND consumed_at IS NULL AND expires_at > ?
+`);
+
+const rotateDeviceTokenStatement = db.prepare(`
+UPDATE personal_assistance_mobile_device
+SET token_hash = ?
+WHERE device_id = ? AND installation_id = ? AND revoked_at IS NULL
 `);
 
 const insertEnrollmentStatement = db.prepare(`
@@ -210,6 +259,10 @@ function pairingCodeHash(
     "chernobog-pa-mobile-enrollment-v1",
     code,
   );
+}
+
+function recoveryCodeHash(code: string): string {
+  return hashSecret("chernobog-pa-mobile-recovery-v1", code);
 }
 
 function deviceTokenHash(
@@ -524,6 +577,88 @@ const consumeEnrollmentTransaction =
       };
     },
   );
+
+/**
+ * Only local owner tooling must mint these codes. No public HTTP endpoint
+ * creates mobile recovery codes. A code is bound to an existing active device.
+ */
+export function createPersonalAssistanceMobileRecovery(
+  deviceId: string,
+  options: { expiresInMinutes?: number; now?: Date } = {},
+): PersonalAssistanceMobileRecoveryChallenge {
+  const now = options.now ?? new Date();
+  const id = normalizedText(deviceId, "deviceId", 8, 128);
+  const row = readDeviceByIdStatement.get(id) as DeviceRow | undefined;
+  if (!row || row.revoked_at) {
+    throw new Error("Active mobile device not found for recovery.");
+  }
+  const minutes = enrollmentMinutes(options.expiresInMinutes);
+  const recoveryCode = randomBytes(32).toString("base64url");
+  const expiresAt = new Date(now.getTime() + minutes * 60_000).toISOString();
+  insertRecoveryStatement.run(
+    recoveryCodeHash(recoveryCode),
+    row.device_id,
+    row.installation_id,
+    now.toISOString(),
+    expiresAt,
+  );
+  return { deviceId: row.device_id, expiresAt, recoveryCode };
+}
+
+const recoverDeviceTransaction = db.transaction(
+  (input: PersonalAssistanceMobileRecoveryInput, now: Date): PersonalAssistanceMobileEnrollmentResult => {
+    const deviceId = normalizedText(input.deviceId, "deviceId", 8, 128);
+    const installationId = normalizedText(input.installationId, "installationId", 8, 160);
+    const recoveryCode = normalizedText(input.recoveryCode, "recoveryCode", 32, 256);
+    const recovery = readRecoveryStatement.get(
+      recoveryCodeHash(recoveryCode),
+    ) as RecoveryRow | undefined;
+
+    if (!recovery ||
+        recovery.device_id !== deviceId ||
+        recovery.installation_id !== installationId) {
+      throw new Error("Invalid mobile recovery code or device identity.");
+    }
+    if (recovery.consumed_at) {
+      throw new Error("Mobile recovery code has already been consumed.");
+    }
+    if (Date.parse(recovery.expires_at) <= now.getTime()) {
+      throw new Error("Mobile recovery code has expired.");
+    }
+
+    const device = readDeviceByIdStatement.get(deviceId) as DeviceRow | undefined;
+    if (!device || device.installation_id !== installationId || device.revoked_at) {
+      throw new Error("Mobile device was revoked or is not registered on this server.");
+    }
+
+    const token = randomBytes(32).toString("base64url");
+    const changed = rotateDeviceTokenStatement.run(
+      deviceTokenHash(token), deviceId, installationId,
+    );
+    if (changed.changes !== 1) {
+      throw new Error("Mobile credential rotation failed.");
+    }
+    const consumed = consumeRecoveryStatement.run(
+      now.toISOString(), recovery.code_hash, now.toISOString(),
+    );
+    if (consumed.changes !== 1) {
+      throw new Error("Mobile recovery code was consumed or expired.");
+    }
+    const updated = readDeviceByIdStatement.get(deviceId) as DeviceRow | undefined;
+    if (!updated) {
+      throw new Error("Recovered device could not be loaded.");
+    }
+    return { device: toDevice(updated), token };
+  },
+);
+
+/** Atomic replacement: same device and installation, new token, old token invalid. */
+export function recoverPersonalAssistanceMobileDevice(
+  input: PersonalAssistanceMobileRecoveryInput,
+  now = new Date(),
+): PersonalAssistanceMobileEnrollmentResult {
+  return structuredClone(recoverDeviceTransaction(input, now));
+}
 
 export function enrollPersonalAssistanceMobileDevice(
   input:

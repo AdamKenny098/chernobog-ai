@@ -37,6 +37,21 @@ class ChernobogCompanionApplication :
                 .enqueueImmediate(
                     this,
                 )
+
+            ReminderDeliveryScheduler
+                .ensurePeriodic(
+                    this,
+                )
+
+            ReminderDeliveryScheduler
+                .enqueueNow(
+                    this,
+                )
+
+            MobileRecoveryCoordinator.enqueue(
+                this,
+                MobileRecoveryCoordinator.Cause.APP_START,
+            )
         }
     }
 }

@@ -69,12 +69,8 @@ assert(
 );
 
 assert(
-  store.includes(
-    'normalized.captureMode ===\n              "metadata-only"',
-  ) &&
-    store.includes(
-      "? receivedAt\n              : null",
-    ),
+  /const\s+processedAt\s*=\s*normalized\.captureMode\s*===\s*"metadata-only"\s*\?\s*receivedAt\s*:\s*null\s*;/u.test(store) &&
+    /insertReceiptStatement\.run\(\s*normalized\.eventId,\s*normalized\.deviceId,\s*"accepted",\s*receivedAt,\s*processedAt,\s*\)/u.test(store),
   "metadata-only receipts remain immediately acknowledgeable while content-bearing receipts wait for downstream processing",
 );
 

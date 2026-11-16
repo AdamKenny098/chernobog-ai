@@ -129,3 +129,25 @@ export async function publishMobileDeviceRevoked(
     },
   });
 }
+
+export async function publishMobileDeviceCredentialRecovered(
+  device: PersonalAssistanceMobileDevice,
+): Promise<void> {
+  await publishChernobogEventSafely({
+    type: "personal-assistance.mobile.device.credential-recovered",
+    source: MOBILE_EVENT_SOURCE,
+    severity: "notice",
+    subject: device.deviceId,
+    scope: "personal-assistance",
+    payload: {
+      deviceId: device.deviceId,
+      platform: device.platform,
+      credentialRotated: true,
+    },
+    metadata: {
+      sensitive: true,
+      confidence: 1,
+      tags: ["personal-assistance", "mobile", "recovery"],
+    },
+  });
+}

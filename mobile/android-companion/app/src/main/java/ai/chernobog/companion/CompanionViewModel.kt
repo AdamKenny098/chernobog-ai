@@ -162,6 +162,71 @@ class CompanionViewModel(
         }
     }
 
+    /** Recover from invalid server credentials; never clear the phone spool. */
+    fun recoverEnrollment() {
+        val current = _state.value
+        val deviceId = current.deviceId ?: return
+        if (current.connectionState == ConnectionState.CONNECTING) return
+        _state.value = current.copy(
+            connectionState = ConnectionState.CONNECTING,
+            errorMessage = null,
+        )
+        viewModelScope.launch {
+            try {
+                val record = withContext(Dispatchers.IO) {
+                    api.recover(
+                        endpoint = current.endpoint,
+                        deviceId = deviceId,
+                        installationId = current.installationId,
+                        recoveryCode = current.pairingCode,
+                    )
+                }
+                withContext(Dispatchers.IO) {
+                    credentialStore.saveEnrollment(record)
+                }
+                _state.value = _state.value.copy(
+                    pairingCode = "",
+                    connectionState = ConnectionState.CONNECTING,
+                    errorMessage = null,
+                )
+                refreshSession()
+            } catch (error: Throwable) {
+                fail(error)
+            }
+        }
+    }
+
+    /**
+     * Only use after verifying that the live Chernobog server has zero
+     * registered devices. Clears obsolete local auth, not app storage.
+     * Retains installation identity and the Room notification spool.
+     */
+    fun prepareFreshEnrollment() {
+        val current = _state.value
+        if (current.deviceId.isNullOrBlank() ||
+            current.connectionState != ConnectionState.ERROR
+        ) {
+            return
+        }
+
+        try {
+            val installationId = credentialStore.installationId()
+            credentialStore.clearEnrollment(
+                rotateInstallationIdentity = false,
+            )
+            _state.value = current.copy(
+                installationId = installationId,
+                deviceId = null,
+                session = null,
+                pairingCode = "",
+                connectionState = ConnectionState.DISCONNECTED,
+                errorMessage = null,
+            )
+        } catch (error: Throwable) {
+            fail(error)
+        }
+    }
+
     fun refreshSessionIfEnrolled() {
         val token =
             try {

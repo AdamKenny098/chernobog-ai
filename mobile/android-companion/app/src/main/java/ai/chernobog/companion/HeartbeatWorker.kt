@@ -129,6 +129,11 @@ class HeartbeatWorker(
                         )
                 }
 
+                ReminderDeliveryScheduler
+                    .enqueueNow(
+                        applicationContext,
+                    )
+
                 Result.success()
             }
         } catch (
