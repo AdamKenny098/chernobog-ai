@@ -2,6 +2,7 @@ import Link from "next/link";
 import { RecursiveCommandHierarchy } from "./RecursiveCommandHierarchy";
 import { SensoryControlDeck } from "@/components/chernobog-ui/sensory/SensoryControlDeck";
 import { StewardAttentionSurface } from "./StewardAttentionSurface";
+import { AdaptiveAssistanceSurface } from "./AdaptiveAssistanceSurface";
 import { AttentionControlSurface } from "./AttentionControlSurface";
 import { WorkScheduleSurface } from "./WorkScheduleSurface";
 import type { CommandCenterModel } from "./commandCenterModel";
@@ -63,6 +64,7 @@ export function CommandCenterView({ model }: { model: CommandCenterModel }) {
 <CommandHeader model={model} />
         <AttentionControlSurface />
         <StewardAttentionSurface />
+        <AdaptiveAssistanceSurface />
         <WorkScheduleSurface />
         <RecursiveCommandHierarchy />
         <SensoryControlDeck />

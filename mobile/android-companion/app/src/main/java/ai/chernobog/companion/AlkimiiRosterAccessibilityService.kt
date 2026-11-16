@@ -1,6 +1,7 @@
 package ai.chernobog.companion
 
 import android.accessibilityservice.AccessibilityService
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -62,6 +63,7 @@ class AlkimiiRosterAccessibilityService :
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        AlkimiiServiceBindingTracker.markConnected(this)
         scheduleCapture()
     }
 
@@ -73,7 +75,13 @@ class AlkimiiRosterAccessibilityService :
             false
     }
 
+    override fun onUnbind(intent: Intent?): Boolean {
+        AlkimiiServiceBindingTracker.markDisconnected(this)
+        return super.onUnbind(intent)
+    }
+
     override fun onDestroy() {
+        AlkimiiServiceBindingTracker.markDisconnected(this)
         handler.removeCallbacks(
             pendingCapture,
         )

@@ -47,6 +47,11 @@ class ChernobogCompanionApplication :
                 .enqueueNow(
                     this,
                 )
+
+            MobileRecoveryCoordinator.enqueue(
+                this,
+                MobileRecoveryCoordinator.Cause.APP_START,
+            )
         }
     }
 }

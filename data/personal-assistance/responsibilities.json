@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "responsibilities": [
+    {
+      "id": "resp_cb96c1a3-181e-4012-a9ed-288f3d623cd0",
+      "title": "Work schedule changed",
+      "summary": "Alkimii schedule reconciliation detected 5 added, 0 changed, 5 removed.",
+      "source": {
+        "type": "work-schedule",
+        "sourceId": "alkimii-snapshot:schedule_7b67929b8714beaf9b5d24198829cd34",
+        "application": "Alkimii"
+      },
+      "state": "waiting-user",
+      "priority": "important",
+      "requiresHuman": true,
+      "suggestedAction": "Review the updated Alkimii work schedule.",
+      "createdAt": "2026-11-11T13:40:38.913Z",
+      "updatedAt": "2026-11-11T13:40:38.913Z",
+      "confidence": 1,
+      "relatedResponsibilityIds": [],
+      "evidence": [
+        {
+          "id": "evidence_311622a7-160d-47ec-a3f8-ff379c47d515",
+          "source": {
+            "type": "work-schedule",
+            "sourceId": "alkimii-snapshot:schedule_7b67929b8714beaf9b5d24198829cd34",
+            "application": "Alkimii"
+          },
+          "observedAt": "2026-11-11T13:40:38.913Z"
+        }
+      ],
+      "revision": 1
+    },
+    {
+      "id": "resp_f9e1ba4f-4237-4163-9b8a-3c5df22fba20",
+      "title": "Work schedule changed",
+      "summary": "Alkimii schedule reconciliation detected 5 added, 0 changed, 5 removed.",
+      "source": {
+        "type": "work-schedule",
+        "sourceId": "alkimii-snapshot:schedule_d4c4fb9fe53123a4319358bceebc44fd",
+        "application": "Alkimii"
+      },
+      "state": "waiting-user",
+      "priority": "important",
+      "requiresHuman": true,
+      "suggestedAction": "Review the updated Alkimii work schedule.",
+      "createdAt": "2026-11-12T16:39:39.706Z",
+      "updatedAt": "2026-11-12T16:39:39.706Z",
+      "confidence": 1,
+      "relatedResponsibilityIds": [],
+      "evidence": [
+        {
+          "id": "evidence_2e122181-17a6-4c33-adab-3e831b654765",
+          "source": {
+            "type": "work-schedule",
+            "sourceId": "alkimii-snapshot:schedule_d4c4fb9fe53123a4319358bceebc44fd",
+            "application": "Alkimii"
+          },
+          "observedAt": "2026-11-12T16:39:39.706Z"
+        }
+      ],
+      "revision": 1
+    }
+  ]
+}

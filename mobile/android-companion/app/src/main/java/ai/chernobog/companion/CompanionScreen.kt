@@ -157,6 +157,7 @@ fun CompanionScreen(
 
             NotificationAccessPanel()
 
+            MobileReliabilityPanel()
             DeviceHealthPanel()
 
             Spacer(

@@ -1,0 +1,6 @@
+﻿PASS mounted in existing Command Center; starts collapsed; no polling or background scheduler
+PASS authoritative K2/K4 read model, evidence caveats and policy visibility
+PASS explicit K4 feedback, revision guard, bounded deferral, critical visibility and undo
+PASS explicit K3 owner action schema, stable reminder ID, timezone conversion and audit history
+PASS no profile/DND/calendar edits, no notification dispatch, fail-visible states and empty reminder handling
+OH-6K5 ADAPTIVE ASSISTANCE UI: PASS

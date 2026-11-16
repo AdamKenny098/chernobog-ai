@@ -3,6 +3,7 @@ package ai.chernobog.companion
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
 
 object ConnectivityReconnectObserver {
     @Volatile
@@ -56,6 +57,25 @@ object ConnectivityReconnectObserver {
                             .enqueueNow(
                                 applicationContext,
                             )
+
+                        MobileRecoveryCoordinator.enqueue(
+                            applicationContext,
+                            MobileRecoveryCoordinator.Cause.NETWORK_AVAILABLE,
+                        )
+                    }
+
+                    override fun onCapabilitiesChanged(
+                        network: Network,
+                        networkCapabilities: NetworkCapabilities,
+                    ) {
+                        if (networkCapabilities.hasCapability(
+                                NetworkCapabilities.NET_CAPABILITY_VALIDATED,
+                            )) {
+                            MobileRecoveryCoordinator.enqueue(
+                                applicationContext,
+                                MobileRecoveryCoordinator.Cause.NETWORK_VALIDATED,
+                            )
+                        }
                     }
                 }
 

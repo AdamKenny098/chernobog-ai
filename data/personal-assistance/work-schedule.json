@@ -3,61 +3,192 @@
   "source": "alkimii",
   "latestSnapshot": {
     "schemaVersion": 1,
-    "snapshotId": "schedule_975512a740bdc33090734c28142c9b6f",
+    "snapshotId": "schedule_d4c4fb9fe53123a4319358bceebc44fd",
     "source": "alkimii",
-    "importedAt": "2026-11-04T02:58:54.259Z",
-    "observedAt": "2026-11-04T02:58:53.290534Z",
-    "fileName": "mobile-roster:alkimii-accessibility-b77fc90a614872a94f38c61a24c5a75492770e292208be20db2beea3b33a6fdf",
-    "timeZone": "UTC",
+    "importedAt": "2026-11-12T16:39:39.695Z",
+    "observedAt": "2026-11-12T16:39:39.291822Z",
+    "fileName": "mobile-roster:alkimii-accessibility-57f43b0dded1b7c6ab51c603de296c600bd90f6537c3795572bbcf32fd3edc4b",
+    "timeZone": "Europe/Dublin",
     "shifts": [
       {
-        "id": "shift_d3d94decb6c7d87363a27c95",
+        "id": "shift_141e9ca22910bdf7c195610c",
         "source": "alkimii",
-        "date": "2026-11-02",
-        "startAt": "2026-11-02T09:00:00.000Z",
-        "endAt": "2026-11-02T16:34:00.000Z",
+        "date": "2026-11-16",
+        "startAt": "2026-11-16T14:00:00.000Z",
+        "endAt": "2026-11-16T22:00:00.000Z",
         "status": "scheduled",
-        "fingerprint": "e438125d3605fbecca7e25b73bece3def01726b694f99a104593e5839f238ac3"
+        "fingerprint": "0d89565792c21fb9a680bfa044a6bf4bbf08bf2cb95319d4e42a2a805f3e6234"
       },
       {
-        "id": "shift_32e4fad0e8e47a63370453ec",
+        "id": "shift_3157e966c1974986c9134077",
         "source": "alkimii",
-        "date": "2026-11-03",
-        "startAt": "2026-11-03T14:00:00.000Z",
-        "endAt": "2026-11-03T23:00:00.000Z",
+        "date": "2026-11-17",
+        "startAt": "2026-11-17T14:00:00.000Z",
+        "endAt": "2026-11-17T22:00:00.000Z",
         "status": "scheduled",
-        "fingerprint": "f6e78dacebab28a49173db99f5fbc264496f6db7a403e3e890e1397a19e6d86d"
+        "fingerprint": "cb6ea10b4c5e9141af7b40207ad4daf4f37590ac64eff13d2d1f393cf19dd39f"
       },
       {
-        "id": "shift_7371fef0ae035581154399a0",
+        "id": "shift_78953bf9f130f3c1673c27e4",
         "source": "alkimii",
-        "date": "2026-11-04",
-        "startAt": "2026-11-04T14:00:00.000Z",
-        "endAt": "2026-11-04T23:00:00.000Z",
+        "date": "2026-11-18",
+        "startAt": "2026-11-18T09:00:00.000Z",
+        "endAt": "2026-11-18T17:30:00.000Z",
         "status": "scheduled",
-        "fingerprint": "599e03a10cb71151e73a31a4b56854547645bd0ce681b8efeece647be16ecc15"
+        "fingerprint": "73dc9cec6a7e02cccd88c6bb5af1ae0a5cbd47b8306bde7b66405f78c1fc5bd5"
       },
       {
-        "id": "shift_70e4794b6db14c9b844faf4b",
+        "id": "shift_d0fbe3511e0e5d33e25c921a",
         "source": "alkimii",
-        "date": "2026-11-05",
-        "startAt": "2026-11-05T07:00:00.000Z",
-        "endAt": "2026-11-05T16:00:00.000Z",
+        "date": "2026-11-19",
+        "startAt": "2026-11-19T09:00:00.000Z",
+        "endAt": "2026-11-19T17:30:00.000Z",
         "status": "scheduled",
-        "fingerprint": "21dbc9a156f79d38ace725219ede3a15251e895f740594dfafafa2003f3cea12"
+        "fingerprint": "c6e1b19095963944cf139872bae1b077e289c13e45495d1bc1de80f757cdb81a"
       },
       {
-        "id": "shift_2c0db2a55aa244e072ac8d53",
+        "id": "shift_c9eac062d483e12e2d9f35e5",
         "source": "alkimii",
-        "date": "2026-11-07",
-        "startAt": "2026-11-07T09:00:00.000Z",
-        "endAt": "2026-11-07T17:30:00.000Z",
+        "date": "2026-11-21",
+        "startAt": "2026-11-21T14:00:00.000Z",
+        "endAt": "2026-11-21T23:00:00.000Z",
         "status": "scheduled",
-        "fingerprint": "89d9c1deb50b12195081411d6bd81cf4a1f7722f006d9f4d84569497970f8686"
+        "fingerprint": "b1040d081a742e9fc8e27ffd4a9902fcf92fae06cc52f7b1cb892aab3f9494dc"
       }
     ]
   },
-  "latestChanges": [],
+  "latestChanges": [
+    {
+      "kind": "removed",
+      "key": "heuristic:2026-11-08::::0",
+      "before": {
+        "id": "shift_a6716cda6ddeff1447d72375",
+        "source": "alkimii",
+        "date": "2026-11-08",
+        "startAt": "2026-11-08T09:00:00.000Z",
+        "endAt": "2026-11-08T17:30:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "fb3d8de2113388cc192c17c93a50570967003b5f3964793619857933fea648a3"
+      }
+    },
+    {
+      "kind": "removed",
+      "key": "heuristic:2026-11-09::::0",
+      "before": {
+        "id": "shift_4e8f38dc059245cb18dd32b5",
+        "source": "alkimii",
+        "date": "2026-11-09",
+        "startAt": "2026-11-09T09:00:00.000Z",
+        "endAt": "2026-11-09T18:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "bd30a12e0525934a3ca61e2ffa8b74080d161bc2e82708603184da8a06532c73"
+      }
+    },
+    {
+      "kind": "removed",
+      "key": "heuristic:2026-11-10::::0",
+      "before": {
+        "id": "shift_7504597d740dd2b0f4b1b0ce",
+        "source": "alkimii",
+        "date": "2026-11-10",
+        "startAt": "2026-11-10T12:00:00.000Z",
+        "endAt": "2026-11-10T21:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "b9364f6f4244e6b3f15b95410d1d3b5bcb037fab6be357c52cf4a8f7dbe6365a"
+      }
+    },
+    {
+      "kind": "removed",
+      "key": "heuristic:2026-11-11::::0",
+      "before": {
+        "id": "shift_f3eccc0338a1d0adb7ff7f64",
+        "source": "alkimii",
+        "date": "2026-11-11",
+        "startAt": "2026-11-11T15:00:00.000Z",
+        "endAt": "2026-11-11T22:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "11af444afb2e37ee897cc625fad4b1436a2a38ecb508bc4c36d3575c4ebcd44a"
+      }
+    },
+    {
+      "kind": "removed",
+      "key": "heuristic:2026-11-12::::0",
+      "before": {
+        "id": "shift_4ce122765ce3ffa14e63c58e",
+        "source": "alkimii",
+        "date": "2026-11-12",
+        "startAt": "2026-11-12T07:00:00.000Z",
+        "endAt": "2026-11-12T16:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "906e0c1376312d97da087ecd267097f9d55de38eeb722d95b9ee8060af5a9270"
+      }
+    },
+    {
+      "kind": "added",
+      "key": "heuristic:2026-11-16::::0",
+      "after": {
+        "id": "shift_141e9ca22910bdf7c195610c",
+        "source": "alkimii",
+        "date": "2026-11-16",
+        "startAt": "2026-11-16T14:00:00.000Z",
+        "endAt": "2026-11-16T22:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "0d89565792c21fb9a680bfa044a6bf4bbf08bf2cb95319d4e42a2a805f3e6234"
+      }
+    },
+    {
+      "kind": "added",
+      "key": "heuristic:2026-11-17::::0",
+      "after": {
+        "id": "shift_3157e966c1974986c9134077",
+        "source": "alkimii",
+        "date": "2026-11-17",
+        "startAt": "2026-11-17T14:00:00.000Z",
+        "endAt": "2026-11-17T22:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "cb6ea10b4c5e9141af7b40207ad4daf4f37590ac64eff13d2d1f393cf19dd39f"
+      }
+    },
+    {
+      "kind": "added",
+      "key": "heuristic:2026-11-18::::0",
+      "after": {
+        "id": "shift_78953bf9f130f3c1673c27e4",
+        "source": "alkimii",
+        "date": "2026-11-18",
+        "startAt": "2026-11-18T09:00:00.000Z",
+        "endAt": "2026-11-18T17:30:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "73dc9cec6a7e02cccd88c6bb5af1ae0a5cbd47b8306bde7b66405f78c1fc5bd5"
+      }
+    },
+    {
+      "kind": "added",
+      "key": "heuristic:2026-11-19::::0",
+      "after": {
+        "id": "shift_d0fbe3511e0e5d33e25c921a",
+        "source": "alkimii",
+        "date": "2026-11-19",
+        "startAt": "2026-11-19T09:00:00.000Z",
+        "endAt": "2026-11-19T17:30:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "c6e1b19095963944cf139872bae1b077e289c13e45495d1bc1de80f757cdb81a"
+      }
+    },
+    {
+      "kind": "added",
+      "key": "heuristic:2026-11-21::::0",
+      "after": {
+        "id": "shift_c9eac062d483e12e2d9f35e5",
+        "source": "alkimii",
+        "date": "2026-11-21",
+        "startAt": "2026-11-21T14:00:00.000Z",
+        "endAt": "2026-11-21T23:00:00.000Z",
+        "status": "scheduled",
+        "fingerprint": "b1040d081a742e9fc8e27ffd4a9902fcf92fae06cc52f7b1cb892aab3f9494dc"
+      }
+    }
+  ],
   "latestSignal": null,
   "pendingRefresh": false,
   "seenSignalIds": []
