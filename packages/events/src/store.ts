@@ -267,6 +267,7 @@ export class JsonlChernobogEventStore
           }
         );
 
+        assertStorageWritable("Event Spine append after directory creation");
         await appendFile(
           this.filePath,
           `${JSON.stringify(event)}\n`,
@@ -362,12 +363,14 @@ export class JsonlChernobogEventStore
           );
 
         try {
+          assertStorageWritable("Event Spine compaction");
           await writeFile(
             temporaryPath,
             retainedJsonl,
             "utf8"
           );
 
+          assertStorageWritable("Event Spine compaction rename");
           await rename(
             temporaryPath,
             this.filePath
@@ -536,12 +539,14 @@ export class JsonlChernobogEventStore
            * before the primary history is
            * repaired.
            */
+          assertStorageWritable("Event Spine recovery quarantine");
           await writeFile(
             quarantineTemporaryPath,
             quarantineJsonl,
             "utf8"
           );
 
+          assertStorageWritable("Event Spine recovery quarantine rename");
           await rename(
             quarantineTemporaryPath,
             quarantinePath
@@ -552,6 +557,7 @@ export class JsonlChernobogEventStore
            * history independently of the live
            * event file.
            */
+          assertStorageWritable("Event Spine recovery replacement");
           await writeFile(
             replacementTemporaryPath,
             recoveredJsonl,
@@ -563,6 +569,7 @@ export class JsonlChernobogEventStore
            * been completely written do we swap
            * it into the primary log.
            */
+          assertStorageWritable("Event Spine recovery replacement rename");
           await rename(
             replacementTemporaryPath,
             this.filePath
