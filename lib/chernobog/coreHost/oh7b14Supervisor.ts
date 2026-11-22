@@ -67,7 +67,8 @@ export class OH7B14Supervisor {
         if (this.state !== "starting") throw new Error("OH7B14 supervised startup cancelled");
         this.state = "running";
       } catch (error) {
-        await this.stop();
+        // Avoid awaiting shutdown here: shutdown itself waits for startup.
+        void this.stop().catch(() => {});
         throw error;
       }
     })();
@@ -90,9 +91,13 @@ export class OH7B14Supervisor {
     this.state = "stopping";
     this.shutdownTask = (async () => {
       let failure: unknown;
-      // Stop dispatch and all adapters before relinquishing ownership.
-      try { await this.composition.stop(); } catch (error) { failure = error; }
-      try { await this.transport.stop(); } catch (error) { failure ??= error; }
+      // Composition.stop synchronously denies new dispatch and safely waits
+      // for adapters still starting. Startup may still be binding its port,
+      // so drain it before closing the transport.
+      const coreStop = this.composition.stop();
+      await this.startupTask?.catch(() => {});
+      try { await this.transport.stop(); } catch (error) { failure = error; }
+      try { await coreStop; } catch (error) { failure ??= error; }
       // Do not release storage authority if background cleanup failed: the
       // supervisor must terminate instead, preserving fail-closed ownership.
       if (!failure && !this.released) {
