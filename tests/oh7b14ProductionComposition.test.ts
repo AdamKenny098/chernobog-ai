@@ -71,3 +71,36 @@ test("OH7B14 denies activation when lease revokes during startup", async () => {
   assert.equal(core.health().operationalCoreReady, false);
   assert.equal((await core.dispatch("/internal/chat", request)).status, 503);
 });
+
+test("OH7B14 shutdown during adapter startup waits, cancels readiness, and stops once", async () => {
+  let releaseStart: (() => void) | undefined;
+  const waitForStart = new Promise<void>((resolve) => { releaseStart = resolve; });
+  const events: string[] = [];
+  const guard = new OH7B13OwnershipGuard({ assertStillOwned() {} });
+  const core = new OH7B14ProductionComposition({
+    guard,
+    adapters: [{
+      id: "personalAssistance",
+      async start() {
+        events.push("starting");
+        await waitForStart;
+        events.push("started");
+      },
+      async stop() { events.push("stopped"); },
+    }],
+    chat: async () => Response.json({ ok: true }),
+    session: async () => Response.json({ ok: true }),
+  });
+  const starting = core.start();
+  assert.equal(core.health().lifecycle, "starting");
+  const stopping = core.stop();
+  assert.equal(core.health().operationalCoreReady, false);
+  assert.equal((await core.dispatch("/internal/chat", request)).status, 503);
+  releaseStart?.();
+  await assert.rejects(starting, /startup cancelled/);
+  await stopping;
+  await core.stop();
+  assert.deepEqual(events, ["starting", "started", "stopped"]);
+  assert.equal(core.health().lifecycle, "stopped");
+  assert.equal(core.health().operationalCoreReady, false);
+});
