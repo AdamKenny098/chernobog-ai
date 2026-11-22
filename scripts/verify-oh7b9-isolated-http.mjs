@@ -33,9 +33,9 @@ async function freePort() {
 
 const port = await freePort();
 const data = path.join(fixture, "data");
-const vault = path.join(fixture, "vault");
-const runtime = path.join(fixture, "runtime");
-const events = path.join(fixture, "events");
+const vault = path.join(data, "vault");
+const runtime = path.join(data, "runtime");
+const events = path.join(data, "events");
 for (const dir of [data, vault, runtime, events]) mkdir(dir);
 fs.writeFileSync(path.join(data, ".oh7b3-fixture"), "", { flag: "wx" });
 
