@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import path from "node:path";
 import { test } from "node:test";
 import { defaultOH5BDatabasePath } from "../packages/vault/src/oh5/store";
@@ -39,10 +39,10 @@ test("OH5 keeps historical paths when storage is not configured", () => {
 test("OH5 honors production data and vault configuration", () => {
   withStorageEnv({
     CHERNOBOG_DATA_DIR: "/var/lib/chernobog/data",
-    CHERNOBOG_VAULT_PATH: "/srv/storage/chernobog/vault",
+    CHERNOBOG_VAULT_PATH: path.resolve("/srv/storage/chernobog/vault"),
   }, () => {
-    assert.equal(defaultOH5BDatabasePath(), "/var/lib/chernobog/data/runtime/oh5/memory.sqlite");
-    assert.equal(defaultObsidianRoot(), "/srv/storage/chernobog/vault");
+    assert.equal(defaultOH5BDatabasePath(), path.join(path.resolve("/var/lib/chernobog/data"), "runtime", "oh5", "memory.sqlite"));
+    assert.equal(defaultObsidianRoot(), path.resolve("/srv/storage/chernobog/vault"));
   });
 });
 
@@ -54,14 +54,15 @@ test("explicit runtime and vault paths override other storage settings", () => {
     CHERNOBOG_VAULT_ROOT: "/tmp/other-vault",
     OBSIDIAN_VAULT_PATH: "/tmp/legacy-vault",
   }, () => {
-    assert.equal(defaultOH5BDatabasePath(), "/tmp/runtime/oh5/memory.sqlite");
-    assert.equal(defaultObsidianRoot(), "/tmp/first-vault");
+    assert.equal(defaultOH5BDatabasePath(), path.join(path.resolve("/tmp/runtime"), "oh5", "memory.sqlite"));
+    assert.equal(defaultObsidianRoot(), path.resolve("/tmp/first-vault"));
   });
 });
 
 test("legacy vault environment aliases remain supported", () => {
   withStorageEnv({ OBSIDIAN_VAULT_PATH: "/tmp/obsidian-vault" }, () => {
-    assert.equal(defaultObsidianRoot(), "/tmp/obsidian-vault");
+    assert.equal(defaultObsidianRoot(), path.resolve("/tmp/obsidian-vault"));
     assert.equal(defaultOH5BDatabasePath(), path.join(process.cwd(), ".chernobog", "runtime", "oh5", "memory.sqlite"));
   });
 });
+
