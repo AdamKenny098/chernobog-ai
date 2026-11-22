@@ -1,0 +1,30 @@
+# OH-7B7 passive-only service. It does NOT replace chernobog.service.
+# Install only after reviewing paths/user and verifying the loopback health checks.
+[Unit]
+Description=Chernobog OH-7B7 passive headless host (not operational)
+After=network.target
+ConditionPathExists=/home/omen/chernobog-oh7/scripts/oh7b7-passive-host.mjs
+
+[Service]
+Type=simple
+User=omen
+WorkingDirectory=/home/omen/chernobog-oh7
+ExecStart=/usr/bin/node /home/omen/chernobog-oh7/scripts/oh7b7-passive-host.mjs
+Environment=CHERNOBOG_OH7B7_PORT=3190
+Environment=CHERNOBOG_CORE_ROUTE_MODE=legacy
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=15s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectKernelModules=true
+RestrictSUIDSGID=true
+ReadOnlyPaths=/home/omen/chernobog-oh7
+# No production database, vault or runtime write permissions.
+
+[Install]
+WantedBy=multi-user.target
