@@ -19,6 +19,7 @@ function fixture() {
   return {
     root, data, vault, runtime,
     env: {
+      ...process.env,
       CHERNOBOG_DATA_DIR: data,
       CHERNOBOG_VAULT_PATH: vault,
       CHERNOBOG_RUNTIME_DIR: runtime,
@@ -114,6 +115,7 @@ test("OH7B12 rejects ambiguous storage paths without initializing state", () => 
   const f = fixture();
   try {
     assert.throws(() => assertProductionPaths(f.root, {
+      ...process.env,
       CHERNOBOG_DATA_DIR: "relative",
       CHERNOBOG_VAULT_PATH: f.vault,
       CHERNOBOG_RUNTIME_DIR: f.runtime,
