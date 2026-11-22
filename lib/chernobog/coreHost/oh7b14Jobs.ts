@@ -116,9 +116,14 @@ export class OH7B14Jobs {
     if (this.workerTimer) clearInterval(this.workerTimer);
     this.schedulerTimer = undefined;
     this.workerTimer = undefined;
-    // The supervisor must immediately revoke readiness and stop the core.
-    try { this.options.onFatal(errorOf(value)); }
-    catch (error) { console.error("OH7B14 supervisor fatal callback failed", error); }
+    // Notify on the next event-loop turn: a worker error can originate
+    // inside workerInFlight.catch, and synchronous shutdown would otherwise
+    // await that very promise through stopWorker (self-deadlock).
+    const cause = errorOf(value);
+    setImmediate(() => {
+      try { this.options.onFatal(cause); }
+      catch (error) { console.error("OH7B14 supervisor fatal callback failed", error); }
+    });
   }
 
   private startScheduler(): void {
