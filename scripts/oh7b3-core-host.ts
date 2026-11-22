@@ -4,6 +4,8 @@
  */
 import http from "node:http";
 import { existsSync, realpathSync } from "node:fs";
+import { acquireProspectiveCoreLease, resolveStoragePaths } from "./oh7b2-storage-boundary.mjs";
+import { OH7B13OwnershipGuard } from "../lib/chernobog/coreHost/oh7b13OwnershipGuard";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -35,6 +37,14 @@ for (const envName of ["CHERNOBOG_VAULT_PATH", "CHERNOBOG_EVENT_LOG_PATH", "CHER
 }
 
 async function startHeadlessHost(): Promise<void> {
+  // This is a disposable fixture lease, NOT the production OH-7B12 grant.
+  // Production remains inaccessible under the fixture-root preflight above.
+  const fixturePaths = resolveStoragePaths(repoRoot, process.env);
+  const fixtureLease = acquireProspectiveCoreLease(fixturePaths, {
+    explicitOptIn: true,
+    legacyHostVerifiedStopped: true, // only for the marked fixture; never a production assertion
+  });
+  const guard = new OH7B13OwnershipGuard(fixtureLease);
   // Intentional lazy loading: no SQLite/database import during preflight validation.
   const { handleChatRequest } = await import("../lib/chernobog/coreHost/chatService");
   const { handleSessionRequest } = await import("../lib/chernobog/coreHost/sessionService");
@@ -51,6 +61,10 @@ async function startHeadlessHost(): Promise<void> {
       }
       if (req.headers["x-chernobog-core-gateway"] !== secret) {
         res.writeHead(401);res.end("Unauthorized");return;
+      }
+      if (!guard.hasOwnership()) {
+        res.writeHead(503, {"Content-Type":"application/json","Cache-Control":"no-store"});
+        res.end(JSON.stringify({error:"core_ownership_lost"}));return;
       }
       const url = new URL(req.url ?? "/", `http://${host}:${port}`);
       if (!((url.pathname === "/internal/mobile/heartbeat" && (req.method === "GET" || req.method === "POST")) ||
@@ -94,7 +108,14 @@ async function startHeadlessHost(): Promise<void> {
     }
   });
   server.listen(port,host,()=>console.log(`OH-7B3 isolated host listening at http://${host}:${port}`));
-  for(const sig of ["SIGINT","SIGTERM"] as const){process.on(sig,()=>{if(closing)return;closing=true;server.close(()=>console.log("OH-7B3 host stopped"));});}
+  for(const sig of ["SIGINT","SIGTERM"] as const){process.on(sig,()=>{
+    if(closing)return;
+    closing=true;
+    server.close(()=>{
+      try { fixtureLease.release(); } catch(error) { console.error("OH-7B3 fixture lease release failed",error); process.exitCode=1; }
+      console.log("OH-7B3 host stopped");
+    });
+  });}
 }
 
 void startHeadlessHost().catch((error: unknown) => {
