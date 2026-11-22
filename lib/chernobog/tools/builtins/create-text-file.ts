@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -85,6 +86,7 @@ export const createTextFileTool: ToolDefinition<CreateTextFileInput, CreateTextF
     const filePath = resolveTargetFilePath(input);
   
     try {
+      assertStorageWritable("builtin file tool create-text-file.ts");
       await fs.writeFile(filePath, input.content ?? "", {
         encoding: "utf8",
         flag: "wx",
