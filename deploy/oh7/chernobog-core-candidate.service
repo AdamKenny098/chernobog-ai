@@ -1,0 +1,37 @@
+# OH-7B14 candidate-only service template.
+# NOT installed, enabled, or started by this repository.
+# NEVER replace chernobog.service with this unit.
+# This intentionally exposes only liveness (200) and readiness (503).
+[Unit]
+Description=Chernobog OH-7B14 nonoperational candidate host
+After=network.target
+ConditionPathExists=/home/omen/chernobog-oh7/scripts/oh7b14-candidate-host.mjs
+
+[Service]
+Type=simple
+User=omen
+Group=omen
+WorkingDirectory=/home/omen/chernobog-oh7
+ExecStart=/usr/bin/node /home/omen/chernobog-oh7/scripts/oh7b14-candidate-host.mjs
+Environment=NODE_ENV=production
+Environment=CHERNOBOG_OH7B14_PORT=3191
+Environment=CHERNOBOG_CORE_ROUTE_MODE=legacy
+Environment=CHERNOBOG_STORAGE_ROLE=legacy
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=15s
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+RestrictRealtime=true
+LockPersonality=true
+# No EnvironmentFile, no SupplementaryGroups, no ReadWritePaths, no bind mounts.
+# Installation and startup require a separate reviewed operator action.
+# Deliberately no [Install] section, to prevent normal systemctl enable.
