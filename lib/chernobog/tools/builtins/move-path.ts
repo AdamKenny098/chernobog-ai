@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -74,6 +75,7 @@ export const movePathTool: ToolDefinition<MovePathInput, MovePathOutput> = {
     }
 
     await assertDestinationAvailable(newPath);
+    assertStorageWritable("builtin file tool move-path.ts");
     await fs.rename(sourcePath, newPath);
 
     return {
