@@ -50,6 +50,27 @@ async function startHeadlessHost(): Promise<void> {
   const guard = new OH7B13OwnershipGuard({
     assertStillOwned: () => fixtureLease.assertHeld(),
   });
+  // Optional OH-7B13 operational composition. Never enabled for production.
+  // Both the host and OH7B6 jobs require independently marked disposable roots.
+  const jobsEnabled = process.env.CHERNOBOG_OH7B13_ISOLATED_JOBS === "1";
+  let core: import("../lib/chernobog/coreHost/oh7b6Composition").OH7B6CoreComposition | undefined;
+  if (jobsEnabled) {
+    const { OH7B6IsolatedJobs } = await import("../lib/chernobog/coreHost/oh7b6IsolatedJobs");
+    const { OH7B6CoreComposition } = await import("../lib/chernobog/coreHost/oh7b6Composition");
+    const jobs = new OH7B6IsolatedJobs({
+      fixtureRoot: path.join(chosen, "jobs"),
+      hasOwnership: guard.hasOwnership,
+      handlers: {}, // fail closed for every unregistered job kind
+    });
+    core = new OH7B6CoreComposition({
+      mode: "isolated-test",
+      hasOwnership: guard.hasOwnership,
+      adapters: jobs.adapters,
+      chat: guard.guardRequest(handleChatRequest),
+      session: guard.guardRequest(handleSessionRequest),
+    });
+    await core.start();
+  }
   const MAX_BYTES = 128 * 1024;
   let closing = false;
 
@@ -60,6 +81,13 @@ async function startHeadlessHost(): Promise<void> {
       if (req.url === "/health/live" && req.method === "GET") {
         res.writeHead(200, {"Content-Type":"application/json"});
         res.end(JSON.stringify({ok:true,mode:"isolated-test",operationalOwner:false}));return;
+      }
+      if (req.url === "/health/ready" && req.method === "GET") {
+        const health = core?.health();
+        const ready = health?.operationalCoreReady === true;
+        res.writeHead(ready ? 200 : 503, {"Content-Type":"application/json","Cache-Control":"no-store"});
+        res.end(JSON.stringify({ok:ready,mode:"isolated-test",operationalOwner:false,
+          fixtureOperationalReady:ready,background:health?.background ?? null}));return;
       }
       if (req.headers["x-chernobog-core-gateway"] !== secret) {
         res.writeHead(401);res.end("Unauthorized");return;
@@ -100,7 +128,11 @@ async function startHeadlessHost(): Promise<void> {
         else if (url.pathname.endsWith("/authorize")) reply = await mobile.handleMobileReminderAuthorize(request);
         else reply = await mobile.handleMobileReminderAck(request);
       } else {
-        reply = url.pathname === "/internal/chat" ? await handleChatRequest(request) : await handleSessionRequest(request);
+        reply = core
+          ? await core.dispatch(url.pathname as "/internal/chat" | "/internal/session", request)
+          : url.pathname === "/internal/chat"
+            ? await guard.guardRequest(handleChatRequest)(request)
+            : await guard.guardRequest(handleSessionRequest)(request);
       }
       res.writeHead(reply.status, {"Content-Type":reply.headers.get("content-type") || "application/json","Cache-Control":"no-store"});
       res.end(Buffer.from(await reply.arrayBuffer()));
@@ -113,8 +145,14 @@ async function startHeadlessHost(): Promise<void> {
   for(const sig of ["SIGINT","SIGTERM"] as const){process.on(sig,()=>{
     if(closing)return;
     closing=true;
-    server.close(()=>{
-      try { fixtureLease.release(); } catch(error) { console.error("OH-7B3 fixture lease release failed",error); process.exitCode=1; }
+    server.close(async ()=>{
+      try {
+        await core?.stop();
+        fixtureLease.release();
+      } catch(error) {
+        console.error("OH-7B3 isolated shutdown failed",error);
+        process.exitCode=1;
+      }
       console.log("OH-7B3 host stopped");
     });
   });}
