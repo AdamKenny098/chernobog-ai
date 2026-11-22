@@ -92,13 +92,12 @@ export class OH7B14Supervisor {
     this.state = "stopping";
     this.shutdownTask = (async () => {
       let failure: unknown;
-      // Composition.stop synchronously denies new dispatch and safely waits
-      // for adapters still starting. Startup may still be binding its port,
-      // so drain it before closing the transport.
-      const coreStop = this.composition.stop();
+      // Startup may still be initializing adapters or binding its port.
+      // Once settled, close the listener and drain in-flight HTTP requests
+      // before the transport stops background adapters. Only then release
+      // the external storage lease.
       await this.startupTask?.catch(() => {});
       try { await this.transport.stop(); } catch (error) { failure = error; }
-      try { await coreStop; } catch (error) { failure ??= error; }
       // Do not release storage authority if background cleanup failed: the
       // supervisor must terminate instead, preserving fail-closed ownership.
       if (!failure && !this.released) {
