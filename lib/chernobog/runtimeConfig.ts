@@ -93,6 +93,20 @@ export function getChernobogRuntimeDirectory(): string {
   );
 }
 
+
+/** OH-5 preserves its historical development location unless storage is configured. */
+export function getOH5DatabasePath(): string {
+  const hasConfiguredStorage =
+    readEnvironmentValue("CHERNOBOG_RUNTIME_DIR") !== undefined ||
+    readEnvironmentValue("CHERNOBOG_DATA_DIR") !== undefined;
+
+  const runtimeRoot = hasConfiguredStorage
+    ? getChernobogRuntimeDirectory()
+    : path.join(process.cwd(), ".chernobog", "runtime");
+
+  return path.join(runtimeRoot, "oh5", "memory.sqlite");
+}
+
 export function getOllamaGenerateUrl(): string {
   const explicitUrl = readEnvironmentValue("OLLAMA_URL");
 
