@@ -14,6 +14,7 @@ test("OH7B8 observes existing configured paths without modifying storage", () =>
     mkdirSync(vault);
     writeFileSync(path.join(data, "chernobog.db"), "fixture only");
     const observed = inspectOH7B8ProductionPaths(root, {
+      ...process.env,
       CHERNOBOG_DATA_DIR: data,
       CHERNOBOG_VAULT_PATH: vault,
     });
@@ -32,12 +33,17 @@ test("OH7B8 observes existing configured paths without modifying storage", () =>
 test("OH7B8 fails closed when paths are missing or unresolved", () => {
   const root = mkdtempSync(path.join(os.tmpdir(), "chernobog-oh7b8-unconfigured-"));
   try {
-    const missing = inspectOH7B8ProductionPaths(root, {});
+    const missing = inspectOH7B8ProductionPaths(root, {
+      ...process.env,
+      CHERNOBOG_DATA_DIR: "",
+      CHERNOBOG_VAULT_PATH: "",
+    });
     assert.equal(missing.configured, false);
     assert.equal(missing.storageVisible, false);
     assert.equal(missing.operationalOwner, false);
     assert.match(missing.warnings.join(" "), /Missing explicit production paths/);
     const configured = inspectOH7B8ProductionPaths(root, {
+      ...process.env,
       CHERNOBOG_DATA_DIR: path.join(root, "nonexistent"),
       CHERNOBOG_VAULT_PATH: path.join(root, "missing-vault"),
     });
@@ -45,6 +51,7 @@ test("OH7B8 fails closed when paths are missing or unresolved", () => {
     assert.equal(configured.storageVisible, false);
     assert.match(configured.warnings.join(" "), /do not initialize a replacement/);
     const relative = inspectOH7B8ProductionPaths(root, {
+      ...process.env,
       CHERNOBOG_DATA_DIR: "relative-data",
       CHERNOBOG_VAULT_PATH: "relative-vault",
     });
