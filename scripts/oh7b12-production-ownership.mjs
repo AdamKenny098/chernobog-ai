@@ -106,10 +106,7 @@ export function acquireOH7B12Ownership({
     if (released || invalidated) throw new Error("OH7B12: ownership no longer valid");
     try {
       assertLegacyQuiescent(getLegacyState);
-      const contents = JSON.parse(fs.readFileSync(paths.ownerLock, "utf8"));
-      if (contents.pid !== process.pid || typeof contents.token !== "string") {
-        throw new Error("OH7B12: ownership file changed or is unreadable");
-      }
+      lease.assertHeld();
     } catch (error) {
       invalidated = true;
       throw error;
