@@ -1,3 +1,5 @@
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
+import { guardCoreSQLiteConnection } from "../../../../lib/chernobog/coreHost/guardCoreSQLite";
 import { createHash } from "node:crypto";
 import Database from "better-sqlite3";
 import { GovernedMemoryStore, type MemoryRecord } from "./store";
@@ -35,7 +37,8 @@ export class OH5WorkingMemory {
   private readonly layout: OH5ObsidianLayout;
   constructor(dbFile: string, vaultRoot: string) {
     this.layout = new OH5ObsidianLayout(vaultRoot);
-    this.db = new Database(dbFile);
+    assertStorageWritable("OH5 classification initialization");
+    this.db = guardCoreSQLiteConnection(new Database(dbFile), "OH5 classification SQLite");
     this.db.pragma("busy_timeout = 5000");
     this.db.pragma("journal_mode = WAL");
     this.governed = new GovernedMemoryStore(dbFile);
