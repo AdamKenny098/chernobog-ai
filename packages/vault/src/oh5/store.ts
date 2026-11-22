@@ -1,5 +1,6 @@
 import Database from "better-sqlite3";
 import path from "node:path";
+import { getOH5DatabasePath } from "../../../../lib/chernobog/runtimeConfig";
 import fs from "node:fs";
 import { randomUUID } from "node:crypto";
 import { evaluateMemoryMutation, evaluateRetrievalScope, type InputChannel, type MemoryTier, type Mutation } from "./governance";
@@ -87,4 +88,4 @@ export class GovernedMemoryStore {
   }
   audit(projectId:string,id?:string){const p=scope(projectId);if(id)return this.db.prepare(`SELECT * FROM audit WHERE projectId=? AND id=? ORDER BY seq ASC`).all(p,id);return this.db.prepare(`SELECT * FROM audit WHERE projectId=? ORDER BY seq DESC LIMIT 200`).all(p);}
 }
-export function defaultOH5BDatabasePath():string{return path.join(process.cwd(),".chernobog","runtime","oh5","memory.sqlite");}
+export function defaultOH5BDatabasePath(): string { return getOH5DatabasePath(); }
