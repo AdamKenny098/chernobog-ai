@@ -36,8 +36,10 @@ const data = path.join(fixture, "data");
 const vault = path.join(data, "vault");
 const runtime = path.join(data, "runtime");
 const events = path.join(data, "events");
-for (const dir of [data, vault, runtime, events]) mkdir(dir);
+const jobs = path.join(data, "jobs");
+for (const dir of [data, vault, runtime, events, jobs]) mkdir(dir);
 fs.writeFileSync(path.join(data, ".oh7b3-fixture"), "", { flag: "wx" });
+fs.writeFileSync(path.join(jobs, ".oh7b6-fixture"), "", { flag: "wx" });
 
 const env = { ...process.env };
 // Strip inherited production paths and credentials before starting the fixture.
@@ -51,6 +53,7 @@ Object.assign(env, {
   NODE_ENV: "test",
   CHERNOBOG_CORE_ROUTE_MODE: "legacy",
   CHERNOBOG_OH7B3_ISOLATED_TEST: "I_UNDERSTAND_ISOLATED",
+  CHERNOBOG_OH7B13_ISOLATED_JOBS: "1",
   CHERNOBOG_OH7B3_PORT: String(port),
   CHERNOBOG_OH7B3_GATEWAY_SECRET: secret,
   CHERNOBOG_DATA_DIR: data,
@@ -92,6 +95,14 @@ try {
   assert.ok(live, "Headless process did not listen: " + errors.join(""));
   assert.equal(live.status, 200);
   console.log("PASS isolated headless process started and accepted HTTP");
+  const readiness = await fetch(url + "/health/ready");
+  assert.equal(readiness.status, 200);
+  const snapshot = await readiness.json();
+  assert.equal(snapshot.fixtureOperationalReady, true);
+  assert.equal(snapshot.operationalOwner, false);
+  assert.equal(snapshot.background.components.scheduler, "active");
+  assert.equal(snapshot.background.components.workers, "active");
+  console.log("PASS isolated host started real OH-3 scheduler and worker adapters");
 
   const denied = await fetch(url + "/internal/session?sessionId=oh7b9");
   assert.equal(denied.status, 401);
@@ -140,6 +151,7 @@ try {
     const stillRefused = await request("/internal/session?sessionId=oh7b9");
     assert.equal(stillRefused.status, 503);
     console.log("PASS real HTTP host latches lease revocation and refuses future requests");
+    assert.equal((await fetch(url + "/health/ready")).status, 503);
   } finally {
     fs.writeFileSync(ownerLock, originalLease);
   }
