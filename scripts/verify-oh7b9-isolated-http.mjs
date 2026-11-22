@@ -126,6 +126,23 @@ try {
   } else {
     console.log("SKIP live OH-4 model execution (set OH7B9_EXERCISE_MODEL=1 to opt in)");
   }
+  // OH-7B13: prove the real HTTP host refuses all authenticated work
+  // when its fixture owner token is stolen, even if subsequently restored.
+  const ownerLock = path.join(runtime, "oh7b2-core-owner.lock");
+  const originalLease = fs.readFileSync(ownerLock, "utf8");
+  try {
+    const payload = JSON.parse(originalLease);
+    fs.writeFileSync(ownerLock, JSON.stringify({ ...payload, token: "revoked-fixture-token" }));
+    const refused = await request("/internal/session?sessionId=oh7b9");
+    assert.equal(refused.status, 503);
+    assert.equal((await refused.json()).error, "core_ownership_lost");
+    fs.writeFileSync(ownerLock, originalLease);
+    const stillRefused = await request("/internal/session?sessionId=oh7b9");
+    assert.equal(stillRefused.status, 503);
+    console.log("PASS real HTTP host latches lease revocation and refuses future requests");
+  } finally {
+    fs.writeFileSync(ownerLock, originalLease);
+  }
   console.log("OH-7B9 ISOLATED HTTP SMOKE: PASS");
 } finally {
   if (child && child.exitCode === null) {
