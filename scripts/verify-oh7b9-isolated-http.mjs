@@ -100,9 +100,11 @@ try {
   const snapshot = await readiness.json();
   assert.equal(snapshot.fixtureOperationalReady, true);
   assert.equal(snapshot.operationalOwner, false);
+  assert.equal(snapshot.background.components.personalAssistance, "active");
+  assert.equal(snapshot.background.components.androidDelivery, "active");
   assert.equal(snapshot.background.components.scheduler, "active");
   assert.equal(snapshot.background.components.workers, "active");
-  console.log("PASS isolated host started real OH-3 scheduler and worker adapters");
+  console.log("PASS isolated host started real PA, Android outbox, scheduler and worker adapters");
 
   const denied = await fetch(url + "/internal/session?sessionId=oh7b9");
   assert.equal(denied.status, 401);
