@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 import {
   appendFile,
   mkdir,
@@ -103,6 +104,7 @@ export class NotificationIntelligenceJournal {
     await previous;
 
     try {
+      assertStorageWritable("PA notification intelligence directory");
       await mkdir(
         this.directory,
         {
@@ -110,6 +112,7 @@ export class NotificationIntelligenceJournal {
         },
       );
 
+      assertStorageWritable("PA notification intelligence append");
       await appendFile(
         this.filePath,
         `${JSON.stringify(entry)}\n`,
