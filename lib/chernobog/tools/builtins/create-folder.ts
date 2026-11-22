@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -73,6 +74,7 @@ export const createFolderTool: ToolDefinition<CreateFolderInput, CreateFolderOut
   execute: async (input) => {
     const folderPath = resolveTargetFolderPath(input);
 
+    assertStorageWritable("builtin file tool create-folder.ts");
     await fs.mkdir(folderPath, {
       recursive: false,
     });
