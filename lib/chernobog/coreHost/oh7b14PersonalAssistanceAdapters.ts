@@ -53,10 +53,16 @@ export function createOH7B14PersonalAssistanceAdapters(
         options.assertOwned();
         if (paStarted) throw new Error("OH7B14 PA already started");
         // Initialization can open SQLite; check ownership immediately before.
-        await initializePA();
-        // Do not advertise readiness if lease disappeared during initialization.
-        options.assertOwned();
-        paStarted = true;
+        try {
+          await initializePA();
+          // Do not advertise readiness if lease disappeared during initialization.
+          options.assertOwned();
+          paStarted = true;
+        } catch (error) {
+          // SQLite may have opened before initialization failed.
+          await closePA().catch(() => {});
+          throw error;
+        }
       },
       async stop() {
         if (!paStarted) return;
