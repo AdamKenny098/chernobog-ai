@@ -47,7 +47,9 @@ async function startHeadlessHost(): Promise<void> {
     explicitOptIn: true,
     legacyHostVerifiedStopped: true, // only for the marked fixture; never a production assertion
   });
-  const guard = new OH7B13OwnershipGuard(fixtureLease);
+  const guard = new OH7B13OwnershipGuard({
+    assertStillOwned: () => fixtureLease.assertHeld(),
+  });
   const MAX_BYTES = 128 * 1024;
   let closing = false;
 
