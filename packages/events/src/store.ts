@@ -1,3 +1,4 @@
+import { assertLegacyStorageWritable } from "../../../lib/chernobog/coreHost/storageAuthority";
 import { randomUUID } from "node:crypto";
 import {
   appendFile,
@@ -256,6 +257,7 @@ export class JsonlChernobogEventStore
   ): Promise<void> {
     const write =
       async (): Promise<void> => {
+        assertLegacyStorageWritable("Event Spine append");
         await mkdir(
           dirname(
             this.filePath
@@ -293,6 +295,7 @@ export class JsonlChernobogEventStore
 
     const compactWrite =
       async (): Promise<void> => {
+        assertLegacyStorageWritable("Event Spine compaction");
         let raw: string;
 
         try {
@@ -406,6 +409,7 @@ export class JsonlChernobogEventStore
 
     const recoverWrite =
       async (): Promise<void> => {
+        assertLegacyStorageWritable("Event Spine recovery");
         let raw: string;
 
         try {

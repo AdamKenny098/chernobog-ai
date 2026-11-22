@@ -1,0 +1,16 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+const read = path => readFileSync(path,"utf8");
+const handlers=read("lib/chernobog/coreHost/mobileHandlers.ts");
+const host=read("scripts/oh7b3-core-host.ts");
+const heartbeat=read("app/api/personal-assistance/mobile/heartbeat/route.ts");
+const claim=read("app/api/personal-assistance/mobile/reminders/claim/route.ts");
+assert.match(heartbeat,/handleMobileHeartbeatPost/);
+assert.match(claim,/handleMobileReminderClaim/);
+assert.match(handlers,/authenticatePersonalAssistanceMobileRequest/);
+assert.match(handlers,/getPersonalAttentionSnapshot/);
+assert.match(handlers,/getPersonalAssistanceProfile/);
+assert.match(handlers,/service\.claim\(/);
+assert.match(host,/\/internal\/mobile\/heartbeat/);
+assert.match(host,/\/internal\/mobile\/reminders\//);
+console.log("OH-7B MOBILE HANDLER EXTRACTION: PASS (source contract; live device test pending)");

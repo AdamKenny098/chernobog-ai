@@ -1,8 +1,11 @@
+import { assertLegacyStorageWritable } from "./coreHost/storageAuthority";
 import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
 
 import { getChernobogDataDirectory } from "./runtimeConfig";
+
+assertLegacyStorageWritable("main SQLite initialization");
 
 const dataDirectory = getChernobogDataDirectory();
 
@@ -24,7 +27,8 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     role TEXT NOT NULL,
     content TEXT NOT NULL,
-    route TEXT,
+    route TEXT,
+
     session_id TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   );

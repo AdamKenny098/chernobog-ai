@@ -1,0 +1,38 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+const root=process.cwd();
+function file(p){return fs.readFileSync(path.join(root,p),'utf8');}
+function pass(name){console.log('PASS '+name);}
+const chat=file('lib/chernobog/coreHost/chatService.ts');
+const session=file('lib/chernobog/coreHost/sessionService.ts');
+const chatRoute=file('app/api/chat/route.ts');
+const sessionRoute=file('app/api/session/route.ts');
+const host=file('scripts/oh7b3-core-host.ts');
+assert.match(chat,/export async function handleChatRequest\(req: Request\)/);
+assert.match(chat,/runLiveOh4CommandPipeline/);
+assert.match(chat,/hasOwnerAuthorization/);
+assert.match(chat,/verifyOH5MemoryScope/);
+assert.match(chat,/dispatchGovernedMemoryCommand/);
+assert.match(chat,/Response\.json/);
+assert.doesNotMatch(chat,/NextResponse/);
+pass('chat service preserves OH4, OH5 and owner auth with native Response');
+assert.match(session,/export async function handleSessionRequest\(req: Request\)/);
+assert.match(session,/getSessionContext/);
+assert.match(session,/Response\.json/);
+assert.doesNotMatch(session,/NextResponse/);
+pass('session service preserves session projection contract');
+assert.match(chatRoute,/handleChatRequest\(req\)/);
+assert.match(sessionRoute,/handleSessionRequest\(req\)/);
+assert.doesNotMatch(chatRoute,/runLiveOh4CommandPipeline/);
+assert.doesNotMatch(sessionRoute,/getSessionContext/);
+pass('Next routes are thin compatibility adapters, with no second command engine');
+assert.match(host,/CHERNOBOG_OH7B3_ISOLATED_TEST/);
+assert.match(host,/\.oh7b3-fixture/);
+assert.match(host,/!path\.isAbsolute\(isolatedRoot\)/);
+assert.match(host,/x-chernobog-core-gateway/);
+assert.match(host,/handleChatRequest/);
+assert.match(host,/handleSessionRequest/);
+assert.doesNotMatch(host,/0\.0\.0\.0/);
+pass('headless host is loopback-only, authenticated and gated to isolated fixture');
+console.log('OH-7B3 COMMAND AND SESSION EXTRACTION: PASS');

@@ -1,3 +1,4 @@
+import { assertLegacyStorageWritable } from "../../../lib/chernobog/coreHost/storageAuthority";
 import { randomUUID } from "node:crypto";
 import * as fs from "node:fs";
 import * as path from "node:path";
@@ -85,6 +86,7 @@ function writeSnapshotAtomically(
   filePath: string,
   snapshot: JobStoreSnapshot,
 ): void {
+  assertLegacyStorageWritable("OH-3 job store write");
   const directory = path.dirname(filePath);
   fs.mkdirSync(directory, { recursive: true });
 
@@ -253,6 +255,7 @@ export class FileJobStore {
   }
 
   private withExclusiveLock<T>(operation: () => T): T {
+    assertLegacyStorageWritable("OH-3 job store mutation");
     const lockPath = `${this.filePath}.lock`;
     fs.mkdirSync(path.dirname(lockPath), { recursive: true });
 

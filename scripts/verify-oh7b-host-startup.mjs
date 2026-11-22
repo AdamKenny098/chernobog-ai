@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+const source = readFileSync(join(process.cwd(), "scripts/oh7b3-core-host.ts"), "utf8");
+assert.match(source, /async function startHeadlessHost\(\): Promise<void>/);
+assert.match(source, /void startHeadlessHost\(\)\.catch/);
+assert.doesNotMatch(source.split("async function startHeadlessHost")[0], /await\s+import/);
+assert.match(source, /OH7B3 requires explicit isolated test permission/);
+assert.match(source, /operationalOwner:false/);
+assert.match(source, /x-chernobog-core-gateway/);
+assert.match(source, /\/internal\/mobile\/reminders\//);
+console.log("OH-7B HEADLESS HOST CJS STARTUP COMPATIBILITY: PASS");
+console.log("ISOLATED-TEST REQUIREMENT: RETAINED; PRODUCTION CUTOVER DISABLED");

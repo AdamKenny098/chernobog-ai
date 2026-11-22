@@ -1,3 +1,4 @@
+import { assertLegacyStorageWritable } from "../../../lib/chernobog/coreHost/storageAuthority";
 import Database from "better-sqlite3";
 import path from "node:path";
 
@@ -8,6 +9,8 @@ import path from "node:path";
  * override semantics while owning its own SQLite connection. No PA tables or
  * stored state are moved, copied, renamed, reset, or deleted here.
  */
+assertLegacyStorageWritable("PA SQLite initialization");
+
 const configuredDataDirectory = process.env.CHERNOBOG_DATA_DIR?.trim();
 const dataDirectory = configuredDataDirectory
   ? path.resolve(configuredDataDirectory)
