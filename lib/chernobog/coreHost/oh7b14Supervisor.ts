@@ -79,7 +79,8 @@ export class OH7B14Supervisor {
    * May be passed directly to OH7B14Jobs.onFatal.
    * Refuses future dispatch synchronously by changing composition state.
    */
-  onFatal = (): void => {
+  onFatal = (error: Error): void => {
+    console.error("OH7B14 supervised host fatal error", error);
     void this.stop().catch(() => {
       // A real systemd entrypoint must treat this as process-fatal; B14 has none.
     });
