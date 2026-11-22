@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 import {
   appendFile,
   mkdir,
@@ -501,6 +502,7 @@ export class WorkScheduleStore {
         const line of
         pendingEvents
       ) {
+        assertStorageWritable("PA work schedule append");
         await appendFile(
           this.eventsPath,
           `${line}\n`,
@@ -516,6 +518,7 @@ export class WorkScheduleStore {
 
   private async ensureDirectory():
     Promise<void> {
+    assertStorageWritable("PA work schedule directory");
     await mkdir(
       this.directory,
       {
@@ -532,6 +535,7 @@ export class WorkScheduleStore {
     const temp =
       `${this.statePath}.tmp`;
 
+    assertStorageWritable("PA work schedule write");
     await writeFile(
       temp,
       `${JSON.stringify(
@@ -542,6 +546,7 @@ export class WorkScheduleStore {
       "utf8",
     );
 
+    assertStorageWritable("PA work schedule rename");
     await rename(
       temp,
       this.statePath,
