@@ -8,6 +8,7 @@ import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectStorageBoundary } from "./oh7b2-storage-boundary.mjs";
+import { inspectOH7B8ProductionPaths } from "./oh7b8-storage-preflight.mjs";
 
 const HOST = "127.0.0.1";
 const rawPort = process.env.CHERNOBOG_OH7B7_PORT ?? "3190";
@@ -34,6 +35,7 @@ const server = http.createServer((req, res) => {
   }
   if (req.url === "/health/ready") {
     const storage = inspectStorageBoundary(root);
+    const productionPaths = inspectOH7B8ProductionPaths(root);
     return json(res, 503, {
       ok: false,
       version: "oh7b7.v1",
@@ -48,6 +50,7 @@ const server = http.createServer((req, res) => {
         scheduler: "not-initialized",
         workers: "not-initialized",
       },
+      productionPaths,
       storageBoundary: {
         mode: storage.mode,
         operationalOwner: storage.operationalOwner,
