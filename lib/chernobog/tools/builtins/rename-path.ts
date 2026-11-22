@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
@@ -78,6 +79,7 @@ export const renamePathTool: ToolDefinition<RenamePathInput, RenamePathOutput> =
       }
     }
 
+    assertStorageWritable("builtin file tool rename-path.ts");
     await fs.rename(currentPath, newPath);
 
     return {
