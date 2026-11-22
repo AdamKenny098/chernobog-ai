@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 // lib/chernobog/tools/builtins/write-project-file.ts
 
 import fs from "node:fs/promises";
@@ -41,7 +42,9 @@ export const writeProjectFileTool: ToolDefinition<
   execute: async (input) => {
     const absolutePath = resolveProjectPath(input.relativePath);
 
+    assertStorageWritable("builtin file tool write-project-file.ts");
     await fs.mkdir(path.dirname(absolutePath), { recursive: true });
+    assertStorageWritable("builtin file tool write-project-file.ts");
     await fs.writeFile(absolutePath, input.content, "utf8");
 
     return {
