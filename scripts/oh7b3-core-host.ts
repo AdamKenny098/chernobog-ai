@@ -57,6 +57,8 @@ async function startHeadlessHost(): Promise<void> {
   if (jobsEnabled) {
     const { OH7B6IsolatedJobs } = await import("../lib/chernobog/coreHost/oh7b6IsolatedJobs");
     const { OH7B6CoreComposition } = await import("../lib/chernobog/coreHost/oh7b6Composition");
+    const { createOH7B13IsolatedPersonalAssistanceAdapters } =
+      await import("../lib/chernobog/coreHost/oh7b13IsolatedPA");
     const jobs = new OH7B6IsolatedJobs({
       fixtureRoot: path.join(chosen, "jobs"),
       hasOwnership: guard.hasOwnership,
@@ -65,7 +67,10 @@ async function startHeadlessHost(): Promise<void> {
     core = new OH7B6CoreComposition({
       mode: "isolated-test",
       hasOwnership: guard.hasOwnership,
-      adapters: jobs.adapters,
+      adapters: [
+        ...createOH7B13IsolatedPersonalAssistanceAdapters({ dataRoot: chosen, hasOwnership: guard.hasOwnership }),
+        ...jobs.adapters,
+      ],
       chat: guard.guardRequest(handleChatRequest),
       session: guard.guardRequest(handleSessionRequest),
     });
