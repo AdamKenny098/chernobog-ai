@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
+import { getChernobogVaultDirectory } from "../../../../lib/chernobog/runtimeConfig";
 import { GovernedMemoryStore, type MemoryRecord } from "./store";
 
 export const OH5_SCHEMA_VERSION = 1 as const;
@@ -15,7 +16,7 @@ export function validateProjectId(id: string): string {
 export function sha256(text: string): string { return createHash("sha256").update(text).digest("hex"); }
 function hexMemoryId(id: string): string { if (!/^[a-zA-Z0-9_-]{1,100}$/.test(id)) throw new Error("Invalid memory identifier"); return id; }
 function safeYaml(value: string): string { return JSON.stringify(value); }
-export function defaultObsidianRoot(): string { return path.join(process.cwd(), "vault", "chernobog"); }
+export function defaultObsidianRoot(): string { return getChernobogVaultDirectory(); }
 export function toMarkdown(record: MemoryRecord): string {
   validateProjectId(record.projectId);hexMemoryId(record.id);
   const bodyHash = sha256(record.body);
