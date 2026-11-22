@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 import {
   createCipheriv,
   createDecipheriv,
@@ -140,6 +141,7 @@ async function writeStateNow(
   const target =
     statePath();
 
+  assertStorageWritable("PA calendar state directory");
   await mkdir(
     path.dirname(
       target,
@@ -153,6 +155,7 @@ async function writeStateNow(
   const temporary =
     `${target}.${process.pid}.tmp`;
 
+  assertStorageWritable("PA calendar state write");
   await writeFile(
     temporary,
     JSON.stringify(
@@ -168,6 +171,7 @@ async function writeStateNow(
     },
   );
 
+  assertStorageWritable("PA calendar state replace");
   await rename(
     temporary,
     target,
