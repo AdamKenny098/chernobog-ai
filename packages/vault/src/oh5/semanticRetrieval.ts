@@ -1,3 +1,5 @@
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
+import { guardCoreSQLiteConnection } from "../../../../lib/chernobog/coreHost/guardCoreSQLite";
 /** PSI 2B: opt-in local semantic candidate retrieval.
  * Never a source of truth: authoritative text and scope always come from governed memory.
  * Vector cache can be rebuilt; it never stores memory bodies or authorises reads.
@@ -61,8 +63,9 @@ export class OH5SemanticRetrieval {
     if (!provider || !provider.model || !provider.embed) throw new Error("Embedding provider required");
     this.memory = new Database(memoryPath,{readonly:true,fileMustExist:true});
     try {
+      assertStorageWritable("OH5 semantic cache initialization");
       mkdirSync(dirname(indexPath), {recursive:true});
-      this.cache = new Database(indexPath);
+      this.cache = guardCoreSQLiteConnection(new Database(indexPath), "OH5 semantic cache SQLite");
       this.cache.pragma("journal_mode = WAL");
       this.cache.exec(`CREATE TABLE IF NOT EXISTS psi2b_vector_cache (
         projectId TEXT NOT NULL, memoryId TEXT NOT NULL, model TEXT NOT NULL,
