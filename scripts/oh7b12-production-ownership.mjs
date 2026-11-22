@@ -83,7 +83,7 @@ export function assertProductionPaths(root, env = process.env) {
  * operational request and state-changing background tick.
  */
 export function acquireOH7B12Ownership({
-  root,
+  root = "",
   env = process.env,
   explicitOptIn = false,
   getLegacyState = readLegacySystemdState,
