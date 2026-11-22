@@ -1,4 +1,5 @@
 import { assertLegacyStorageWritable } from "../../../lib/chernobog/coreHost/storageAuthority";
+import { guardCoreSQLiteConnection } from "../../../lib/chernobog/coreHost/guardCoreSQLite";
 import Database from "better-sqlite3";
 import path from "node:path";
 
@@ -21,8 +22,9 @@ export const personalAssistanceDatabasePath = path.join(
   "chernobog.db",
 );
 
-export const personalAssistanceDb = new Database(
-  personalAssistanceDatabasePath,
+export const personalAssistanceDb = guardCoreSQLiteConnection(
+  new Database(personalAssistanceDatabasePath),
+  "Personal Assistance SQLite",
 );
 personalAssistanceDb.pragma("journal_mode = WAL");
 
