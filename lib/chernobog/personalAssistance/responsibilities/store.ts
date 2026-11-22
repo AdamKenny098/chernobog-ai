@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 import {
   mkdir,
   readFile,
@@ -803,6 +804,7 @@ export class ResponsibilityLedger {
       (() => Promise<void>) | undefined;
 
     try {
+      assertStorageWritable("PA responsibility mutation");
       releaseFileLock =
         await this.acquireFileLock();
 
@@ -833,6 +835,7 @@ export class ResponsibilityLedger {
         const event of
         pendingEvents
       ) {
+        assertStorageWritable("PA responsibility audit append");
         await appendFile(
           this.eventsPath,
           `${JSON.stringify(event)}\n`,
@@ -952,6 +955,7 @@ export class ResponsibilityLedger {
       true
     ) {
       try {
+        assertStorageWritable("PA responsibility lock acquisition");
         await mkdir(
           this.lockPath,
         );
@@ -1052,6 +1056,7 @@ export class ResponsibilityLedger {
       attempt += 1
     ) {
       try {
+        assertStorageWritable("PA responsibility replacement");
         await rename(
           temporaryPath,
           this.responsibilitiesPath,
@@ -1106,6 +1111,7 @@ export class ResponsibilityLedger {
       `${this.responsibilitiesPath}.${process.pid}.${randomUUID()}.tmp`;
 
     try {
+      assertStorageWritable("PA responsibility snapshot write");
       await writeFile(
         temporaryPath,
         `${JSON.stringify(
