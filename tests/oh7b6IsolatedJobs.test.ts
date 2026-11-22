@@ -81,6 +81,7 @@ test("OH7B6 refuses unmarked storage, unsupported jobs and missing ownership", a
     writable.store.putJob({
       id: "unknown-handler",
       kind: "not.registered",
+      payload: { test: true },
       source: { kind: "subsystem", subsystemId: "oh7b6-test" },
       owner: { ownerId: "oh7b6-test" },
       enabled: true,
