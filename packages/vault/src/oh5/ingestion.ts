@@ -1,3 +1,5 @@
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
+import { guardCoreSQLiteConnection } from "../../../../lib/chernobog/coreHost/guardCoreSQLite";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash, randomUUID } from "node:crypto";
@@ -48,9 +50,10 @@ export class ControlledEvidenceIngress {
   private readonly layout: OH5ObsidianLayout;
   constructor(dbFile: string, vaultRoot: string) {
     this.layout = new OH5ObsidianLayout(vaultRoot);
+    assertStorageWritable("OH5 ingestion directory");
     fs.mkdirSync(path.dirname(dbFile),{recursive:true});
     this.store = new GovernedMemoryStore(dbFile);
-    this.ledger = new Database(dbFile);
+    this.ledger = guardCoreSQLiteConnection(new Database(dbFile), "OH5 evidence ingress SQLite");
     this.ledger.pragma("busy_timeout = 5000");
     this.ledger.exec(`CREATE TABLE IF NOT EXISTS oh5_evidence_receipts (
       fingerprint TEXT PRIMARY KEY, projectId TEXT NOT NULL, channel TEXT NOT NULL,
