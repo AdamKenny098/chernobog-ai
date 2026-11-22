@@ -37,6 +37,9 @@ for (const envName of ["CHERNOBOG_VAULT_PATH", "CHERNOBOG_EVENT_LOG_PATH", "CHER
 }
 
 async function startHeadlessHost(): Promise<void> {
+  // Intentional lazy loading: no SQLite/database import during preflight validation.
+  const { handleChatRequest } = await import("../lib/chernobog/coreHost/chatService");
+  const { handleSessionRequest } = await import("../lib/chernobog/coreHost/sessionService");
   // This is a disposable fixture lease, NOT the production OH-7B12 grant.
   // Production remains inaccessible under the fixture-root preflight above.
   const fixturePaths = resolveStoragePaths(repoRoot, process.env);
@@ -45,9 +48,6 @@ async function startHeadlessHost(): Promise<void> {
     legacyHostVerifiedStopped: true, // only for the marked fixture; never a production assertion
   });
   const guard = new OH7B13OwnershipGuard(fixtureLease);
-  // Intentional lazy loading: no SQLite/database import during preflight validation.
-  const { handleChatRequest } = await import("../lib/chernobog/coreHost/chatService");
-  const { handleSessionRequest } = await import("../lib/chernobog/coreHost/sessionService");
   const MAX_BYTES = 128 * 1024;
   let closing = false;
 
