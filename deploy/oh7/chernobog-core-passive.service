@@ -12,6 +12,9 @@ WorkingDirectory=/home/omen/chernobog-oh7
 ExecStart=/usr/bin/node /home/omen/chernobog-oh7/scripts/oh7b7-passive-host.mjs
 Environment=CHERNOBOG_OH7B7_PORT=3190
 Environment=CHERNOBOG_CORE_ROUTE_MODE=legacy
+# Read-only visibility of existing production storage; never grants write authority.
+Environment=CHERNOBOG_DATA_DIR=/var/lib/chernobog/data
+Environment=CHERNOBOG_VAULT_PATH=/srv/storage/chernobog/vault
 Restart=on-failure
 RestartSec=5s
 TimeoutStopSec=15s
