@@ -117,7 +117,8 @@ export class OH7B14Jobs {
     this.schedulerTimer = undefined;
     this.workerTimer = undefined;
     // The supervisor must immediately revoke readiness and stop the core.
-    this.options.onFatal(errorOf(value));
+    try { this.options.onFatal(errorOf(value)); }
+    catch (error) { console.error("OH7B14 supervisor fatal callback failed", error); }
   }
 
   private startScheduler(): void {
