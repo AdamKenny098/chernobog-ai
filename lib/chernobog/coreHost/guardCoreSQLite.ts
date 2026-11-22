@@ -42,7 +42,7 @@ export function guardCoreSQLiteConnection(
   const guardTransaction = <T extends (...args: never[]) => unknown>(transaction: T): T => {
     const invoke = (fn: (...args: unknown[]) => unknown) =>
       (...args: unknown[]) => { check(); return fn(...args); };
-    const wrapped = invoke(transaction as (...args: unknown[]) => unknown);
+    const wrapped = invoke(transaction as unknown as (...args: unknown[]) => unknown);
     for (const method of ["immediate", "deferred", "exclusive"] as const) {
       const variant = transaction[method as keyof T];
       if (typeof variant === "function") {
@@ -52,7 +52,7 @@ export function guardCoreSQLiteConnection(
         });
       }
     }
-    return wrapped as T;
+    return wrapped as unknown as T;
   };
 
   return new Proxy(connection, {
