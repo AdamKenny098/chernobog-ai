@@ -31,7 +31,7 @@ export type OH7B14ProductionHealth = Readonly<{
   mode: "production-candidate";
   operationalCoreReady: boolean;
   operationalOwner: boolean;
-  lifecycle: "new" | "active" | "stopping" | "stopped";
+  lifecycle: "new" | "starting" | "active" | "stopping" | "stopped";
   background: BackgroundSnapshot;
 }>;
 
@@ -41,6 +41,8 @@ export class OH7B14ProductionComposition {
   private readonly chat: RequestHandler;
   private readonly session: RequestHandler;
   private lifecycle: OH7B14ProductionHealth["lifecycle"] = "new";
+  private startTask: Promise<void> | null = null;
+  private stopTask: Promise<void> | null = null;
 
   constructor(options: OH7B14ProductionCompositionOptions) {
     if (!(options.guard instanceof OH7B13OwnershipGuard)) {
@@ -64,18 +66,34 @@ export class OH7B14ProductionComposition {
     });
   }
 
-  async start(): Promise<void> {
-    if (this.lifecycle !== "new") throw new Error("OH7B14 core already started or stopped");
-    this.guard.assertOwned();
+  start(): Promise<void> {
+    if (this.lifecycle !== "new") {
+      return Promise.reject(new Error("OH7B14 core already started or stopped"));
+    }
+    // Move to starting synchronously: stop() must observe a pending startup.
+    this.lifecycle = "starting";
+    this.startTask = this.activate();
+    return this.startTask;
+  }
+
+  private async activate(): Promise<void> {
     try {
-      await this.background.start();
-      // Catch lease loss during asynchronous adapter startup.
       this.guard.assertOwned();
+      await this.background.start();
+      // Catch revocation and shutdown while async adapters were starting.
+      this.guard.assertOwned();
+      if (this.lifecycle !== "starting") {
+        throw new Error("OH7B14 startup cancelled by shutdown");
+      }
       this.lifecycle = "active";
     } catch (error) {
-      this.lifecycle = "stopping";
-      await this.background.stop();
-      this.lifecycle = "stopped";
+      // stop() waits for startTask, preventing overlapping lifecycle transitions.
+      // We own cleanup on startup failure when stop() was not requested.
+      if (this.lifecycle !== "stopping") {
+        this.lifecycle = "stopping";
+        await this.background.stop();
+        this.lifecycle = "stopped";
+      }
       throw error;
     }
   }
@@ -96,10 +114,19 @@ export class OH7B14ProductionComposition {
     return endpoint === "/internal/chat" ? this.chat(request) : this.session(request);
   }
 
-  async stop(): Promise<void> {
-    if (this.lifecycle === "stopped") return;
+  stop(): Promise<void> {
+    if (this.stopTask) return this.stopTask;
+    if (this.lifecycle === "stopped") return Promise.resolve();
     this.lifecycle = "stopping";
-    await this.background.stop();
-    this.lifecycle = "stopped";
+    this.stopTask = (async () => {
+      try {
+        // Never call background.stop while background.start is in flight.
+        await this.startTask?.catch(() => {});
+        await this.background.stop();
+      } finally {
+        this.lifecycle = "stopped";
+      }
+    })();
+    return this.stopTask;
   }
 }
