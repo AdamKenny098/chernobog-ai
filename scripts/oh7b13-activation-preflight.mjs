@@ -18,14 +18,19 @@ export function inspectOH7B13Activation({
     try { assertProductionPaths(root, env); }
     catch (error) { blockers.push(error instanceof Error ? error.message : String(error)); }
   }
-  try { assertLegacyQuiescent(getLegacyState); }
-  catch (error) { blockers.push(error instanceof Error ? error.message : String(error)); }
+  let legacyWriterStoppedAndMasked = false;
+  try {
+    assertLegacyQuiescent(getLegacyState);
+    legacyWriterStoppedAndMasked = true;
+  } catch (error) {
+    blockers.push(error instanceof Error ? error.message : String(error));
+  }
   // Production host composition is still in development. The mode MUST remain
   // disabled even when storage and legacy-service checks individually pass.
   blockers.push("Production runtime composition and write-path fencing not yet validated");
   return Object.freeze({
     mode: "production-preflight-only",
-    legacyWriterStoppedAndMasked: !blockers.some(x => x.includes("legacy writer") || x.includes("systemd")),
+    legacyWriterStoppedAndMasked,
     operationalCoreReady: false,
     activationAuthorized: false,
     blockers,
