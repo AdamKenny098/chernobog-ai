@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../coreHost/storageAuthority";
 import { randomUUID } from "node:crypto";
 import {
   appendFile,
@@ -256,6 +257,7 @@ export class JsonlChernobogEventStore
   ): Promise<void> {
     const write =
       async (): Promise<void> => {
+        assertStorageWritable("Legacy event spine mutation");
         await mkdir(
           dirname(
             this.filePath
@@ -265,6 +267,7 @@ export class JsonlChernobogEventStore
           }
         );
 
+        assertStorageWritable("Legacy event spine append");
         await appendFile(
           this.filePath,
           `${JSON.stringify(event)}\n`,
@@ -341,6 +344,7 @@ export class JsonlChernobogEventStore
           return;
         }
 
+        assertStorageWritable("Legacy event spine mutation");
         await mkdir(
           dirname(
             this.filePath
@@ -359,12 +363,14 @@ export class JsonlChernobogEventStore
           );
 
         try {
+          assertStorageWritable("Legacy event spine file write");
           await writeFile(
             temporaryPath,
             retainedJsonl,
             "utf8"
           );
 
+          assertStorageWritable("Legacy event spine file replacement");
           await rename(
             temporaryPath,
             this.filePath
@@ -470,6 +476,7 @@ export class JsonlChernobogEventStore
           return;
         }
 
+        assertStorageWritable("Legacy event spine mutation");
         await mkdir(
           dirname(
             this.filePath
@@ -532,12 +539,14 @@ export class JsonlChernobogEventStore
            * before the primary history is
            * repaired.
            */
+          assertStorageWritable("Legacy event spine file write");
           await writeFile(
             quarantineTemporaryPath,
             quarantineJsonl,
             "utf8"
           );
 
+          assertStorageWritable("Legacy event spine file replacement");
           await rename(
             quarantineTemporaryPath,
             quarantinePath
@@ -548,6 +557,7 @@ export class JsonlChernobogEventStore
            * history independently of the live
            * event file.
            */
+          assertStorageWritable("Legacy event spine file write");
           await writeFile(
             replacementTemporaryPath,
             recoveredJsonl,
@@ -559,6 +569,7 @@ export class JsonlChernobogEventStore
            * been completely written do we swap
            * it into the primary log.
            */
+          assertStorageWritable("Legacy event spine file replacement");
           await rename(
             replacementTemporaryPath,
             this.filePath
