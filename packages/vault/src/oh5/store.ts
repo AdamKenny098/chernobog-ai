@@ -1,3 +1,5 @@
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
+import { guardCoreSQLiteConnection } from "../../../../lib/chernobog/coreHost/guardCoreSQLite";
 import Database from "better-sqlite3";
 import path from "node:path";
 import { getOH5DatabasePath } from "../../../../lib/chernobog/runtimeConfig";
@@ -14,7 +16,8 @@ function decode(row: unknown):MemoryRecord { const record=row as MemoryRecord;re
 export class GovernedMemoryStore {
   private readonly db: Database.Database;
   constructor(filename:string){
-    fs.mkdirSync(path.dirname(filename),{recursive:true});this.db=new Database(filename);
+    assertStorageWritable("OH5 SQLite initialization");
+    fs.mkdirSync(path.dirname(filename),{recursive:true});this.db=guardCoreSQLiteConnection(new Database(filename), "OH5 SQLite");
     this.db.pragma("journal_mode = WAL");this.db.pragma("busy_timeout = 5000");
     this.db.exec(`CREATE TABLE IF NOT EXISTS memory (
       id TEXT PRIMARY KEY, projectId TEXT NOT NULL, body TEXT NOT NULL, sourceRef TEXT NOT NULL,
