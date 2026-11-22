@@ -18,10 +18,12 @@ const data = path.join(fixture, "data");
 const vault = path.join(data, "vault");
 const runtime = path.join(data, "runtime");
 const eventDir = path.join(data, "events");
+const jobs = path.join(data, "jobs");
 const secret = randomBytes(40).toString("hex");
 const sessionId = "oh7b10-" + randomBytes(8).toString("hex");
-for (const dir of [data, vault, runtime, eventDir]) fs.mkdirSync(dir, { recursive: true });
+for (const dir of [data, vault, runtime, eventDir, jobs]) fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(data, ".oh7b3-fixture"), "", { flag: "wx" });
+fs.writeFileSync(path.join(jobs, ".oh7b6-fixture"), "", { flag: "wx" });
 fs.writeFileSync(path.join(data, ".oh7b10-fixture"), "", { flag: "wx" });
 
 const env = { ...process.env };
@@ -35,6 +37,7 @@ Object.assign(env, {
   NODE_ENV: "test",
   CHERNOBOG_CORE_ROUTE_MODE: "legacy",
   CHERNOBOG_OH7B3_ISOLATED_TEST: "I_UNDERSTAND_ISOLATED",
+  CHERNOBOG_OH7B13_ISOLATED_JOBS: "1",
   CHERNOBOG_OH7B3_GATEWAY_SECRET: secret,
   CHERNOBOG_DATA_DIR: data,
   CHERNOBOG_VAULT_PATH: vault,
@@ -113,6 +116,7 @@ async function inspectSession() {
 try {
   await launch();
   console.log("PASS first isolated headless process started");
+  assert.equal((await fetch(base + "/health/ready")).status, 200);
 
   const seeded = spawnSync(process.execPath, [
     "--import", "tsx", "scripts/oh7b10-seed-fixture-session.ts",
@@ -127,6 +131,7 @@ try {
   assert.equal(fs.existsSync(path.join(data, "chernobog.db")), true);
 
   await launch();
+  assert.equal((await fetch(base + "/health/ready")).status, 200);
   const second = await inspectSession();
   assert.equal(second.lastUpdatedAt, first.lastUpdatedAt);
   console.log("PASS real session restored after a complete headless process restart");
