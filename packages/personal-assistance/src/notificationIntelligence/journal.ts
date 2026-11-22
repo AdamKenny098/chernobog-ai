@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../../lib/chernobog/coreHost/storageAuthority";
 import {
   appendFile,
   mkdir,
@@ -103,6 +104,7 @@ export class NotificationIntelligenceJournal {
     await previous;
 
     try {
+      assertStorageWritable("PA notification directory");
       await mkdir(
         this.directory,
         {
@@ -110,6 +112,7 @@ export class NotificationIntelligenceJournal {
         },
       );
 
+      assertStorageWritable("PA notification append");
       await appendFile(
         this.filePath,
         `${JSON.stringify(entry)}\n`,
