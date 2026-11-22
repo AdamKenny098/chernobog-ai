@@ -26,3 +26,18 @@ test("OH7B13 read-only SQLite prepare is not misreported as independent connecti
   assert.equal(report.needsManualReview, 0);
   assert.equal(report.activationAuthorized, false);
 });
+
+test("OH7B13 audit separately identifies non-writers, guarded lessons, and backup rehearsal", () => {
+  const report = criticalWriterAudit([
+    { path: "lib/chernobog/execution/buildExecutionTask.ts", line: 49, kinds: ["async-file-write"], snippet: "/open (.+)/i" },
+    { path: "packages/vault/src/oh5/retrieval.ts", line: 51, kinds: ["sqlite-open"], snippet: "new Database(path, {readonly:true})" },
+    { path: "packages/vault/src/oh5/resilience.ts", line: 50, kinds: ["sync-file-write"], snippet: "fs.mkdirSync(dir)" },
+    { path: "lib/chernobog/learning/lessonStore.ts", line: 6, kinds: ["async-file-write"], snippet: "await writeFile(temp)" },
+  ]);
+  assert.equal(report.needsManualReview, 0);
+  assert.equal(report.specialReview, 1);
+  assert.equal(report.files.find((f) => f.path.endsWith("resilience.ts"))?.classification, "special-review");
+  assert.equal(report.files.find((f) => f.path.endsWith("retrieval.ts"))?.classification, "non-writer");
+  assert.equal(report.files.find((f) => f.path.endsWith("lessonStore.ts"))?.classification, "guarded");
+  assert.equal(report.activationAuthorized, false);
+});
