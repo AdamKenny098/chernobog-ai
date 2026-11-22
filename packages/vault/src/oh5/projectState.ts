@@ -1,3 +1,5 @@
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
+import { guardCoreSQLiteConnection } from "../../../../lib/chernobog/coreHost/guardCoreSQLite";
 import Database from "better-sqlite3";
 import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
@@ -36,8 +38,9 @@ export class OH5ProjectState {
   private readonly db: Database.Database;
   private readonly layout: OH5ObsidianLayout;
   constructor(dbPath: string, vaultRoot: string) {
+    assertStorageWritable("OH5 project state initialization");
     mkdirSync(path.dirname(dbPath), { recursive: true });
-    this.db = new Database(dbPath);
+    this.db = guardCoreSQLiteConnection(new Database(dbPath), "OH5 project state SQLite");
     this.db.pragma("busy_timeout = 5000");
     this.db.pragma("journal_mode = WAL");
     this.db.exec(schema);
