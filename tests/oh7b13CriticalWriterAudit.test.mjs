@@ -13,8 +13,12 @@ test("OH7B13 critical audit fails closed and excludes unrelated UI", () => {
   assert.equal(report.writerIsolationProven, false);
   assert.equal(report.candidateFiles, 2);
   assert.equal(report.needsManualReview, 1);
-  assert.equal(report.files[0].path, "lib/chernobog/personalAssistance/unknownWriter.ts");
-  assert.equal(report.files[0].guardReviewed, false);
+  const unknownWriter = report.files.find(
+    (file) => file.path === "lib/chernobog/personalAssistance/unknownWriter.ts",
+  );
+  assert.ok(unknownWriter, "unreviewed writer must appear in report");
+  assert.equal(unknownWriter.guardReviewed, false);
+  assert.equal(unknownWriter.classification, "unreviewed");
 });
 
 test("OH7B13 read-only SQLite prepare is not misreported as independent connection", () => {
