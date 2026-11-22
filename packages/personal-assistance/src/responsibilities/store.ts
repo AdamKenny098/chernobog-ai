@@ -1,4 +1,4 @@
-import { assertStorageWritable } from "../../../lib/chernobog/coreHost/storageAuthority";
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
 import {
   mkdir,
   readFile,
