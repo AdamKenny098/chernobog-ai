@@ -1,3 +1,5 @@
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
+import { guardCoreSQLiteConnection } from "../../../../lib/chernobog/coreHost/guardCoreSQLite";
 import Database from "better-sqlite3";
 import { createHash, randomUUID } from "node:crypto";
 import { GovernedMemoryStore, type MemoryRecord } from "./store";
@@ -14,7 +16,8 @@ export class OH5ConfirmationGate {
   private readonly store: GovernedMemoryStore;
   private readonly layout: OH5ObsidianLayout;
   constructor(dbFile: string, vaultRoot: string) {
-    this.db = new Database(dbFile);
+    assertStorageWritable("OH5 confirmation initialization");
+    this.db = guardCoreSQLiteConnection(new Database(dbFile), "OH5 confirmation SQLite");
     this.db.pragma("busy_timeout = 5000");
     this.db.pragma("journal_mode = WAL");
     this.store = new GovernedMemoryStore(dbFile);
