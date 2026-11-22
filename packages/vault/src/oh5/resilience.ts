@@ -65,7 +65,20 @@ export async function snapshotOH5Database(filename: string, directory: string): 
     assertStorageWritable("OH5 backup permissions");
     fs.chmodSync(dest, 0o600);
     return { backupPath: dest, sha256: sha256(bytes), bytes: bytes.length };
-  } catch (e) { if (fs.existsSync(dest)) fs.unlinkSync(dest); throw e; }
+  } catch (error) {
+    // Never mutate the backup destination after losing production ownership.
+    // An orphaned backup is safer than a post-revocation unlink.
+    if (fs.existsSync(dest)) {
+      try {
+        assertStorageWritable("OH5 backup failure cleanup");
+        fs.unlinkSync(dest);
+      } catch (cleanupError) {
+        // Preserve the originating failure while recording refused cleanup.
+        console.error("OH5 backup cleanup skipped or failed", cleanupError);
+      }
+    }
+    throw error;
+  }
 }
 
 /** A recovery rehearsal must happen in an isolated temp path, never the live database. */
