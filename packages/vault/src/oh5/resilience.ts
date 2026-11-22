@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -47,16 +48,21 @@ export async function snapshotOH5Database(filename: string, directory: string): 
   const resolvedSource = path.resolve(filename);
   const resolvedDirectory = path.resolve(directory);
   if (resolvedSource.startsWith(resolvedDirectory + path.sep)) throw new Error("Backup directory cannot contain source database");
+  assertStorageWritable("OH5 backup directory creation");
   fs.mkdirSync(resolvedDirectory, { recursive: true, mode: 0o700 });
   if (fs.lstatSync(resolvedDirectory).isSymbolicLink()) throw new Error("Symlink backup destination rejected");
   const dest = path.join(resolvedDirectory, `oh5-${new Date().toISOString().replace(/[:.]/g, "-")}-${randomUUID()}.sqlite`);
   const source = new Database(resolvedSource, { readonly: true, fileMustExist: true });
-  try { await source.backup(dest); } finally { source.close(); }
+  try {
+    assertStorageWritable("OH5 online backup");
+    await source.backup(dest);
+  } finally { source.close(); }
   try {
     const verified = inspectOH5Database(dest);
     if (!verified.healthy) throw new Error("Backup verification failed");
     const bytes = fs.readFileSync(dest);
     if (!bytes.length) throw new Error("Empty backup rejected");
+    assertStorageWritable("OH5 backup permissions");
     fs.chmodSync(dest, 0o600);
     return { backupPath: dest, sha256: sha256(bytes), bytes: bytes.length };
   } catch (e) { if (fs.existsSync(dest)) fs.unlinkSync(dest); throw e; }
