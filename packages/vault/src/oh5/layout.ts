@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -23,6 +24,7 @@ export function toMarkdown(record: MemoryRecord): string {
   return ["---", "oh5_schema: 1", `id: ${safeYaml(record.id)}`, `project: ${safeYaml(record.projectId)}`, `tier: ${safeYaml(record.tier)}`, `revision: ${record.revision}`, `source: ${safeYaml(record.sourceRef)}`, `origin_channel: ${safeYaml(record.channel)}`, `content_sha256: ${safeYaml(bodyHash)}`, `created: ${safeYaml(record.createdAt)}`, `updated: ${safeYaml(record.updatedAt)}`, record.supersededBy ? `superseded_by: ${safeYaml(record.supersededBy)}` : undefined, "---", "", record.body, ""].filter((x): x is string => x !== undefined).join("\n");
 }
 function atomicWrite(filename: string, content: string): void {
+  assertStorageWritable("OH5 vault atomic write");
   fs.mkdirSync(path.dirname(filename), { recursive: true });
   const temporary = `${filename}.${process.pid}.${Math.random().toString(36).slice(2)}.tmp`;
   try { fs.writeFileSync(temporary, content, { encoding: "utf8", flag: "wx" }); fs.renameSync(temporary, filename); }
@@ -74,6 +76,7 @@ export class OH5ObsidianLayout {
     });
   }
   private withLock<T>(fn: () => T): T {
+    assertStorageWritable("OH5 vault write lock");
     fs.mkdirSync(this.boundary, { recursive: true });
     const lock = this.file(".write.lock");
     let descriptor: number;
