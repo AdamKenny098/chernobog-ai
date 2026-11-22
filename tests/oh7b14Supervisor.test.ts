@@ -113,3 +113,46 @@ test("OH7B14 supervisor fatal callback stops core and releases authority", async
   assert.deepEqual(events, ["start", "stop", "release"]);
   assert.equal(supervisor.phase, "stopped");
 });
+
+test("OH7B14 drains an in-flight authenticated request before releasing ownership", async () => {
+  const port = await freePort();
+  const events: string[] = [];
+  let enterHandler: (() => void) | undefined;
+  let finishHandler: (() => void) | undefined;
+  const entered = new Promise<void>(resolve => { enterHandler = resolve; });
+  const mayFinish = new Promise<void>(resolve => { finishHandler = resolve; });
+  const supervisor = new OH7B14Supervisor({
+    guard: new OH7B13OwnershipGuard({ assertStillOwned() {} }),
+    port, gatewaySecret: secret,
+    adapters: [{ id: "workers", start() { events.push("start"); },
+      stop() { events.push("adapter stop"); } }],
+    chat: async () => {
+      enterHandler?.();
+      await mayFinish;
+      events.push("request complete");
+      return Response.json({ ok: true });
+    },
+    session: async () => Response.json({ ok: true }),
+    release() { events.push("lease released"); },
+  });
+  await supervisor.start();
+  try {
+    const inFlight = fetch(`http://127.0.0.1:${port}/internal/chat`, {
+      method: "POST",
+      headers: { "x-chernobog-core-gateway": secret },
+      body: "{}",
+    });
+    await entered;
+    const stopping = supervisor.stop();
+    assert.equal(supervisor.phase, "stopping");
+    assert.equal(events.includes("lease released"), false);
+    finishHandler?.();
+    const response = await inFlight;
+    assert.equal(response.status, 200);
+    await stopping;
+    assert.deepEqual(events, ["start", "request complete", "adapter stop", "lease released"]);
+  } finally {
+    finishHandler?.();
+    await supervisor.stop();
+  }
+});
