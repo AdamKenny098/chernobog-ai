@@ -70,6 +70,13 @@ export function acquireProspectiveCoreLease(paths, options = {}) {
   fs.closeSync(fd);
   let released = false;
   return {
+    assertHeld() {
+      if (released) throw new Error('Core lease already released');
+      const payload = JSON.parse(fs.readFileSync(paths.ownerLock, 'utf8'));
+      if (payload.token !== token || payload.pid !== process.pid) {
+        throw new Error('Core lease changed: refusing ownership');
+      }
+    },
     release() {
       if (released) return;
       const payload = JSON.parse(fs.readFileSync(paths.ownerLock, 'utf8'));
