@@ -102,7 +102,7 @@ export class OH5ObsidianLayout {
   }
   /** Project authoritative state from OH-5B SQLite, never from an arbitrary caller supplied record. */
   projectFromGovernedStore(store: GovernedMemoryStore, projectId: string, id: string): VaultProjection {
-    const folder = this.projectFolder(projectId);
+    this.projectFolder(projectId);
     const record = store.get(projectId, hexMemoryId(id));
     if (!record) throw new Error("Record absent from governed store or wrong project");
     return this.withLock(() => {
