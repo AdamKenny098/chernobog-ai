@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../coreHost/storageAuthority";
 import {
   mkdir,
   readFile,
@@ -122,6 +123,7 @@ export class JsonWorldStateSnapshotStore {
     const directory =
       path.dirname(this.filePath);
 
+    assertStorageWritable("world-state directory");
     await mkdir(directory, {
       recursive: true,
     });
@@ -133,12 +135,14 @@ export class JsonWorldStateSnapshotStore {
       `${JSON.stringify(snapshot, null, 2)}\n`;
 
     try {
+      assertStorageWritable("world-state snapshot write");
       await writeFile(
         temporaryPath,
         body,
         "utf8",
       );
 
+      assertStorageWritable("world-state snapshot replace");
       await rename(
         temporaryPath,
         this.filePath,
@@ -166,6 +170,7 @@ export class JsonWorldStateSnapshotStore {
   async quarantineCorruptSnapshot(
     now = new Date(),
   ): Promise<string | undefined> {
+    assertStorageWritable("world-state directory");
     await mkdir(
       this.quarantineDirectory,
       {
@@ -179,6 +184,7 @@ export class JsonWorldStateSnapshotStore {
     );
 
     try {
+      assertStorageWritable("world-state snapshot replace");
       await rename(
         this.filePath,
         target,
