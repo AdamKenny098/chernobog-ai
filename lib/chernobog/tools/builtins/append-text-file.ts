@@ -1,3 +1,4 @@
+import { assertStorageWritable } from "../../coreHost/storageAuthority";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
@@ -52,6 +53,7 @@ export const appendTextFileTool: ToolDefinition<
       ? input.text
       : `\n${input.text}`;
 
+    assertStorageWritable("builtin file tool append-text-file.ts");
     await fs.appendFile(filePath, textToAppend, "utf8");
 
     return {
