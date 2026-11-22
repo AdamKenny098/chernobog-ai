@@ -1,3 +1,5 @@
+import { assertStorageWritable } from "../../../../lib/chernobog/coreHost/storageAuthority";
+import { guardCoreSQLiteConnection } from "../../../../lib/chernobog/coreHost/guardCoreSQLite";
 import Database from "better-sqlite3";
 import { createHash, randomUUID } from "node:crypto";
 import { GovernedMemoryStore, type MemoryRecord } from "./store";
@@ -13,7 +15,8 @@ export class OH5ConflictManager {
   private readonly store:GovernedMemoryStore;
   private readonly layout:OH5ObsidianLayout;
   constructor(dbPath:string,vaultRoot:string){
-    this.db=new Database(dbPath);
+    assertStorageWritable("OH5 conflicts initialization");
+    this.db=guardCoreSQLiteConnection(new Database(dbPath), "OH5 conflicts SQLite");
     this.db.pragma("busy_timeout = 5000"); this.db.pragma("journal_mode = WAL");
     this.store=new GovernedMemoryStore(dbPath);
     this.layout=new OH5ObsidianLayout(vaultRoot);
