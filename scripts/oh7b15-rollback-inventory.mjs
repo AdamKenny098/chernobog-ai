@@ -50,9 +50,13 @@ export function inspectOH7B15Rollback({
     };
     if (!release.symlink) blockers.push("Legacy release pointer is not a symlink");
     if (!path.isAbsolute(release.target)) blockers.push("Resolved legacy release target is not absolute");
-  } catch {
-    release = { path: releasePath, status: "unavailable" };
-    blockers.push("Legacy release pointer could not be inspected");
+  } catch (error) {
+    const code = error && typeof error === "object" && "code" in error
+      ? String(error.code) : "";
+    const status = code === "EACCES" || code === "EPERM" ? "inaccessible" :
+      code === "ENOENT" ? "missing" : "unavailable";
+    release = { path: releasePath, status };
+    blockers.push("Legacy release pointer could not be inspected (" + status + ")");
   }
 
   const services = {};
