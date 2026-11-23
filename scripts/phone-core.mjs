@@ -5,11 +5,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { handlePhoneInterface } from './phone-interface.mjs';
 import { readOllamaStream } from './phone-stream.mjs';
+import { createPhoneInferenceRouter } from './phone-inference-router.mjs';
 
-export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', ollama = 'http://127.0.0.1:11434', fetchModel = fetch, frontend, speech = 'http://127.0.0.1:3194', fetchUpstream = fetch }) {
+export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', ollama = 'http://127.0.0.1:11434', fetchModel = fetch, frontend, speech = 'http://127.0.0.1:3194', fetchUpstream = fetch, desktopUrl, desktopSecret }) {
   if (!token || Buffer.byteLength(token) < 32 || !path.isAbsolute(dataDir)) throw new Error('Absolute data directory and 32-byte token required');
   await mkdir(dataDir, { recursive: true, mode: 0o700 });
   const page = await readFile(new URL('../deploy/phone/index.html', import.meta.url));
+  const inference = createPhoneInferenceRouter({ desktopUrl, desktopSecret, fetchModel });
   let busy = false;
   const server = http.createServer(async (req, res) => {
     const send = (status, body) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(body)); };
@@ -32,6 +34,7 @@ export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', oll
         return send(200, { ok: true });
       }
       if (await handlePhoneInterface(req, res, { frontend, speech, fetchUpstream })) return;
+      if (req.method === 'GET' && req.url === '/api/inference/status') return send(200, inference.status());
       if (req.method === 'GET' && req.url === '/health/ready') {
         const result = await fetchModel(`${ollama}/api/tags`, { signal: AbortSignal.timeout(5000) });
         const tags = await result.json();
@@ -60,7 +63,7 @@ export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', oll
         res.once('close', abort);
         let reply;
         try {
-          const result = await fetchModel(`${ollama}/api/chat`, {
+          const result = await inference.fetch(`${ollama}/api/chat`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: AbortSignal.any([controller.signal, AbortSignal.timeout(120000)]),
             body: JSON.stringify({ model, stream: streaming, messages: [{ role: 'system', content: 'You are Chernobog, a personal assistant running on the owner\'s homelab. Be helpful, candid and concise. This chat can converse and remember the recent conversation, but has no tools or access to other stored memories. Never claim to have performed actions.' }, ...messages] }),
           });
@@ -92,7 +95,7 @@ export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', oll
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const server = await createPhoneCore({ token: process.env.CHERNOBOG_PHONE_TOKEN, dataDir: process.env.CHERNOBOG_PHONE_DATA ?? '/var/lib/chernobog-phone', model: process.env.CHERNOBOG_PHONE_MODEL, ollama: process.env.OLLAMA_URL, frontend: process.env.CHERNOBOG_FRONTEND_URL });
+  const server = await createPhoneCore({ token: process.env.CHERNOBOG_PHONE_TOKEN, dataDir: process.env.CHERNOBOG_PHONE_DATA ?? '/var/lib/chernobog-phone', model: process.env.CHERNOBOG_PHONE_MODEL, ollama: process.env.OLLAMA_URL, frontend: process.env.CHERNOBOG_FRONTEND_URL, desktopUrl: process.env.CHERNOBOG_DESKTOP_URL, desktopSecret: process.env.CHERNOBOG_DESKTOP_SECRET });
   server.listen(3192, '127.0.0.1');
   const stop = () => { server.close(); server.closeIdleConnections(); setTimeout(() => process.exit(1), 130000).unref(); };
   process.once('SIGTERM', stop);
