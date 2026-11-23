@@ -41,6 +41,7 @@ test("B15 read-only inspection identifies enabled production handler kinds", () 
   assert.equal(result.activationAuthorized, false);
   assert.equal(result.legacyWriterState, "not-quiescent");
   assert.equal(result.enabledJobs, 2);
+  assert.equal(result.jobInventoryState, "read");
   assert.deepEqual(result.enabledJobKinds, ["report"]);
   assert.ok(result.blockers.some(x => x.includes("audited handler registry")));
 });
@@ -53,6 +54,7 @@ test("B15 cannot authorize even fully quiescent simulated production", () => {
     readText: () => JSON.stringify({ schemaVersion: 1, jobs: [] }),
   });
   assert.equal(result.legacyWriterState, "quiescent");
+  assert.equal(result.jobInventoryState, "read");
   assert.equal(result.blockers.length, 0);
   assert.equal(result.activationAuthorized, false);
   assert.equal(result.productionCoreReady, false);
@@ -66,6 +68,8 @@ test("B15 missing storage environment and unavailable systemd are fail closed", 
   });
   assert.equal(result.activationAuthorized, false);
   assert.ok(result.blockers.some(x => x.includes("Absolute data")));
+  assert.ok(!result.blockers.includes("Invalid production data root"));
+  assert.equal(result.jobInventoryState, "not-inspected");
   assert.ok(result.blockers.some(x => x.includes("systemd")));
 });
 
