@@ -13,12 +13,6 @@ const masked = () => ({
 const running = () => ({
   ActiveState: "active", LoadState: "loaded", UnitFileState: "enabled",
 });
-const files = new Set([
-  "/var/lib/chernobog/data",
-  "/srv/storage/chernobog/vault",
-  "/var/lib/chernobog/data/chernobog.db",
-  "/var/lib/chernobog/data/scheduler/jobs.json",
-]);
 const stat = file => ({
   isDirectory: () => file === env.CHERNOBOG_DATA_DIR || file === env.CHERNOBOG_VAULT_PATH,
   isFile: () => file.endsWith(".db") || file.endsWith(".json"),
