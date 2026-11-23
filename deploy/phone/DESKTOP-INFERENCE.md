@@ -63,7 +63,7 @@ CHERNOBOG_DESKTOP_URL and CHERNOBOG_DESKTOP_SECRET. Then, on the Acer:
 sudo bash /home/omen/chernobog-voice-build/deploy/phone/enable-desktop-inference.sh
 ```
 
-That installs all four phone modules and a dedicated systemd EnvironmentFile
+That installs all five phone modules and a dedicated systemd EnvironmentFile
 drop-in. Existing phone credentials, history, legacy services and speech
 containers remain unchanged. Authenticated GET /api/inference/status reports
 the last route and fallback reason; it is not a continuous readiness probe.

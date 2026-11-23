@@ -23,7 +23,7 @@ class VoiceTurnDetector {
         }
         frames++
         quiet = if (voiced) 0 else quiet + 1
-        if (quiet >= 40 || frames >= 1500) {
+        if (quiet >= 70 || frames >= 1500) {
             val useful = frames - quiet >= 12
             reset()
             return if (useful) Event.END else Event.DISCARD

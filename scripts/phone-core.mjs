@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { handlePhoneInterface } from './phone-interface.mjs';
 import { readOllamaStream } from './phone-stream.mjs';
 import { createPhoneInferenceRouter } from './phone-inference-router.mjs';
+import { CHERNOBOG_CONVERSATION_STYLE } from './phone-personality.mjs';
 
 export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', ollama = 'http://127.0.0.1:11434', fetchModel = fetch, frontend, speech = 'http://127.0.0.1:3194', fetchUpstream = fetch, desktopUrl, desktopSecret }) {
   if (!token || Buffer.byteLength(token) < 32 || !path.isAbsolute(dataDir)) throw new Error('Absolute data directory and 32-byte token required');
@@ -65,7 +66,7 @@ export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', oll
         try {
           const result = await inference.fetch(`${ollama}/api/chat`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: AbortSignal.any([controller.signal, AbortSignal.timeout(120000)]),
-            body: JSON.stringify({ model, stream: streaming, messages: [{ role: 'system', content: 'You are Chernobog, a personal assistant running on the owner\'s homelab. Be helpful, candid and concise. This chat can converse and remember the recent conversation, but has no tools or access to other stored memories. Never claim to have performed actions.' }, ...messages] }),
+            body: JSON.stringify({ model, stream: streaming, messages: [{ role: 'system', content: `${CHERNOBOG_CONVERSATION_STYLE}\nThis chat runs on the owner's homelab, remembers recent conversation, and currently has no tools or access to other stored memories.` }, ...messages] }),
           });
           if (!result.ok) throw new Error('Model unavailable');
           if (streaming) {

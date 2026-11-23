@@ -24,5 +24,8 @@ test('gateway reuses role routing, restricts methods, and preserves model stream
     assert.equal(generated.model, 'qwen3.5:9b');
     assert.equal(generated.think, false);
     assert.equal(generated.options.num_ctx, 4096);
+    assert.equal(generated.messages[0].role, 'system');
+    assert.match(generated.messages[0].content, /warmth/);
+    assert.equal(generated.messages[1].content, 'Hello');
   } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
 });

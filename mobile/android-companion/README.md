@@ -4,7 +4,8 @@
 
 Select Start voice conversation once. Foreground PCM recording detects
 speech onset, keeps a short pre-roll, and submits a turn after approximately
-800 ms of silence. Individual turns are capped at 30 seconds; long silence
+1400 ms of silence (updated in 0.5.1 to allow more natural thinking pauses).
+Individual turns are capped at 30 seconds; long silence
 does not generate a request. Short clicks/noise are discarded. This is an
 adaptive energy detector, not a trained speech classifier: quiet voices,
 background conversation, speaker echo and pause length require testing on

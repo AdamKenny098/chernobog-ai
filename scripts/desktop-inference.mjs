@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { getModelCandidates } from '../packages/models/src/modelRouter.ts';
 import { findInstalledOllamaModelMatch } from '../packages/models/src/modelMatching.ts';
+import { CHERNOBOG_CONVERSATION_STYLE } from './phone-personality.mjs';
 
 export function createDesktopInference({ secret, ollama = 'http://127.0.0.1:11434', fetchModel = fetch }) {
   if (typeof secret !== 'string' || Buffer.byteLength(secret) < 32) throw new Error('Inference secret must contain at least 32 bytes');
@@ -35,9 +36,11 @@ export function createDesktopInference({ secret, ollama = 'http://127.0.0.1:1143
       const installed = (tags.models ?? []).map(item => item.name);
       const selected = getModelCandidates(role).map(candidate => findInstalledOllamaModelMatch(candidate.model, installed)).find(Boolean);
       if (!selected) return send(503, { error: 'No installed model matches the configured role' });
+      const messages = role !== 'default' || input.messages.some(message => message.role === 'system' && typeof message.content === 'string' && message.content.includes(CHERNOBOG_CONVERSATION_STYLE))
+        ? input.messages : [{ role: 'system', content: CHERNOBOG_CONVERSATION_STYLE }, ...input.messages];
       const upstream = await fetchModel(`${ollama}/api/chat`, {
         method: 'POST', signal: AbortSignal.any([controller.signal, AbortSignal.timeout(120000)]), headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: selected, messages: input.messages, stream: input.stream === true, think: false, keep_alive: '10m', options: { num_ctx: 4096, num_predict: 1024 } }),
+        body: JSON.stringify({ model: selected, messages, stream: input.stream === true, think: false, keep_alive: '10m', options: { num_ctx: 4096, num_predict: 1024 } }),
       });
       if (!upstream.ok) return send(upstream.status >= 500 ? 503 : upstream.status, { error: 'Desktop model unavailable' });
       res.writeHead(200, { 'Content-Type': upstream.headers.get('content-type') ?? 'application/x-ndjson', 'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no', 'X-Chernobog-Model': selected, 'X-Chernobog-Role': role });

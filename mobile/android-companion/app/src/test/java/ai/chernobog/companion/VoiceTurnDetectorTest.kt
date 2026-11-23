@@ -14,9 +14,9 @@ class VoiceTurnDetectorTest {
     @Test fun shortPausesDoNotSplitSpeechButTrailingSilenceEndsIt() {
         val detector = VoiceTurnDetector()
         repeat(20) { detector.accept(3000.0) }
-        repeat(20) { assertEquals(VoiceTurnDetector.Event.NONE, detector.accept(50.0)) }
+        repeat(60) { assertEquals(VoiceTurnDetector.Event.NONE, detector.accept(50.0)) }
         repeat(20) { detector.accept(3000.0) }
-        repeat(39) { assertEquals(VoiceTurnDetector.Event.NONE, detector.accept(50.0)) }
+        repeat(69) { assertEquals(VoiceTurnDetector.Event.NONE, detector.accept(50.0)) }
         assertEquals(VoiceTurnDetector.Event.END, detector.accept(50.0))
         assertFalse(detector.active)
     }

@@ -8,6 +8,11 @@ Disconnected streams abort the upstream model request; incomplete replies
 are not committed to conversation storage. Install all three phone modules
 (`phone-core.mjs`, `phone-interface.mjs`, `phone-stream.mjs`) together.
 
+Current installations also require `phone-inference-router.mjs` and
+`phone-personality.mjs`; both installers copy these automatically. Conversation
+style is shared by the Acer core and desktop default-role gateway, with warmer
+spoken phrasing and explicit limits on unsupported action claims.
+
 This standalone Node 22 service provides authenticated conversation with the
 existing Ollama model, without Next.js. It binds only to 127.0.0.1:3192.
 Tailscale Serve provides private HTTPS on port 10443. Do not use Funnel or
