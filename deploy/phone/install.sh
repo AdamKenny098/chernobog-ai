@@ -33,6 +33,10 @@ source /etc/chernobog-phone.env
 set +a
 curl --fail --silent -H "Authorization: Bearer $CHERNOBOG_PHONE_TOKEN" http://127.0.0.1:3192/health/ready
 printf '\n'
-tailscale serve --bg --https=9443 http://127.0.0.1:3192
+if ss -ltnH | awk '{print $4}' | grep -qE ':10443$'; then
+  tailscale serve status | grep -q 'https://.*:10443' || { echo 'Port 10443 already occupied; refusing to replace its service'; exit 1; }
+fi
+tailscale serve --bg --https=10443 http://127.0.0.1:3192
+tailscale serve --https=9443 off
 tailscale serve status
 printf '\nAccess token (store privately; enter on your phone):\n%s\n' "$CHERNOBOG_PHONE_TOKEN"

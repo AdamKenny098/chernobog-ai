@@ -2,7 +2,7 @@
 
 This standalone Node 22 service provides authenticated conversation with the
 existing Ollama model, without Next.js. It binds only to 127.0.0.1:3192.
-Tailscale Serve provides private HTTPS on port 9443. Do not use Funnel or
+Tailscale Serve provides private HTTPS on port 10443. Do not use Funnel or
 forward this port through the router. Tailnet access policy must restrict
 the server to trusted devices. The access token is kept only in the page's
 memory; reload requires entering it again.
@@ -84,14 +84,15 @@ end-to-end connectivity. Node is restarted after failure and enabled at boot.
 Rollback only this service (existing services and Serve ports are untouched):
 
 ```bash
-sudo tailscale serve --https=9443 off
+sudo tailscale serve --https=10443 off
 sudo systemctl disable --now chernobog-phone
 sudo systemctl disable --now chernobog-voice
 ```
 
 Observed server: Node 22.22.1; Ollama gemma3:4b; legacy, passive core,
 Village, agent host and Tailscale active. Serve ports 443 and 8443 were
-already occupied, so this installer uses 9443. SSH works as omen; sudo
+already occupied; Docker Portainer also occupies 9443, so this installer
+uses 10443. SSH works as omen; sudo
 requires an interactive password. System service installation cannot be
 completed by the remote noninteractive session.
 
