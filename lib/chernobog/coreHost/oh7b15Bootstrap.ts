@@ -25,6 +25,8 @@ export interface OH7B15BootOptions {
   readonly handlers: JobHandlerMap;
   readonly chat: (request: Request) => Promise<Response>;
   readonly session: (request: Request) => Promise<Response>;
+  /** Notifies the process host of fatal background errors after shutdown begins. */
+  readonly onFatal?: (error: Error) => void;
   readonly pa?: {
     initializePA?: () => Promise<void>;
     closePA?: () => Promise<void>;
@@ -73,6 +75,12 @@ export function createOH7B15Bootstrap(options: OH7B15BootOptions): OH7B14Supervi
   const onFatal = (error: Error) => {
     if (supervisorRef.current) supervisorRef.current.onFatal(error);
     else earlyFatal = error;
+    // B14 stops and releases ownership; the process launcher must also
+    // report a nonzero exit so systemd Restart=on-failure can do its job.
+    try { options.onFatal?.(error); }
+    catch (notificationError) {
+      console.error("OH7B15 fatal observer failed", notificationError);
+    }
   };
   // Constructors do not open databases or start background loops.
   const pa = createOH7B14PersonalAssistanceAdapters({
