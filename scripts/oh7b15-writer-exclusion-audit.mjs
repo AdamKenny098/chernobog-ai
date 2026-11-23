@@ -35,7 +35,7 @@ export function readOH7B15SystemdUnit(unit) {
   ], { timeout: 5000, encoding: "utf8" });
   if (result.error) throw result.error;
   const output = result.stdout ?? "";
-  if (result.status !== 0 && !/^(?:LoadState=not-found|Id=chernobog-core-b15\.service)$/m.test(output)) {
+  if (result.status !== 0 && !/^(?:LoadState=not-found)$/m.test(output)) {
     throw new Error("OH7B15 systemd status unavailable");
   }
   return Object.fromEntries(output.split("\n").filter(Boolean).map(line => {
