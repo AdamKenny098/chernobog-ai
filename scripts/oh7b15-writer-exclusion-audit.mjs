@@ -6,7 +6,7 @@
  * A masked legacy unit is evidence of systemd-level startup prevention,
  * not a substitute for confirming there are no other legacy writers.
  */
-import { execFileSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -27,9 +27,17 @@ export function readOH7B15SystemdUnit(unit) {
   if (![LEGACY, CORE, ...SIBLINGS].includes(unit)) {
     throw new Error("OH7B15 systemd audit refuses unknown unit");
   }
-  const output = execFileSync("/usr/bin/systemctl", [
+  // systemctl show returns nonzero on some hosts for an absent unit.
+  // A known absent unit is a safe inventory state, not an unknown failure.
+  // Capture output with spawnSync so we can distinguish that case.
+  const result = spawnSync("/usr/bin/systemctl", [
     "show", unit, "--no-pager", "--property=" + FIELDS.join(","),
   ], { timeout: 5000, encoding: "utf8" });
+  if (result.error) throw result.error;
+  const output = result.stdout ?? "";
+  if (result.status !== 0 && !/^(?:LoadState=not-found|Id=chernobog-core-b15\.service)$/m.test(output)) {
+    throw new Error("OH7B15 systemd status unavailable");
+  }
   return Object.fromEntries(output.split("\n").filter(Boolean).map(line => {
     const at = line.indexOf("=");
     if (at < 1) throw new Error("OH7B15 malformed systemd status");
@@ -51,6 +59,11 @@ export function auditOH7B15WriterExclusion({
       const state = getUnit(unit);
       if (!state || !state.LoadState || !state.ActiveState ||
           !state.UnitFileState) throw new Error("incomplete systemd status");
+      if (unit === CORE && state.LoadState === "not-found" &&
+          state.ActiveState === "inactive") {
+        statuses[unit] = { status: "not-installed", load: "not-found", active: "inactive" };
+        continue;
+      }
       statuses[unit] = {
         load: state.LoadState,
         active: state.ActiveState,
