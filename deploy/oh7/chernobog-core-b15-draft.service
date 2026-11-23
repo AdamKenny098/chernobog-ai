@@ -1,0 +1,40 @@
+# OH-7B15 REVIEW-ONLY operational core service draft.
+# DO NOT INSTALL OR START THIS UNIT. It is intentionally nonoperational:
+# the required launch marker is not created by the repository and the
+# storage role remains legacy. A reviewed B15 handover must replace both.
+# The legacy chernobog.service and all sibling units remain untouched.
+[Unit]
+Description=Chernobog OH-7B15 core (UNAPPROVED DRAFT)
+After=network.target
+ConditionPathExists=/etc/chernobog/oh7b15-operator-approved
+
+[Service]
+Type=simple
+User=chernobog
+Group=chernobog
+WorkingDirectory=/srv/apps/chernobog/oh7-headless/current
+ExecStart=/usr/bin/node --import tsx /srv/apps/chernobog/oh7-headless/current/lib/chernobog/coreHost/oh7b15ProductionHost.ts
+Environment=NODE_ENV=production
+Environment=CHERNOBOG_STORAGE_ROLE=legacy
+Environment=CHERNOBOG_CORE_ROUTE_MODE=legacy
+Environment=CHERNOBOG_CORE_PORT=3191
+Restart=on-failure
+RestartSec=10s
+TimeoutStopSec=120s
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+RestrictRealtime=true
+LockPersonality=true
+ReadWritePaths=/var/lib/chernobog/data /srv/storage/chernobog/vault
+# No EnvironmentFile here: no secrets are injected into an unapproved draft.
+# No [Install] section: normal systemctl enable is unavailable.
+# Before a real unit exists: validate executable placement, write needs,
+# backup/rollback, masked legacy exclusion, secrets, and real job handlers.
