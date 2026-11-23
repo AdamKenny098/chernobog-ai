@@ -4,6 +4,7 @@ import { mkdir, readFile, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { handlePhoneInterface } from './phone-interface.mjs';
+import { readOllamaStream } from './phone-stream.mjs';
 
 export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', ollama = 'http://127.0.0.1:11434', fetchModel = fetch, frontend, speech = 'http://127.0.0.1:3194', fetchUpstream = fetch }) {
   if (!token || Buffer.byteLength(token) < 32 || !path.isAbsolute(dataDir)) throw new Error('Absolute data directory and 32-byte token required');
@@ -53,19 +54,37 @@ export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', oll
         try { history = JSON.parse(await readFile(filename, 'utf8')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
         if (!Array.isArray(history)) throw new Error('Invalid conversation store');
         const messages = [...history.slice(-24), { role: 'user', content: input.message.trim() }];
-        const result = await fetchModel(`${ollama}/api/chat`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(120000),
-          body: JSON.stringify({ model, stream: false, messages: [{ role: 'system', content: 'You are Chernobog, a personal assistant running on the owner\'s homelab. Be helpful, candid and concise. This chat can converse and remember the recent conversation, but has no tools or access to other stored memories. Never claim to have performed actions.' }, ...messages] }),
-        });
-        if (!result.ok) throw new Error('Model unavailable');
-        const output = await result.json();
-        const reply = output.message?.content;
+        const streaming = input.stream === true;
+        const controller = new AbortController();
+        const abort = () => { if (!res.writableEnded) controller.abort(); };
+        res.once('close', abort);
+        let reply;
+        try {
+          const result = await fetchModel(`${ollama}/api/chat`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: AbortSignal.any([controller.signal, AbortSignal.timeout(120000)]),
+            body: JSON.stringify({ model, stream: streaming, messages: [{ role: 'system', content: 'You are Chernobog, a personal assistant running on the owner\'s homelab. Be helpful, candid and concise. This chat can converse and remember the recent conversation, but has no tools or access to other stored memories. Never claim to have performed actions.' }, ...messages] }),
+          });
+          if (!result.ok) throw new Error('Model unavailable');
+          if (streaming) {
+            res.writeHead(200, { 'Content-Type': 'application/x-ndjson', 'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no' });
+            res.flushHeaders();
+            reply = await readOllamaStream(result.body, token => { if (res.destroyed) throw new Error('Client disconnected'); res.write(JSON.stringify({ type: 'token', text: token }) + '\n'); });
+          } else {
+            const output = await result.json();
+            reply = output.message?.content;
+          }
+        } finally { res.off('close', abort); }
         if (typeof reply !== 'string' || !reply.trim()) throw new Error('Empty model reply');
         await writeFile(`${filename}.tmp`, JSON.stringify([...messages, { role: 'assistant', content: reply }]), { mode: 0o600 });
         await rename(`${filename}.tmp`, filename);
+        if (streaming) { res.end(JSON.stringify({ type: 'done', sessionId, reply }) + '\n'); return; }
         return send(200, { sessionId, reply, spokenReply: reply });
       } finally { busy = false; }
-    } catch { send(503, { error: 'Conversation unavailable. Check the model and service logs.' }); }
+    } catch {
+      if (res.destroyed) return;
+      if (res.headersSent) res.end(JSON.stringify({ type: 'error', error: 'Conversation interrupted. Please retry.' }) + '\n');
+      else send(503, { error: 'Conversation unavailable. Check the model and service logs.' });
+    }
   });
   server.requestTimeout = 150000;
   server.headersTimeout = 15000;

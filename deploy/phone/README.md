@@ -1,5 +1,13 @@
 # Private phone conversation
 
+Native companion 0.5 supports `POST /api/chat` with `stream: true` for
+newline-delimited JSON: `token` events carry `text`, followed by `done` with
+the complete `reply` and `sessionId`. Failures after headers emit `error`.
+The default request remains a single JSON response for older clients.
+Disconnected streams abort the upstream model request; incomplete replies
+are not committed to conversation storage. Install all three phone modules
+(`phone-core.mjs`, `phone-interface.mjs`, `phone-stream.mjs`) together.
+
 This standalone Node 22 service provides authenticated conversation with the
 existing Ollama model, without Next.js. It binds only to 127.0.0.1:3192.
 Tailscale Serve provides private HTTPS on port 10443. Do not use Funnel or

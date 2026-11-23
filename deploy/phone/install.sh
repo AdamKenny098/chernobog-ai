@@ -7,10 +7,10 @@ command -v tailscale >/dev/null
 curl --fail --silent http://127.0.0.1:3000/command-center >/dev/null
 node --input-type=module -e 'if(Number(process.versions.node.split(".")[0])<22)process.exit(1)'
 curl --fail --silent http://127.0.0.1:11434/api/tags >/dev/null
-node --test tests/phoneCore.test.mjs tests/phoneInterface.test.mjs
+node --test tests/phoneCore.test.mjs tests/phoneInterface.test.mjs tests/phoneStream.test.mjs tests/phoneStreamHttp.test.mjs
 id chernobog-phone >/dev/null 2>&1 || useradd --system --home-dir /var/lib/chernobog-phone --shell /usr/sbin/nologin chernobog-phone
 install -d -m 755 /opt/chernobog-phone/scripts /opt/chernobog-phone/deploy/phone
-install -m 644 scripts/phone-core.mjs scripts/phone-interface.mjs /opt/chernobog-phone/scripts/
+install -m 644 scripts/phone-core.mjs scripts/phone-interface.mjs scripts/phone-stream.mjs /opt/chernobog-phone/scripts/
 install -m 644 deploy/phone/index.html deploy/phone/app.js deploy/phone/style.css /opt/chernobog-phone/deploy/phone/
 if [ ! -f /etc/chernobog-phone.env ]; then
   umask 077

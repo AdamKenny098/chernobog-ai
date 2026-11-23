@@ -10,6 +10,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -24,11 +31,18 @@ data class ConversationState(
     val speakReplies: Boolean = true,
     val status: String = "Ready when you are",
     val error: String? = null,
+    val voiceMode: Boolean = false,
+    val muted: Boolean = false,
+    val partialReply: String = "",
 )
 
 class ConversationViewModel(application: Application) : AndroidViewModel(application) {
     private val credentials = SecureCredentialStore(application)
     private val client = ConversationClient()
+    private val speechClient = ConversationClient()
+    private val voiceCapture = ContinuousVoiceCapture(application)
+    private var turnJob: Job? = null
+    private var turnEpoch = 0
     private var session = credentials.chatSession()
     private val mutable = MutableStateFlow(ConversationState(turns = loadHistory(), speakReplies = credentials.spokenReplies()))
     val state = mutable.asStateFlow()
@@ -39,6 +53,7 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
     private var player: MediaPlayer? = null
     private var recordingFile: File? = null
     private var playbackFile: File? = null
+    private var playbackWaiter: kotlinx.coroutines.CancellableContinuation<Unit>? = null
     private var audioGeneration = 0
 
     private fun loadHistory(): List<ConversationTurn> = runCatching {
@@ -87,25 +102,113 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
         turn(mutable.value.draft.trim(), null)
     }
 
+    fun startVoice() {
+        if (token.isBlank()) { mutable.value = mutable.value.copy(error = "Connect in Settings first."); return }
+        if (mutable.value.busy || mutable.value.recording) return
+        mutable.value = mutable.value.copy(voiceMode = true, muted = false, error = null, status = "Listening…")
+        captureVoice()
+    }
+
+    private fun captureVoice() {
+        voiceCapture.start(viewModelScope,
+            allowed = { echoCancellation ->
+                val current = mutable.value
+                current.voiceMode && !current.muted && (!current.busy || (current.speaking && echoCancellation))
+            },
+            onStart = {
+                if (mutable.value.voiceMode && !mutable.value.muted) {
+                    if (mutable.value.busy || mutable.value.speaking) interrupt()
+                    mutable.value = mutable.value.copy(recording = true, status = "Hearing you…")
+                }
+            },
+            onTurn = { file ->
+                mutable.value = mutable.value.copy(recording = false)
+                if (mutable.value.voiceMode && !mutable.value.muted) turn(null, file) else file.delete()
+            },
+            onDiscard = { mutable.value = mutable.value.copy(recording = false, status = "Listening…") },
+            onError = { stopAudio(); mutable.value = mutable.value.copy(error = "Voice microphone unavailable. Check permission or use text chat.") },
+        )
+    }
+
+    fun muteVoice() {
+        if (!mutable.value.voiceMode) return
+        val muted = !mutable.value.muted
+        voiceCapture.stop()
+        mutable.value = mutable.value.copy(muted = muted, recording = false, status = if (muted) "Microphone muted" else "Listening…")
+        if (!muted) captureVoice()
+    }
+
+    fun interrupt() {
+        turnEpoch++
+        turnJob?.cancel()
+        client.cancel()
+        speechClient.cancel()
+        stopPlayback()
+        mutable.value = mutable.value.copy(busy = false, partialReply = "", status = if (mutable.value.voiceMode) "Listening…" else "Interrupted")
+    }
+
     private fun turn(message: String?, audio: File?) {
         if (token.isBlank()) { audio?.delete(); mutable.value = mutable.value.copy(error = "Connect to the phone core in Settings first."); return }
         stopPlayback()
-        val generation = audioGeneration
-        mutable.value = mutable.value.copy(busy = true, error = null, status = if (audio != null) "Transcribing…" else "Thinking…")
-        viewModelScope.launch {
+        val epoch = ++turnEpoch
+        mutable.value = mutable.value.copy(busy = true, error = null, partialReply = "", status = if (audio != null) "Transcribing…" else "Thinking…")
+        turnJob = viewModelScope.launch {
             try {
                 val text = message ?: withContext(Dispatchers.IO) { client.transcribe(endpoint, token, audio!!) }
                 mutable.value = mutable.value.copy(draft = text, status = "Thinking…")
-                val reply = withContext(Dispatchers.IO) { client.chat(endpoint, token, session, text) }
-                mutable.value = mutable.value.copy(turns = (mutable.value.turns + listOf(ConversationTurn("You", text), ConversationTurn("Chernobog", reply))).takeLast(100), draft = "", status = "Reply received")
-                persist()
-                if (mutable.value.speakReplies && generation == audioGeneration) {
-                    mutable.value = mutable.value.copy(status = "Preparing speech…")
-                    val bytes = withContext(Dispatchers.IO) { client.request(endpoint, token, "/api/sensory/speak", JSONObject().put("text", reply.take(8000)).toString().toByteArray()) }
-                    if (generation == audioGeneration) play(bytes)
+                coroutineScope {
+                    val sentences = Channel<String>(Channel.UNLIMITED)
+                    val shouldSpeak = mutable.value.speakReplies
+                    val speaker = launch {
+                        for (sentence in sentences) {
+                            if (!shouldSpeak || !mutable.value.speakReplies || epoch != turnEpoch) continue
+                            try {
+                                val bytes = withContext(Dispatchers.IO) { speechClient.request(endpoint, token, "/api/sensory/speak", JSONObject().put("text", sentence).toString().toByteArray()) }
+                                if (epoch == turnEpoch) playAndAwait(bytes)
+                            } catch (cancelled: CancellationException) { throw cancelled }
+                            catch (error: Exception) { mutable.value = mutable.value.copy(error = "Speech unavailable; the text reply is still shown.") }
+                        }
+                    }
+                    var accumulated = ""
+                    var speechBuffer = ""
+                    var showPartial = true
+                    val reply = try {
+                        withContext(Dispatchers.IO) {
+                            client.streamChat(endpoint, token, session, text, onToken = { fragment ->
+                                accumulated += fragment
+                                val snapshot = accumulated
+                                speechBuffer += fragment
+                                if (epoch == turnEpoch) viewModelScope.launch {
+                                    if (epoch == turnEpoch && showPartial) mutable.value = mutable.value.copy(partialReply = snapshot, status = if (mutable.value.speaking) "Speaking…" else "Responding…")
+                                }
+                                val boundary = Regex("[.!?](?:\\s|$)").find(speechBuffer)
+                                if (boundary != null && boundary.range.last >= 30 || speechBuffer.length >= 240) {
+                                    val end = if (boundary != null && boundary.range.last >= 30) boundary.range.last + 1 else speechBuffer.lastIndexOf(' ').takeIf { it > 0 } ?: speechBuffer.length
+                                    sentences.trySend(speechBuffer.substring(0, end).trim())
+                                    speechBuffer = speechBuffer.substring(end)
+                                }
+                            }, onComplete = {})
+                        }
+                    } finally {
+                        if (speechBuffer.isNotBlank()) sentences.trySend(speechBuffer.trim())
+                        sentences.close()
+                    }
+                    if (epoch == turnEpoch) {
+                        showPartial = false
+                        mutable.value = mutable.value.copy(turns = (mutable.value.turns + listOf(ConversationTurn("You", text), ConversationTurn("Chernobog", reply))).takeLast(100), partialReply = "", draft = "", status = "Reply received")
+                        persist()
+                    }
+                    speaker.join()
                 }
-            } catch (error: Exception) { mutable.value = mutable.value.copy(error = error.message ?: "Unable to reach Chernobog. Check Tailscale.", status = "Ready to retry") }
-            finally { audio?.delete(); mutable.value = mutable.value.copy(busy = false) }
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) {
+                if (epoch == turnEpoch) mutable.value = mutable.value.copy(error = error.message ?: "Unable to reach Chernobog. Check Tailscale.", status = "Ready to retry")
+                if (mutable.value.voiceMode && epoch == turnEpoch) { voiceCapture.stop(); mutable.value = mutable.value.copy(voiceMode = false, recording = false) }
+            }
+            finally {
+                audio?.delete()
+                if (epoch == turnEpoch) mutable.value = mutable.value.copy(busy = false, partialReply = "", status = if (mutable.value.voiceMode && !mutable.value.muted) "Listening…" else mutable.value.status)
+            }
         }
     }
 
@@ -148,7 +251,8 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
         } catch (error: Exception) { file?.delete(); stopAudio(); mutable.value = mutable.value.copy(error = "Recording too short. Try again.") }
     }
 
-    private fun play(bytes: ByteArray) {
+    private suspend fun playAndAwait(bytes: ByteArray) = suspendCancellableCoroutine<Unit> { continuation ->
+        playbackWaiter = continuation
         val file = File.createTempFile("reply-", ".wav", getApplication<Application>().cacheDir)
         playbackFile = file
         file.writeBytes(bytes)
@@ -156,12 +260,12 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
         player = activePlayer
         activePlayer.apply {
             setDataSource(file.absolutePath)
-            setOnCompletionListener { stopPlayback() }
-            setOnErrorListener { _, _, _ -> stopPlayback(); true }
-            prepare()
-            start()
+            setOnCompletionListener { stopPlayback(); if (continuation.isActive) continuation.resume(Unit) }
+            setOnErrorListener { _, _, _ -> stopPlayback(); if (continuation.isActive) continuation.resumeWithException(IllegalStateException("Audio playback failed")); true }
+            setOnPreparedListener { if (continuation.isActive) { start(); mutable.value = mutable.value.copy(speaking = true, status = "Speaking…") } }
+            prepareAsync()
         }
-        mutable.value = mutable.value.copy(speaking = true, status = "Speaking…")
+        continuation.invokeOnCancellation { viewModelScope.launch(Dispatchers.Main.immediate) { stopPlayback() } }
     }
 
     fun stopPlayback() {
@@ -170,10 +274,15 @@ class ConversationViewModel(application: Application) : AndroidViewModel(applica
         player = null
         playbackFile?.delete()
         playbackFile = null
+        playbackWaiter?.let { if (it.isActive) it.resume(Unit) }
+        playbackWaiter = null
         mutable.value = mutable.value.copy(speaking = false, status = if (mutable.value.speaking) "Ready when you are" else mutable.value.status)
     }
 
     fun stopAudio() {
+        voiceCapture.stop()
+        mutable.value = mutable.value.copy(voiceMode = false, muted = false)
+        interrupt()
         recorder?.run { runCatching { stop() }; release() }
         recorder = null
         recordingFile?.delete()

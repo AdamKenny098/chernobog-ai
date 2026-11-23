@@ -1,5 +1,39 @@
 # Chernobog PA-2D1 — Android Companion Foundation
 
+## Continuous voice — 0.5.0
+
+Select Start voice conversation once. Foreground PCM recording detects
+speech onset, keeps a short pre-roll, and submits a turn after approximately
+800 ms of silence. Individual turns are capped at 30 seconds; long silence
+does not generate a request. Short clicks/noise are discarded. This is an
+adaptive energy detector, not a trained speech classifier: quiet voices,
+background conversation, speaker echo and pause length require testing on
+the actual phone. Mute releases microphone capture; Unmute resumes it.
+End, changing tabs, and leaving the app cancel capture and active responses.
+
+Text and voice share the same server session. Replies stream into the chat,
+and sentence-sized speech chunks begin playing before the full model reply
+finishes. Interrupt cancels pending generation/playback and resumes listening.
+Automatic spoken interruption is enabled during playback only when Android
+reports an enabled acoustic echo canceller. Otherwise listening pauses while
+speaking and the Interrupt control remains available. Headphones help reduce
+speaker bleed, but do not override this device capability check. There is no
+background microphone or promise of full-duplex echo-free conversation.
+
+The phone core must include `scripts/phone-stream.mjs` for incremental replies.
+The app also accepts older JSON chat replies, so continuous voice still works
+without incremental text until that server update is installed. Completed
+turns are persisted; cancelled/partial streams are not committed as complete
+server turns. If speech was heard before cancellation, that partial utterance
+is not saved as a completed reply in history. A disconnect after server commit
+but before receipt can still leave server and phone displays out of sync.
+
+Validation: Android build/lint, voice-detector unit tests, server streaming
+tests (split Unicode, early output, truncated streams and history integrity),
+and actual Acer/Gemma streaming. One observed short model request produced
+first text at about 5 seconds; this is a single measurement, not a latency
+guarantee. Real-device acoustic tuning and interruption still require testing.
+
 ## Conversation update — 0.4.0
 
 The native app now has Conversation, Companion and Settings tabs, retaining

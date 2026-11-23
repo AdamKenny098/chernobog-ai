@@ -53,11 +53,12 @@ fun CompanionNavigation(model: ConversationViewModel, companion: @Composable () 
 @Composable
 private fun ConversationPanel(model: ConversationViewModel, state: ConversationState, settings: () -> Unit) {
     val context = LocalContext.current
+    var requestContinuous by remember { mutableStateOf(false) }
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) model.startRecording() else model.permissionDenied()
+        if (granted) { if (requestContinuous) model.startVoice() else model.startRecording() } else model.permissionDenied()
     }
     val scroll = rememberLazyListState()
-    LaunchedEffect(state.turns.size) { if (state.turns.isNotEmpty()) scroll.animateScrollToItem(state.turns.lastIndex) }
+    LaunchedEffect(state.turns.size, state.partialReply) { if (state.turns.isNotEmpty()) scroll.animateScrollToItem(state.turns.size - 1 + if (state.partialReply.isNotEmpty()) 1 else 0) }
     Column(Modifier.fillMaxSize().padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(Modifier.fillMaxWidth().padding(top = 18.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
@@ -66,7 +67,27 @@ private fun ConversationPanel(model: ConversationViewModel, state: ConversationS
             }
             TextButton(onClick = model::newConversation, enabled = !state.busy && !state.recording) { Text("New") }
         }
-        if (state.turns.isEmpty()) {
+        if (state.voiceMode) {
+            Surface(color = ChernobogPanelRaised, shape = RoundedCornerShape(24.dp), modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(18.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(if (state.muted) "◌" else if (state.speaking) "◉" else "◎", style = MaterialTheme.typography.displayMedium, color = ChernobogAmberBright)
+                    Text("VOICE CONVERSATION", style = MaterialTheme.typography.labelMedium, color = ChernobogAmber)
+                    Text(state.status, style = MaterialTheme.typography.bodyMedium)
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        OutlinedButton(onClick = model::muteVoice) { Text(if (state.muted) "Unmute" else "Mute") }
+                        if (state.busy || state.speaking) OutlinedButton(onClick = model::interrupt) { Text("Interrupt") }
+                        Button(onClick = model::stopAudio) { Text("End") }
+                    }
+                }
+            }
+        } else {
+            OutlinedButton(onClick = {
+                requestContinuous = true
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) model.startVoice()
+                else permission.launch(Manifest.permission.RECORD_AUDIO)
+            }, enabled = !state.busy && !state.recording, modifier = Modifier.fillMaxWidth()) { Text("Start voice conversation") }
+        }
+        if (state.turns.isEmpty() && state.partialReply.isEmpty()) {
             Column(Modifier.weight(1f).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 Text("◉", color = ChernobogAmber, style = MaterialTheme.typography.displayLarge)
                 Spacer(Modifier.height(18.dp))
@@ -85,22 +106,31 @@ private fun ConversationPanel(model: ConversationViewModel, state: ConversationS
                         }
                     }
                 }
+                if (state.partialReply.isNotEmpty()) item {
+                    Surface(shape = RoundedCornerShape(18.dp), color = ChernobogPanel) {
+                        Column(Modifier.padding(16.dp)) {
+                            Text("CHERNOBOG • RESPONDING", style = MaterialTheme.typography.labelSmall, color = ChernobogAmber)
+                            Text(state.partialReply, style = MaterialTheme.typography.bodyLarge)
+                        }
+                    }
+                }
             }
         }
         state.error?.let { Text(it, color = ChernobogDanger, style = MaterialTheme.typography.bodySmall) }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             if (state.busy) CircularProgressIndicator(Modifier.size(14.dp), strokeWidth = 2.dp)
             Text(state.status, modifier = Modifier.weight(1f), color = ChernobogMuted, style = MaterialTheme.typography.labelMedium)
-            if (state.speaking) TextButton(onClick = model::stopPlayback) { Text("Stop audio") }
+            if (state.speaking) TextButton(onClick = model::interrupt) { Text("Stop audio") }
         }
         OutlinedTextField(value = state.draft, onValueChange = model::draft, enabled = !state.busy && !state.recording,
             placeholder = { Text("Message Chernobog…") }, modifier = Modifier.fillMaxWidth(), maxLines = 4, shape = RoundedCornerShape(18.dp))
         Row(Modifier.fillMaxWidth().padding(bottom = 12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             OutlinedButton(onClick = {
+                requestContinuous = false
                 if (state.recording) model.finishRecording()
                 else if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) model.startRecording()
                 else permission.launch(Manifest.permission.RECORD_AUDIO)
-            }, enabled = !state.busy, modifier = Modifier.weight(1f)) { Text(if (state.recording) "Stop & send" else "Microphone") }
+            }, enabled = !state.busy && !state.voiceMode, modifier = Modifier.weight(1f)) { Text(if (state.recording) "Stop & send" else "Microphone") }
             Button(onClick = model::send, enabled = !state.busy && !state.recording && state.draft.isNotBlank(), modifier = Modifier.weight(1f)) { Text("Send") }
         }
     }
@@ -122,7 +152,7 @@ private fun ConversationSettings(model: ConversationViewModel, state: Conversati
             Column(Modifier.weight(1f)) { Text("Spoken replies"); Text("Speech is generated on the Acer.", color = ChernobogMuted, style = MaterialTheme.typography.bodySmall) }
             Switch(checked = state.speakReplies, onCheckedChange = model::speakReplies)
         }
-        Text("Recording is foreground-only and limited to 45 seconds. Leaving the app stops the microphone. No always-on listening.", color = ChernobogMuted, style = MaterialTheme.typography.bodySmall)
+        Text("Voice mode detects speech and pauses automatically. Microphone capture stops on Mute, End, changing tabs or leaving the app. On devices with echo cancellation, speaking can interrupt a reply; otherwise tap Interrupt or use headphones. There is no background listening.", color = ChernobogMuted, style = MaterialTheme.typography.bodySmall)
         Text(state.status, color = ChernobogAmber)
         state.error?.let { Text(it, color = ChernobogDanger) }
     }
