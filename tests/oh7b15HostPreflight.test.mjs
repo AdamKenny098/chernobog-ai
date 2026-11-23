@@ -91,3 +91,24 @@ test("B15 distinguishes missing paths from permission-denied paths", () => {
   assert.ok(result.blockers.includes("vault production path missing"));
   assert.equal(result.activationAuthorized, false);
 });
+
+test("B15 absent scheduler store is an explicit activation blocker", () => {
+  const result = inspectOH7B15Host({
+    env,
+    readLegacy: masked,
+    inspectStat(file) {
+      if (file.endsWith("/scheduler/jobs.json")) {
+        const error = new Error("simulated missing scheduler");
+        error.code = "ENOENT";
+        throw error;
+      }
+      return stat(file);
+    },
+  });
+  assert.equal(result.storage.jobs.state, "missing");
+  assert.equal(result.jobInventoryState, "missing");
+  assert.equal(result.enabledJobs, 0);
+  assert.ok(result.blockers.includes("jobs production path missing"));
+  assert.equal(result.activationAuthorized, false);
+  assert.equal(result.productionCoreReady, false);
+});
