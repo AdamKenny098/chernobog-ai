@@ -10,6 +10,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity :
     ComponentActivity() {
+    private var conversationModel: ConversationViewModel? = null
+
+    override fun onStop() {
+        conversationModel?.stopAudio()
+        super.onStop()
+    }
     override fun onCreate(
         savedInstanceState: Bundle?,
     ) {
@@ -42,7 +48,10 @@ class MainActivity :
                         .state
                         .collectAsState()
 
-                CompanionScreen(
+                val conversation: ConversationViewModel = viewModel()
+                conversationModel = conversation
+                CompanionNavigation(conversation) {
+                    CompanionScreen(
                     state =
                         state,
                     onEndpointChange =
@@ -59,7 +68,8 @@ class MainActivity :
                         model::prepareFreshEnrollment,
                     onRefresh =
                         model::refreshSession,
-                )
+                    )
+                }
             }
         }
     }

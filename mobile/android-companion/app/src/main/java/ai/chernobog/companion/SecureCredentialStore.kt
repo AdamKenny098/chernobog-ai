@@ -88,6 +88,32 @@ class SecureCredentialStore(
         return decrypt(encoded)
     }
 
+    fun chatEndpoint(): String = preferences.getString("chat_endpoint", "https://homelab-server.tail3fcb3d.ts.net:10443").orEmpty()
+
+    fun spokenReplies(): Boolean = preferences.getBoolean("chat_spoken_replies", true)
+
+    fun saveSpokenReplies(enabled: Boolean) { preferences.edit().putBoolean("chat_spoken_replies", enabled).apply() }
+
+    fun chatToken(): String = preferences.getString("chat_token", null)?.let { decrypt(it) }.orEmpty()
+
+    fun saveChatConnection(endpoint: String, token: String) {
+        preferences.edit().putString("chat_endpoint", endpoint).putString("chat_token", encrypt(token)).apply()
+    }
+
+    fun chatHistory(): String = preferences.getString("chat_history", null)?.let { decrypt(it) } ?: "[]"
+
+    fun saveChatHistory(history: String) {
+        preferences.edit().putString("chat_history", encrypt(history)).apply()
+    }
+
+    fun chatSession(): String = preferences.getString("chat_session", null) ?: UUID.randomUUID().toString().also {
+        preferences.edit().putString("chat_session", it).apply()
+    }
+
+    fun resetChatSession(): String = UUID.randomUUID().toString().also {
+        preferences.edit().putString("chat_session", it).remove("chat_history").apply()
+    }
+
     fun saveEnrollment(
         record: EnrollmentRecord,
     ) {

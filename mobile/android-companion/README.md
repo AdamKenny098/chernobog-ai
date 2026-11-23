@@ -1,5 +1,48 @@
 # Chernobog PA-2D1 — Android Companion Foundation
 
+## Conversation update — 0.4.0
+
+The native app now has Conversation, Companion and Settings tabs, retaining
+the amber-and-black Chernobog theme. Existing enrollment, notification,
+reminder and reliability controls remain in Companion.
+
+In Settings, use `https://homelab-server.tail3fcb3d.ts.net:10443` and the
+existing **phone core access token**, then select Save & test connection.
+Keep Tailscale connected. This credential is separate from the companion's
+enrolled device token; saving it does not reset device enrollment or the
+offline notification spool. Tokens and the last 100 displayed conversation
+messages are encrypted with the existing Android Keystore-backed store.
+The server retains its own conversation history. New starts a new session;
+it does not delete previous conversation files from the server.
+
+Type and Send for text chat. Tap Microphone, grant permission when prompted,
+then tap Stop & send. Recordings are limited to 45 seconds. The app uploads
+AAC audio directly to the local speech service via the phone core, sends
+the transcript to chat, and plays the generated WAV reply. Spoken replies
+can be disabled in Settings or interrupted with Stop audio. Leaving the
+app or changing tabs stops microphone capture and playback. Temporary audio
+files are deleted on completion/cancellation; there is no background or
+always-on microphone. Failed chat leaves the draft available to retry.
+
+Required server endpoints (provided by `deploy/phone/`): authenticated
+`GET /health/ready`, `POST /api/chat`, `POST /api/sensory/transcribe`, and
+`POST /api/sensory/speak`. This uses native HTTPS requests, without WebView,
+browser cookies or a 3D web scene. The Acer speech service must be running
+for voice; text chat is independently available.
+
+Build and verify with the installed Android SDK and JDK:
+
+```powershell
+.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest
+```
+
+Install the update over the existing app with the same signing key to keep
+its data. Do not uninstall to resolve a signing mismatch: use a build signed
+with the original key. Device checks still required: native layout on the
+actual phone, microphone permission denial/grant, short/45-second recordings,
+audible replies, background cancellation, reconnect, and existing reminder
+and notification behavior.
+
 PA-2D1 starts the real phone-side Chernobog Mobile Companion.
 
 This is not another server stub. It is a native Android application project that speaks to the already accepted PA-2A/PA-2B/PA-2C server APIs.
