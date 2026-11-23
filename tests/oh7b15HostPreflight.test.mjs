@@ -27,7 +27,6 @@ const stat = file => ({
 test("B15 read-only inspection identifies enabled production handler kinds", () => {
   const result = inspectOH7B15Host({
     env, readLegacy: running,
-    exists: file => files.has(file),
     inspectStat: stat,
     readText: () => JSON.stringify({
       schemaVersion: 1,
@@ -49,7 +48,6 @@ test("B15 read-only inspection identifies enabled production handler kinds", () 
 test("B15 cannot authorize even fully quiescent simulated production", () => {
   const result = inspectOH7B15Host({
     env, readLegacy: masked,
-    exists: file => files.has(file),
     inspectStat: stat,
     readText: () => JSON.stringify({ schemaVersion: 1, jobs: [] }),
   });
@@ -64,7 +62,6 @@ test("B15 missing storage environment and unavailable systemd are fail closed", 
   const result = inspectOH7B15Host({
     env: {},
     readLegacy() { throw new Error("systemd disconnected"); },
-    exists() { throw new Error("unexpected storage read"); },
   });
   assert.equal(result.activationAuthorized, false);
   assert.ok(result.blockers.some(x => x.includes("Absolute data")));
@@ -76,8 +73,27 @@ test("B15 missing storage environment and unavailable systemd are fail closed", 
 test("B15 refuses operational role during inspection", () => {
   const result = inspectOH7B15Host({
     env: { ...env, CHERNOBOG_STORAGE_ROLE: "core" },
-    readLegacy: running, exists: () => false,
+    readLegacy: running,
   });
   assert.equal(result.activationAuthorized, false);
   assert.ok(result.blockers.some(x => x.includes("operational core")));
+});
+
+test("B15 distinguishes missing paths from permission-denied paths", () => {
+  const result = inspectOH7B15Host({
+    env,
+    readLegacy: running,
+    inspectStat(file) {
+      const error = new Error("simulated read-only stat failure");
+      error.code = file === env.CHERNOBOG_DATA_DIR ? "EACCES" : "ENOENT";
+      throw error;
+    },
+  });
+  assert.equal(result.storage.data.state, "inaccessible");
+  assert.equal(result.storage.data.present, null);
+  assert.equal(result.storage.vault.state, "missing");
+  assert.equal(result.jobInventoryState, "missing");
+  assert.ok(result.blockers.includes("data production path inaccessible"));
+  assert.ok(result.blockers.includes("vault production path missing"));
+  assert.equal(result.activationAuthorized, false);
 });
