@@ -35,6 +35,7 @@ test("B15 audit denies operational status while legacy service is running", () =
   assert.equal(report.activationAuthorized, false);
   assert.equal(report.osLevelWriterExclusionProven, false);
   assert.equal(report.legacySystemdStartupBlocked, false);
+  assert.equal(report.proposedCoreState.status, "not-installed");
   assert.ok(report.blockers.some(x => x.includes("inactive and masked")));
   assert.equal(report.siblingStates["chernobog-village.service"].active, "active");
 });
@@ -44,6 +45,7 @@ test("B15 audit never confuses masked legacy with cutover approval", () => {
     getUnit: fakeSystemd(legacyMasked), draftText: draft,
   });
   assert.equal(report.legacySystemdStartupBlocked, true);
+  assert.equal(report.proposedCoreState.status, "not-installed");
   assert.equal(report.activationAuthorized, false);
   assert.equal(report.osLevelWriterExclusionProven, false);
   assert.deepEqual(report.blockers, []);
