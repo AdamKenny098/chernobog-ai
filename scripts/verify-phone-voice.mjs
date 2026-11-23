@@ -19,6 +19,11 @@ try {
   assert.ok(stylesheet, 'Command Center stylesheet exists');
   assert.equal((await fetch(`${base}${stylesheet[1].replaceAll('&amp;', '&')}`, { headers })).status, 200);
   console.log('Original Command Center HTML and stylesheet served through current core');
+  const model = await fetch(`${base}/models/chernobog/chernobog-core-3d7k-restpose-seamless.glb`, { headers });
+  assert.equal(model.status, 200);
+  const modelBytes = new Uint8Array(await model.arrayBuffer());
+  assert.equal(new TextDecoder().decode(modelBytes.slice(0, 4)), 'glTF');
+  console.log('Command Center 3D model asset served correctly');
   const speech = await fetch(`${base}/api/sensory/speak`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ text: 'Hello Adam. Chernobog is ready for voice conversation.' }) });
   assert.equal(speech.status, 200);
   const audio = await speech.arrayBuffer();

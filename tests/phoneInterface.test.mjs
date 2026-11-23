@@ -27,6 +27,8 @@ test('Command Center authenticates, preserves assets, and routes speech away fro
     const page = await fetch(`${base}/command-center`, { headers });
     assert.equal(await page.text(), '<h1>Command Center</h1>');
     assert.equal((await fetch(`${base}/_next/static/chunk.js`, { headers })).status, 200);
+    assert.equal((await fetch(`${base}/models/chernobog/chernobog-core-3d7k-restpose-seamless.glb`, { headers })).status, 200);
+    assert.ok(forwarded.some(([url]) => url.endsWith('/models/chernobog/chernobog-core-3d7k-restpose-seamless.glb')));
     const health = await (await fetch(`${base}/api/sensory/status`, { headers })).json();
     assert.equal(health.providers.stt.online, true);
     const audio = new FormData();

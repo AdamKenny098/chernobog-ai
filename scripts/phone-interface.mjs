@@ -30,7 +30,7 @@ export async function handlePhoneInterface(req, res, { frontend, speech, fetchUp
     }
     return true;
   }
-  if (frontend && req.method === 'GET' && (url.pathname === '/command-center' || url.pathname.startsWith('/_next/') || url.pathname.startsWith('/api/personal-assistance/') || /\.(?:svg|png|ico|woff2?)$/.test(url.pathname))) {
+  if (frontend && req.method === 'GET' && (url.pathname === '/command-center' || url.pathname.startsWith('/_next/') || url.pathname.startsWith('/api/personal-assistance/') || url.pathname === '/models/chernobog/chernobog-core-3d7k-restpose-seamless.glb' || /\.(?:svg|png|ico|woff2?)$/.test(url.pathname))) {
     const response = await fetchUpstream(`${frontend}${url.pathname}${url.search}`, { headers: { Accept: req.headers.accept ?? '*/*' }, signal: AbortSignal.timeout(15000), redirect: 'manual' });
     res.removeHeader('Content-Security-Policy');
     res.setHeader('Content-Security-Policy', "frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
