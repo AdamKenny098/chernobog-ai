@@ -52,3 +52,18 @@ test("B15 rollback inventory fails closed on inaccessible units and release", ()
   assert.ok(report.blockers.some(x => x.includes("Unit state unavailable")));
   assert.equal(report.activationAuthorized, false);
 });
+
+test("B15 rollback inventory distinguishes permission failures from missing release", () => {
+  const resultFor = code => inspectOH7B15Rollback({
+    getUnit: fakeUnit,
+    getLstat() {
+      const error = new Error("synthetic metadata failure");
+      error.code = code;
+      throw error;
+    },
+  });
+  assert.equal(resultFor("EACCES").legacyRelease.status, "inaccessible");
+  assert.equal(resultFor("EPERM").legacyRelease.status, "inaccessible");
+  assert.equal(resultFor("ENOENT").legacyRelease.status, "missing");
+  assert.equal(resultFor("EIO").legacyRelease.status, "unavailable");
+});
