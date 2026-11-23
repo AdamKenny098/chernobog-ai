@@ -63,9 +63,9 @@ export function inspectOH7B15Host({
           typeMatches: false,
           state: missing ? "missing" : "inaccessible",
         };
-        if (!missing || label !== "jobs") {
-          blockers.push(label + (missing ? " production path missing" : " production path inaccessible"));
-        }
+        // Missing OH3 storage is an activation blocker, even when no jobs
+        // could be inventoried. B15 bootstrap refuses to initialize it.
+        blockers.push(label + (missing ? " production path missing" : " production path inaccessible"));
       }
     }
   }
