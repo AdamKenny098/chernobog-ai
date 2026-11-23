@@ -16,7 +16,6 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export function inspectOH7B15Host({
   env = process.env,
   readLegacy = readLegacySystemdState,
-  exists = fs.existsSync,
   readText = file => fs.readFileSync(file, "utf8"),
   inspectStat = file => fs.statSync(file),
 } = {}) {
@@ -46,21 +45,35 @@ export function inspectOH7B15Host({
       ["jobs", path.join(data, "scheduler", "jobs.json"), "file"],
     ]) {
       try {
-        const present = exists(file);
-        inspections[label] = { present, typeMatches: present &&
-          (kind === "directory" ? inspectStat(file).isDirectory() : inspectStat(file).isFile()) };
-        if (!present && label !== "jobs") blockers.push(label + " production path missing");
-        if (present && !inspections[label].typeMatches) blockers.push(label + " production path has wrong type");
-      } catch {
-        inspections[label] = { present: false, typeMatches: false };
-        blockers.push(label + " production path inaccessible");
+        // existsSync returns false on EACCES as well as ENOENT. statSync
+        // distinguishes genuine absence from an unreadable parent directory.
+        const stat = inspectStat(file);
+        inspections[label] = {
+          present: true,
+          typeMatches: kind === "directory" ? stat.isDirectory() : stat.isFile(),
+          state: "present",
+        };
+        if (!inspections[label].typeMatches) {
+          blockers.push(label + " production path has wrong type");
+        }
+      } catch (error) {
+        const missing = error?.code === "ENOENT";
+        inspections[label] = {
+          present: missing ? false : null,
+          typeMatches: false,
+          state: missing ? "missing" : "inaccessible",
+        };
+        if (!missing || label !== "jobs") {
+          blockers.push(label + (missing ? " production path missing" : " production path inaccessible"));
+        }
       }
     }
   }
   let enabledJobKinds = [];
   let enabledJobs = 0;
   let jobInventoryState = inspections.jobs?.typeMatches ? "present-unread" :
-    inspections.jobs?.present === false ? "missing" : "not-inspected";
+    inspections.jobs?.state === "missing" ? "missing" :
+    inspections.jobs?.state === "inaccessible" ? "inaccessible" : "not-inspected";
   if (inspections.jobs?.typeMatches) {
     try {
       const jobs = JSON.parse(readText(path.join(data, "scheduler", "jobs.json")));
