@@ -1,0 +1,27 @@
+[Unit]
+Description=Chernobog private phone conversation core
+After=network.target ollama.service
+
+[Service]
+User=chernobog-phone
+Group=chernobog-phone
+WorkingDirectory=/opt/chernobog-phone
+EnvironmentFile=/etc/chernobog-phone.env
+ExecStart=/usr/bin/node /opt/chernobog-phone/scripts/phone-core.mjs
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=135
+StateDirectory=chernobog-phone
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectKernelModules=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target
