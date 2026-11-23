@@ -45,7 +45,7 @@ export function validateOH7B15LaunchEnvironment(env: OH7B15LaunchEnvironment): {
   }
   const rawPort = env.CHERNOBOG_CORE_PORT ?? "3191";
   const port = Number(rawPort);
-  if (!/^\\d+$/.test(rawPort) || !Number.isSafeInteger(port) ||
+  if (!/^\d+$/.test(rawPort) || !Number.isSafeInteger(port) ||
       port < 1024 || port > 65535) {
     throw new Error("OH7B15 invalid core port");
   }
