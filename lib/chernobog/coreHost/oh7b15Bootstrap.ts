@@ -57,10 +57,10 @@ export function createOH7B15Bootstrap(options: OH7B15BootOptions): OH7B14Supervi
   }
   verifyOH7B15HandlerRegistry(options.handlers);
   options.authority.guard.assertOwned();
-  let supervisor: OH7B14Supervisor | undefined;
+  const supervisorRef: { current?: OH7B14Supervisor } = {};
   let earlyFatal: Error | undefined;
   const onFatal = (error: Error) => {
-    if (supervisor) supervisor.onFatal(error);
+    if (supervisorRef.current) supervisorRef.current.onFatal(error);
     else earlyFatal = error;
   };
   // Constructors do not open databases or start background loops.
@@ -75,7 +75,7 @@ export function createOH7B15Bootstrap(options: OH7B15BootOptions): OH7B14Supervi
     handlers: options.handlers,
     onFatal,
   });
-  supervisor = new OH7B14Supervisor({
+  const supervisor = new OH7B14Supervisor({
     guard: options.authority.guard,
     adapters: [...pa, ...jobs.adapters],
     port: options.port,
@@ -84,6 +84,7 @@ export function createOH7B15Bootstrap(options: OH7B15BootOptions): OH7B14Supervi
     session: options.session,
     release: options.authority.release,
   });
+  supervisorRef.current = supervisor;
   if (earlyFatal) supervisor.onFatal(earlyFatal);
   return supervisor;
 }
