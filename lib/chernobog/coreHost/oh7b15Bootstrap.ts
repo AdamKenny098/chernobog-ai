@@ -5,6 +5,7 @@
  * Production launcher integration is a separate, explicitly gated step.
  */
 import path from "node:path";
+import { statSync } from "node:fs";
 import type { JobHandlerMap } from "@chernobog/runtime";
 import { OH7B13OwnershipGuard } from "./oh7b13OwnershipGuard";
 import { OH7B14Jobs } from "./oh7b14Jobs";
@@ -57,6 +58,16 @@ export function createOH7B15Bootstrap(options: OH7B15BootOptions): OH7B14Supervi
   }
   verifyOH7B15HandlerRegistry(options.handlers);
   options.authority.guard.assertOwned();
+  // WorkerRuntime.runNext() can persist an empty snapshot on an idle poll.
+  // Do not let B15 silently initialize a missing production scheduler store.
+  const jobStorePath = path.join(dataRoot, "scheduler", "jobs.json");
+  try {
+    if (!statSync(jobStorePath).isFile()) {
+      throw new Error("not a regular file");
+    }
+  } catch {
+    throw new Error("OH7B15 existing scheduler jobs.json required; refusing implicit initialization");
+  }
   const supervisorRef: { current?: OH7B14Supervisor } = {};
   let earlyFatal: Error | undefined;
   const onFatal = (error: Error) => {
