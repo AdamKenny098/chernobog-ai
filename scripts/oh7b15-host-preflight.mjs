@@ -31,8 +31,9 @@ export function inspectOH7B15Host({
   }
   const isRealStorage = path.isAbsolute(data) && path.isAbsolute(vault);
   const canonicalData = isRealStorage ? path.resolve(data) : "";
-  if (canonicalData === ROOT || canonicalData.startsWith(ROOT + path.sep) ||
-      canonicalData === path.parse(canonicalData).root) {
+  if (isRealStorage && (canonicalData === ROOT ||
+      canonicalData.startsWith(ROOT + path.sep) ||
+      canonicalData === path.parse(canonicalData).root)) {
     blockers.push("Invalid production data root");
   }
 
@@ -58,6 +59,8 @@ export function inspectOH7B15Host({
   }
   let enabledJobKinds = [];
   let enabledJobs = 0;
+  let jobInventoryState = inspections.jobs?.typeMatches ? "present-unread" :
+    inspections.jobs?.present === false ? "missing" : "not-inspected";
   if (inspections.jobs?.typeMatches) {
     try {
       const jobs = JSON.parse(readText(path.join(data, "scheduler", "jobs.json")));
@@ -67,6 +70,7 @@ export function inspectOH7B15Host({
       const enabled = jobs.jobs.filter(job => job?.enabled === true);
       enabledJobs = enabled.length;
       enabledJobKinds = [...new Set(enabled.map(job => String(job.kind ?? "")))].sort();
+      jobInventoryState = "read";
       if (enabledJobKinds.length) blockers.push("Enabled production job kinds require audited handler registry");
     } catch {
       blockers.push("Job inventory unreadable or malformed");
@@ -89,6 +93,7 @@ export function inspectOH7B15Host({
     storage: inspections,
     enabledJobs,
     enabledJobKinds,
+    jobInventoryState,
     activationAuthorized: false,
     productionCoreReady: false,
     blockers,
