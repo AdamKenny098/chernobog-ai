@@ -60,9 +60,12 @@ function catalogue(root, exclude = () => false) {
       const rel = path.join(subdir, item.name);
       if (exclude(rel)) continue;
       const full = path.join(root, rel);
-      if (item.isDirectory()) visit(rel);
-      else if (item.isFile()) entries.push({
+      if (item.isDirectory()) {
+        entries.push({ relative: rel, type: "directory" });
+        visit(rel);
+      } else if (item.isFile()) entries.push({
         relative: rel,
+        type: "file",
         size: fs.statSync(full).size,
         sha256: hashFile(full),
       });
@@ -77,6 +80,10 @@ function copyCatalogued(root, dest, entries) {
   fs.mkdirSync(dest, { mode: 0o700 });
   for (const item of entries) {
     const target = path.join(dest, item.relative);
+    if (item.type === "directory") {
+      fs.mkdirSync(target, { recursive: true, mode: 0o700 });
+      continue;
+    }
     fs.mkdirSync(path.dirname(target), { recursive: true, mode: 0o700 });
     fs.copyFileSync(path.join(root, item.relative), target, fs.constants.COPYFILE_EXCL);
     fs.chmodSync(target, 0o600);
@@ -85,7 +92,7 @@ function copyCatalogued(root, dest, entries) {
       throw new Error("OH7B15 source copy changed during backup: " + item.relative);
     }
   }
-  return entries.length;
+  return entries.filter(item => item.type === "file").length;
 }
 
 function checkDatabase(file) {
