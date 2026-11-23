@@ -81,6 +81,12 @@ export async function launchOH7B15ProductionHost(): Promise<void> {
       port: config.port,
       gatewaySecret: config.gatewaySecret,
       handlers: {},
+      onFatal(error) {
+        // B14 begins draining requests and stopping jobs. A clean exit would
+        // suppress Restart=on-failure, so preserve a nonzero process status.
+        console.error("OH7B15 fatal background failure; restart required", error);
+        process.exitCode = 1;
+      },
       chat: handleChatRequest,
       session: handleSessionRequest,
     });
