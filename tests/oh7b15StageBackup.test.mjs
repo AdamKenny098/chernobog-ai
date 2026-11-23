@@ -40,7 +40,6 @@ test("B15 stage backup includes WAL-committed records and rehearses restore", as
     } finally { restored.close(); }
     assert.equal(fs.readFileSync(path.join(
       destination, "restore-rehearsal/vault/note.md"), "utf8"), "# restore test\n");
-    assert.throws(() => awaitUnused(), /unreachable/);
     await assert.rejects(() => stageOH7B15Backup({
       dataRoot: f.dataRoot, vaultRoot: f.vaultRoot, destination,
       explicitOptIn: true, confirmDisposableRestore: true,
@@ -50,8 +49,6 @@ test("B15 stage backup includes WAL-committed records and rehearses restore", as
     fs.rmSync(f.root, { recursive: true, force: true });
   }
 });
-
-function awaitUnused() { throw new Error("unreachable"); }
 
 test("B15 backup is opt-in and refuses output inside live data", async () => {
   const f = fixture();
