@@ -49,6 +49,7 @@ export function inspectOH7B15Host({
         inspections[label] = { present, typeMatches: present &&
           (kind === "directory" ? inspectStat(file).isDirectory() : inspectStat(file).isFile()) };
         if (!present && label !== "jobs") blockers.push(label + " production path missing");
+        if (present && !inspections[label].typeMatches) blockers.push(label + " production path has wrong type");
       } catch {
         inspections[label] = { present: false, typeMatches: false };
         blockers.push(label + " production path inaccessible");
