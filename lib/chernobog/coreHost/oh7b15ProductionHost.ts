@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 const APPROVAL = "I_APPROVE_OH7B15_PRODUCTION_CUTOVER";
 
 export interface OH7B15LaunchEnvironment {
+  readonly [key: string]: string | undefined;
   readonly CHERNOBOG_STORAGE_ROLE?: string;
   readonly CHERNOBOG_OH7B15_CUTOVER_APPROVAL?: string;
   readonly CHERNOBOG_DATA_DIR?: string;
