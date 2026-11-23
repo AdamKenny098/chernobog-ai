@@ -57,13 +57,17 @@ export function auditOH7B15WriterExclusion({
   for (const unit of [LEGACY, CORE, ...SIBLINGS]) {
     try {
       const state = getUnit(unit);
-      if (!state || !state.LoadState || !state.ActiveState ||
-          !state.UnitFileState) throw new Error("incomplete systemd status");
+      if (!state || !state.LoadState || !state.ActiveState) {
+        throw new Error("incomplete systemd status");
+      }
+      // systemd reports UnitFileState="" for a unit that does not exist.
+      // Classify that specifically before requiring UnitFileState on loaded units.
       if (unit === CORE && state.LoadState === "not-found" &&
-          state.ActiveState === "inactive") {
+          state.ActiveState === "inactive" && state.UnitFileState === "") {
         statuses[unit] = { status: "not-installed", load: "not-found", active: "inactive" };
         continue;
       }
+      if (!state.UnitFileState) throw new Error("incomplete systemd status");
       statuses[unit] = {
         load: state.LoadState,
         active: state.ActiveState,
