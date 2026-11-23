@@ -3,8 +3,9 @@ import { timingSafeEqual, randomUUID } from 'node:crypto';
 import { mkdir, readFile, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { handlePhoneInterface } from './phone-interface.mjs';
 
-export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', ollama = 'http://127.0.0.1:11434', fetchModel = fetch }) {
+export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', ollama = 'http://127.0.0.1:11434', fetchModel = fetch, frontend, speech = 'http://127.0.0.1:3194', fetchUpstream = fetch }) {
   if (!token || Buffer.byteLength(token) < 32 || !path.isAbsolute(dataDir)) throw new Error('Absolute data directory and 32-byte token required');
   await mkdir(dataDir, { recursive: true, mode: 0o700 });
   const page = await readFile(new URL('../deploy/phone/index.html', import.meta.url));
@@ -19,9 +20,17 @@ export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', oll
       if (req.method === 'GET' && req.url === '/app.js') { res.writeHead(200, { 'Content-Type': 'text/javascript' }); return res.end(await readFile(new URL('../deploy/phone/app.js', import.meta.url))); }
       if (req.method === 'GET' && req.url === '/style.css') { res.writeHead(200, { 'Content-Type': 'text/css' }); return res.end(await readFile(new URL('../deploy/phone/style.css', import.meta.url))); }
       if (req.method === 'GET' && req.url === '/health/live') return send(200, { ok: true });
-      const supplied = Buffer.from(req.headers.authorization ?? '');
+      if (req.method === 'POST' && req.headers.origin && req.headers.origin !== `https://${req.headers.host}` && req.headers.origin !== `http://${req.headers.host}`) return send(403, { error: 'Origin rejected' });
+      const cookie = req.headers.cookie?.split(';').map(value => value.trim()).find(value => value.startsWith('__Host-chernobog='))?.slice('__Host-chernobog='.length);
+      const supplied = Buffer.from(req.headers.authorization ?? (cookie ? `Bearer ${cookie}` : ''));
       const expected = Buffer.from(`Bearer ${token}`);
       if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) return send(401, { error: 'Unauthorized' });
+      if (req.method === 'POST' && req.url === '/api/login') {
+        req.resume();
+        res.setHeader('Set-Cookie', `__Host-chernobog=${token}; Secure; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200`);
+        return send(200, { ok: true });
+      }
+      if (await handlePhoneInterface(req, res, { frontend, speech, fetchUpstream })) return;
       if (req.method === 'GET' && req.url === '/health/ready') {
         const result = await fetchModel(`${ollama}/api/tags`, { signal: AbortSignal.timeout(5000) });
         const tags = await result.json();
@@ -38,7 +47,7 @@ export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', oll
         let input;
         try { input = JSON.parse(body); } catch { return send(400, { error: 'Invalid JSON' }); }
         const sessionId = input.sessionId ?? randomUUID();
-        if (!/^[a-f0-9-]{36}$/.test(sessionId) || typeof input.message !== 'string' || !input.message.trim() || input.message.length > 8000) return send(400, { error: 'Invalid message or session' });
+        if (!/^(?:sensory-)?[a-f0-9-]{36}$/.test(sessionId) || typeof input.message !== 'string' || !input.message.trim() || input.message.length > 8000) return send(400, { error: 'Invalid message or session' });
         const filename = path.join(dataDir, `${sessionId}.json`);
         let history = [];
         try { history = JSON.parse(await readFile(filename, 'utf8')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
@@ -54,7 +63,7 @@ export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', oll
         if (typeof reply !== 'string' || !reply.trim()) throw new Error('Empty model reply');
         await writeFile(`${filename}.tmp`, JSON.stringify([...messages, { role: 'assistant', content: reply }]), { mode: 0o600 });
         await rename(`${filename}.tmp`, filename);
-        return send(200, { sessionId, reply });
+        return send(200, { sessionId, reply, spokenReply: reply });
       } finally { busy = false; }
     } catch { send(503, { error: 'Conversation unavailable. Check the model and service logs.' }); }
   });
@@ -64,7 +73,7 @@ export async function createPhoneCore({ token, dataDir, model = 'gemma3:4b', oll
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const server = await createPhoneCore({ token: process.env.CHERNOBOG_PHONE_TOKEN, dataDir: process.env.CHERNOBOG_PHONE_DATA ?? '/var/lib/chernobog-phone', model: process.env.CHERNOBOG_PHONE_MODEL, ollama: process.env.OLLAMA_URL });
+  const server = await createPhoneCore({ token: process.env.CHERNOBOG_PHONE_TOKEN, dataDir: process.env.CHERNOBOG_PHONE_DATA ?? '/var/lib/chernobog-phone', model: process.env.CHERNOBOG_PHONE_MODEL, ollama: process.env.OLLAMA_URL, frontend: process.env.CHERNOBOG_FRONTEND_URL });
   server.listen(3192, '127.0.0.1');
   const stop = () => { server.close(); server.closeIdleConnections(); setTimeout(() => process.exit(1), 130000).unref(); };
   process.once('SIGTERM', stop);

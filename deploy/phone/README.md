@@ -14,7 +14,42 @@ sudo bash deploy/phone/install.sh
 ```
 
 Connect the phone to Tailscale, open the HTTPS URL printed by the installer,
-and enter the printed token. Send a message, then a follow-up referring to it.
+enter the printed token, and select Open Command Center. This serves the
+actual existing Command Center from the running Next.js frontend on port
+3000, including its existing appearance and microphone controls. It is a
+frontend bridge, not a port or rebuilt copy of the React interface. The
+frontend must remain running; chat and model inference still run separately.
+The login uses a Secure, HttpOnly, SameSite=Strict cookie lasting 12 hours.
+Chat and speech endpoints run in the current service; personal-assistance
+panels can read existing legacy status, but their mutation endpoints and
+unrelated navigation routes are not exposed by this bridge.
+
+Install server-local voice processing after the phone service exists:
+
+```bash
+sudo bash deploy/phone/install-voice.sh
+node scripts/verify-phone-voice.mjs
+```
+
+Docker must already be installed. The installer builds a Python 3.12 speech
+image with faster-whisper 1.2.1, Piper 1.3.0 and PyAV 15.1.0 (newer PyAV 19
+removed an API used by this faster-whisper release). Models are downloaded
+at image-build time; inference uses offline files. The service listens only
+on 127.0.0.1:3194. It uses CPU transcription and the en_US-lessac-medium voice.
+The Flask service uses Werkzeug's programmatic HTTP server on loopback.
+Speech shares a single inference lock, rejects oversized uploads and limits
+speech text to 8000 characters. Models are inside the container image and do
+not require production vault access. First build requires Internet access.
+
+On the Command Center, grant microphone access and enable its listening and
+speech controls. Verify a spoken question receives an audible reply and
+that turning listening off stops recording. The existing wake/listening
+behavior is retained. Phone microphone permissions, autoplay and latency
+must be checked on the actual device.
+
+Speech implementation follows the upstream APIs:
+- https://github.com/SYSTRAN/faster-whisper
+- https://github.com/OHF-Voice/piper1-gpl/blob/main/docs/API_PYTHON.md
 The model defaults to gemma3:4b. Change CHERNOBOG_PHONE_MODEL in
 /etc/chernobog-phone.env and restart chernobog-phone if needed.
 
@@ -51,6 +86,7 @@ Rollback only this service (existing services and Serve ports are untouched):
 ```bash
 sudo tailscale serve --https=9443 off
 sudo systemctl disable --now chernobog-phone
+sudo systemctl disable --now chernobog-voice
 ```
 
 Observed server: Node 22.22.1; Ollama gemma3:4b; legacy, passive core,
@@ -58,3 +94,11 @@ Village, agent host and Tailscale active. Serve ports 443 and 8443 were
 already occupied, so this installer uses 9443. SSH works as omen; sudo
 requires an interactive password. System service installation cannot be
 completed by the remote noninteractive session.
+
+Live verification on the Acer: Command Center HTML and stylesheet returned
+200 through the new gateway; Piper produced WAV audio; faster-whisper
+recognized the synthesized sentence; Gemma replied; Piper synthesized the
+reply. Node integration checks cover authentication, secure cookie flags,
+frontend assets, voice routing, blocked legacy mutations and cross-site
+request rejection. Browser visual inspection was blocked by the testing
+browser's inability to resolve the private Tailscale hostname.

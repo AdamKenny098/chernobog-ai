@@ -1,5 +1,12 @@
 let sessionId = localStorage.getItem('chernobog-phone-session') || crypto.randomUUID();
 const element = id => document.getElementById(id);
+element('command-center').onclick = async () => {
+  try {
+    const response = await fetch('/api/login', { method: 'POST', headers: { Authorization: `Bearer ${element('token').value}` } });
+    if (!response.ok) throw new Error('Enter a valid access token.');
+    location.assign('/command-center');
+  } catch (error) { element('status').textContent = error.message; }
+};
 const add = (speaker, text) => {
   const paragraph = document.createElement('p');
   paragraph.textContent = `${speaker}: ${text}`;

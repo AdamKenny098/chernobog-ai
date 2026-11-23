@@ -1,0 +1,20 @@
+[Unit]
+Description=Chernobog local transcription and speech
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/docker run --rm --name chernobog-voice --network host --read-only --tmpfs /tmp:rw,noexec,nosuid,size=256m --cap-drop ALL --security-opt no-new-privileges chernobog-voice:local
+ExecStop=/usr/bin/docker stop -t 20 chernobog-voice
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=30
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,46 @@
+import assert from 'node:assert/strict';
+import { mkdtemp, rm } from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+import { createPhoneCore } from './phone-core.mjs';
+
+const dataDir = await mkdtemp(path.join(os.tmpdir(), 'chernobog-voice-smoke-'));
+const token = 'smoke-test-token-'.repeat(4);
+const server = await createPhoneCore({ token, dataDir, frontend: 'http://127.0.0.1:3000' });
+await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+const base = `http://127.0.0.1:${server.address().port}`;
+const headers = { Authorization: `Bearer ${token}` };
+try {
+  const page = await fetch(`${base}/command-center`, { headers });
+  assert.equal(page.status, 200);
+  const html = await page.text();
+  assert.match(html, /Command Center/);
+  const stylesheet = html.match(/href="([^\"]+\.css(?:\?[^\"]*)?)"/);
+  assert.ok(stylesheet, 'Command Center stylesheet exists');
+  assert.equal((await fetch(`${base}${stylesheet[1].replaceAll('&amp;', '&')}`, { headers })).status, 200);
+  console.log('Original Command Center HTML and stylesheet served through current core');
+  const speech = await fetch(`${base}/api/sensory/speak`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ text: 'Hello Adam. Chernobog is ready for voice conversation.' }) });
+  assert.equal(speech.status, 200);
+  const audio = await speech.arrayBuffer();
+  assert.ok(audio.byteLength > 1000);
+  const form = new FormData();
+  form.append('audio', new Blob([audio], { type: 'audio/wav' }), 'test.wav');
+  const transcription = await fetch(`${base}/api/sensory/transcribe`, { method: 'POST', headers, body: form });
+  assert.equal(transcription.status, 200);
+  const { transcript } = await transcription.json();
+  assert.match(transcript, /hello|adam|ready|voice/i);
+  console.log('Local synthesis and transcription:', transcript);
+  const chat = await fetch(`${base}/api/chat`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: transcript, sessionId: `sensory-${crypto.randomUUID()}`, responseMode: 'voice' }) });
+  assert.equal(chat.status, 200);
+  const result = await chat.json();
+  assert.ok(result.spokenReply?.trim());
+  console.log('Model reply:', result.reply);
+  const replyAudio = await fetch(`${base}/api/sensory/speak`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ text: result.spokenReply }) });
+  assert.equal(replyAudio.status, 200);
+  assert.ok((await replyAudio.arrayBuffer()).byteLength > 1000);
+  console.log('Voice -> transcript -> current core -> spoken reply verified');
+} finally {
+  server.closeAllConnections();
+  await new Promise(resolve => server.close(resolve));
+  await rm(dataDir, { recursive: true, force: true });
+}
