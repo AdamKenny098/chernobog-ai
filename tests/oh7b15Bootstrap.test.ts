@@ -35,6 +35,9 @@ test("B15 composition integrates all four accepted components without touching p
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), "oh7b15-bootstrap-"));
   const prior = process.env.CHERNOBOG_DATA_DIR;
   process.env.CHERNOBOG_DATA_DIR = temp;
+  fs.mkdirSync(path.join(temp, "scheduler"));
+  fs.writeFileSync(path.join(temp, "scheduler", "jobs.json"),
+    JSON.stringify({ schemaVersion: 1, jobs: [], schedules: [], runs: [] }));
   const events: string[] = [];
   let owner = true;
   const authority = {
@@ -93,4 +96,29 @@ test("B15 refuses mismatched storage root before starting services", () => {
     chat: async () => Response.json({ ok: true }),
     session: async () => Response.json({ ok: true }),
   }), /data path does not match/);
+});
+
+test("B15 rejects absent scheduler store instead of creating one on idle worker polling", () => {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), "oh7b15-no-jobs-"));
+  const prior = process.env.CHERNOBOG_DATA_DIR;
+  process.env.CHERNOBOG_DATA_DIR = temp;
+  try {
+    assert.throws(() => createOH7B15Bootstrap({
+      authority: {
+        guard: new OH7B13OwnershipGuard({ assertStillOwned() {} }),
+        paths: { data: temp },
+        release() {},
+      },
+      handlers: {},
+      port: 3192,
+      gatewaySecret: secret,
+      chat: async () => Response.json({ ok: true }),
+      session: async () => Response.json({ ok: true }),
+    }), /existing scheduler jobs.json required/);
+    assert.equal(fs.existsSync(path.join(temp, "scheduler", "jobs.json")), false);
+  } finally {
+    if (prior === undefined) delete process.env.CHERNOBOG_DATA_DIR;
+    else process.env.CHERNOBOG_DATA_DIR = prior;
+    fs.rmSync(temp, { recursive: true, force: true });
+  }
 });
