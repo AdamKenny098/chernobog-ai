@@ -27,7 +27,7 @@ test('private chat rejects unauthorized input, persists history and sends it aft
     const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
     assert.equal((await fetch(`${base}/health/ready`, { headers })).status, 200);
     assert.equal((await fetch(`${base}/api/chat`, { method: 'POST', headers, body: '{' })).status, 400);
-    const first = await fetch(`${base}/api/chat`, { method: 'POST', headers, body: JSON.stringify({ message: 'Remember my name' }) });
+    const first = await fetch(`${base}/api/chat`, { method: 'POST', headers, body: JSON.stringify({ message: 'Hello, my name is Adam' }) });
     assert.equal(first.status, 200);
     const { sessionId, reply } = await first.json();
     assert.equal(reply, 'Hello from Chernobog');
@@ -36,7 +36,7 @@ test('private chat rejects unauthorized input, persists history and sends it aft
     base = await start();
     const second = await fetch(`${base}/api/chat`, { method: 'POST', headers, body: JSON.stringify({ sessionId, message: 'What did I say?' }) });
     assert.equal(second.status, 200);
-    assert.equal(calls[1].messages[1].content, 'Remember my name');
+    assert.equal(calls[1].messages[1].content, 'Hello, my name is Adam');
     assert.equal((await fetch(`${base}/api/chat`, { method: 'POST', headers: { ...headers, Origin: 'https://attacker.example' }, body: '{}' })).status, 403);
     assert.equal((await fetch(`${base}/api/chat`, { method: 'POST', headers, body: JSON.stringify({ sessionId: '../escape', message: 'hello' }) })).status, 400);
   } finally { if (server.listening) await stop(); await rm(dataDir, { recursive: true, force: true }); }

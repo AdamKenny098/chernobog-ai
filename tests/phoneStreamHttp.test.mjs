@@ -29,7 +29,7 @@ test('HTTP stream emits early, preserves history only after completion, and repo
     const reader = response.body.getReader();
     const early = new TextDecoder().decode((await reader.read()).value);
     assert.match(early, /"type":"token"/);
-    assert.deepEqual(await readdir(dataDir), []);
+    assert.deepEqual((await readdir(dataDir)).filter(name => name.endsWith('.json')), []);
     finish();
     let rest = '';
     for (;;) { const part = await reader.read(); if (part.done) break; rest += new TextDecoder().decode(part.value); }
@@ -39,7 +39,7 @@ test('HTTP stream emits early, preserves history only after completion, and repo
     const brokenSession = crypto.randomUUID();
     const broken = await fetch(`${base}/api/chat`, { method: 'POST', headers, body: JSON.stringify({ sessionId: brokenSession, message: 'Hi', stream: true }) });
     assert.match(await broken.text(), /"type":"error"/);
-    assert.deepEqual(await readdir(dataDir), [`${sessionId}.json`]);
+    assert.deepEqual((await readdir(dataDir)).filter(name => name.endsWith('.json')), [`${sessionId}.json`]);
   } finally { finish(); server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); await rm(dataDir, { recursive: true, force: true }); }
 });
 
@@ -67,7 +67,7 @@ test('disconnect aborts model generation and frees the next turn without saving 
     let timeout;
     try { await Promise.race([cancellation, new Promise((_, reject) => { timeout = setTimeout(() => reject(new Error('Model did not abort')), 2000); })]); }
     finally { clearTimeout(timeout); }
-    assert.deepEqual(await readdir(dataDir), []);
+    assert.deepEqual((await readdir(dataDir)).filter(name => name.endsWith('.json')), []);
     const next = await fetch(`${base}/api/chat`, { method: 'POST', headers, body: JSON.stringify({ message: 'Next' }) });
     assert.equal(next.status, 200);
     assert.equal((await next.json()).reply, 'Next turn works');

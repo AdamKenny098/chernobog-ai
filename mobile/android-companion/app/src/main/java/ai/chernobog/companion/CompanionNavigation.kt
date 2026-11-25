@@ -33,17 +33,18 @@ fun CompanionNavigation(model: ConversationViewModel, companion: @Composable () 
         containerColor = ChernobogBackground,
         bottomBar = {
             NavigationBar(containerColor = ChernobogPanel) {
-                listOf("Conversation", "Companion", "Settings").forEachIndexed { index, title ->
+                listOf("Conversation", "Memory", "Companion", "Settings").forEachIndexed { index, title ->
                     NavigationBarItem(selected = selected == index, onClick = { if (index != selected) model.stopAudio(); selected = index },
-                        icon = { Text(listOf("◉", "◇", "⚙")[index]) }, label = { Text(title) })
+                        icon = { Text(listOf("◉", "◇", "⌘", "⚙")[index]) }, label = { Text(title) })
                 }
             }
         },
     ) { padding ->
         Box(Modifier.fillMaxSize().padding(padding).imePadding()) {
             when (selected) {
-                0 -> ConversationPanel(model, state) { selected = 2 }
-                1 -> companion()
+                0 -> ConversationPanel(model, state) { selected = 3 }
+                1 -> MemoryPanel()
+                2 -> companion()
                 else -> ConversationSettings(model, state)
             }
         }

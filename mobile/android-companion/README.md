@@ -1,5 +1,16 @@
 # Chernobog PA-2D1 — Android Companion Foundation
 
+## Cross-conversation memory — 0.6.0
+
+Memory is a dedicated tab next to Conversation, Companion and Settings.
+Use it to view, add, edit or forget explicitly confirmed personal facts.
+Facts persist on the Acer across chats and service restarts. The existing
+phone-core token is reused; device pairing and notification data are unchanged.
+Install the server memory update before using this tab. Ordinary conversation
+does not automatically create long-term memories. Deleting a saved fact does
+not erase original chat transcripts or existing backups. See
+`deploy/phone/MEMORY.md` for commands, boundaries, verification and rollback.
+
 ## Continuous voice — 0.5.0
 
 Select Start voice conversation once. Foreground PCM recording detects

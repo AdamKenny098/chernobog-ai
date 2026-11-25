@@ -32,6 +32,7 @@ class ConversationClient {
                     401 -> "Access token rejected. Check Conversation settings."
                     429 -> "Chernobog is busy. Please try again shortly."
                     413 -> "Recording or message is too large. Try a shorter turn."
+                    409 -> "Memory changed, already exists, or a reply is in progress. Refresh Memory and review before retrying."
                     else -> "Chernobog returned HTTP $status. Check the server services."
                 })
             }
